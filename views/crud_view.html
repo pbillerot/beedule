@@ -1,0 +1,130 @@
+<!-- vusers.html -->
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$tableid := .TableId}}
+{{$viewid := .ViewId}}
+{{$formid := .FormId}}
+{{$table := .Table}}
+{{$view := .View}}
+{{$form := .Form}}
+{{$id := .Id}}
+{{$tablekey := .Table.Key}}
+{{$coldisplay := .ColDisplay}}
+{{$elements := .Elements}}
+{{$cols := .Cols}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{$theme}} inverted large fixed menu navbar">
+      <div class="item">
+        <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
+          <img class="ui mini image" src="{{$app.Image}}">
+        </a>
+      </div>
+      <div class="header item">Fiche: {{$coldisplay}}</div>
+      <div class="right menu">
+        {{if $view.Deletable}}
+          <a class="ui icon item crud-jquery-delete" title="Supprimer la fiche...">
+          <i class="trash icon"></i>
+        {{end}}
+        </a>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- LIST CARD -->
+      <div class="ui cards">
+        {{ range $irecord, $record := .Records }}
+        <a class="card raised" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+          <div class="content">
+            <div class="ui right floated">
+              <i class="big {{$theme}} {{$view.IconName}} icon"></i>
+            </div>
+            {{ range $num, $key := $cols }}
+            {{ $val := index $record $key }}
+            {{ $element := index $elements $key }}
+            {{ if (eq $element.Type "checkbox")}}
+            <div class="description">&nbsp;</div>
+            <div class="header">
+              <h4>
+                {{if (eq $val "1") }}
+                <i class="check square outline icon"></i> {{$element.LabelLong}}
+                {{else}}
+                <i class="square outline icon"></i> {{$element.LabelLong}}
+                {{end}}
+              </h4>
+            </div>
+            {{else if (eq $element.Type "password")}}
+            <div class="description">
+              <div class="meta">
+                <span>{{$element.LabelLong}}</span>
+              </div>
+            </div>
+            <div class="header">
+              <h4>***</h4>
+            </div>
+            {{else if (eq $element.Type "tag")}}
+              <div class="description">
+                <div class="meta">
+                  <span>{{$element.LabelLong}}</span>
+                </div>
+              </div>
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui small label">{{$item}}</div>
+              {{end}}
+            {{else if (eq $element.Type "section")}}
+            <!-- Fermeture de la card et ouverture d'une autre -->
+          </div> <!-- end content card -->
+        </a> <!-- end card -->
+        <a class="card raised" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+          <div class="content">
+            <div class="ui right floated">
+              <i class="big {{$theme}} {{$element.Params.IconName}} icon"></i>
+            </div>
+            <div class="header">
+              <h4>{{$element.LabelLong}}</h4>
+            </div>
+            {{else}}
+            <div class="description">
+              <div class="meta">
+                <span>{{$element.LabelLong}}</span>
+              </div>
+            </div>
+            <div class="header">
+              <h4>{{$val}}</h4>
+            </div>
+            {{end}} <!-- end if type -->
+            {{end}} <!-- end range $cols -->
+          </div> <!-- end content card -->
+        </a> <!-- end card -->
+        {{end}} <!-- end range records -->
+      </div>
+    </div>
+  </main>
+  <!-- Demande de confirmation de la suppression -->
+  <div class="ui modal">
+    <div class="header">Suppression de {{$coldisplay}}</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div>
+  <form action="/crud/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" method="POST">
+    {{ .xsrfdata }}
+  </form>
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

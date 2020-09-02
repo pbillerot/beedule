@@ -1,0 +1,22 @@
+# http://golang.io/fr/tutoriels/deployer-un-serveur-go-avec-docker/
+
+# Utilisation de golang comme image de base
+# Le GOPATH par défaut de cette image est /go.
+FROM scratch
+
+ENV APPNAME beedule
+
+# Copie des sources de notre projet
+COPY . .
+
+# Le port sur lequel notre serveur écoute
+EXPOSE 3945
+
+CMD ["/${APPNAME}"]
+
+# docker image build -t beedule:latest .
+# docker container run --name beedule -p 3945:3945 -d beedule:latest
+# http://localhost:3945
+# docker container ps
+# docker container stop beedule
+# docker container start beedule

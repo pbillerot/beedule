@@ -1,0 +1,50 @@
+<!-- about.html -->
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+    <!-- NAVBAR -->
+    <div class="ui container">
+        <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+            <div class="item">
+                <a class="ui icon image" href="/crud">
+                    <img class="ui mini image" src="/crud/static/img/beedule.png">
+                </a>
+            </div>
+            <div class="header item">{{.Title}}</div>
+        </div>
+    </div>
+    <main>
+        <div class="ui centered card">
+            <div class="image">
+                <img src="{{.Config.Icone}}">
+            </div>
+            <div class="content">
+                <a class="header">{{.Config.Appname}}</a>
+                <div class="description">
+                    {{.Config.Appnote}}
+                </div>
+            </div>
+            <div class="content">
+                <div class="meta">
+                    <div class="icon label">
+                        <i class="user icon"></i> {{.Config.Author}}
+                    </div>
+                    <div class="icon label">
+                        <i class="code icon"></i> Version {{.Config.Version}}
+                    </div>
+                </div>
+            </div>
+            <div class="extra content">
+                <a href="{{.Config.Site}}" target="_blank">
+                    <i class="github icon"></i>Github
+                </a>
+            </div>
+        </div>
+        </div>
+    </main>
+    {{template "_crud_footer.html" .}}
+</body>
+
+</html>

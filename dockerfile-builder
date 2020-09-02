@@ -1,0 +1,41 @@
+# http://golang.io/fr/tutoriels/deployer-un-serveur-go-avec-docker/
+# https://www.cloudreach.com/en/resources/blog/cts-build-golang-dockerfiles/
+
+# Utilisation de golang comme image de base
+# Le GOPATH par défaut de cette image est /go.
+FROM golang:alpine AS builder
+
+ENV APPNAME beedule
+
+# Installation de GCC et GIT
+RUN apk add -U --no-cache build-base git
+
+WORKDIR /src
+COPY . .
+
+# Fetch dependencies.
+# Using go get.
+RUN go get -d -v
+
+# Construction du binaire toujours à partir de /src
+RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/${APPNAME}
+# RUN go build -o /go/bin/${APPNAME}
+
+############################
+# STEP 2 build a small image
+############################
+FROM scratch
+# Copy our static executable.
+COPY --from=builder /go/bin/${APPNAME} /go/bin/${APPNAME}
+# Run the hello binary.
+ENTRYPOINT ["/go/bin/${APPNAME}"]
+
+# Le port sur lequel notre serveur écoute
+EXPOSE 3945
+
+# docker image build -t beedule:latest .
+# docker container run --name beedule -p 3945:3945 -d beedule:latest
+# http://localhost:3945
+# docker container ps
+# docker container stop beedule
+# docker container start beedule

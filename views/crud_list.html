@@ -1,0 +1,148 @@
+<!-- vusers.html -->
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$tableid := .TableId}}
+{{$viewid := .ViewId}}
+{{$formaddid := .FormAddId}}
+{{$table := .Table}}
+{{$tablekey := .Table.Key}}
+{{$view := .View}}
+{{$elements := .Elements}}
+{{$cols := .Cols}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <div class="item">
+        <a class="ui mini image" href="/crud">
+          <img src="{{$app.Image}}">
+        </a>
+      </div>
+      {{$lenAppViews := len $app.AppViews }}
+      {{if (gt $lenAppViews 1)}}
+      <div class="ui dropdown item">
+        {{$view.Title}}
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          {{ range $iv, $appView := $app.AppViews }}
+          {{$t := index $portail.Tables $appView.Tableid }}
+          {{$v := index $t.Views $appView.Viewid }}
+          <a class="item" href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">{{$v.Title}}</a>
+          {{end}}
+        </div>
+      </div>
+      {{else}}
+      <div class="header item">{{$view.Title}}</div>
+      {{end}}
+      <div class="right menu">
+        <div class="ui icon item">
+          <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
+        </div>
+        <a class="ui icon item crud-jquery-url" data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}"
+          title="Ajouter un article...">
+          <i class="plus square icon"></i>
+        </a>
+        {{if $view.ActionsSQL}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{range $iaction, $action := $view.ActionsSQL}}
+            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+              data-url="/crud/action/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
+            {{end}}
+          </div>
+        </div>
+        {{end}}
+        <!-- end ActionSQL -->
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- Recherche -->
+      <div style="display: none" id="crud-search">
+        <div class="ui icon input">
+          <input type="text" id="crud-search-input" placeholder="Search...">
+          <i class="search icon"></i>
+        </div>
+      </div>
+      <!-- LIST TABLE -->
+      <table class="ui unstackable collapsing sortable selectable celled table" data-role="table"
+        data-mode="columntoggle">
+        <thead>
+          <!-- ENTETE TABLE -->
+          <tr>
+            {{ range $num, $key := $cols }}
+            {{ $element := index $elements $key }}
+            {{if (ne $element.Hide true)}}
+            <th class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
+              {{$element.LabelShort}}
+            </th>
+            {{end}}
+            <!-- end if Hide -->
+            {{end}}
+            <!-- end loop $cols -->
+          </tr>
+        </thead>
+        <tbody id="bee-table">
+          <!-- LOOP $RECORD -->
+          {{ range $irecord, $record := .Records }}
+          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $table.AliasDB}}"
+            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
+            {{ range $num, $key := $cols }}
+            {{ $val := index $record $key }}
+            {{ $element := index $elements $key }}
+            {{if (ne $element.Hide true)}}
+            <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
+              {{if (eq $element.Type "checkbox")}}
+              {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
+              {{else if (eq $element.Type "password")}}
+              ***
+              {{else if (eq $element.Type "tag")}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui small label">{{$item}}</div>
+              {{end}}
+              {{else}}
+              {{$val}}
+              {{end}}
+            </td>
+            {{end}}
+            <!-- end if Hide -->
+            {{end}}
+            <!-- end loop $cols -->
+          </tr>
+          {{end}}
+          <!-- fin loop $records -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- Action-->
+  <form action="" method="POST">
+    {{ .xsrfdata }}
+  </form>
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+package controllers
+
+import (
+	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/models"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+)
+
+// CrudListController as
+type CrudListController struct {
+	loggedRouter
+}
+
+// Get CrudListController
+func (c *CrudListController) Get() {
+	appid := c.Ctx.Input.Param(":app")
+	tableid := c.Ctx.Input.Param(":table")
+	viewid := c.Ctx.Input.Param(":view")
+
+	flash := beego.ReadFromRequest(&c.Controller)
+	// Ctrl tableid et viewid
+	if val, ok := app.Tables[tableid]; ok {
+		if _, ok := val.Views[viewid]; ok {
+		} else {
+			c.Ctx.Redirect(302, "/crud")
+			return
+		}
+	} else {
+		c.Ctx.Redirect(302, "/crud")
+		return
+	}
+
+	// Fusion des attributs des éléments de la table dans les éléments de la vue
+	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Views[viewid].Elements, "")
+	// Calcul des champs SQL
+	view := app.Tables[tableid].Views[viewid]
+	if view.OrderBy != "" {
+		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
+	}
+	if view.FooterSQL != "" {
+		view.FooterSQL = macroSQL(c.Controller, view.OrderBy, orm.Params{}, app.Tables[tableid].AliasDB)
+	}
+	if view.Where != "" {
+		view.Where = macro(c.Controller, view.Where, orm.Params{})
+	}
+
+	// lecture des records
+	records, err := models.CrudList(tableid, viewid, &view, elements)
+	if err != nil {
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+		// c.Ctx.Redirect(302, "/crud")
+		// return
+	}
+
+	// Remplissage du contexte pour le template
+	setContext(c.Controller)
+	table := app.Tables[tableid]
+	formAddid := app.Tables[tableid].Views[viewid].FormAdd
+	c.Data["Title"] = view.Title
+	c.Data["AppId"] = appid
+	c.Data["Application"] = app.Applications[appid]
+	c.Data["TableId"] = tableid
+	c.Data["ViewId"] = viewid
+	c.Data["FormAddId"] = formAddid
+	c.Data["Table"] = &table
+	c.Data["View"] = &view
+	c.Data["Elements"] = elements
+	c.Data["Records"] = records
+	c.Data["Cols"] = cols
+
+	c.TplName = "crud_list.html"
+}
