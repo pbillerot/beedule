@@ -12,6 +12,13 @@ services:
       - /mnt/nas/data/beedule/custom.conf:/src/conf/custom.conf
       - /mnt/nas/data/beedule/beedule.sqlite:/src/database/beedule.sqlite
 
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge
+
 # Pour reconstruire le container
 # docker-compose up -d --build
 

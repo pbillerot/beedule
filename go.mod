@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/astaxie/beego v1.12.2
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/imdario/mergo v0.3.11
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/prometheus/common v0.13.0 // indirect
