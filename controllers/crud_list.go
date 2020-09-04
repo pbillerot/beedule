@@ -54,6 +54,8 @@ func (c *CrudListController) Get() {
 		// c.Ctx.Redirect(302, "/crud")
 		// return
 	}
+	// Calcul des éléments
+	elements = computeElements(c.Controller, tableid, elements, records[0])
 
 	// Remplissage du contexte pour le template
 	setContext(c.Controller)

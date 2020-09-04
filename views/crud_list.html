@@ -103,17 +103,23 @@
             {{ $element := index $elements $key }}
             {{if (ne $element.Hide true)}}
             <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
-              {{if (eq $element.Type "checkbox")}}
+              {{if (eq $element.Type "combo")}} <!-- combo -->
+                {{CrudItem $element.Items $val}} ({{$val}})
+              {{else if (eq $element.Type "checkbox")}} <!-- checkbox -->
               {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
-              {{else if (eq $element.Type "password")}}
+              {{else if (eq $element.Type "password")}} <!-- password -->
               ***
-              {{else if (eq $element.Type "tag")}}
-              {{$arr := CrudSplit $val ","}}
-              {{range $i, $item := $arr}}
-              <div class="ui small label">{{$item}}</div>
-              {{end}}
-              {{else}}
-              {{$val}}
+              {{else if (eq $element.Type "tag")}} <!-- tag -->
+                {{$arr := CrudSplit $val ","}}
+                {{range $i, $item := $arr}}
+                <div class="ui small label">{{$item}}</div>
+                {{end}}
+              {{else}} <!-- autres -->
+                {{if $element.Format}}
+                  {{CrudFormat $element.Format $val}}
+                {{else}}
+                  {{$val}}
+                {{end}}
               {{end}}
             </td>
             {{end}}

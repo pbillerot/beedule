@@ -53,13 +53,14 @@ type Element struct {
 	Default      string // Valeur par défaut (macro possible)
 	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error        string // contiendra "error" si le champ est en erreur de saisie
+	Format       string // TODO
 	ComputeSQL   string // TODO formule de calcul de Value en SQL
 	Height       int    // TODO
 	Help         string // TODO
 	HelpSQL      string // TODO
 	Hide         bool
 	HideOnMobile bool     // La colonne dans une vue sera cachée sur Mobile
-	Items        string   // "item1,item2,..."
+	Items        []Item   // slice d'item
 	ItemsSQL     string   // Ordre SQL qui retournera la colonne pour alimenter Items
 	Jointure     Jointure // TODO
 	LabelLong    string
@@ -76,7 +77,6 @@ type Element struct {
 	ReadOnly     bool // TODO
 	Refresh      bool // TODO
 	Required     bool
-	Sprintf      string // TODO
 	SQLout       string // Valeur à enregistrer dans la base de données
 	Type         string // amount checkbox counter date datetime email float jointure list month number percent plugin section tag tel text time radio url week
 	Value        string
@@ -161,7 +161,10 @@ type Action struct {
 type Arg map[string]string
 
 // Item entre tables
-type Item map[string]string
+type Item struct {
+	Key   string
+	Value string
+}
 
 // HashPassword hashage de Value
 func (element *Element) HashPassword() string {

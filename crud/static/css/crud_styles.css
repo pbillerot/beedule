@@ -17,6 +17,12 @@ main {
 .ui.cards>.crud-card-portail {
     width: 160px;
 }
+.ui.cards>.crud-card-view {
+    width: 320px;
+}
+.ui.form {
+    width: 360px;
+}
 
 /* Mobile */
 

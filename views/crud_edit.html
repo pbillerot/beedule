@@ -59,7 +59,26 @@
             {{ $val := index $record $key }}
             {{ $element := index $elements $key }}
             <div class="ui form">
-              {{if (eq $element.Type "counter")}}
+              {{if (eq $element.Type "amount")}}
+              <div
+                class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <input type="text" pattern="\$\d{1,3}(,\d{3})*(\.\d+)?$" name="{{$key}}" id="{{$key}}"{{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} 
+                value="{{$val}}">
+              </div>
+              {{else if (eq $element.Type "combo")}}
+              <div
+                class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <select name="{{$key}}" id="{{$key}}" class="ui fluid search dropdown">
+                  <option value="">{{$element.PlaceHolder}}</option>
+                  {{range $num, $item := $element.Items}}
+                    <option value="{{$item.Key}}"{{if (eq $item.Key $val)}} selected=""{{end}}>
+                      {{$item.Value}} ({{$item.Key}})</option>
+                  {{end}}
+                </select>
+              </div>
+              {{else if (eq $element.Type "counter")}}
               <div
                 class="disabled field {{$element.Error}}">
                 <label>{{$element.LabelLong}}</label>
@@ -73,6 +92,13 @@
                   <input type="checkbox" name="{{$key}}" id="{{$key}}"{{if(eq $val `1`)}} checked{{end}}>
                   <label>{{$element.LabelLong}}</label>
                 </div>
+              </div>
+              {{else if (eq $element.Type "float")}}
+              <div
+                class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <input type="number" step="any" name="{{$key}}" id="{{$key}}"{{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} 
+                value="{{$val}}">
               </div>
               {{else if (eq $element.Type "radio")}}
               <div
@@ -94,9 +120,8 @@
                 <label>{{$element.LabelLong}}</label>
                 <select name="{{$key}}" id="{{$key}}" multiple="" class="ui fluid dropdown">
                   <option value="">{{$element.PlaceHolder}}</option>
-                  {{ $items := CrudSplit $element.Items ","}}
-                  {{range $num, $item := $items}}
-                    <option value="{{$item}}"{{CrudContains $val $item ` selected`}}>{{$item}}</option>
+                  {{range $num, $item := $element.Items}}
+                    <option value="{{$item.Key}}"{{if CrudContains $val $item.Key}} selected=""{{end}}>{{$item.Value}}</option>
                   {{end}}
                 </select>
               </div>

@@ -43,7 +43,7 @@
       <!-- LIST CARD -->
       <div class="ui cards">
         {{ range $irecord, $record := .Records }}
-        <a class="card raised" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+        <a class="card raised crud-card-view" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
           <div class="content">
             <div class="ui right floated">
               <i class="big {{$theme}} {{$view.IconName}} icon"></i>
@@ -85,7 +85,7 @@
             <!-- Fermeture de la card et ouverture d'une autre -->
           </div> <!-- end content card -->
         </a> <!-- end card -->
-        <a class="card raised" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+        <a class="card raised  crud-card-view" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
           <div class="content">
             <div class="ui right floated">
               <i class="big {{$theme}} {{$element.Params.IconName}} icon"></i>
@@ -100,7 +100,13 @@
               </div>
             </div>
             <div class="header">
-              <h4>{{$val}}</h4>
+              <h4>
+                {{if $element.Format}}
+                  {{CrudFormat $element.Format $val}}
+                {{else}}
+                  {{$val}}
+                {{end}}
+              </h4>
             </div>
             {{end}} <!-- end if type -->
             {{end}} <!-- end range $cols -->

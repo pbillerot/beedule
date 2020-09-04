@@ -42,8 +42,8 @@ func (c *loggedRouter) Prepare() {
 	} else {
 		c.Ctx.Redirect(302, "/crud/login")
 	}
-	c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
-	c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
+	// c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
+	// c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
 }
 
 // adminRouter implements global settings for all other routers.

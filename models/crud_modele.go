@@ -28,11 +28,17 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 
 	// Rédaction de la requête
 	var keys []string
+	joins := []string{}
 	for k, element := range elements {
 		if element.Type == "section" {
 			continue
 		}
-		keys = append(keys, k)
+		if element.Jointure.Join != "" {
+			keys = append(keys, element.Jointure.Column+" as "+k)
+			joins = append(joins, element.Jointure.Join)
+		} else {
+			keys = append(keys, tableid+"."+k)
+		}
 	}
 	skey := strings.Join(keys, ", ")
 
@@ -50,6 +56,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	var maps []orm.Params
 	_, err = o.Raw("SELECT " + skey +
 		" FROM " + tableid +
+		" " + strings.Join(joins, " ") +
 		where +
 		orderby).Values(&maps)
 	if err != nil {
@@ -63,11 +70,17 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 
 	// Rédaction de la requête
 	var keys []string
+	joins := []string{}
 	for k, element := range elements {
 		if element.Type == "section" {
 			continue
 		}
-		keys = append(keys, k)
+		if element.Jointure.Join != "" {
+			keys = append(keys, element.Jointure.Column+" as "+k)
+			joins = append(joins, element.Jointure.Join)
+		} else {
+			keys = append(keys, tableid+"."+k)
+		}
 	}
 	skey := strings.Join(keys, ", ")
 
@@ -76,6 +89,7 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 	var maps []orm.Params
 	num, err := o.Raw("SELECT "+skey+
 		" FROM "+tableid+
+		" "+strings.Join(joins, " ")+
 		" WHERE "+app.Tables[tableid].Key+" = ?", id).
 		Values(&maps)
 	if err != nil {

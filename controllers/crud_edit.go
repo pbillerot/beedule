@@ -48,16 +48,13 @@ func (c *CrudEditController) Get() {
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
 	}
-
-	// Remplissage records avec valeur par défaut
-	for ir, record := range records {
-		for key, val := range record {
-			if val == "" {
-				record[key] = elements[key].Value
-				records[ir] = record
-			}
-		}
+	if len(records) == 0 {
+		flash.Error("Article non trouvé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
 	}
+	// // Calcul des éléments (valeur par défaut comprise)
+	elements = computeElements(c.Controller, tableid, elements, records[0])
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]

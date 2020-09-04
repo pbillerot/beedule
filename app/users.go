@@ -45,7 +45,7 @@ var usersElements = types.Elements{
 		Type:       "tag",
 		LabelLong:  "Groupes",
 		LabelShort: "Groupes",
-		ItemsSQL:   "select group_id from groups order by group_id",
+		ItemsSQL:   "select group_id as key, group_id as value from groups order by group_id",
 	},
 	"_SECTION_MDP": {
 		Type:      "section",

@@ -41,45 +41,69 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			if app.Tables[tableid].Key == key && id != "" {
 				element.ReadOnly = true
 			}
+			if element.ComputeSQL != "" {
+				element.Protected = true
+			}
+			if element.ComputeSQL != "" {
+				element.Protected = true
+			}
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
-			// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL
-			if element.ClassSQL != "" {
-				element.Class = macroSQL(c, element.ClassSQL, orm.Params{}, app.Tables[tableid].AliasDB)
-			}
-			if element.ComputeSQL != "" {
-				element.ComputeSQL = macroSQL(c, element.ComputeSQL, orm.Params{}, app.Tables[tableid].AliasDB)
-			}
-			if element.DefaultSQL != "" {
-				element.DefaultSQL = macroSQL(c, element.DefaultSQL, orm.Params{}, app.Tables[tableid].AliasDB)
-			}
-			if element.ItemsSQL != "" {
-				sql := macro(c, element.ItemsSQL, orm.Params{})
-				records, err := models.CrudSQL(sql, app.Tables[tableid].AliasDB)
-				if err != nil {
-					beego.Error(err)
-				}
-				var list string
-				for _, record := range records {
-					for _, item := range record {
-						if list != "" {
-							list += ","
-						}
-						list += item.(string)
-					}
-				}
-				element.Items = list
-			}
-
-			if element.Value == "" && element.Default != "" {
-				element.Value = macro(c, element.Default, orm.Params{})
+			switch element.Type {
+			case "amount":
+				element.Format = "%3.2f €"
 			}
 			elements[key] = element
 		}
 		order++
 	}
 	return elements, cols
+}
+
+// computeElements calcule les éléments
+func computeElements(c beego.Controller, tableid string, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+
+	elements := types.Elements{}
+
+	for key, element := range viewOrFormElements {
+		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL
+		if element.ClassSQL != "" {
+			element.Class = macroSQL(c, element.ClassSQL, record, app.Tables[tableid].AliasDB)
+		}
+		if element.ComputeSQL != "" {
+			element.ComputeSQL = macroSQL(c, element.ComputeSQL, record, app.Tables[tableid].AliasDB)
+		}
+		if element.DefaultSQL != "" {
+			element.DefaultSQL = macroSQL(c, element.DefaultSQL, record, app.Tables[tableid].AliasDB)
+		}
+		if element.ItemsSQL != "" {
+			sql := macro(c, element.ItemsSQL, record)
+			recs, err := models.CrudSQL(sql, app.Tables[tableid].AliasDB)
+			if err != nil {
+				beego.Error(err)
+			}
+			var list []types.Item
+			for _, rec := range recs {
+				item := types.Item{}
+				for _, col := range rec {
+					if item.Key == "" {
+						item.Key = col.(string)
+					} else {
+						item.Value = col.(string)
+					}
+				}
+				list = append(list, item)
+			}
+			element.Items = list
+		}
+
+		if element.Value == "" && element.Default != "" {
+			element.Value = macro(c, element.Default, record)
+		}
+		elements[key] = element
+	}
+	return elements
 }
 
 // checkElement:
@@ -139,101 +163,6 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 	return err
 }
 
-// macro qui remplace les {$user} et les {key}
-func macro(c beego.Controller, in string, record orm.Params) (out string) {
-	out = in
-
-	if strings.Contains(out, "{$user}") {
-		out = strings.ReplaceAll(out, "{$user}", c.GetSession("Username").(string))
-	}
-	re := regexp.MustCompile(`.*{(.*)}.*`)
-	for strings.Contains(out, "{") {
-		match := re.FindStringSubmatch(in)
-		if len(match) > 0 {
-			key := match[1]
-			out = strings.ReplaceAll(out, "{"+key+"}", record[key].(string))
-		}
-	}
-
-	return
-}
-
-// macroSQL qui remplace les {$user} et les {key} et exécute le résultat en SQL
-func macroSQL(c beego.Controller, in string, record orm.Params, aliasDB string) (out string) {
-	out = ""
-	sql := macro(c, in, record)
-	ress, err := models.CrudSQL(sql, aliasDB)
-	if err != nil {
-		beego.Error(err)
-	}
-	for _, record := range ress {
-		for _, val := range record {
-			out = val.(string)
-		}
-	}
-
-	return
-}
-
-// Déclaration des fonctions utilisées dans les templates
-func init() {
-	beego.AddFuncMap("CrudSplit", CrudSplit)
-	beego.AddFuncMap("CrudContains", CrudContains)
-	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
-}
-
-// CrudSplit CrudSplit strings séparées par une virgule en slice
-func CrudSplit(in string, separateur string) (out []string) {
-	if in != "" {
-		out = strings.Split(in, separateur)
-	} else {
-		out = []string{}
-	}
-	return
-}
-
-// CrudContains as
-// list : "item1,item2,..."
-// in   : "item2"
-// ret  : valeur à retourner si OK
-func CrudContains(list string, in string, ret string) (out string) {
-	if strings.Contains(list, in) {
-		out = ret
-	} else {
-		out = ""
-	}
-	return
-}
-
-// CrudMacroSQL retourne le résulat de la requête avec macro
-// in: formule SQLite = select 'grey' where '{task_status}' = 'Terminée'
-func CrudMacroSQL(in string, record orm.Params, aliasDB string) (out string) {
-	out = ""
-	if in != "" {
-		sql := in
-		re := regexp.MustCompile(`.*{(.*)}.*`)
-		for strings.Contains(sql, "{") {
-			match := re.FindStringSubmatch(sql)
-			if len(match) > 0 {
-				key := match[1]
-				sql = strings.ReplaceAll(sql, "{"+key+"}", record[key].(string))
-			}
-		}
-		if sql != "" {
-			recs, err := models.CrudSQL(sql, aliasDB)
-			if err != nil {
-				beego.Error(err)
-			}
-			for _, rec := range recs {
-				for _, val := range rec {
-					out = val.(string)
-				}
-			}
-		}
-	}
-	return
-}
-
 // setContext remplissage du controller.Data
 func setContext(c beego.Controller) {
 	// Données de session dans le contextx
@@ -289,4 +218,44 @@ func setContext(c beego.Controller) {
 
 func setSession(c beego.Controller, param string, value string) {
 	c.SetSession(param, value)
+}
+
+// macro qui remplace les {$user} et les {key}
+func macro(c beego.Controller, in string, record orm.Params) (out string) {
+	out = in
+
+	if strings.Contains(out, "{$user}") {
+		out = strings.ReplaceAll(out, "{$user}", c.GetSession("Username").(string))
+	}
+	re := regexp.MustCompile(`.*{(.*)}.*`)
+	for strings.Contains(out, "{") {
+		match := re.FindStringSubmatch(in)
+		if len(match) > 0 {
+			key := match[1]
+			if val, ok := record[key]; ok {
+				out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
+			} else {
+				out = strings.ReplaceAll(out, "{"+key+"}", "")
+			}
+		}
+	}
+
+	return
+}
+
+// macroSQL qui remplace les {$user} et les {key} et exécute le résultat en SQL
+func macroSQL(c beego.Controller, in string, record orm.Params, aliasDB string) (out string) {
+	out = ""
+	sql := macro(c, in, record)
+	ress, err := models.CrudSQL(sql, aliasDB)
+	if err != nil {
+		beego.Error(err)
+	}
+	for _, record := range ress {
+		for _, val := range record {
+			out = val.(string)
+		}
+	}
+
+	return
 }

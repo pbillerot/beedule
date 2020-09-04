@@ -19,6 +19,14 @@ var Applications = map[string]types.Application{
 			{Tableid: "tasks", Viewid: "vall"},
 		},
 	},
+	"picsou": {
+		Title: "Picsou, pour bricoler sur la bourse",
+		Image: "/crud/static/img/picsou.jpg",
+		AppViews: []types.AppView{
+			{Tableid: "orders", Viewid: "vachat"},
+			{Tableid: "orders", Viewid: "vvente"},
+		},
+	},
 	"filebrowser": {
 		Title: "Gestionnaire de fichiers",
 		Image: "/crud/static/img/filebrowser.svg",
