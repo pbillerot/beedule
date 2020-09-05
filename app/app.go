@@ -57,3 +57,8 @@ var Tables = types.Tables{
 	"groups": Groups,
 	"orders": Orders,
 }
+
+// Params paramètres globaux aux applications
+var Params = map[string]string{
+	"__cout": "0.0047",
+}

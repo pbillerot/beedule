@@ -24,22 +24,7 @@
           <img src="{{$app.Image}}">
         </a>
       </div>
-      {{$lenAppViews := len $app.AppViews }}
-      {{if (gt $lenAppViews 1)}}
-      <div class="ui dropdown item">
-        {{$view.Title}}
-        <i class="dropdown icon"></i>
-        <div class="menu">
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
-          <a class="item" href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">{{$v.Title}}</a>
-          {{end}}
-        </div>
-      </div>
-      {{else}}
-      <div class="header item">{{$view.Title}}</div>
-      {{end}}
+      <div class="header item">{{$app.Title}}</div>
       <div class="right menu">
         <div class="ui icon item">
           <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
@@ -68,13 +53,37 @@
   <main>
     <div class="ui container">
       {{template "_crud_flash.html" .}}
+      {{$lenAppViews := len $app.AppViews }}
+      {{if (gt $lenAppViews 1)}}
+      <div class="ui pointing compact menu">
+        {{ range $iv, $appView := $app.AppViews }}
+        {{$t := index $portail.Tables $appView.Tableid }}
+        {{$v := index $t.Views $appView.Viewid }}
+        <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} active{{end}}"
+          href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+          <i class="{{$v.IconName}} icon"></i>
+          {{$v.Title}}
+        </a>
+        {{end}}
+        <!-- end range appViewq-->
+        <!-- Recherche -->
+        <div class="ui search item" style="display: none" id="crud-search">
+          <div class="ui transparent icon input">
+            <input type="text" id="crud-search-input" placeholder="Recherche...">
+            <i class="search icon"></i>
+          </div>
+        </div>
+      </div>
+      {{else}}
       <!-- Recherche -->
       <div style="display: none" id="crud-search">
         <div class="ui icon input">
-          <input type="text" id="crud-search-input" placeholder="Search...">
+          <input type="text" id="crud-search-input" placeholder="Recherche...">
           <i class="search icon"></i>
         </div>
       </div>
+      {{end}}
+      <!-- end if menu -->
       <!-- LIST TABLE -->
       <table class="ui unstackable collapsing sortable selectable celled table" data-role="table"
         data-mode="columntoggle">
@@ -103,23 +112,28 @@
             {{ $element := index $elements $key }}
             {{if (ne $element.Hide true)}}
             <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
-              {{if (eq $element.Type "combo")}} <!-- combo -->
-                {{CrudItem $element.Items $val}} ({{$val}})
-              {{else if (eq $element.Type "checkbox")}} <!-- checkbox -->
+              {{if (eq $element.Type "combo")}}
+              <!-- combo -->
+              {{CrudItem $element.Items $val}} ({{$val}})
+              {{else if (eq $element.Type "checkbox")}}
+              <!-- checkbox -->
               {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
-              {{else if (eq $element.Type "password")}} <!-- password -->
+              {{else if (eq $element.Type "password")}}
+              <!-- password -->
               ***
-              {{else if (eq $element.Type "tag")}} <!-- tag -->
-                {{$arr := CrudSplit $val ","}}
-                {{range $i, $item := $arr}}
-                <div class="ui small label">{{$item}}</div>
-                {{end}}
-              {{else}} <!-- autres -->
-                {{if $element.Format}}
-                  {{CrudFormat $element.Format $val}}
-                {{else}}
-                  {{$val}}
-                {{end}}
+              {{else if (eq $element.Type "tag")}}
+              <!-- tag -->
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui small label">{{$item}}</div>
+              {{end}}
+              {{else}}
+              <!-- autres -->
+              {{if $element.Format}}
+              {{CrudFormat $element.Format $val}}
+              {{else}}
+              {{$val}}
+              {{end}}
               {{end}}
             </td>
             {{end}}

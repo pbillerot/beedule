@@ -44,9 +44,6 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			if element.ComputeSQL != "" {
 				element.Protected = true
 			}
-			if element.ComputeSQL != "" {
-				element.Protected = true
-			}
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
@@ -62,7 +59,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 }
 
 // computeElements calcule les éléments
-func computeElements(c beego.Controller, tableid string, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+func computeElements(c beego.Controller, computeValue bool, tableid string, viewOrFormElements types.Elements, record orm.Params) types.Elements {
 
 	elements := types.Elements{}
 
@@ -70,12 +67,6 @@ func computeElements(c beego.Controller, tableid string, viewOrFormElements type
 		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL
 		if element.ClassSQL != "" {
 			element.Class = macroSQL(c, element.ClassSQL, record, app.Tables[tableid].AliasDB)
-		}
-		if element.ComputeSQL != "" {
-			element.ComputeSQL = macroSQL(c, element.ComputeSQL, record, app.Tables[tableid].AliasDB)
-		}
-		if element.DefaultSQL != "" {
-			element.DefaultSQL = macroSQL(c, element.DefaultSQL, record, app.Tables[tableid].AliasDB)
 		}
 		if element.ItemsSQL != "" {
 			sql := macro(c, element.ItemsSQL, record)
@@ -97,9 +88,16 @@ func computeElements(c beego.Controller, tableid string, viewOrFormElements type
 			}
 			element.Items = list
 		}
-
-		if element.Value == "" && element.Default != "" {
-			element.Value = macro(c, element.Default, record)
+		if computeValue {
+			if element.ComputeSQL != "" {
+				element.ComputeSQL = macroSQL(c, element.ComputeSQL, record, app.Tables[tableid].AliasDB)
+			}
+			if element.DefaultSQL != "" {
+				element.DefaultSQL = macroSQL(c, element.DefaultSQL, record, app.Tables[tableid].AliasDB)
+			}
+			if element.Value == "" && element.Default != "" {
+				element.Value = macro(c, element.Default, record)
+			}
 		}
 		elements[key] = element
 	}
@@ -235,7 +233,10 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 			if val, ok := record[key]; ok {
 				out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
 			} else {
-				out = strings.ReplaceAll(out, "{"+key+"}", "")
+				if strings.Contains(key, "__") {
+					// Le champ est un paramètre global
+					out = strings.ReplaceAll(out, "{"+key+"}", app.Params[key])
+				}
 			}
 		}
 	}

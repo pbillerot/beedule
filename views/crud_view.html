@@ -51,7 +51,16 @@
             {{ range $num, $key := $cols }}
             {{ $val := index $record $key }}
             {{ $element := index $elements $key }}
-            {{ if (eq $element.Type "checkbox")}}
+            {{if (eq $element.Type "combo")}}
+              <div class="description">
+                <div class="meta">
+                  <span>{{$element.LabelLong}}</span>
+                </div>
+              </div>
+              <div class="header">
+                <h4>{{CrudItem $element.Items $val}} ({{$val}})</h4>
+              </div>
+            {{else if (eq $element.Type "checkbox")}}
             <div class="description">&nbsp;</div>
             <div class="header">
               <h4>

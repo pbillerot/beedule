@@ -20,15 +20,20 @@ var ordersViews = types.Views{
 		IconName:  "folder open outline",
 		FormAdd:   "faddbuy",
 		FormEdit:  "feditbuy",
+		FormView:  "fviewbuy",
 		Deletable: true,
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
 		Elements: types.Elements{
-			"orders_id":     {Order: 1},
-			"orders_ptf_id": {Order: 10},
-			"orders_order":  {Order: 20},
-			"orders_quote":  {Order: 22},
-			"orders_time":   {Order: 30},
+			"orders_id":         {Order: 1},
+			"orders_ptf_id":     {Order: 10},
+			"orders_order":      {Order: 20},
+			"orders_time":       {Order: 30},
+			"orders_quantity":   {Order: 40},
+			"orders_buy":        {Order: 50},
+			"orders_cost":       {Order: 60},
+			"orders_cost_price": {Order: 70},
+			"orders_debit":      {Order: 80},
 		},
 	},
 	"vvente": {
@@ -49,6 +54,26 @@ var ordersViews = types.Views{
 	},
 }
 var ordersForms = types.Forms{
+	"fviewbuy": {
+		Title: "Ordre d'achat",
+		Elements: types.Elements{
+			"orders_id":                {Order: 1},
+			"orders_ptf_id":            {Order: 10},
+			"orders_order":             {Order: 20},
+			"orders_time":              {Order: 30},
+			"orders_quantity":          {Order: 40},
+			"orders_buy":               {Order: 50},
+			"orders_cost":              {Order: 60},
+			"orders_cost_price":        {Order: 70},
+			"orders_debit":             {Order: 80},
+			"_section_achat_situation": {Order: 100},
+			// "_optimum":                 {Order: 110},
+			"orders_quote": {Order: 120},
+			"orders_gain":  {Order: 130},
+			"orders_gainp": {Order: 140},
+			"orders_rem":   {Order: 150},
+		},
+	},
 	"faddbuy": {
 		Title: "Ajout d'un ordre d'achat",
 		Elements: types.Elements{
@@ -72,6 +97,11 @@ var ordersForms = types.Forms{
 }
 
 var ordersElements = types.Elements{
+	"_section_achat_situation": {
+		Type:       "section",
+		LabelLong:  "Situation",
+		LabelShort: "Situation",
+	},
 	"orders_id": {
 		Type:       "number",
 		LabelLong:  "N° enregistrement",
@@ -87,7 +117,7 @@ var ordersElements = types.Elements{
 		Type:       "text",
 		LabelLong:  "Code ISIN",
 		LabelShort: "ISIN",
-		ComputeSQL: "SELECT ptf_isin From ptf where ptf_id = '{orders_ptf_id}'",
+		// ComputeSQL: "SELECT ptf_isin From ptf where ptf_id = '{orders_ptf_id}'",
 		Jointure: types.Jointure{
 			Join:   "LEFT OUTER JOIN ptf on ptf.ptf_id = orders.orders_ptf_id",
 			Column: "ptf_isin",
@@ -124,10 +154,10 @@ var ordersElements = types.Elements{
 		Type:       "amount",
 		LabelLong:  "Cours du jour",
 		LabelShort: "Cours J",
-		ComputeSQL: "select close from quotes where id = '{orders_ptf_id}' and date = (select max(date) from quotes where id = '{orders_ptf_id}')",
+		// ComputeSQL: "select close from quotes where id = '{orders_ptf_id}' and date = (select max(date) from quotes where id = '{orders_ptf_id}')",
 	},
 	"orders_quantity": {
-		Type:       "int",
+		Type:       "number",
 		LabelLong:  "Quantité",
 		LabelShort: "Qt",
 		Refresh:    true,
@@ -150,36 +180,36 @@ var ordersElements = types.Elements{
 		LabelLong:  "Prix de revient",
 		LabelShort: "Revient",
 		ColWith:    80,
-		ComputeSQL: "select ({orders_buy} * {orders_quantity} + {orders_buy} * {orders_quantity} * ({__cost}*2))/{orders_quantity}",
+		// ComputeSQL: "({orders_buy} * {orders_quantity} + {orders_buy} * {orders_quantity} * ({__cost}*2))/{orders_quantity}",
 	},
 	"orders_cost": {
 		Type:       "amount",
 		LabelLong:  "Frais",
 		LabelShort: "Frais",
 		ColWith:    60,
-		ComputeSQL: "select {orders_buy} * {orders_quantity} * {__cost}",
+		// ComputeSQL: "orders_buy * orders_quantity * {__cost}",
 	},
 	"orders_debit": {
 		Type:       "amount",
 		LabelLong:  "Débit",
 		LabelShort: "Débit",
 		ColWith:    80,
-		ComputeSQL: "select {orders_buy} * {orders_quantity} + {orders_buy} * {orders_quantity} * {__cost}",
+		// ComputeSQL: "select {orders_buy} * {orders_quantity} + {orders_buy} * {orders_quantity} * {__cost}",
 	},
 	"orders_credit": {
 		Type:       "amount",
 		LabelLong:  "Crédit",
 		LabelShort: "Crédit",
 		ColWith:    80,
-		ComputeSQL: "select {orders_sell} * {orders_quantity} + {orders_sell} * {orders_quantity} * {__cost}",
+		// ComputeSQL: "select {orders_sell} * {orders_quantity} + {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_gain": {
 		Type:       "amount",
 		LabelLong:  "Gain",
 		LabelShort: "Gain",
 		ColWith:    80,
-		ComputeSQL: "select {orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}",
-		ClassSQL:   "select case when orders_gain < 0 then '#FF0000' else '#006600' end",
+		// ComputeSQL: "select {orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}",
+		ClassSQL: "select case when orders_gain < 0 then '#FF0000' else '#006600' end",
 	},
 	"orders_gainp": {
 		Type:       "float",
@@ -187,8 +217,8 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		Format:     "%3.2f %",
 		ColWith:    80,
-		ComputeSQL: "select ( ({orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
-		ClassSQL:   "select case when orders_gainp < 0 then '#FF0000' else '#006600' end",
+		// ComputeSQL: "select ( ({orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
+		ClassSQL: "select case when orders_gainp < 0 then '#FF0000' else '#006600' end",
 	},
 	"orders_sell_cost": {
 		Type:       "float",
@@ -196,7 +226,7 @@ var ordersElements = types.Elements{
 		LabelShort: "Frais",
 		Format:     "%3.2f %",
 		ColWith:    60,
-		ComputeSQL: "select {orders_buy} * {orders_quantity} * {__cost} + {orders_sell} * {orders_quantity} * {__cost}",
+		// ComputeSQL: "select {orders_buy} * {orders_quantity} * {__cost} + {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_sell_gain": {
 		Type:       "float",
@@ -204,8 +234,8 @@ var ordersElements = types.Elements{
 		LabelShort: "Gain",
 		Format:     "%3.2f %",
 		ColWith:    80,
-		ComputeSQL: "select {orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}",
-		ClassSQL:   "select case when orders_sell_gain < 0 then '#FF0000' else '#006600' end",
+		// ComputeSQL: "select {orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}",
+		ClassSQL: "select case when orders_sell_gain < 0 then '#FF0000' else '#006600' end",
 	},
 	"orders_sell_gainp": {
 		Type:       "float",
@@ -213,14 +243,14 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		Format:     "%3.2f %",
 		ColWith:    80,
-		ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
-		ClassSQL:   "select case when orders_sell_gainp < 0 then '#FF0000' else '#006600' end",
+		// ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
+		ClassSQL: "select case when orders_sell_gainp < 0 then '#FF0000' else '#006600' end",
 	},
 	"_optimum": {
 		Type:       "amount",
 		LabelLong:  "Optimum",
 		LabelShort: "Optimum",
-		ComputeSQL: "select {orders_cost_price} + {orders_cost_price} * 0.03",
+		// ComputeSQL: "select {orders_cost_price} + {orders_cost_price} * 0.03",
 	},
 	"_fsell": {
 		Type:       "form",

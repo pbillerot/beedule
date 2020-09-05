@@ -55,7 +55,7 @@ func (c *CrudListController) Get() {
 		// return
 	}
 	// Calcul des éléments
-	elements = computeElements(c.Controller, tableid, elements, records[0])
+	elements = computeElements(c.Controller, false, tableid, elements, records[0])
 
 	// Remplissage du contexte pour le template
 	setContext(c.Controller)

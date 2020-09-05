@@ -54,7 +54,7 @@ func (c *CrudEditController) Get() {
 		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
 	}
 	// // Calcul des éléments (valeur par défaut comprise)
-	elements = computeElements(c.Controller, tableid, elements, records[0])
+	elements = computeElements(c.Controller, false, tableid, elements, records[0])
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
