@@ -31,9 +31,11 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	joins := []string{}
 	for k, element := range elements {
 		if strings.HasPrefix(k, "_") {
+			keys = append(keys, "'' as "+k)
 			continue
 		}
 		if element.Type == "section" {
+			keys = append(keys, "'' as "+k)
 			continue
 		}
 		if element.Jointure.Join != "" {
@@ -57,11 +59,12 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	o := orm.NewOrm()
 	o.Using(app.Tables[tableid].AliasDB)
 	var maps []orm.Params
-	_, err = o.Raw("SELECT " + skey +
+	sql := "SELECT " + skey +
 		" FROM " + tableid +
 		" " + strings.Join(joins, " ") +
 		where +
-		orderby).Values(&maps)
+		orderby
+	_, err = o.Raw(sql).Values(&maps)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -76,9 +79,11 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 	joins := []string{}
 	for k, element := range elements {
 		if strings.HasPrefix(k, "_") {
+			keys = append(keys, "'' as "+k)
 			continue
 		}
 		if element.Type == "section" {
+			keys = append(keys, "'' as "+k)
 			continue
 		}
 		if element.Jointure.Join != "" {
@@ -93,14 +98,16 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 	o := orm.NewOrm()
 	o.Using(app.Tables[tableid].AliasDB)
 	var maps []orm.Params
-	num, err := o.Raw("SELECT "+skey+
-		" FROM "+tableid+
-		" "+strings.Join(joins, " ")+
-		" WHERE "+app.Tables[tableid].Key+" = ?", id).
+	sql := "SELECT " + skey +
+		" FROM " + tableid +
+		" " + strings.Join(joins, " ") +
+		" WHERE " + app.Tables[tableid].Key + " = ?"
+	num, err := o.Raw(sql, id).
 		Values(&maps)
 	if err != nil {
 		beego.Error(err)
 	} else if num == 0 {
+		beego.Error(app.Tables[tableid].AliasDB, sql)
 		err = errors.New("Article non trouvé")
 	}
 	return maps, err
@@ -140,6 +147,7 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 	o.Using(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
+		beego.Error(app.Tables[tableid].AliasDB, sql)
 		beego.Error(err)
 	}
 	return err
@@ -178,6 +186,7 @@ func CrudInsert(tableid string, elements types.Elements) error {
 	o.Using(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
+		beego.Error(app.Tables[tableid].AliasDB, sql)
 		beego.Error(err)
 	}
 	return err
@@ -203,6 +212,7 @@ func CrudSQL(sql string, aliasDB string) ([]orm.Params, error) {
 	var maps []orm.Params
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
+		beego.Error(aliasDB, sql)
 		beego.Error(err)
 	}
 	return maps, err
@@ -215,6 +225,7 @@ func CrudExec(sql string, aliasDB string) error {
 	o.Using(aliasDB)
 	_, err := o.Raw(sql).Exec()
 	if err != nil {
+		beego.Error(aliasDB, sql)
 		beego.Error(err)
 	}
 	return err

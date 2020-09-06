@@ -47,9 +47,39 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
+			// Attributs par défaut en fonction du type
 			switch element.Type {
 			case "amount":
-				element.Format = "%3.2f €"
+				if element.Format == "" {
+					element.Format = "%3.2f €"
+				}
+				if element.ColAlign == "" {
+					element.ColAlign = "right"
+				}
+			case "count":
+				if element.ColAlign == "" {
+					element.ColAlign = "center"
+				}
+			case "float":
+				if element.ColAlign == "" {
+					element.ColAlign = "right"
+				}
+			case "month":
+				if element.ColAlign == "" {
+					element.ColAlign = "center"
+				}
+			case "percent":
+				if element.ColAlign == "" {
+					element.ColAlign = "right"
+				}
+			case "number":
+				if element.ColAlign == "" {
+					element.ColAlign = "right"
+				}
+			case "week":
+				if element.ColAlign == "" {
+					element.ColAlign = "center"
+				}
 			}
 			elements[key] = element
 		}
@@ -66,11 +96,11 @@ func computeElements(c beego.Controller, computeValue bool, tableid string, view
 	for key, element := range viewOrFormElements {
 		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL
 		if element.ClassSQL != "" {
-			element.Class = macroSQL(c, element.ClassSQL, record, app.Tables[tableid].AliasDB)
+			element.Class = macroSQL(c, element.ClassSQL, record)
 		}
 		if element.ItemsSQL != "" {
 			sql := macro(c, element.ItemsSQL, record)
-			recs, err := models.CrudSQL(sql, app.Tables[tableid].AliasDB)
+			recs, err := models.CrudSQL(sql, "default")
 			if err != nil {
 				beego.Error(err)
 			}
@@ -90,10 +120,10 @@ func computeElements(c beego.Controller, computeValue bool, tableid string, view
 		}
 		if computeValue {
 			if element.ComputeSQL != "" {
-				element.ComputeSQL = macroSQL(c, element.ComputeSQL, record, app.Tables[tableid].AliasDB)
+				element.ComputeSQL = macroSQL(c, element.ComputeSQL, record)
 			}
 			if element.DefaultSQL != "" {
-				element.DefaultSQL = macroSQL(c, element.DefaultSQL, record, app.Tables[tableid].AliasDB)
+				element.DefaultSQL = macroSQL(c, element.DefaultSQL, record)
 			}
 			if element.Value == "" && element.Default != "" {
 				element.Value = macro(c, element.Default, record)
@@ -163,13 +193,7 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 
 // setContext remplissage du controller.Data
 func setContext(c beego.Controller) {
-	// Données de session dans le contextx
-	type Session struct {
-		LoggedIn bool
-		Username string
-		IsAdmin  bool
-	}
-	session := Session{}
+	session := types.Session{}
 	if c.GetSession("LoggedIn") != nil {
 		session.LoggedIn = c.GetSession("LoggedIn").(bool)
 	}
@@ -181,18 +205,7 @@ func setContext(c beego.Controller) {
 	}
 	c.Data["Session"] = &session
 
-	// Paramètres de config dans le contexte
-	type Config struct {
-		Appname string
-		Appnote string
-		Icone   string
-		Site    string
-		Email   string
-		Author  string
-		Version string
-		Theme   string
-	}
-	config := Config{}
+	config := types.Config{}
 	config.Appname = beego.AppConfig.String("appname")
 	config.Appnote = beego.AppConfig.String("appnote")
 	config.Icone = beego.AppConfig.String("icone")
@@ -244,8 +257,25 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 	return
 }
 
-// macroSQL qui remplace les {$user} et les {key} et exécute le résultat en SQL
-func macroSQL(c beego.Controller, in string, record orm.Params, aliasDB string) (out string) {
+// macroSQL qui remplace les {$user} et les {key} et exécute le résultat en SQL sur l'alias default
+func macroSQL(c beego.Controller, in string, record orm.Params) (out string) {
+	out = ""
+	sql := macro(c, in, record)
+	ress, err := models.CrudSQL(sql, "default")
+	if err != nil {
+		beego.Error(err)
+	}
+	for _, record := range ress {
+		for _, val := range record {
+			out = val.(string)
+		}
+	}
+
+	return
+}
+
+// requeteSQL qui remplace les {$user} et les {key} et exécute le résultat en SQL
+func requeteSQL(c beego.Controller, in string, record orm.Params, aliasDB string) (out string) {
 	out = ""
 	sql := macro(c, in, record)
 	ress, err := models.CrudSQL(sql, aliasDB)

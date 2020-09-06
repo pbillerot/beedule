@@ -24,6 +24,7 @@ var ordersViews = types.Views{
 		Deletable: true,
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
+		ClassSQL:  "select case when {orders_cost_price} + {orders_cost_price} * {__optimum} < {orders_quote} then 'positive' when {orders_cost_price} < {orders_quote} then 'blue' else 'negative' end",
 		Elements: types.Elements{
 			"orders_id":         {Order: 1},
 			"orders_ptf_id":     {Order: 10},
@@ -32,8 +33,13 @@ var ordersViews = types.Views{
 			"orders_quantity":   {Order: 40},
 			"orders_buy":        {Order: 50},
 			"orders_cost":       {Order: 60},
-			"orders_cost_price": {Order: 70},
-			"orders_debit":      {Order: 80},
+			"orders_debit":      {Order: 70},
+			"orders_cost_price": {Order: 80},
+			"orders_quote":      {Order: 90},
+			"_optimum":          {Order: 100},
+			"orders_gain":       {Order: 110},
+			"orders_gainp":      {Order: 120},
+			"orders_rem":        {Order: 130},
 		},
 	},
 	"vvente": {
@@ -106,6 +112,7 @@ var ordersElements = types.Elements{
 		Type:       "number",
 		LabelLong:  "N° enregistrement",
 		LabelShort: "N°",
+		ColAlign:   "center",
 	},
 	"orders_ptf_id": {
 		Type:       "combo",
@@ -208,8 +215,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Gain",
 		LabelShort: "Gain",
 		ColWith:    80,
-		// ComputeSQL: "select {orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}",
-		ClassSQL: "select case when orders_gain < 0 then '#FF0000' else '#006600' end",
+		ComputeSQL: "select {orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}",
 	},
 	"orders_gainp": {
 		Type:       "float",
@@ -217,8 +223,7 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		Format:     "%3.2f %",
 		ColWith:    80,
-		// ComputeSQL: "select ( ({orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
-		ClassSQL: "select case when orders_gainp < 0 then '#FF0000' else '#006600' end",
+		ComputeSQL: "select ( ({orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
 	},
 	"orders_sell_cost": {
 		Type:       "float",
@@ -244,13 +249,12 @@ var ordersElements = types.Elements{
 		Format:     "%3.2f %",
 		ColWith:    80,
 		// ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
-		ClassSQL: "select case when orders_sell_gainp < 0 then '#FF0000' else '#006600' end",
 	},
 	"_optimum": {
 		Type:       "amount",
 		LabelLong:  "Optimum",
 		LabelShort: "Optimum",
-		// ComputeSQL: "select {orders_cost_price} + {orders_cost_price} * 0.03",
+		ComputeSQL: "select {orders_cost_price} + {orders_cost_price} * {__optimum}",
 	},
 	"_fsell": {
 		Type:       "form",

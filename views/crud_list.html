@@ -1,4 +1,5 @@
 <!-- vusers.html -->
+{{$session := .Session}}
 {{$appid := .AppId}}
 {{$portail := .Portail}}
 {{$app := .Application}}
@@ -105,35 +106,35 @@
         <tbody id="bee-table">
           <!-- LOOP $RECORD -->
           {{ range $irecord, $record := .Records }}
-          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $table.AliasDB}}"
+          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
             data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
             {{ range $num, $key := $cols }}
-            {{ $val := index $record $key }}
             {{ $element := index $elements $key }}
+            {{ $val := CrudIndex $record $key $element $session}}
             {{if (ne $element.Hide true)}}
             <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
               {{if (eq $element.Type "combo")}}
-              <!-- combo -->
-              {{CrudItem $element.Items $val}} ({{$val}})
+                <!-- combo -->
+                {{CrudItem $element.Items $val}} ({{$val}})
               {{else if (eq $element.Type "checkbox")}}
-              <!-- checkbox -->
-              {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
-              {{else if (eq $element.Type "password")}}
-              <!-- password -->
-              ***
+                <!-- checkbox -->
+                {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
+                {{else if (eq $element.Type "password")}}
+                <!-- password -->
+                ***
               {{else if (eq $element.Type "tag")}}
-              <!-- tag -->
-              {{$arr := CrudSplit $val ","}}
-              {{range $i, $item := $arr}}
-              <div class="ui small label">{{$item}}</div>
-              {{end}}
+                <!--   tag -->
+                {{$arr := CrudSplit $val ","}}
+                {{range $i, $item := $arr}}
+                <div c  lass="ui small label">{{$item}}</div>
+                {{end}}
               {{else}}
-              <!-- autres -->
-              {{if $element.Format}}
-              {{CrudFormat $element.Format $val}}
-              {{else}}
-              {{$val}}
-              {{end}}
+                <!-- autres -->
+                {{if and $element.Format $val}}
+                  {{CrudFormat $element.Format $val}}
+                {{else}}
+                  {{$val}}
+                {{end}}
               {{end}}
             </td>
             {{end}}

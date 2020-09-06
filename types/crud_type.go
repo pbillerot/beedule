@@ -48,7 +48,7 @@ type Element struct {
 	Args         Arg
 	ColAlign     string // TODO
 	Class        string // TODO Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL     string // TODO SQL pour alimenter Class
+	ClassSQL     string // TODO SQL pour alimenter Class error warning info green blue
 	ColWith      int    // TODO
 	Default      string // Valeur par défaut (macro possible)
 	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
@@ -101,7 +101,7 @@ type View struct {
 	FormAdd        string
 	FormEdit       string
 	FormView       string
-	FooterSQL      string // TODO à exploiter
+	FooterSQL      string // requête sur la table courante
 	Hide           bool   // TODO
 	IconName       string
 	Info           string
@@ -173,4 +173,23 @@ func (element *Element) HashPassword() string {
 		beego.Error(err)
 	}
 	return string(bytes)
+}
+
+// Config Paramètres de config dans le contexte
+type Config struct {
+	Appname string
+	Appnote string
+	Icone   string
+	Site    string
+	Email   string
+	Author  string
+	Version string
+	Theme   string
+}
+
+// Session Données de session dans le contextx
+type Session struct {
+	LoggedIn bool
+	Username string
+	IsAdmin  bool
 }

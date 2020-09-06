@@ -40,7 +40,7 @@ func (c *CrudListController) Get() {
 		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
 	}
 	if view.FooterSQL != "" {
-		view.FooterSQL = macroSQL(c.Controller, view.OrderBy, orm.Params{}, app.Tables[tableid].AliasDB)
+		view.FooterSQL = requeteSQL(c.Controller, view.OrderBy, orm.Params{}, app.Tables[tableid].AliasDB)
 	}
 	if view.Where != "" {
 		view.Where = macro(c.Controller, view.Where, orm.Params{})
@@ -54,7 +54,7 @@ func (c *CrudListController) Get() {
 		// c.Ctx.Redirect(302, "/crud")
 		// return
 	}
-	// Calcul des éléments
+	// Calcul des éléments hors values
 	elements = computeElements(c.Controller, false, tableid, elements, records[0])
 
 	// Remplissage du contexte pour le template
