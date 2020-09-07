@@ -34,10 +34,6 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 			keys = append(keys, "'' as "+k)
 			continue
 		}
-		if element.Type == "section" {
-			keys = append(keys, "'' as "+k)
-			continue
-		}
 		if element.Jointure.Column != "" {
 			keys = append(keys, element.Jointure.Column+" as "+k)
 			joins = append(joins, element.Jointure.Join)
@@ -79,10 +75,6 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 	joins := []string{}
 	for k, element := range elements {
 		if strings.HasPrefix(k, "_") {
-			keys = append(keys, "'' as "+k)
-			continue
-		}
-		if element.Type == "section" {
 			keys = append(keys, "'' as "+k)
 			continue
 		}
@@ -129,9 +121,6 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 		if element.Type == "counter" {
 			continue
 		}
-		if element.Type == "section" {
-			continue
-		}
 		if len(sql) == 0 {
 			sql += "UPDATE " + tableid + " SET "
 		} else {
@@ -166,9 +155,6 @@ func CrudInsert(tableid string, elements types.Elements) error {
 			continue
 		}
 		if element.Type == "counter" {
-			continue
-		}
-		if element.Type == "section" {
 			continue
 		}
 		if !bstart {

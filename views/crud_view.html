@@ -1,4 +1,5 @@
 <!-- vusers.html -->
+{{$session := .Session}}
 {{$appid := .AppId}}
 {{$portail := .Portail}}
 {{$app := .Application}}
@@ -71,6 +72,17 @@
                 {{end}}
               </h4>
             </div>
+            {{else if (eq $element.Type "image")}}
+            {{$url := CrudMacro $element.Params.Path $record $session}}
+            <!-- Fermeture de la card et ouverture d'une autre -->
+          </div> <!-- end content card -->
+        </a> <!-- end card -->
+        <a class="card raised  crud-card-view" href="{{$url}}">
+          <div class="ui image">
+            <img src="{{$url}}">
+          </div>
+          <div class="content">
+              <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
             {{else if (eq $element.Type "password")}}
             <div class="description">
               <div class="meta">

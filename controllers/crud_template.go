@@ -24,15 +24,16 @@ func init() {
 	beego.AddFuncMap("CrudFormat", CrudFormat)
 	beego.AddFuncMap("CrudItem", CrudItem)
 	beego.AddFuncMap("CrudIndex", CrudIndex)
+	beego.AddFuncMap("CrudMacro", CrudMacro)
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
 }
 
 // CrudIndex équivalent de index mais avec computeSQL en +
-func CrudIndex(record orm.Params, key string, element types.Element, session types.Session, app types.Application) (out string) {
+func CrudIndex(record orm.Params, key string, element types.Element, session types.Session) (out string) {
 	out = ""
 	if element.ComputeSQL != "" {
-		out = CrudMacroSQL(element.ComputeSQL, record, session, app)
+		out = CrudMacroSQL(element.ComputeSQL, record, session)
 	} else {
 		if val, ok := record[key]; ok {
 			if reflect.ValueOf(val).IsValid() {
@@ -93,27 +94,22 @@ func CrudItem(items []types.Item, in string) (out string) {
 	return
 }
 
-// CrudMacroSQL retourne le résulat de la requête avec macro
-// in: formule SQLite = select 'grey' where '{task_status}' = 'Terminée'
-func CrudMacroSQL(in string, record orm.Params, session types.Session, application types.Application) (out string) {
-	out = ""
+// CrudMacro remplace les macros
+func CrudMacro(in string, record orm.Params, session types.Session) (out string) {
+	out = in
 	if in != "" {
-		sql := in
 		if strings.Contains(out, "{$user}") {
-			sql = strings.ReplaceAll(sql, "{$user}", session.Username)
-		}
-		if strings.Contains(out, "{$datapath}") {
-			out = strings.ReplaceAll(out, "{$datapath}", application.DataPath)
+			out = strings.ReplaceAll(out, "{$user}", session.Username)
 		}
 		re := regexp.MustCompile(`.*{(.*)}.*`)
-		for strings.Contains(sql, "{") {
-			match := re.FindStringSubmatch(sql)
+		for strings.Contains(out, "{") {
+			match := re.FindStringSubmatch(out)
 			if len(match) > 0 {
 				key := match[1]
 				if strings.Contains(key, "__") {
 					// Le champ est un paramètre global
 					if p, ok := app.Params[key]; ok {
-						sql = strings.ReplaceAll(sql, "{"+key+"}", p)
+						out = strings.ReplaceAll(out, "{"+key+"}", p)
 					} else {
 						labelError := fmt.Sprintf("Rubrique [%s] non trouvée", key)
 						beego.Error(labelError)
@@ -124,7 +120,7 @@ func CrudMacroSQL(in string, record orm.Params, session types.Session, applicati
 				}
 				if val, ok := record[key]; ok {
 					if val != nil {
-						sql = strings.ReplaceAll(sql, "{"+key+"}", val.(string))
+						out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
 					} else {
 						labelError := fmt.Sprintf("Rubrique [%s] NULL", key)
 						beego.Error(labelError)
@@ -138,21 +134,29 @@ func CrudMacroSQL(in string, record orm.Params, session types.Session, applicati
 					break
 				}
 			} else {
-				labelError := fmt.Sprintf("Syntaxe incorrecte [%s]", sql)
+				labelError := fmt.Sprintf("Syntaxe incorrecte [%s]", out)
 				beego.Error(labelError)
 				err = errors.New(labelError)
 				break
 			}
 		}
-		if err == nil && sql != "" {
-			recs, err := models.CrudSQL(sql, "default")
-			if err != nil {
-				beego.Error(err)
-			}
-			for _, rec := range recs {
-				for _, val := range rec {
-					out = val.(string)
-				}
+	}
+	return
+}
+
+// CrudMacroSQL retourne le résulat de la requête avec macro
+// in: formule SQLite = select 'grey' where '{task_status}' = 'Terminée'
+func CrudMacroSQL(in string, record orm.Params, session types.Session) (out string) {
+	out = ""
+	sql := CrudMacro(in, record, session)
+	if sql != "" {
+		recs, err := models.CrudSQL(sql, "default")
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, rec := range recs {
+			for _, val := range rec {
+				out = val.(string)
 			}
 		}
 	}

@@ -25,16 +25,22 @@ func init() {
 	for _, table := range app.Tables {
 		alias := table.AliasDB
 		section, _ := beego.AppConfig.GetSection(alias)
+		// connecteur db
 		drivertype, _ := strconv.Atoi(section["drivertype"])
 		drivername := section["drivername"]
 		datasource := section["datasource"]
+		dataurl := "/crud/data/" + alias
+		datapath := section["datapath"]
 		if _, ok := aliass[alias]; ok == false {
 			aliass[alias] = true
 			orm.RegisterDriver(drivername, orm.DriverType(drivertype))
 			orm.RegisterDataBase(alias, drivername, datasource)
-			beego.Info("Enregistrement de", alias, drivertype, drivername, datasource)
+			beego.Info("Enregistrement connecteur", alias, drivertype, drivername, datasource)
+			beego.SetStaticPath(dataurl, datapath)
+			beego.Info("Enregistrement url static", dataurl, datapath)
 		}
 	}
+
 	if beego.AppConfig.String("debug") == "true" {
 		orm.Debug = true
 	} else {

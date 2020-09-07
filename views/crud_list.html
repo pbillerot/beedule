@@ -106,11 +106,11 @@
         <tbody id="bee-table">
           <!-- LOOP $RECORD -->
           {{ range $irecord, $record := .Records }}
-          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session $app}}"
+          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
             data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
-            {{ $val := CrudIndex $record $key $element $session $app}}
+            {{ $val := CrudIndex $record $key $element $session}}
             {{if (ne $element.Hide true)}}
             <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}} {{$element.Class}}">
               {{if (eq $element.Type "combo")}}

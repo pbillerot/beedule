@@ -253,10 +253,6 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 	if strings.Contains(out, "{$user}") {
 		out = strings.ReplaceAll(out, "{$user}", c.GetSession("Username").(string))
 	}
-	if strings.Contains(out, "{$datapath}") {
-		app := app.Applications[c.Ctx.Input.Param(":app")]
-		out = strings.ReplaceAll(out, "{$datapath}", app.DataPath)
-	}
 	re := regexp.MustCompile(`.*{(.*)}.*`)
 	for strings.Contains(out, "{") {
 		match := re.FindStringSubmatch(in)
