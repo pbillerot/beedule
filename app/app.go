@@ -20,8 +20,9 @@ var Applications = map[string]types.Application{
 		},
 	},
 	"picsou": {
-		Title: "Picsou, pour bricoler sur la bourse",
-		Image: "/crud/static/img/picsou.jpg",
+		Title:    "Picsou, pour bricoler sur la bourse",
+		Image:    "/crud/static/img/picsou.jpg",
+		DataPath: "", // valorisé dans custom.conf
 		AppViews: []types.AppView{
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},

@@ -47,6 +47,12 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
+			if element.Jointure.Column != "" {
+				element.Jointure.Column = macro(c, element.Jointure.Column, orm.Params{})
+			}
+			if element.Jointure.Join != "" {
+				element.Jointure.Join = macro(c, element.Jointure.Join, orm.Params{})
+			}
 			// Attributs par défaut en fonction du type
 			switch element.Type {
 			case "amount":
@@ -55,6 +61,9 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				}
 				if element.ColAlign == "" {
 					element.ColAlign = "right"
+				}
+				if element.Class == "" {
+					element.Class = "crud-cell-nowrap"
 				}
 			case "count":
 				if element.ColAlign == "" {
@@ -69,8 +78,14 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 					element.ColAlign = "center"
 				}
 			case "percent":
+				if element.Format == "" {
+					element.Format = "%3.2f %%"
+				}
 				if element.ColAlign == "" {
 					element.ColAlign = "right"
+				}
+				if element.Class == "" {
+					element.Class = "crud-cell-nowrap"
 				}
 			case "number":
 				if element.ColAlign == "" {
@@ -89,7 +104,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 }
 
 // computeElements calcule les éléments
-func computeElements(c beego.Controller, computeValue bool, tableid string, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+func computeElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
 
 	elements := types.Elements{}
 
@@ -237,6 +252,10 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 
 	if strings.Contains(out, "{$user}") {
 		out = strings.ReplaceAll(out, "{$user}", c.GetSession("Username").(string))
+	}
+	if strings.Contains(out, "{$datapath}") {
+		app := app.Applications[c.Ctx.Input.Param(":app")]
+		out = strings.ReplaceAll(out, "{$datapath}", app.DataPath)
 	}
 	re := regexp.MustCompile(`.*{(.*)}.*`)
 	for strings.Contains(out, "{") {

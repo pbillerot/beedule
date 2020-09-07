@@ -38,7 +38,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 			keys = append(keys, "'' as "+k)
 			continue
 		}
-		if element.Jointure.Join != "" {
+		if element.Jointure.Column != "" {
 			keys = append(keys, element.Jointure.Column+" as "+k)
 			joins = append(joins, element.Jointure.Join)
 		} else {
@@ -86,7 +86,7 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 			keys = append(keys, "'' as "+k)
 			continue
 		}
-		if element.Jointure.Join != "" {
+		if element.Jointure.Column != "" {
 			keys = append(keys, element.Jointure.Column+" as "+k)
 			joins = append(joins, element.Jointure.Join)
 		} else {

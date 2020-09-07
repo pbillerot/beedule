@@ -55,7 +55,7 @@ func (c *CrudListController) Get() {
 		// return
 	}
 	// Calcul des éléments hors values
-	elements = computeElements(c.Controller, false, tableid, elements, records[0])
+	elements = computeElements(c.Controller, false, elements, records[0])
 
 	// Remplissage du contexte pour le template
 	setContext(c.Controller)

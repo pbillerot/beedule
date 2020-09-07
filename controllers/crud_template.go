@@ -29,10 +29,10 @@ func init() {
 }
 
 // CrudIndex équivalent de index mais avec computeSQL en +
-func CrudIndex(record orm.Params, key string, element types.Element, session types.Session) (out string) {
+func CrudIndex(record orm.Params, key string, element types.Element, session types.Session, app types.Application) (out string) {
 	out = ""
 	if element.ComputeSQL != "" {
-		out = CrudMacroSQL(element.ComputeSQL, record, session)
+		out = CrudMacroSQL(element.ComputeSQL, record, session, app)
 	} else {
 		if val, ok := record[key]; ok {
 			if reflect.ValueOf(val).IsValid() {
@@ -95,12 +95,15 @@ func CrudItem(items []types.Item, in string) (out string) {
 
 // CrudMacroSQL retourne le résulat de la requête avec macro
 // in: formule SQLite = select 'grey' where '{task_status}' = 'Terminée'
-func CrudMacroSQL(in string, record orm.Params, session types.Session) (out string) {
+func CrudMacroSQL(in string, record orm.Params, session types.Session, application types.Application) (out string) {
 	out = ""
 	if in != "" {
 		sql := in
 		if strings.Contains(out, "{$user}") {
 			sql = strings.ReplaceAll(sql, "{$user}", session.Username)
+		}
+		if strings.Contains(out, "{$datapath}") {
+			out = strings.ReplaceAll(out, "{$datapath}", application.DataPath)
 		}
 		re := regexp.MustCompile(`.*{(.*)}.*`)
 		for strings.Contains(sql, "{") {

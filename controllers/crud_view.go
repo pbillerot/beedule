@@ -52,7 +52,7 @@ func (c *CrudViewController) Get() {
 		flash.Store(&c.Controller)
 	}
 	// Calcul des éléments
-	elements = computeElements(c.Controller, false, tableid, elements, records[0])
+	elements = computeElements(c.Controller, false, elements, records[0])
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]

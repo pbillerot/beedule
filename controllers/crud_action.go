@@ -46,12 +46,14 @@ func (c *CrudActionController) Post() {
 		return
 	}
 	if iactionid <= len(view.ActionsSQL) {
-		sql := macro(c.Controller, view.ActionsSQL[iactionid].SQL, orm.Params{})
-		if sql != "" {
-			err = models.CrudExec(sql, table.AliasDB)
-			if err != nil {
-				flash.Error(err.Error())
-				flash.Store(&c.Controller)
+		for _, action := range view.ActionsSQL[iactionid].SQL {
+			sql := macro(c.Controller, action, orm.Params{})
+			if sql != "" {
+				err = models.CrudExec(sql, table.AliasDB)
+				if err != nil {
+					flash.Error(err.Error())
+					flash.Store(&c.Controller)
+				}
 			}
 		}
 	} else {

@@ -69,14 +69,11 @@ var tasksViews = types.Views{
 		ActionsSQL: types.Actions{
 			{
 				// on ne supprime que ses propres tâches
-				Label:       "Supprimer les tâches terminées...",
-				SQL:         "delete from tasks where task_status = '1' and task_user = '{$user}'",
+				Label: "Supprimer les tâches terminées...",
+				SQL: []string{
+					"delete from tasks where task_status = '1' and task_user = '{$user}'",
+				},
 				WithConfirm: true,
-			},
-			{
-				Label:       "Tâches bidon",
-				SQL:         "select 'Les vaches sont bien gardées'",
-				WithConfirm: false,
 			},
 		},
 	},

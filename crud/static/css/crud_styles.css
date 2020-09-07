@@ -23,6 +23,9 @@ main {
 .ui.form {
     width: 360px;
 }
+.crud-cell-nowrap {
+    white-space: nowrap;
+}
 
 /* Mobile */
 

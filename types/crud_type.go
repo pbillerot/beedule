@@ -22,6 +22,7 @@ type Application struct {
 	IconFile string
 	IconName string
 	Path     string    // Path ou URL de l'application externe
+	DataPath string    // répertoire des données valorisé dans custom.conf [app] datapath lu par {$datapath}
 	AppViews []AppView // Vues des tables liées à l'application
 }
 
@@ -78,7 +79,7 @@ type Element struct {
 	Refresh      bool // TODO
 	Required     bool
 	SQLout       string // Valeur à enregistrer dans la base de données
-	Type         string // amount checkbox counter date datetime email float jointure list month number percent plugin section tag tel text time radio url week
+	Type         string // amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
 	Value        string
 }
 
@@ -133,18 +134,14 @@ type Jointure struct {
 	Column string
 }
 
-// Params entre tables
+// Params paramètres de l'élément
 type Params struct {
 	Action   string
 	Form     string
 	IconName string
 	URL      string
 	Path     string
-	SQL1     string
-	SQL2     string
-	SQL3     string
-	SQL4     string
-	SQL5     string
+	SQL      []string
 }
 
 // Actions as
@@ -153,7 +150,7 @@ type Actions []Action
 // Action as
 type Action struct {
 	Label       string
-	SQL         string
+	SQL         []string
 	WithConfirm bool
 }
 
