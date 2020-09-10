@@ -60,7 +60,7 @@ $(document).ready(function () {
     $('.crud-jquery-action').on('click', function (event) {
         var $url = $(this).data('url');
         if ($(this).data('confirm') == true) {
-            $('#crud-action').html($(this).html()); 
+            $('#crud-action').html($(this).html());
             $('.ui.modal')
                 .modal({
                     closable: false,
@@ -101,6 +101,29 @@ $(document).ready(function () {
             class: $('#toaster').data('color'),
             position: 'bottom right',
             message: $('#toaster').val()
-        })
+        });
+    // Calendar
+    $('#standard_calendar')
+    .calendar({
+        ampm: false,
+        text: {
+            days: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+            monthsShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+            today: 'Aujourd\'hui',
+            now: 'Maintenant',
+            am: 'AM',
+            pm: 'PM'
+          },
+        // formatter: {
+        //     date: function (date, settings) {
+        //         if (!date) return '';
+        //         var day = date.getDate();
+        //         var month = date.getMonth() + 1;
+        //         var year = date.getFullYear();
+        //         return year + '-' + month + '-' + day;
+        //     }
+        // }
+      })
         ;
 });

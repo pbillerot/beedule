@@ -5,6 +5,7 @@ import (
 	"github.com/pbillerot/beedule/models"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 // CrudEditController as
@@ -117,6 +118,10 @@ func (c *CrudEditController) Post() {
 		return
 	}
 
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	form := app.Tables[tableid].Forms[formid]
+
 	// Lecture, contrôle des champs saisis
 	// et remplissage de SQLOut pour l'enregistrement
 	berr := false
@@ -131,9 +136,6 @@ func (c *CrudEditController) Post() {
 	}
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
-		table := app.Tables[tableid]
-		view := app.Tables[tableid].Views[viewid]
-		form := app.Tables[tableid].Forms[formid]
 
 		setContext(c.Controller)
 		c.Data["AppId"] = appid
@@ -162,6 +164,23 @@ func (c *CrudEditController) Post() {
 		c.Data["error"] = "error"
 		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
 		return
+	}
+	// PostSQL
+	for _, postsql := range form.PostSQL {
+		sql := macro(c.Controller, postsql, orm.Params{})
+		if sql != "" {
+			err = models.CrudExec(sql, table.AliasDB)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+			}
+		} else {
+			beego.Error("Ordre sql incorrect ", postsql)
+			flash.Error("Ordre sql incorrect ", postsql)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+			return
+		}
 	}
 
 	flash.Notice("Mise à jour effectuée avec succès")

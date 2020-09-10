@@ -24,13 +24,25 @@ func init() {
 	beego.AddFuncMap("CrudFormat", CrudFormat)
 	beego.AddFuncMap("CrudItem", CrudItem)
 	beego.AddFuncMap("CrudIndex", CrudIndex)
+	beego.AddFuncMap("CrudIndexSQL", CrudIndexSQL)
 	beego.AddFuncMap("CrudMacro", CrudMacro)
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
 }
 
 // CrudIndex équivalent de index mais avec computeSQL en +
-func CrudIndex(record orm.Params, key string, element types.Element, session types.Session) (out string) {
+func CrudIndex(record orm.Params, key string) (out string) {
+	out = ""
+	if val, ok := record[key]; ok {
+		if reflect.ValueOf(val).IsValid() {
+			out = val.(string)
+		}
+	}
+	return
+}
+
+// CrudIndexSQL équivalent de index mais avec computeSQL en +
+func CrudIndexSQL(record orm.Params, key string, element types.Element, session types.Session) (out string) {
 	out = ""
 	if element.ComputeSQL != "" {
 		out = CrudMacroSQL(element.ComputeSQL, record, session)
@@ -54,7 +66,9 @@ func CrudFormat(in string, value string) (out string) {
 		}
 		for _, rec := range recs {
 			for _, val := range rec {
-				out = val.(string)
+				if reflect.ValueOf(val).IsValid() {
+					out = val.(string)
+				}
 			}
 		}
 	}
@@ -88,7 +102,7 @@ func CrudContains(list string, in string) (out bool) {
 func CrudItem(items []types.Item, in string) (out string) {
 	for _, item := range items {
 		if item.Key == in {
-			out = item.Value
+			out = item.Label
 		}
 	}
 	return

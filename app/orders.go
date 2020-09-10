@@ -18,9 +18,9 @@ var ordersViews = types.Views{
 		Title:     "Achat",
 		Info:      "Liste des Valeurs placées",
 		IconName:  "folder open outline",
-		FormAdd:   "faddbuy",
+		FormAdd:   "feditbuy",
 		FormEdit:  "feditbuy",
-		FormView:  "fviewbuy",
+		FormView:  "fview",
 		Deletable: true,
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
@@ -29,7 +29,7 @@ var ordersViews = types.Views{
 			"orders_id":     {Order: 1},
 			"orders_ptf_id": {Order: 10},
 			// "orders_order":  {Order: 20},
-			// "orders_time":       {Order: 30},
+			"orders_time":       {Order: 30},
 			"orders_buy":        {Order: 40},
 			"orders_cost":       {Order: 50, HideOnMobile: true},
 			"orders_quantity":   {Order: 60},
@@ -41,7 +41,7 @@ var ordersViews = types.Views{
 			"orders_gainp":      {Order: 130, HideOnMobile: true},
 			"orders_rem":        {Order: 140, HideOnMobile: true},
 		},
-		ActionsSQL: types.Actions{
+		Actions: types.Actions{
 			{
 				Label: "Mettre à jour avec le cours du jour",
 				SQL: []string{
@@ -58,7 +58,8 @@ var ordersViews = types.Views{
 		Info:      "Historique des placements",
 		IconName:  "folder outline",
 		FormAdd:   "faddbuy",
-		FormEdit:  "feditbuy",
+		FormEdit:  "fedit",
+		FormView:  "fview",
 		Deletable: true,
 		Where:     "orders_order = 'sell'",
 		Elements: types.Elements{
@@ -77,44 +78,67 @@ var ordersViews = types.Views{
 	},
 }
 var ordersForms = types.Forms{
-	"fviewbuy": {
+	"fview": {
 		Title: "Ordre d'achat",
 		Elements: types.Elements{
-			"orders_id":                {Order: 1},
-			"orders_ptf_id":            {Order: 10},
-			"orders_order":             {Order: 20},
-			"orders_time":              {Order: 30},
-			"orders_buy":               {Order: 50},
-			"orders_cost":              {Order: 60},
-			"orders_quantity":          {Order: 40},
-			"orders_debit":             {Order: 80},
-			"_section_achat_situation": {Order: 100},
-			"orders_cost_price":        {Order: 110},
-			"orders_optimum":           {Order: 120},
-			"orders_quote":             {Order: 130},
-			"orders_gain":              {Order: 140},
-			"orders_gainp":             {Order: 150},
-			"orders_rem":               {Order: 160},
-			"_image_day":               {Order: 170},
-			"_image_histo":             {Order: 180},
-			"_image_analyse":           {Order: 190},
-		},
-	},
-	"faddbuy": {
-		Title: "Ajout d'un ordre d'achat",
-		Elements: types.Elements{
+			// Achat
 			"orders_id":       {Order: 1},
 			"orders_ptf_id":   {Order: 10},
-			"orders_order":    {Order: 20, Default: "buy"},
+			"orders_order":    {Order: 20},
 			"orders_time":     {Order: 30},
-			"orders_quote":    {Order: 40},
 			"orders_buy":      {Order: 50},
-			"orders_quantity": {Order: 60},
-			"orders_debit":    {Order: 70},
+			"orders_cost":     {Order: 60},
+			"orders_quantity": {Order: 40},
+			"orders_debit":    {Order: 80},
+			// Evolution
+			"_section_achat_situation": {
+				Order:     100,
+				Type:      "section",
+				LabelLong: "Situation",
+				Params: types.Params{
+					Form:     "frem",
+					IconName: "folder open outline",
+				},
+			},
+			"orders_cost_price": {Order: 110},
+			"orders_optimum":    {Order: 120},
+			"orders_quote":      {Order: 130},
+			"orders_gain":       {Order: 140},
+			"orders_gainp":      {Order: 150},
+			"orders_rem":        {Order: 160},
+			// Vente
+			"_section_vente": {
+				Order:      200,
+				Type:       "section",
+				LabelLong:  "Ordre de Vente",
+				LabelShort: "Vente",
+				Params: types.Params{
+					Form:     "feditsell",
+					IconName: "folder open outline",
+				},
+			},
+			"orders_sell_time":  {Order: 210},
+			"orders_sell":       {Order: 220},
+			"orders_sell_cost":  {Order: 230},
+			"orders_credit":     {Order: 240},
+			"orders_sell_gain":  {Order: 250},
+			"orders_sell_gainp": {Order: 260},
+			// Images
+			"_image_day":     {Order: 300},
+			"_image_histo":   {Order: 310},
+			"_image_analyse": {Order: 320},
+		},
+		Actions: []types.Action{
+			{
+				Label:      "Vendre cette valeur",
+				Tableid:    "orders",
+				Formid:     "feditsell",
+				TypeAction: "edit",
+			},
 		},
 	},
 	"feditbuy": {
-		Title: "Mise à jour d'un ordre d'achat",
+		Title: "Ordre d'achat",
 		Elements: types.Elements{
 			"orders_id":       {Order: 1},
 			"orders_ptf_id":   {Order: 10},
@@ -124,23 +148,43 @@ var ordersForms = types.Forms{
 			"orders_buy":      {Order: 50},
 			"orders_quantity": {Order: 60},
 			"orders_debit":    {Order: 70},
+		},
+	},
+	"feditsell": {
+		Title: "Ordre de vente",
+		Elements: types.Elements{
+			"orders_id":         {Order: 1},
+			"orders_ptf_id":     {Order: 10},
+			"orders_order":      {Order: 20},
+			"orders_sell_time":  {Order: 30},
+			"orders_quote":      {Order: 40},
+			"orders_sell":       {Order: 50},
+			"orders_quantity":   {Order: 60},
+			"orders_credit":     {Order: 70},
+			"orders_sell_gain":  {Order: 80},
+			"orders_sell_gainp": {Order: 90},
+		},
+		PostSQL: []string{
+			"update orders set orders_sell_cost = orders_buy * orders_quantity * {__cost} + orders_sell * orders_quantity * {__cost}",
+			"update orders set orders_sell_gain = orders_sell * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_sell * orders_quantity * {__cost}",
+			"update orders set orders_sell_gainp = (orders_sell_gain / (orders_buy * orders_quantity)) * 100",
+			"update orders set orders_credit = orders_sell * orders_quantity + orders_sell * orders_quantity * {__cost}",
+		},
+	},
+	"frem": {
+		Title: "Remarques",
+		Elements: types.Elements{
+			"orders_id":     {Order: 1},
+			"orders_ptf_id": {Order: 10},
+			"orders_rem":    {Order: 20},
 		},
 	},
 }
 
 var ordersElements = types.Elements{
-	"_section_achat_situation": {
-		Type:       "section",
-		LabelLong:  "Situation",
-		LabelShort: "Situation",
-		Params: types.Params{
-			Form:     "feditbuy",
-			IconName: "folder open outline",
-		},
-	},
 	"orders_id": {
 		Type:       "number",
-		LabelLong:  "N° enregistrement",
+		LabelLong:  "N°",
 		LabelShort: "N°",
 		ColAlign:   "center",
 	},
@@ -148,7 +192,7 @@ var ordersElements = types.Elements{
 		Type:       "combo",
 		LabelLong:  "Valeur",
 		LabelShort: "Valeur",
-		ItemsSQL:   "SELECT ptf_id, ptf_name From ptf order by ptf_name",
+		ItemsSQL:   "SELECT ptf_id as 'key', ptf_name as 'label' From ptf order by ptf_name",
 	},
 	"_ptf_isin": {
 		Type:       "text",
@@ -166,8 +210,8 @@ var ordersElements = types.Elements{
 		LabelShort: "Order",
 		ColAlign:   "center",
 		Items: []types.Item{
-			{Key: "buy", Value: "Achat"},
-			{Key: "sell", Value: "Vente"},
+			{Key: "buy", Label: "Achat"},
+			{Key: "sell", Label: "Vente"},
 		},
 	},
 	"orders_rem": {
@@ -176,13 +220,13 @@ var ordersElements = types.Elements{
 		LabelShort: "Rem.",
 	},
 	"orders_time": {
-		Type:       "text",
+		Type:       "datetime",
 		LabelLong:  "Jour Heure d'achat",
 		LabelShort: "JH d'achat",
 		DefaultSQL: "select datetime('now', 'localtime')",
 	},
 	"orders_sell_time": {
-		Type:       "text",
+		Type:       "datetime",
 		LabelLong:  "Jour Heure de vente",
 		LabelShort: "JH de vente",
 		DefaultSQL: "select datetime('now', 'localtime')",
@@ -260,6 +304,7 @@ var ordersElements = types.Elements{
 		LabelShort: "Gain",
 		ColWith:    80,
 		Protected:  true,
+		ClassSQL:   "select case when {orders_gain} > 0 then 'green' when {orders_gain} < 0 then 'red' end",
 		// ComputeSQL: "select {orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}",
 	},
 	"orders_gainp": {
@@ -268,24 +313,24 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		ColWith:    80,
 		Protected:  true,
+		ClassSQL:   "select case when {orders_gainp} > 0 then 'green' when {orders_gainp} < 0 then 'red' end",
 		// ComputeSQL: "select ( ({orders_quote} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_quote} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
 	},
 	"orders_sell_cost": {
-		Type:       "float",
+		Type:       "amount",
 		LabelLong:  "Frais",
 		LabelShort: "Frais",
-		Format:     "%3.2f %",
 		ColWith:    60,
 		Protected:  true,
 		// ComputeSQL: "select {orders_buy} * {orders_quantity} * {__cost} + {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_sell_gain": {
-		Type:       "float",
+		Type:       "amount",
 		LabelLong:  "Gain",
 		LabelShort: "Gain",
-		Format:     "%3.2f %",
 		ColWith:    80,
 		Protected:  true,
+		ClassSQL:   "select case when {orders_sell_gain} > 0 then 'green' when {orders_sell_gain} < 0 then 'red' end",
 		// ComputeSQL: "select {orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_sell_gainp": {
@@ -294,6 +339,7 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		ColWith:    80,
 		Protected:  true,
+		ClassSQL:   "select case when {orders_sell_gainp} > 0 then 'green' when {orders_sell_gainp} < 0 then 'red' end",
 		// ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
 	},
 	"_image_day": {

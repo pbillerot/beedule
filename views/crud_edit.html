@@ -74,7 +74,7 @@
                   <option value="">{{$element.PlaceHolder}}</option>
                   {{range $num, $item := $element.Items}}
                     <option value="{{$item.Key}}"{{if (eq $item.Key $val)}} selected=""{{end}}>
-                      {{$item.Value}} ({{$item.Key}})</option>
+                      {{$item.Label}} ({{$item.Key}})</option>
                   {{end}}
                 </select>
               </div>
@@ -91,6 +91,18 @@
                 <div class="ui checkbox">
                   <input type="checkbox" name="{{$key}}" id="{{$key}}"{{if(eq $val `1`)}} checked{{end}}>
                   <label>{{$element.LabelLong}}</label>
+                </div>
+              </div>
+              {{else if (eq $element.Type "datetime")}}
+              <div
+                class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <div class="ui calendar" id="standard_calendar">
+                  <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input type="text" name="{{$key}}" id="{{$key}}"{{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}"{{end}} 
+                    value="{{$val}}">
+                  </div>
                 </div>
               </div>
               {{else if (eq $element.Type "float")}}
@@ -121,7 +133,7 @@
                 <select name="{{$key}}" id="{{$key}}" multiple="" class="ui fluid dropdown">
                   <option value="">{{$element.PlaceHolder}}</option>
                   {{range $num, $item := $element.Items}}
-                    <option value="{{$item.Key}}"{{if CrudContains $val $item.Key}} selected=""{{end}}>{{$item.Value}}</option>
+                    <option value="{{$item.Key}}"{{if CrudContains $val $item.Key}} selected=""{{end}}>{{$item.Label}}</option>
                   {{end}}
                 </select>
               </div>

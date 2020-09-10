@@ -9,12 +9,13 @@
 {{$formid := .FormId}}
 {{$table := .Table}}
 {{$view := .View}}
-{{$form := .Form}}
+{{$form := .FormView}}
 {{$id := .Id}}
 {{$tablekey := .Table.Key}}
 {{$coldisplay := .ColDisplay}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
+{{$composter := .Composter}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -35,6 +36,17 @@
           <i class="trash icon"></i>
         {{end}}
         </a>
+        {{if $form.Actions}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+          {{range $iaction, $action := $form.Actions}}
+            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+              data-url="/crud/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
+          {{end}} <!-- end range actions-->
+          </div>
+        </div>
+        {{end}}<!-- end if actions-->
       </div>
     </div>
   </div>
@@ -49,8 +61,11 @@
             <div class="ui right floated">
               <i class="big {{$theme}} {{$view.IconName}} icon"></i>
             </div>
+            <div class="header">
+              <h4>{{$coldisplay}}</h4>
+            </div>            
             {{ range $num, $key := $cols }}
-            {{ $val := index $record $key }}
+            {{ $val := CrudIndex $record $key }}
             {{ $element := index $elements $key }}
             {{if (eq $element.Type "combo")}}
               <div class="description">
@@ -77,9 +92,9 @@
             <!-- Fermeture de la card et ouverture d'une autre -->
           </div> <!-- end content card -->
         </a> <!-- end card -->
-        <a class="card raised  crud-card-view" href="{{$url}}">
+        <a class="card raised  crud-card-view" href="{{$url}}?{{$composter}}">
           <div class="ui image">
-            <img src="{{$url}}">
+            <img src="{{$url}}?{{$composter}}">
           </div>
           <div class="content">
               <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
@@ -121,13 +136,13 @@
               </div>
             </div>
             <div class="header">
-              <h4>
+              <span class="ui medium {{$element.Class}} text">
                 {{if $element.Format}}
                   {{CrudFormat $element.Format $val}}
                 {{else}}
                   {{$val}}
                 {{end}}
-              </h4>
+              </span>
             </div>
             {{end}} <!-- end if type -->
             {{end}} <!-- end range $cols -->

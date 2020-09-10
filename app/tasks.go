@@ -66,7 +66,7 @@ var tasksViews = types.Views{
 			"task_status": {Order: 40},
 			"task_note":   {Order: 50, HideOnMobile: true},
 		},
-		ActionsSQL: types.Actions{
+		Actions: types.Actions{
 			{
 				// on ne supprime que ses propres tâches
 				Label: "Supprimer les tâches terminées...",

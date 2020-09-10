@@ -46,7 +46,7 @@ type Elements map[string]Element
 
 // Element is ... Rubrique de l'application
 type Element struct {
-	Args         Arg
+	Args         Args
 	ColAlign     string // TODO
 	Class        string // TODO Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL     string // TODO SQL pour alimenter Class error warning info green blue
@@ -96,7 +96,7 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	ActionsSQL     Actions // TODO Action sur la vue (ordres sql)
+	Actions        Actions // TODO Action sur la vue (ordres sql)
 	ClassSQL       string  // couleur theme de la ligne
 	Deletable      bool    // Suppression fiche autorisée
 	FormAdd        string
@@ -117,9 +117,11 @@ type View struct {
 
 // Form formulaire
 type Form struct {
+	Actions  Actions // TODO Action appel d'un formulaire ou exécution d'une requête SQL
 	Title    string
 	Groupe   string // groupe qui peut accéder au formulaire  // TODO
 	Elements Elements
+	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
 }
 
 // DBAlias alias des connections aux bases de données
@@ -147,20 +149,24 @@ type Params struct {
 // Actions as
 type Actions []Action
 
-// Action as
+// Action as Formulaire ou Requête SQL
 type Action struct {
 	Label       string
-	SQL         []string
+	Tableid     string // TODO appel d'un formulaire d'une autre table de l'application
+	Formid      string // TODO nom du formulaire
+	TypeAction  string // TODO add, edit
+	Args        Args
+	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
 	WithConfirm bool
 }
 
-// Arg entre tables
-type Arg map[string]string
+// Args paramètres à transmettre lors de l'appel
+type Args map[string]string
 
 // Item entre tables
 type Item struct {
 	Key   string
-	Value string
+	Label string
 }
 
 // HashPassword hashage de Value

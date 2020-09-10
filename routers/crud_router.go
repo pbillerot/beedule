@@ -26,6 +26,6 @@ func init() {
 	beego.Router("/crud/add/:app/:table/:view/:form", &controllers.CrudAddController{})
 	beego.Router("/crud/edit/:app/:table/:view/:form/:id", &controllers.CrudEditController{})
 	beego.Router("/crud/delete/:app/:table/:view/:id", &controllers.CrudDeleteController{})
-	beego.Router("/crud/action/:app/:table/:view/:action", &controllers.CrudActionController{})
-
+	beego.Router("/crud/actionv/:app/:table/:view/:action", &controllers.CrudActionViewController{})
+	beego.Router("/crud/actionf/:app/:table/:view/:form/:id/:action", &controllers.CrudActionFormController{})
 }

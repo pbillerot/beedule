@@ -34,13 +34,13 @@
           title="Ajouter un article...">
           <i class="plus square icon"></i>
         </a>
-        {{if $view.ActionsSQL}}
+        {{if $view.Actions}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
           <div class="menu">
-            {{range $iaction, $action := $view.ActionsSQL}}
+            {{range $iaction, $action := $view.Actions}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/crud/action/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
+              data-url="/crud/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
             {{end}}
           </div>
         </div>
@@ -110,9 +110,9 @@
             data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
-            {{ $val := CrudIndex $record $key $element $session}}
+            {{ $val := CrudIndexSQL $record $key $element $session}}
             {{if (ne $element.Hide true)}}
-            <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}} {{$element.Class}}">
+            <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
               {{if (eq $element.Type "combo")}}
                 <!-- combo -->
                 {{CrudItem $element.Items $val}} ({{$val}})
