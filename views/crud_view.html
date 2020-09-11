@@ -29,24 +29,28 @@
           <img class="ui mini image" src="{{$app.Image}}">
         </a>
       </div>
-      <div class="header item">Fiche: {{$coldisplay}}</div>
+      <div class="header item">{{$form.Title}}: {{$coldisplay}}</div>
       <div class="right menu">
         {{if $view.Deletable}}
-          <a class="ui icon item crud-jquery-delete" title="Supprimer la fiche...">
+        <a class="ui icon item crud-jquery-delete" title="Supprimer la fiche...">
           <i class="trash icon"></i>
-        {{end}}
+          {{end}}
         </a>
         {{if $form.Actions}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
           <div class="menu">
-          {{range $iaction, $action := $form.Actions}}
+            {{range $iaction, $action := $form.Actions}}
+            {{if not $action.Hide}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/crud/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
-          {{end}} <!-- end range actions-->
+              data-url="/crud/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
+            {{end}}
+            {{end}}
+            <!-- end range actions-->
           </div>
         </div>
-        {{end}}<!-- end if actions-->
+        {{end}}
+        <!-- end if actions-->
       </div>
     </div>
   </div>
@@ -62,20 +66,56 @@
               <i class="big {{$theme}} {{$view.IconName}} icon"></i>
             </div>
             <div class="header">
-              <h4>{{$coldisplay}}</h4>
-            </div>            
+              <h4>{{$form.Title}}</h4>
+            </div>
+            <!-- pour mémoriser le hide dans une section -->
+            {{ $isSectionHide := false}}
+
             {{ range $num, $key := $cols }}
             {{ $val := CrudIndex $record $key }}
             {{ $element := index $elements $key }}
-            {{if (eq $element.Type "combo")}}
-              <div class="description">
-                <div class="meta">
-                  <span>{{$element.LabelLong}}</span>
-                </div>
+            {{if and (eq $isSectionHide true) (eq $element.Hide false) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+              {{$isSectionHide = false}}<!-- les champs de la section seront affichés -->
+            {{end}}
+            {{if and (eq $element.Hide true) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+              {{$isSectionHide = true}}<!-- les champs de la section ne seront pas affichés -->
+            {{end}}
+
+            {{if and (eq $element.Hide false) (eq $isSectionHide false)}}
+            <!-- Affichage de l'élément -->
+            {{if (eq $element.Type "section")}}
+            <!-- Fermeture de la card et ouverture d'une autre -->
+          </div> <!-- end content card -->
+        </a> <!-- end card -->
+        <a class="card raised  crud-card-view"
+          href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+          <div class="content">
+            <div class="ui right floated">
+              <i class="big {{$theme}} {{$element.Params.IconName}} icon"></i>
+            </div>
+            <div class="header">
+              <h4>{{$element.LabelLong}}</h4>
+            </div>
+            <!-- DEBUT type -->
+            {{else if (eq $element.Type "action")}}
+            {{if $element.Action.URL}}
+            <button class="ui {{$theme}} button crud-jquery-url" data-url="{{$element.Action.URL}}">
+              {{$element.LabelLong}}
+            </button>
+            {{else}}
+            <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Action.WithConfirm}}" data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}">
+              {{$element.LabelLong}}
+            </button>
+            {{end}}
+            {{else if (eq $element.Type "combo")}}
+            <div class="description">
+              <div class="meta">
+                <span>{{$element.LabelLong}}</span>
               </div>
-              <div class="header">
-                <h4>{{CrudItem $element.Items $val}} ({{$val}})</h4>
-              </div>
+            </div>
+            <div class="header">
+              <h4>{{CrudItem $element.Items $val}} ({{$val}})</h4>
+            </div>
             {{else if (eq $element.Type "checkbox")}}
             <div class="description">&nbsp;</div>
             <div class="header">
@@ -97,7 +137,7 @@
             <img src="{{$url}}?{{$composter}}">
           </div>
           <div class="content">
-              <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
+            <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
             {{else if (eq $element.Type "password")}}
             <div class="description">
               <div class="meta">
@@ -108,26 +148,23 @@
               <h4>***</h4>
             </div>
             {{else if (eq $element.Type "tag")}}
-              <div class="description">
-                <div class="meta">
-                  <span>{{$element.LabelLong}}</span>
-                </div>
+            <div class="description">
+              <div class="meta">
+                <span>{{$element.LabelLong}}</span>
               </div>
-              {{$arr := CrudSplit $val ","}}
-              {{range $i, $item := $arr}}
-              <div class="ui small label">{{$item}}</div>
-              {{end}}
-            {{else if (eq $element.Type "section")}}
-            <!-- Fermeture de la card et ouverture d'une autre -->
-          </div> <!-- end content card -->
-        </a> <!-- end card -->
-        <a class="card raised  crud-card-view" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
-          <div class="content">
-            <div class="ui right floated">
-              <i class="big {{$theme}} {{$element.Params.IconName}} icon"></i>
             </div>
-            <div class="header">
-              <h4>{{$element.LabelLong}}</h4>
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+            <div class="ui small label">{{$item}}</div>
+            {{end}}
+            {{else if (eq $element.Type "textarea")}}
+            <div class="description">
+              <div class="meta">
+                <span>{{$element.LabelLong}}</span>
+              </div>
+            </div>
+            <div class="ui {{$element.Class}} message">
+              {{$val}}
             </div>
             {{else}}
             <div class="description">
@@ -138,17 +175,22 @@
             <div class="header">
               <span class="ui medium {{$element.Class}} text">
                 {{if $element.Format}}
-                  {{CrudFormat $element.Format $val}}
+                {{CrudFormat $element.Format $val}}
                 {{else}}
-                  {{$val}}
+                {{$val}}
                 {{end}}
               </span>
             </div>
-            {{end}} <!-- end if type -->
-            {{end}} <!-- end range $cols -->
+            {{end}}
+            <!-- end if type -->
+            {{end}}
+            <!-- end if Hide -->
+            {{end}}
+            <!-- end range $cols -->
           </div> <!-- end content card -->
         </a> <!-- end card -->
-        {{end}} <!-- end range records -->
+        {{end}}
+        <!-- end range records -->
       </div>
     </div>
   </main>

@@ -46,10 +46,11 @@ type Elements map[string]Element
 
 // Element is ... Rubrique de l'application
 type Element struct {
+	Action       Action // bouton d'action
 	Args         Args
-	ColAlign     string // TODO
 	Class        string // TODO Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL     string // TODO SQL pour alimenter Class error warning info green blue
+	ColAlign     string // TODO
 	ColWith      int    // TODO
 	Default      string // Valeur par défaut (macro possible)
 	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
@@ -60,6 +61,7 @@ type Element struct {
 	Help         string // TODO
 	HelpSQL      string // TODO
 	Hide         bool
+	HideSQL      string   // TODO cachée si condition
 	HideOnMobile bool     // La colonne dans une vue sera cachée sur Mobile
 	Items        []Item   // slice d'item
 	ItemsSQL     string   // Ordre SQL qui retournera la colonne pour alimenter Items
@@ -79,7 +81,7 @@ type Element struct {
 	Refresh      bool // TODO
 	Required     bool
 	SQLout       string // Valeur à enregistrer dans la base de données
-	Type         string // amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
+	Type         string // action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
 	Value        string
 }
 
@@ -96,23 +98,22 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	Actions        Actions // TODO Action sur la vue (ordres sql)
-	ClassSQL       string  // couleur theme de la ligne
-	Deletable      bool    // Suppression fiche autorisée
-	FormAdd        string
-	FormEdit       string
-	FormView       string
-	FooterSQL      string // requête sur la table courante
-	Hide           bool   // TODO
-	IconName       string
-	Info           string
-	Limit          int    // TODO
-	Groupe         string // groupe qui peut accéder à la vue  // TODO
-	OrderBy        string
-	Where          string
-	Title          string // Titre de la vue
-	ElementsSorted string
-	Elements       Elements
+	Actions   Actions // TODO Action sur la vue (ordres sql)
+	ClassSQL  string  // couleur theme de la ligne
+	Deletable bool    // Suppression fiche autorisée
+	FormAdd   string
+	FormEdit  string
+	FormView  string
+	FooterSQL string // requête sur la table courante
+	Hide      bool   // TODO
+	IconName  string
+	Info      string
+	Limit     int    // TODO
+	Group     string // groupe qui peut accéder à la vue  // TODO
+	OrderBy   string
+	Where     string
+	Title     string // Titre de la vue
+	Elements  Elements
 }
 
 // Form formulaire
@@ -152,12 +153,11 @@ type Actions []Action
 // Action as Formulaire ou Requête SQL
 type Action struct {
 	Label       string
-	Tableid     string // TODO appel d'un formulaire d'une autre table de l'application
-	Formid      string // TODO nom du formulaire
-	TypeAction  string // TODO add, edit
-	Args        Args
+	URL         string
 	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
 	WithConfirm bool
+	Hide        bool
+	HideSQL     string
 }
 
 // Args paramètres à transmettre lors de l'appel

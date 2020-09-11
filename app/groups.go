@@ -39,7 +39,7 @@ var groupsViews = types.Views{
 		Title:     "Groupes",
 		IconName:  "users",
 		OrderBy:   "group_id",
-		Groupe:    "admin",
+		Group:     "admin",
 		Elements: types.Elements{
 			"group_id":   {},
 			"group_note": {},

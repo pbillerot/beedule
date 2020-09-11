@@ -79,6 +79,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
 				}
+			case "number":
+				if element.ColAlign == "" {
+					element.ColAlign = "right"
+				}
 			case "percent":
 				if element.Format == "" {
 					element.Format = "%3.2f %%"
@@ -89,9 +93,9 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				if element.Class == "" {
 					element.Class = "crud-cell-nowrap"
 				}
-			case "number":
-				if element.ColAlign == "" {
-					element.ColAlign = "right"
+			case "textarea":
+				if element.Class == "" {
+					element.Class = "warning"
 				}
 			case "week":
 				if element.ColAlign == "" {
@@ -111,9 +115,14 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 	elements := types.Elements{}
 
 	for key, element := range viewOrFormElements {
-		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL
+		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
 			element.Class = macroSQL(c, element.ClassSQL, record)
+		}
+		if element.HideSQL != "" {
+			if macroSQL(c, element.HideSQL, record) != "" {
+				element.Hide = true
+			}
 		}
 		if element.ItemsSQL != "" {
 			sql := macro(c, element.ItemsSQL, record)
@@ -135,6 +144,10 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			}
 			element.Items = list
 		}
+		if element.Action.URL != "" {
+			element.Action.URL = macro(c, element.Action.URL, record)
+		}
+
 		if computeValue {
 			if element.ComputeSQL != "" {
 				element.ComputeSQL = macroSQL(c, element.ComputeSQL, record)

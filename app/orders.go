@@ -20,7 +20,7 @@ var ordersViews = types.Views{
 		IconName:  "folder open outline",
 		FormAdd:   "feditbuy",
 		FormEdit:  "feditbuy",
-		FormView:  "fview",
+		FormView:  "fviewbuy",
 		Deletable: true,
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
@@ -48,6 +48,7 @@ var ordersViews = types.Views{
 					"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
 					"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
 					"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+					"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
 				},
 				WithConfirm: false,
 			},
@@ -58,8 +59,8 @@ var ordersViews = types.Views{
 		Info:      "Historique des placements",
 		IconName:  "folder outline",
 		FormAdd:   "faddbuy",
-		FormEdit:  "fedit",
-		FormView:  "fview",
+		FormEdit:  "feditbuy",
+		FormView:  "fviewsell",
 		Deletable: true,
 		Where:     "orders_order = 'sell'",
 		Elements: types.Elements{
@@ -78,7 +79,7 @@ var ordersViews = types.Views{
 	},
 }
 var ordersForms = types.Forms{
-	"fview": {
+	"fviewbuy": {
 		Title: "Ordre d'achat",
 		Elements: types.Elements{
 			// Achat
@@ -94,7 +95,7 @@ var ordersForms = types.Forms{
 			"_section_achat_situation": {
 				Order:     100,
 				Type:      "section",
-				LabelLong: "Situation",
+				LabelLong: "Évolution",
 				Params: types.Params{
 					Form:     "frem",
 					IconName: "folder open outline",
@@ -105,7 +106,27 @@ var ordersForms = types.Forms{
 			"orders_quote":      {Order: 130},
 			"orders_gain":       {Order: 140},
 			"orders_gainp":      {Order: 150},
-			"orders_rem":        {Order: 160},
+			"_refresh_buy":      {Order: 160},
+			"orders_rem":        {Order: 170},
+			"_action_sell":      {Order: 270},
+			// Images
+			"_image_day":     {Order: 300},
+			"_image_histo":   {Order: 310},
+			"_image_analyse": {Order: 320},
+		},
+	},
+	"fviewsell": {
+		Title: "Ordre de vente",
+		Elements: types.Elements{
+			// Achat
+			"orders_id":       {Order: 1},
+			"orders_ptf_id":   {Order: 10},
+			"orders_order":    {Order: 20},
+			"orders_time":     {Order: 30},
+			"orders_buy":      {Order: 50},
+			"orders_cost":     {Order: 60},
+			"orders_quantity": {Order: 40},
+			"orders_debit":    {Order: 80},
 			// Vente
 			"_section_vente": {
 				Order:      200,
@@ -128,14 +149,6 @@ var ordersForms = types.Forms{
 			"_image_histo":   {Order: 310},
 			"_image_analyse": {Order: 320},
 		},
-		Actions: []types.Action{
-			{
-				Label:      "Vendre cette valeur",
-				Tableid:    "orders",
-				Formid:     "feditsell",
-				TypeAction: "edit",
-			},
-		},
 	},
 	"feditbuy": {
 		Title: "Ordre d'achat",
@@ -148,6 +161,13 @@ var ordersForms = types.Forms{
 			"orders_buy":      {Order: 50},
 			"orders_quantity": {Order: 60},
 			"orders_debit":    {Order: 70},
+		},
+		PostSQL: []string{
+			"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
+			"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
+			"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+			"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
+			"update orders set orders_cost = orders_buy * orders_quantity * {__cost}",
 		},
 	},
 	"feditsell": {
@@ -182,6 +202,26 @@ var ordersForms = types.Forms{
 }
 
 var ordersElements = types.Elements{
+	"_refresh_buy": {
+		Type:      "action",
+		LabelLong: "Mettre à jour avec le cours du jour",
+		Action: types.Action{
+			SQL: []string{
+				"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
+				"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
+				"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+			},
+			WithConfirm: false,
+		},
+	},
+	"_action_sell": {
+		Type:      "action",
+		LabelLong: "Vendre l'action...",
+		Action: types.Action{
+			Label: "Vendre cette valeur",
+			URL:   "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}",
+		},
+	},
 	"orders_id": {
 		Type:       "number",
 		LabelLong:  "N°",
@@ -215,7 +255,7 @@ var ordersElements = types.Elements{
 		},
 	},
 	"orders_rem": {
-		Type:       "text",
+		Type:       "textarea",
 		LabelLong:  "Remarque",
 		LabelShort: "Rem.",
 	},
