@@ -12,6 +12,7 @@ services:
       - /mnt/nas/data/beedule/custom.conf:/src/conf/custom.conf
       - /mnt/nas/data/beedule/beedule.sqlite:/src/database/beedule.sqlite
       - /mnt/nas/data/picsou/picsou.sqlite:/src/database/picsou.sqlite
+      - /mnt/nas/data/picsou:/src/data/picsou
 
     networks:
       - db-network
