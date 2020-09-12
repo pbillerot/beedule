@@ -164,7 +164,7 @@ func (c *CrudAddController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
 		return
 	}
 

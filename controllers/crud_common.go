@@ -111,9 +111,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 
 // computeElements calcule les éléments
 func computeElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+	tableid := c.Ctx.Input.Param(":table")
+	table := app.Tables[tableid]
 
 	elements := types.Elements{}
-
 	for key, element := range viewOrFormElements {
 		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
@@ -126,20 +127,23 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		}
 		if element.ItemsSQL != "" {
 			sql := macro(c, element.ItemsSQL, record)
-			recs, err := models.CrudSQL(sql, "default")
+			recs, err := models.CrudSQL(sql, table.AliasDB)
 			if err != nil {
 				beego.Error(err)
 			}
 			var list []types.Item
 			for _, rec := range recs {
-				item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
-				// for key, label := range rec {
-				// 	if item.Key == "" {
-				// 		item.Key = col.(string)
-				// 	} else {
-				// 		item.Label = col.(string)
-				// 	}
-				// }
+				// item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
+				item := types.Item{}
+				// la 1ère colonne représente la clé
+				// la 2ème le label à afficher
+				for _, label := range rec {
+					if item.Key == "" {
+						item.Key = label.(string)
+					} else {
+						item.Label = label.(string)
+					}
+				}
 				list = append(list, item)
 			}
 			element.Items = list

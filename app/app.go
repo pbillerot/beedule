@@ -26,6 +26,8 @@ var Applications = map[string]types.Application{
 		AppViews: []types.AppView{
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},
+			{Tableid: "ptf", Viewid: "vactiv"},
+			{Tableid: "ptf", Viewid: "vall"},
 		},
 	},
 	"filebrowser": {
@@ -57,6 +59,7 @@ var Tables = types.Tables{
 	"users":  Users,
 	"groups": Groups,
 	"orders": Orders,
+	"ptf":    Ptf,
 }
 
 // Params paramètres globaux aux applications

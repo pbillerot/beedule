@@ -47,12 +47,12 @@ func (c *CrudEditController) Get() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		c.Ctx.Redirect(302, "/crud")
 	}
 	if len(records) == 0 {
 		flash.Error("Article non trouvé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		c.Ctx.Redirect(302, "/crud")
 	}
 	// // Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, false, elements, records[0])
@@ -87,24 +87,30 @@ func (c *CrudEditController) Post() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
+	flash := beego.NewFlash()
+
 	// Ctrl tableid et viewid
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
+				flash.Error("Formulaire non trouvé :", formid)
+				flash.Store(&c.Controller)
 				c.Ctx.Redirect(302, "/crud")
 				return
 			}
 		} else {
+			flash.Error("Vue non trouvée :", viewid)
+			flash.Store(&c.Controller)
 			c.Ctx.Redirect(302, "/crud")
 			return
 		}
 	} else {
+		flash.Error("Application non trouvée :", appid)
+		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/crud")
 		return
 	}
-
-	flash := beego.NewFlash()
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -114,7 +120,7 @@ func (c *CrudEditController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		c.Ctx.Redirect(302, "/crud")
 		return
 	}
 
@@ -162,7 +168,7 @@ func (c *CrudEditController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		c.Ctx.Redirect(302, "/crud")
 		return
 	}
 	// PostSQL
@@ -178,7 +184,7 @@ func (c *CrudEditController) Post() {
 			beego.Error("Ordre sql incorrect ", postsql)
 			flash.Error("Ordre sql incorrect ", postsql)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+			c.Ctx.Redirect(302, "/crud")
 			return
 		}
 	}
