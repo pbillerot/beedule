@@ -153,11 +153,82 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		}
 
 		if computeValue {
-			if element.ComputeSQL != "" {
-				element.ComputeSQL = macroSQL(c, element.ComputeSQL, record)
+			val := ""
+			if col, ok := record[key]; ok {
+				if reflect.ValueOf(col).IsValid() {
+					val = record[key].(string)
+				}
 			}
-			if element.DefaultSQL != "" {
-				element.DefaultSQL = macroSQL(c, element.DefaultSQL, record)
+			if element.ComputeSQL != "" {
+				val = macroSQL(c, element.ComputeSQL, record)
+			}
+			if val == "" && element.DefaultSQL != "" {
+				val = macroSQL(c, element.DefaultSQL, record)
+			}
+			if val == "" && element.Default != "" {
+				val = macro(c, element.Default, record)
+			}
+			// Update record avec valeur calculée
+			if col, ok := record[key]; ok {
+				if reflect.ValueOf(col).IsValid() {
+					record[key] = val
+				}
+			}
+		}
+		elements[key] = element
+	}
+	return elements
+}
+
+// computeElements calcule les éléments
+func defaultElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+	tableid := c.Ctx.Input.Param(":table")
+	table := app.Tables[tableid]
+
+	elements := types.Elements{}
+	for key, element := range viewOrFormElements {
+		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL, HideSQL
+		if element.ClassSQL != "" {
+			element.Class = macroSQL(c, element.ClassSQL, record)
+		}
+		if element.HideSQL != "" {
+			if macroSQL(c, element.HideSQL, record) != "" {
+				element.Hide = true
+			}
+		}
+		if element.ItemsSQL != "" {
+			sql := macro(c, element.ItemsSQL, record)
+			recs, err := models.CrudSQL(sql, table.AliasDB)
+			if err != nil {
+				beego.Error(err)
+			}
+			var list []types.Item
+			for _, rec := range recs {
+				// item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
+				item := types.Item{}
+				// la 1ère colonne représente la clé
+				// la 2ème le label à afficher
+				for _, label := range rec {
+					if item.Key == "" {
+						item.Key = label.(string)
+					} else {
+						item.Label = label.(string)
+					}
+				}
+				list = append(list, item)
+			}
+			element.Items = list
+		}
+		if element.Action.URL != "" {
+			element.Action.URL = macro(c, element.Action.URL, record)
+		}
+
+		if computeValue {
+			if element.ComputeSQL != "" {
+				element.Value = macroSQL(c, element.ComputeSQL, record)
+			}
+			if element.Value == "" && element.DefaultSQL != "" {
+				element.Value = macroSQL(c, element.DefaultSQL, record)
 			}
 			if element.Value == "" && element.Default != "" {
 				element.Value = macro(c, element.Default, record)

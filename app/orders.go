@@ -113,7 +113,16 @@ var ordersForms = types.Forms{
 		Title: "Ordre de vente",
 		Elements: types.Elements{
 			// Achat
-			"orders_id":       {Order: 1},
+			"_section_achat": {
+				Order:     10,
+				Type:      "section",
+				LabelLong: "Achat",
+				Params: types.Params{
+					Form:     "feditbuy",
+					IconName: "money check",
+				},
+			},
+			"orders_id":       {Order: 15},
 			"orders_ptf_id":   {Order: 10},
 			"orders_order":    {Order: 20},
 			"orders_time":     {Order: 30},
@@ -125,7 +134,7 @@ var ordersForms = types.Forms{
 			"_section_vente": {
 				Order:      200,
 				Type:       "section",
-				LabelLong:  "Ordre de Vente",
+				LabelLong:  "Vente",
 				LabelShort: "Vente",
 				Params: types.Params{
 					Form:     "feditsell",

@@ -176,7 +176,7 @@ func (c *CrudActionElementController) Post() {
 		return
 	}
 	// Calcul des éléments
-	elements = computeElements(c.Controller, false, elements, records[0])
+	elements = computeElements(c.Controller, true, elements, records[0])
 
 	table := app.Tables[tableid]
 	if element, ok := elements[actionid]; ok {

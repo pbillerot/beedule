@@ -49,15 +49,8 @@ func (c *CrudAddController) Get() {
 	var records []orm.Params
 	records = append(records, record)
 
-	// Remplissage records avec valeur par défaut
-	for ir, record := range records {
-		for key, val := range record {
-			if val == "" {
-				record[key] = elements[key].Value
-				records[ir] = record
-			}
-		}
-	}
+	// Calcul des éléments
+	elements = computeElements(c.Controller, true, elements, records[0])
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]

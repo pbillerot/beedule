@@ -54,8 +54,8 @@ func (c *CrudEditController) Get() {
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/crud")
 	}
-	// // Calcul des éléments (valeur par défaut comprise)
-	elements = computeElements(c.Controller, false, elements, records[0])
+	// Calcul des éléments (valeur par défaut comprise)
+	elements = computeElements(c.Controller, true, elements, records[0])
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
