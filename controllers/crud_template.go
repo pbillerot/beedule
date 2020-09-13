@@ -58,7 +58,7 @@ func CrudIndexSQL(record orm.Params, key string, element types.Element, session 
 
 // CrudFormat préféré à text/template/printf car les données fournies sont toujours des strings
 func CrudFormat(in string, value string) (out string) {
-	out = ""
+	out = value
 	if in != "" {
 		recs, err := models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
 		if err != nil {

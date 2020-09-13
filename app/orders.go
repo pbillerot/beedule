@@ -25,6 +25,21 @@ var ordersViews = types.Views{
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
 		ClassSQL:  "select case when {orders_cost_price} + {orders_cost_price} * {__optimum} < {orders_quote} then 'positive' when {orders_cost_price} < {orders_quote} then 'blue' else 'negative' end",
+		Mask: types.MaskList{
+			Header: []string{
+				"orders_ptf_id",
+			},
+			Meta: []string{
+				"orders_time",
+			},
+			Description: []string{
+				"orders_rem",
+			},
+			Extra: []string{
+				"orders_gain",
+				"orders_gainp",
+			},
+		},
 		Elements: types.Elements{
 			"orders_id":         {Order: 1, HideOnMobile: true},
 			"orders_ptf_id":     {Order: 10},
@@ -57,6 +72,22 @@ var ordersViews = types.Views{
 		FormView:  "fviewsell",
 		Deletable: true,
 		Where:     "orders_order = 'sell'",
+		Mask: types.MaskList{
+			Header: []string{
+				"orders_ptf_id",
+			},
+			Meta: []string{
+				"orders_time",
+				"orders_sell_time",
+			},
+			Description: []string{
+				"orders_rem",
+			},
+			Extra: []string{
+				"orders_sell_gain",
+				"orders_sell_gainp",
+			},
+		},
 		Elements: types.Elements{
 			"orders_id":         {Order: 1, HideOnMobile: true},
 			"orders_ptf_id":     {Order: 10},

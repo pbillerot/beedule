@@ -56,11 +56,12 @@
       {{template "_crud_flash.html" .}}
       {{$lenAppViews := len $app.AppViews }}
       {{if (gt $lenAppViews 1)}}
-      <div class="ui pointing compact menu">
+      <!-- MENU DES VUES -->
+      <div class="ui stackable secondary pointing menu">
         {{ range $iv, $appView := $app.AppViews }}
         {{$t := index $portail.Tables $appView.Tableid }}
         {{$v := index $t.Views $appView.Viewid }}
-        <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} active{{end}}"
+        <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
           href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
           <i class="{{$v.IconName}} icon"></i>
           {{$v.Title}}
@@ -85,90 +86,68 @@
       </div>
       {{end}}
       <!-- end if menu -->
-      <!-- ITEMS -->
-      <div class="ui relaxed divided items">
-        {{ range $irecord, $record := .Records }}
-        <a class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} item"
-          data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
-          <i class="large {{$theme}} {{$view.IconName}} middle aligned icon"></i>
-          {{ range $num, $key := $cols }}
-          {{ $element := index $elements $key }}
-          {{ $val := CrudIndexSQL $record $key $element $session}}
-          {{if (ne $element.Hide true)}}
-          {{if (eq $element.Type "combo")}}
-          <div class="content">
-            <div class="description">
-              <div class="meta">
-                <span>{{$element.LabelLong}}</span>
-              </div>
-            </div>
-            <div class="header">
-              <h4>{{CrudItem $element.Items $val}} ({{$val}})</h4>
-            </div>
-          </div>
-          {{else if (eq $element.Type "checkbox")}}
-          <div class="content">
-            <div class="description">&nbsp;</div>
-            <div class="header">
-              <h4>
-                {{if (eq $val "1") }}
-                <i class="check square outline icon"></i> {{$element.LabelLong}}
-                {{else}}
-                <i class="square outline icon"></i> {{$element.LabelLong}}
-                {{end}}
-              </h4>
-            </div>
-          </div>
-          {{else if (eq $element.Type "tag")}}
-          <div class="content">
-            <div class="description">
-              <div class="meta">
-                <span>{{$element.LabelLong}}</span>
-              </div>
-            </div>
-            {{$arr := CrudSplit $val ","}}
-            {{range $i, $item := $arr}}
-            <div class="ui small label">{{$item}}</div>
+      <!-- LIST TABLE -->
+      <table class="ui unstackable collapsing sortable selectable celled table" data-role="table"
+        data-mode="columntoggle">
+        <thead>
+          <!-- ENTETE TABLE -->
+          <tr>
+            {{ range $num, $key := $cols }}
+            {{ $element := index $elements $key }}
+            {{if (ne $element.Hide true)}}
+            <th class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
+              {{$element.LabelShort}}
+            </th>
             {{end}}
-            {{else if (eq $element.Type "textarea")}}
-            <div class="description">
-              <div class="meta">
-                <span>{{$element.LabelLong}}</span>
-              </div>
-            </div>
-            <div class="ui {{$element.Class}} message">
-              {{$val}}
-            </div>
-          </div>
-          {{else}}
-          <!-- autre types -->
-          <div class="content">
-            <div class="description">
-              <div class="meta">
-                <span>{{$element.LabelLong}}</span>
-              </div>
-            </div>
-            <div class="header">
-              <span class="ui medium {{$element.Class}} text">
-                {{if $element.Format}}
-                {{CrudFormat $element.Format $val}}
-                {{else}}
-                {{$val}}
+            <!-- end if Hide -->
+            {{end}}
+            <!-- end loop $cols -->
+          </tr>
+        </thead>
+        <tbody id="bee-table">
+          <!-- LOOP $RECORD -->
+          {{ range $irecord, $record := .Records }}
+          <tr class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
+            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
+            {{ range $num, $key := $cols }}
+            {{ $element := index $elements $key }}
+            {{ $val := CrudIndexSQL $record $key $element $session}}
+            {{if (ne $element.Hide true)}}
+            <td class="ui {{$element.ColAlign}} aligned{{if (eq $element.HideOnMobile true)}} bee-mobile-hide{{end}}">
+              {{if (eq $element.Type "combo")}}
+                <!-- combo -->
+                {{CrudItem $element.Items $val}} ({{$val}})
+              {{else if (eq $element.Type "checkbox")}}
+                <!-- checkbox -->
+                {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
+                {{else if (eq $element.Type "password")}}
+                <!-- password -->
+                ***
+              {{else if (eq $element.Type "tag")}}
+                <!--   tag -->
+                {{$arr := CrudSplit $val ","}}
+                {{range $i, $item := $arr}}
+                <div c  lass="ui small label">{{$item}}</div>
                 {{end}}
-              </span>
-            </div>
-          </div>
+              {{else}}
+                <!-- autres -->
+                {{if and $element.Format $val}}
+                  {{CrudFormat $element.Format $val}}
+                {{else}}
+                  {{$val}}
+                {{end}}
+              {{end}}
+            </td>
+            {{end}}
+            <!-- end if Hide -->
+            {{end}}
+            <!-- end loop $cols -->
+          </tr>
           {{end}}
-          <!-- end type -->
-          {{end}}
-          <!-- end if Hide -->
-          {{end}}
-          <!-- end range $cols -->
-        </a> <!-- end item -->
-        {{end}}
-        <!-- end range $records -->
-      </div><!-- end items -->
-    </div> <!-- end container-->
+          <!-- fin loop $records -->
+        </tbody>
+      </table>
+    </div>
   </main>
   <!-- Demande de confirmation de l'action' -->
   <div class="ui modal">

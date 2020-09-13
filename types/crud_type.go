@@ -114,6 +114,15 @@ type View struct {
 	Where     string
 	Title     string // Titre de la vue
 	Elements  Elements
+	Mask      MaskList // Masque html d'une ligne dans la vue
+}
+
+// MaskList as
+type MaskList struct {
+	Header      []string
+	Meta        []string
+	Description []string
+	Extra       []string
 }
 
 // Form formulaire
