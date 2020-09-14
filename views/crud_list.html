@@ -57,7 +57,7 @@
       {{$lenAppViews := len $app.AppViews }}
       {{if (gt $lenAppViews 1)}}
       <!-- MENU DES VUES -->
-      <div class="ui stackable secondary pointing menu">
+      <div class="ui stackable pointing compact menu">
         {{ range $iv, $appView := $app.AppViews }}
         {{$t := index $portail.Tables $appView.Tableid }}
         {{$v := index $t.Views $appView.Viewid }}
@@ -87,13 +87,11 @@
       {{end}}
       <!-- end if menu -->
       <!-- ITEMS -->
-      <div class="ui white unstackable divided links items">
+      <div class="ui divided relaxed celled links list">
         {{ range $irecord, $record := .Records }}
         <a class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} item"
           data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
-          <div class="ui mini image">
-            <i class="large {{$theme}} {{$view.IconName}} middle aligned icon"></i>
-          </div>
+          <i class="large {{$theme}} {{$view.IconName}} middle aligned icon"></i>
           <div class="content">
             {{if $view.Mask.Header}}
             <div class="header">
@@ -101,9 +99,9 @@
               {{ $element := index $elements $key }}
               {{ $val := CrudIndex $record $key}}
               {{if (eq $element.Type "combo")}}
-                <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
               {{else}}
-                <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
+              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
               {{end}}
               {{end}}
             </div>
@@ -113,10 +111,16 @@
               {{range $im, $key := $view.Mask.Meta}}
               {{ $element := index $elements $key }}
               {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "combo")}}
-                <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              {{if (eq $element.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <i class="check square outline icon"></i> {{$element.LabelLong}}
               {{else}}
-                <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
+              <i class="square outline icon"></i> {{$element.LabelLong}}
+              {{end}}
+              {{else if (eq $element.Type "combo")}}
+              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              {{else}}
+              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
               {{end}}
               {{end}}
             </div>
@@ -127,9 +131,9 @@
               {{ $element := index $elements $key }}
               {{ $val := CrudIndex $record $key}}
               {{if (eq $element.Type "combo")}}
-                <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
               {{else}}
-                <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
+              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
               {{end}}
               {{end}}
             </div>
@@ -139,10 +143,21 @@
               {{range $im, $key := $view.Mask.Extra}}
               {{ $element := index $elements $key }}
               {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "combo")}}
-                <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              {{if (eq $element.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <i class="check square outline icon"></i> {{$element.LabelLong}}
               {{else}}
-                <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
+              <i class="square outline icon"></i> {{$element.LabelLong}}
+              {{end}}
+              {{else if (eq $element.Type "combo")}}
+              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              {{else if (eq $element.Type "tag")}}
+                {{$arr := CrudSplit $val ","}}
+                {{range $i, $item := $arr}}
+                <div class="ui small label">{{$item}}</div>
+                {{end}}
+              {{else}}
+              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
               {{end}}
               {{end}}
             </div>

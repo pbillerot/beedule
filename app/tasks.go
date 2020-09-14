@@ -59,6 +59,20 @@ var tasksViews = types.Views{
 		ClassSQL:  "select 'positive' where '{task_status}' = '1'",
 		OrderBy:   "task_status",
 		// Where:   "task_user = '{$user}'",
+		Mask: types.MaskList{
+			Header: []string{
+				"task_name",
+			},
+			Meta: []string{
+				"task_user",
+			},
+			Description: []string{
+				"task_note",
+			},
+			Extra: []string{
+				"task_status",
+			},
+		},
 		Elements: types.Elements{
 			"task_id":     {Order: 10, HideOnMobile: true},
 			"task_user":   {Order: 20},

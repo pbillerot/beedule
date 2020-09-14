@@ -40,6 +40,16 @@ var groupsViews = types.Views{
 		IconName:  "users",
 		OrderBy:   "group_id",
 		Group:     "admin",
+		Mask: types.MaskList{
+			Header: []string{
+				"group_id",
+			},
+			Meta: []string{},
+			Description: []string{
+				"group_id",
+			},
+			Extra: []string{},
+		},
 		Elements: types.Elements{
 			"group_id":   {},
 			"group_note": {},

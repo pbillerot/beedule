@@ -67,6 +67,20 @@ var usersViews = types.Views{
 		Title:     "Comptes",
 		IconName:  "user",
 		OrderBy:   "user_name",
+		Mask: types.MaskList{
+			Header: []string{
+				"user_name",
+			},
+			Meta: []string{
+				"user_is_admin",
+			},
+			Description: []string{
+				"user_email",
+			},
+			Extra: []string{
+				"user_groupes",
+			},
+		},
 		Elements: types.Elements{
 			"user_name":     {Order: 10},
 			"user_email":    {Order: 20, HideOnMobile: true},
