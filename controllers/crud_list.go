@@ -54,8 +54,10 @@ func (c *CrudListController) Get() {
 		// c.Ctx.Redirect(302, "/crud")
 		// return
 	}
-	// Calcul des éléments hors values
-	elements = computeElements(c.Controller, false, elements, records[0])
+	if len(records) > 0 {
+		// Calcul des éléments hors values
+		elements = computeElements(c.Controller, false, elements, records[0])
+	}
 
 	// Remplissage du contexte pour le template
 	setContext(c.Controller)

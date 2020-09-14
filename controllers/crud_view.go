@@ -56,6 +56,12 @@ func (c *CrudViewController) Get() {
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
+	if len(records) == 0 {
+		flash.Error("Article non trouvé: ", id)
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		return
+	}
 
 	setContext(c.Controller)
 	if err == nil {

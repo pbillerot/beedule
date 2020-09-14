@@ -123,10 +123,20 @@ func (c *CrudEditController) Post() {
 		c.Ctx.Redirect(302, "/crud")
 		return
 	}
-
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
 	form := app.Tables[tableid].Forms[formid]
+
+	if len(records) == 0 {
+		flash.Error("Article non trouvé: ", id)
+		flash.Store(&c.Controller)
+		if view.FormView == "" {
+			c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		} else {
+			c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		}
+		return
+	}
 
 	// Lecture, contrôle des champs saisis
 	// et remplissage de SQLOut pour l'enregistrement

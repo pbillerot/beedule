@@ -20,8 +20,11 @@
   <!-- NAVBAR -->
   <div class="ui container">
     <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <a href="/crud" class="item" style="padding: 0.4em;">
+        <i class="home icon"></i>
+      </a>
       <div class="item">
-        <a class="ui mini image" href="/crud">
+        <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
           <img src="{{$app.Image}}">
         </a>
       </div>
@@ -134,11 +137,7 @@
             {{range $im, $key := $view.Mask.Description}}
             {{ $element := index $elements $key }}
             {{ $val := CrudIndex $record $key}}
-            {{if (eq $element.Type "combo")}}
-            <pre class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</remœ>
-            {{else}}
-            <pre class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</pre>
-            {{end}}
+            <span class="ui orange {{$element.Class}} text"><b>{{CrudFormat $element.Format $val}}</b></span>
             {{end}}
           </div>
           {{end}}

@@ -29,8 +29,11 @@ main {
 .ui.link.message {
     cursor: pointer;
 }
-/* Mobile */
+pre {
+    font-size: 0.9em;
+}
 
+/* Mobile */
 @media only screen and (max-width: 767px) {
     .bee-mobile-hide {
         display: none;

@@ -22,17 +22,24 @@
   <!-- NAVBAR -->
   <div class="ui container">
     <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <a href="/crud" class="item" style="padding: 0.4em;">
+        <i class="home icon"></i>
+      </a>
       <div class="item">
         <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
           <img class="ui mini image" src="{{$app.Image}}">
         </a>
       </div>
-      {{if (eq $id "")}} <!-- Formulaire d'Ajout ou d'Edition -->
-      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item">
+      {{if (eq $id "")}} <!-- Formulaire d'Ajout -->
+      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
+        <i class="arrow left icon"></i>
+      </a>
+      {{else if $view.FormView}}
+      <a href="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
       {{else}}
-      <a href="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" class="item">
+      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
       {{end}}

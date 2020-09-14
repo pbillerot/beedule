@@ -43,7 +43,6 @@ var ptfViews = types.Views{
 			"ptf_id":      {},
 			"ptf_name":    {},
 			"ptf_enabled": {},
-			"ptf_note":    {},
 			"ptf_top":     {},
 			"ptf_rem":     {},
 			"ptf_quote":   {},
@@ -52,12 +51,12 @@ var ptfViews = types.Views{
 		Where:   "ptf_enabled = '1'",
 		OrderBy: "ptf_name",
 	},
-	"vall": {
+	"vinactiv": {
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		FormView:  "fview",
 		Deletable: true,
-		Title:     "Toutes les Valeurs",
+		Title:     "Les Valeurs inactives",
 		IconName:  "building outline",
 		Mask: types.MaskList{
 			Header: []string{
@@ -80,12 +79,48 @@ var ptfViews = types.Views{
 			"ptf_id":      {},
 			"ptf_name":    {},
 			"ptf_enabled": {},
-			"ptf_note":    {},
 			"ptf_top":     {},
 			"ptf_rem":     {},
 			"ptf_quote":   {},
 			"ptf_gain":    {},
 		},
+		Where:   "ptf_enabled <> '1'",
+		OrderBy: "ptf_name",
+	},
+	"vtop": {
+		FormAdd:   "fadd",
+		FormEdit:  "fedit",
+		FormView:  "fview",
+		Deletable: true,
+		Title:     "Les Valeurs TOP",
+		IconName:  "building outline",
+		Mask: types.MaskList{
+			Header: []string{
+				"ptf_name",
+				"ptf_id",
+			},
+			Meta: []string{
+				"ptf_enabled",
+				"ptf_top",
+			},
+			Description: []string{
+				"ptf_rem",
+			},
+			Extra: []string{
+				"ptf_quote",
+				"ptf_gain",
+			},
+		},
+		Elements: types.Elements{
+			"ptf_id":      {},
+			"ptf_name":    {},
+			"ptf_enabled": {},
+			"ptf_top":     {},
+			"ptf_rem":     {},
+			"ptf_quote":   {},
+			"ptf_gain":    {},
+		},
+		Where:   "ptf_top = '1'",
 		OrderBy: "ptf_name",
 	},
 }
@@ -97,7 +132,6 @@ var ptfForms = types.Forms{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
 			"ptf_enabled":    {Order: 30},
-			"ptf_note":       {Order: 40},
 			"ptf_top":        {Order: 50},
 			"ptf_rem":        {Order: 60},
 			"ptf_quote":      {Order: 70},
@@ -118,9 +152,13 @@ var ptfForms = types.Forms{
 	"fedit": {
 		Title: "Fiche Valeur",
 		Elements: types.Elements{
-			"ptf_id":   {Order: 10},
-			"ptf_name": {Order: 20},
-			"ptf_isin": {Order: 30},
+			"ptf_id":      {Order: 10},
+			"ptf_name":    {Order: 20},
+			"ptf_isin":    {Order: 30},
+			"ptf_enabled": {Order: 40},
+			"ptf_top":     {Order: 50},
+			"ptf_note":    {Order: 60},
+			"ptf_rem":     {Order: 70},
 		},
 	},
 }
@@ -143,13 +181,14 @@ var ptfElements = types.Elements{
 	},
 	"ptf_note": {
 		Type:       "text",
-		LabelLong:  "Note",
+		LabelLong:  "Note ",
 		LabelShort: "Note",
 	},
 	"ptf_rem": {
 		Type:       "text",
 		LabelLong:  "Remarque",
 		LabelShort: "Remarque",
+		Class:      "orange",
 	},
 	"ptf_enabled": {
 		Type:       "checkbox",
