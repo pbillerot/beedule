@@ -48,10 +48,15 @@
     <div class="ui container">
       {{template "_crud_flash.html" .}}
       <!-- FORMULAIRE -->
+      <div class="ui attached message">
+        <div class="header">
+          {{$form.Title}}: {{$coldisplay}}
+        </div>
+      </div>
       {{if (eq $id "")}} <!-- Formulaire d'Ajout ou d'Edition -->
-      <form class="ui form" id="beeForm" method="POST" action="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}">
+      <form class="ui form attached segment" id="beeForm" method="POST" action="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}">
       {{else}}
-      <form class="ui form" id="beeForm" method="POST" action="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+      <form class="ui form attached segment" id="beeForm" method="POST" action="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
       {{end}}
         {{ .xsrfdata }}
         {{ range $irecord, $record := .Records }}

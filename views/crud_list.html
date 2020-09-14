@@ -87,87 +87,92 @@
       {{end}}
       <!-- end if menu -->
       <!-- ITEMS -->
-      <div class="ui divided relaxed celled links list">
-        {{ range $irecord, $record := .Records }}
-        <a class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} item"
-          data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}">
-          <i class="large {{$theme}} {{$view.IconName}} middle aligned icon"></i>
-          <div class="content">
-            {{if $view.Mask.Header}}
-            <div class="header">
-              {{range $im, $key := $view.Mask.Header}}
-              {{ $element := index $elements $key }}
-              {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "combo")}}
-              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
-              {{else}}
-              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
-              {{end}}
-              {{end}}
-            </div>
+      <!-- <div class="ui divided relaxed celled links list"> -->
+      {{ range $irecord, $record := .Records }}
+      <a class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message"
+        {{if $view.FormView}} data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        {{else if $view.FormEdit}}
+        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}" {{end}}>
+        <i class="mini {{$theme}} {{$view.IconName}} middle aligned icon"></i>
+        <div class="content">
+          {{if $view.Mask.Header}}
+          <div class="header">
+            {{range $im, $key := $view.Mask.Header}}
+            {{ $element := index $elements $key }}
+            {{ $val := CrudIndex $record $key}}
+            {{if (eq $element.Type "combo")}}
+            <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+            {{else}}
+            <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
             {{end}}
-            {{if $view.Mask.Meta}}
-            <div class="meta">
-              {{range $im, $key := $view.Mask.Meta}}
-              {{ $element := index $elements $key }}
-              {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "checkbox")}}
-              {{if (eq $val "1") }}
-              <i class="check square outline icon"></i> {{$element.LabelLong}}
-              {{else}}
-              <i class="square outline icon"></i> {{$element.LabelLong}}
-              {{end}}
-              {{else if (eq $element.Type "combo")}}
-              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
-              {{else}}
-              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
-              {{end}}
-              {{end}}
-            </div>
-            {{end}}
-            {{if $view.Mask.Description}}
-            <div class="description">
-              {{range $im, $key := $view.Mask.Description}}
-              {{ $element := index $elements $key }}
-              {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "combo")}}
-              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
-              {{else}}
-              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
-              {{end}}
-              {{end}}
-            </div>
-            {{end}}
-            {{if $view.Mask.Extra}}
-            <div class="extra">
-              {{range $im, $key := $view.Mask.Extra}}
-              {{ $element := index $elements $key }}
-              {{ $val := CrudIndex $record $key}}
-              {{if (eq $element.Type "checkbox")}}
-              {{if (eq $val "1") }}
-              <i class="check square outline icon"></i> {{$element.LabelLong}}
-              {{else}}
-              <i class="square outline icon"></i> {{$element.LabelLong}}
-              {{end}}
-              {{else if (eq $element.Type "combo")}}
-              <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
-              {{else if (eq $element.Type "tag")}}
-                {{$arr := CrudSplit $val ","}}
-                {{range $i, $item := $arr}}
-                <div class="ui small label">{{$item}}</div>
-                {{end}}
-              {{else}}
-              <span class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</span>
-              {{end}}
-              {{end}}
-            </div>
             {{end}}
           </div>
-          <!-- end range $cols -->
-        </a> <!-- end item -->
-        {{end}}
-        <!-- end range $records -->
-      </div><!-- end items -->
+          {{end}}
+          {{if $view.Mask.Meta}}
+          <div class="meta">
+            {{range $im, $key := $view.Mask.Meta}}
+            {{ $element := index $elements $key }}
+            {{ $val := CrudIndex $record $key}}
+            {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+            <i class="check square outline icon"></i> {{$element.LabelLong}}
+            {{else}}
+            <i class="square outline icon"></i> {{$element.LabelLong}}
+            {{end}}
+            {{else if (eq $element.Type "combo")}}
+            {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+            <span class="ui {{$element.Class}} text"><b>{{CrudItem $element.Items $val}} ({{$val}})</b></span>
+            {{else}}
+            {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+            <span class="ui {{$element.Class}} text"><b>{{CrudFormat $element.Format $val}}</b></span>
+            {{end}}
+            {{end}}
+          </div>
+          {{end}}
+          {{if $view.Mask.Description}}
+          <div class="description">
+            {{range $im, $key := $view.Mask.Description}}
+            {{ $element := index $elements $key }}
+            {{ $val := CrudIndex $record $key}}
+            {{if (eq $element.Type "combo")}}
+            <pre class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</remœ>
+            {{else}}
+            <pre class="ui {{$element.Class}} text">{{CrudFormat $element.Format $val}}</pre>
+            {{end}}
+            {{end}}
+          </div>
+          {{end}}
+          {{if $view.Mask.Extra}}
+          <div class="extra">
+            {{range $im, $key := $view.Mask.Extra}}
+            {{ $element := index $elements $key }}
+            {{ $val := CrudIndex $record $key}}
+            {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+            <i class="check square outline icon"></i> <b>{{$element.LabelLong}}</b>
+            {{else}}
+            <i class="square outline icon"></i> <b>{{$element.LabelLong}}</b>
+            {{end}}
+            {{else if (eq $element.Type "combo")}}
+            <span class="ui {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+            {{else if (eq $element.Type "tag")}}
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+            <div class="ui tag label"><b>{{$item}}</b></div>
+            {{end}}
+            {{else}}
+            {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+            <span class="ui {{$element.Class}} text"><b>{{CrudFormat $element.Format $val}}</b></span>
+            {{end}}
+            {{end}}
+          </div>
+          {{end}}
+        </div>
+        <!-- end range $cols -->
+      </a> <!-- end item -->
+      {{end}}
+      <!-- end range $records -->
+      <!-- </div>end items -->
     </div> <!-- end container-->
   </main>
   <!-- Demande de confirmation de l'action' -->

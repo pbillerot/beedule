@@ -192,5 +192,9 @@ func (c *CrudEditController) Post() {
 	flash.Notice("Mise à jour effectuée avec succès")
 	flash.Store(&c.Controller)
 
-	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	if view.FormView == "" {
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	} else {
+		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	}
 }

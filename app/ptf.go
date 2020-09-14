@@ -29,10 +29,9 @@ var ptfViews = types.Views{
 			},
 			Meta: []string{
 				"ptf_enabled",
+				"ptf_top",
 			},
 			Description: []string{
-				"ptf_top",
-				"ptf_note",
 				"ptf_rem",
 			},
 			Extra: []string{
@@ -67,10 +66,9 @@ var ptfViews = types.Views{
 			},
 			Meta: []string{
 				"ptf_enabled",
+				"ptf_top",
 			},
 			Description: []string{
-				"ptf_top",
-				"ptf_note",
 				"ptf_rem",
 			},
 			Extra: []string{
@@ -169,7 +167,7 @@ var ptfElements = types.Elements{
 		LabelShort: "Quote",
 	},
 	"ptf_gain": {
-		Type:       "amount",
+		Type:       "percent",
 		LabelLong:  "Gain du jour",
 		LabelShort: "Gain",
 		ClassSQL:   "select case when {ptf_gain} > 0 then 'green' when {ptf_gain} < 0 then 'red' end",

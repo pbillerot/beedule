@@ -49,7 +49,7 @@ var tasksElements = types.Elements{
 
 var tasksViews = types.Views{
 	"vall": {
-		FormView:  "fview",
+		// FormView:  "fview",
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		Deletable: false,

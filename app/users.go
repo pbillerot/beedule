@@ -72,12 +72,11 @@ var usersViews = types.Views{
 				"user_name",
 			},
 			Meta: []string{
-				"user_is_admin",
-			},
-			Description: []string{
 				"user_email",
 			},
+			Description: []string{},
 			Extra: []string{
+				"user_is_admin",
 				"user_groupes",
 			},
 		},
