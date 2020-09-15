@@ -26,15 +26,15 @@ func (c *CrudEditController) Get() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				c.Ctx.Redirect(302, "/crud")
+				c.Ctx.Redirect(302, c.GetSession("from").(string))
 				return
 			}
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
@@ -47,12 +47,12 @@ func (c *CrudEditController) Get() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 	}
 	if len(records) == 0 {
 		flash.Error("Article non trouvé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 	}
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
@@ -61,6 +61,7 @@ func (c *CrudEditController) Get() {
 	view := app.Tables[tableid].Views[viewid]
 	form := app.Tables[tableid].Forms[formid]
 
+	// c.SetSession("from", c.Ctx.Request.Referer())
 	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
@@ -96,19 +97,19 @@ func (c *CrudEditController) Post() {
 			} else {
 				flash.Error("Formulaire non trouvé :", formid)
 				flash.Store(&c.Controller)
-				c.Ctx.Redirect(302, "/crud")
+				c.Ctx.Redirect(302, c.GetSession("from").(string))
 				return
 			}
 		} else {
 			flash.Error("Vue non trouvée :", viewid)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/crud")
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
 		flash.Error("Application non trouvée :", appid)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
@@ -120,7 +121,7 @@ func (c *CrudEditController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 	table := app.Tables[tableid]
@@ -130,11 +131,7 @@ func (c *CrudEditController) Post() {
 	if len(records) == 0 {
 		flash.Error("Article non trouvé: ", id)
 		flash.Store(&c.Controller)
-		if view.FormView == "" {
-			c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
-		} else {
-			c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
-		}
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
@@ -178,7 +175,7 @@ func (c *CrudEditController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 	// PostSQL
@@ -194,7 +191,7 @@ func (c *CrudEditController) Post() {
 			beego.Error("Ordre sql incorrect ", postsql)
 			flash.Error("Ordre sql incorrect ", postsql)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, "/crud")
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	}
@@ -202,9 +199,11 @@ func (c *CrudEditController) Post() {
 	flash.Notice("Mise à jour effectuée avec succès")
 	flash.Store(&c.Controller)
 
-	if view.FormView == "" {
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
-	} else {
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
-	}
+	// if view.FormView == "" {
+	// 	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	// } else {
+	// 	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	// }
+	c.Ctx.Redirect(302, c.GetSession("from").(string))
+
 }

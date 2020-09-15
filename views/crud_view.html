@@ -64,31 +64,33 @@
       <div class="ui cards">
         {{ $isStart := true}}
         {{ range $irecord, $record := .Records }}
-            <!-- pour mémoriser le hide dans une section -->
-            {{ $isSectionHide := false}}
+        <!-- pour mémoriser le hide dans une section -->
+        {{ $isSectionHide := false}}
 
-            {{ range $num, $key := $cols }}
-            {{ $val := CrudIndex $record $key }}
-            {{ $element := index $elements $key }}
-            {{if and (eq $isSectionHide true) (eq $element.Hide false) (or (eq $element.Type "section") (eq $element.Type "image"))}}
-              {{$isSectionHide = false}}<!-- les champs de la section seront affichés -->
-            {{end}}
-            {{if and (eq $element.Hide true) (or (eq $element.Type "section") (eq $element.Type "image"))}}
-              {{$isSectionHide = true}}<!-- les champs de la section ne seront pas affichés -->
-            {{end}}
+        {{ range $num, $key := $cols }}
+        {{ $val := CrudIndex $record $key }}
+        {{ $element := index $elements $key }}
+        {{if and (eq $isSectionHide true) (eq $element.Hide false) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+        {{$isSectionHide = false}}
+        <!-- les champs de la section seront affichés -->
+        {{end}}
+        {{if and (eq $element.Hide true) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+        {{$isSectionHide = true}}
+        <!-- les champs de la section ne seront pas affichés -->
+        {{end}}
 
-            {{if and (eq $element.Hide false) (eq $isSectionHide false)}}
-            <!-- 1ère section automatique si le 1er élement n'est pas une section-->
-            {{if and $isStart (ne $element.Type "section")}}
-            <a class="card raised crud-card-view" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
-              <div class="content">
-              <div class="ui right floated">
-                <i class="big {{$theme}} {{$view.IconName}} icon"></i>
-              </div>
-              <div class="header">
-                <h4>{{$form.Title}}</h4>
-              </div>
-              {{ $isStart = false}}
+        {{if and (eq $element.Hide false) (eq $isSectionHide false)}}
+        <!-- 1ère section automatique si le 1er élement n'est pas une section-->
+        {{if and $isStart (ne $element.Type "section")}}
+        <a class="card raised crud-card-view" href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+          <div class="content">
+            <div class="ui right floated">
+              <i class="big {{$theme}} {{$view.IconName}} icon"></i>
+            </div>
+            <div class="header">
+              <h4>{{$form.Title}}</h4>
+            </div>
+            {{ $isStart = false}}
             {{end}}
             <!-- Affichage de l'élément -->
             {{if (eq $element.Type "section")}}
@@ -96,8 +98,8 @@
             <!-- Fermeture de la card et ouverture d'une autre -->
           </div> <!-- end content card -->
         </a> <!-- end card -->
-            {{end}}
-            {{ $isStart = false}}
+        {{end}}
+        {{ $isStart = false}}
         <a class="card raised  crud-card-view"
           href="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
           <div class="content">
@@ -114,7 +116,8 @@
               {{$element.LabelLong}}
             </button>
             {{else}}
-            <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Action.WithConfirm}}" data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}">
+            <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Action.WithConfirm}}"
+              data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}">
               {{$element.LabelLong}}
             </button>
             {{end}}

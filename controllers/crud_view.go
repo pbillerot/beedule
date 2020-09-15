@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
@@ -63,6 +65,7 @@ func (c *CrudViewController) Get() {
 		return
 	}
 
+	c.SetSession("from", fmt.Sprintf("/crud/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 	setContext(c.Controller)
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)

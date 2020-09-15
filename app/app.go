@@ -29,6 +29,7 @@ var Applications = map[string]types.Application{
 			{Tableid: "ptf", Viewid: "vtop"},
 			{Tableid: "ptf", Viewid: "vactiv"},
 			{Tableid: "ptf", Viewid: "vinactiv"},
+			{Tableid: "ptf", Viewid: "vdiapo"},
 		},
 	},
 	"filebrowser": {

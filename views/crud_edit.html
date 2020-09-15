@@ -1,4 +1,5 @@
 <!-- vusers.html -->
+{{$from := .From}}
 {{$appid := .AppId}}
 {{$portail := .Portail}}
 {{$app := .Application}}
@@ -30,19 +31,9 @@
           <img class="ui mini image" src="{{$app.Image}}">
         </a>
       </div>
-      {{if (eq $id "")}} <!-- Formulaire d'Ajout -->
-      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
+      <a href="{{$from}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
-      {{else if $view.FormView}}
-      <a href="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" class="item" style="padding: 0.5em;">
-        <i class="arrow left icon"></i>
-      </a>
-      {{else}}
-      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
-        <i class="arrow left icon"></i>
-      </a>
-      {{end}}
       <div class="header item">{{$form.Title}}: {{$coldisplay}}</div>
       <div class="right menu">
         <a class="ui icon item crud-jquery-submit" title="Valider le formulaire">
@@ -68,7 +59,7 @@
         {{ .xsrfdata }}
         {{ range $irecord, $record := .Records }}
           {{ range $num, $key := $cols }}
-            {{ $val := index $record $key }}
+            {{ $val := CrudIndex $record $key }}
             {{ $element := index $elements $key }}
             <div class="ui form">
               {{if (eq $element.Type "amount")}}

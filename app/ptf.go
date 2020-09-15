@@ -123,6 +123,18 @@ var ptfViews = types.Views{
 		Where:   "ptf_top = '1'",
 		OrderBy: "ptf_name",
 	},
+	"vdiapo": {
+		Title:    "Cours du jour",
+		IconName: "photo video",
+		Type:     "image",
+		Elements: types.Elements{
+			"ptf_id":         {Order: 10},
+			"ptf_name":       {Order: 20},
+			"_image_day":     {Order: 100},
+			"_image_histo":   {Order: 110},
+			"_image_analyse": {Order: 120},
+		},
+	},
 }
 
 var ptfForms = types.Forms{
@@ -217,7 +229,9 @@ var ptfElements = types.Elements{
 		LabelShort: "Graph J",
 		Params: types.Params{
 			Path:     "/crud/data/picsou/png/day/{ptf_id}.png",
+			URL:      "/crud/edit/picsou/ptf/vactiv/fedit/{ptf_id}",
 			IconName: "emblem-photos",
+			Legend:   "{ptf_name} {ptf_id}",
 		},
 	},
 	"_image_histo": {
@@ -227,6 +241,7 @@ var ptfElements = types.Elements{
 		Params: types.Params{
 			Path:     "/crud/data/picsou/png/quotes/{ptf_id}.png",
 			IconName: "emblem-photos",
+			Legend:   "{ptf_name} {ptf_id}",
 		},
 	},
 	"_image_analyse": {
@@ -236,6 +251,7 @@ var ptfElements = types.Elements{
 		Params: types.Params{
 			Path:     "/crud/data/picsou/png/ana/{ptf_id}.gif",
 			IconName: "emblem-photos",
+			Legend:   "{ptf_name} {ptf_id}",
 		},
 	},
 }

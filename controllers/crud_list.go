@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 
@@ -60,6 +62,7 @@ func (c *CrudListController) Get() {
 	}
 
 	// Remplissage du contexte pour le template
+	c.SetSession("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 	setContext(c.Controller)
 	table := app.Tables[tableid]
 	formAddid := app.Tables[tableid].Views[viewid].FormAdd
@@ -75,5 +78,9 @@ func (c *CrudListController) Get() {
 	c.Data["Records"] = records
 	c.Data["Cols"] = cols
 
-	c.TplName = "crud_list.html"
+	if view.Type == "image" {
+		c.TplName = "crud_list_image.html"
+	} else {
+		c.TplName = "crud_list.html"
+	}
 }

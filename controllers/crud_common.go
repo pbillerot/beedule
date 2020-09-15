@@ -331,6 +331,10 @@ func setContext(c beego.Controller) {
 	c.Data["beePath"] = u.Path
 	c.Data["beeReturn"] = c.Ctx.Request.Referer()
 	c.Data["Composter"] = time.Now().Unix()
+	if c.GetSession("from") != nil {
+		beego.Debug("*** FROM:", c.GetSession("from"))
+		c.Data["From"] = c.GetSession("from").(string)
+	}
 }
 
 func setSession(c beego.Controller, param string, value string) {

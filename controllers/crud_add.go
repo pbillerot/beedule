@@ -56,6 +56,7 @@ func (c *CrudAddController) Get() {
 	view := app.Tables[tableid].Views[viewid]
 	form := app.Tables[tableid].Forms[formid]
 
+	c.SetSession("from", c.Ctx.Request.Referer())
 	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]

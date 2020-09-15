@@ -112,6 +112,7 @@ type View struct {
 	Group     string // groupe qui peut accéder à la vue  // TODO
 	OrderBy   string
 	Where     string
+	Type      string // type de vue normal,image
 	Title     string // Titre de la vue
 	Elements  Elements
 	Mask      MaskList // Masque html d'une ligne dans la vue
@@ -151,6 +152,7 @@ type Params struct {
 	Action   string
 	Form     string
 	IconName string
+	Legend   string
 	URL      string
 	Path     string
 	SQL      []string
