@@ -4,3 +4,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.6/semantic.min.js"></script>
 <script defer src="/crud/static/js/tablesort.js"></script>
 <script defer src="/crud/static/js/crud_script.js?v={{.Config.Version}}"></script>
+<script>
+  // Scroll sur la dernière sélection
+  var anchor_url = '{{.Anchor}}'
+  if (anchor_url.length > 0) {
+    $('html, body').animate({
+      scrollTop: $(anchor_url).offset().top
+    }, 1000)
+  }
+</script>

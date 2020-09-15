@@ -133,13 +133,10 @@ func CrudMacro(in string, record orm.Params, session types.Session) (out string)
 					continue
 				}
 				if val, ok := record[key]; ok {
-					if val != nil {
+					if reflect.ValueOf(val).IsValid() {
 						out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
 					} else {
-						labelError := fmt.Sprintf("Rubrique [%s] NULL", key)
-						beego.Error(labelError)
-						err = errors.New(labelError)
-						break
+						out = strings.ReplaceAll(out, "{"+key+"}", "")
 					}
 				} else {
 					labelError := fmt.Sprintf("Rubrique [%s] non trouvée", key)

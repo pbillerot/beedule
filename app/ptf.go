@@ -130,6 +130,8 @@ var ptfViews = types.Views{
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
+			"ptf_rem":        {Order: 30},
+			"ptf_note":       {Order: 40},
 			"_image_day":     {Order: 100},
 			"_image_histo":   {Order: 110},
 			"_image_analyse": {Order: 120},
@@ -169,7 +171,6 @@ var ptfForms = types.Forms{
 			"ptf_isin":    {Order: 30},
 			"ptf_enabled": {Order: 40},
 			"ptf_top":     {Order: 50},
-			"ptf_note":    {Order: 60},
 			"ptf_rem":     {Order: 70},
 		},
 	},
@@ -228,10 +229,9 @@ var ptfElements = types.Elements{
 		LabelLong:  "Graph du jour",
 		LabelShort: "Graph J",
 		Params: types.Params{
-			Path:     "/crud/data/picsou/png/day/{ptf_id}.png",
-			URL:      "/crud/edit/picsou/ptf/vactiv/fedit/{ptf_id}",
-			IconName: "emblem-photos",
-			Legend:   "{ptf_name} {ptf_id}",
+			Path:   "/crud/data/picsou/png/day/{ptf_id}.png",
+			URL:    "/crud/edit/picsou/ptf/vactiv/fedit/{ptf_id}",
+			Legend: "{ptf_name} {ptf_id} - {ptf_rem}",
 		},
 	},
 	"_image_histo": {
@@ -239,9 +239,8 @@ var ptfElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			Path:     "/crud/data/picsou/png/quotes/{ptf_id}.png",
-			IconName: "emblem-photos",
-			Legend:   "{ptf_name} {ptf_id}",
+			Path:   "/crud/data/picsou/png/quotes/{ptf_id}.png",
+			Legend: "{ptf_name} {ptf_id} - {ptf_note}",
 		},
 	},
 	"_image_analyse": {
@@ -249,9 +248,8 @@ var ptfElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			Path:     "/crud/data/picsou/png/ana/{ptf_id}.gif",
-			IconName: "emblem-photos",
-			Legend:   "{ptf_name} {ptf_id}",
+			Path:   "/crud/data/picsou/png/ana/{ptf_id}.gif",
+			Legend: "{ptf_name} {ptf_id}",
 		},
 	},
 }
