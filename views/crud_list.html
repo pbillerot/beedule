@@ -34,10 +34,12 @@
         <div class="ui icon item">
           <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
         </div>
+        {{if $view.FormAdd}}
         <a class="ui icon item crud-jquery-url" data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}"
           title="Ajouter un article...">
           <i class="plus square icon"></i>
         </a>
+        {{end}}
         <!-- MENU à droite -->
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>

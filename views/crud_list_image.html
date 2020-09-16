@@ -34,10 +34,12 @@
         <div class="ui icon item">
           <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
         </div>
+        {{if $view.FormAdd}}
         <a class="ui icon item crud-jquery-url" data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}"
           title="Ajouter un article...">
           <i class="plus square icon"></i>
         </a>
+        {{end}}
         <!-- MENU à droite -->
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
@@ -90,8 +92,7 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable" {{if $url}} href="{{$url}}" {{else}} href="{{$path}}?{{$composter}}"
-          {{end}}>
+        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable" href="{{$path}}?{{$composter}}">
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}">
           </div>
@@ -99,6 +100,11 @@
             <div class="center aligned description searchable">
               <b>{{CrudMacro $element.Params.Legend $record $session}}</b>
             </div>
+            {{if $url}}
+            <div class="ui icon button crud-jquery-url" data-url="{{$url}}">
+              <i class="edit icon"></i>
+            </div>
+            {{end}}
           </div>
         </a>
         {{end}}

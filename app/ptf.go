@@ -88,7 +88,6 @@ var ptfViews = types.Views{
 		OrderBy: "ptf_name",
 	},
 	"vtop": {
-		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		FormView:  "fview",
 		Deletable: true,
@@ -124,7 +123,7 @@ var ptfViews = types.Views{
 		OrderBy: "ptf_name",
 	},
 	"vdiapo": {
-		Title:    "Cours du jour",
+		Title:    "Graphiques",
 		IconName: "photo video",
 		Type:     "image",
 		Elements: types.Elements{
