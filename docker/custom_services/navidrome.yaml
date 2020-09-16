@@ -1,0 +1,13 @@
+http:
+  routers:
+    navidrome:
+      entryPoints: 
+      - websecure
+      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/nv`)"
+      service: navidrome
+
+  services:
+    navidrome:
+      loadBalancer:
+        servers:
+        - url: "http://192.168.1.76:4533/"

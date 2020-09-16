@@ -135,6 +135,7 @@ var ptfViews = types.Views{
 			"_image_histo":   {Order: 110},
 			"_image_analyse": {Order: 120},
 		},
+		OrderBy: "ptf_name",
 	},
 }
 

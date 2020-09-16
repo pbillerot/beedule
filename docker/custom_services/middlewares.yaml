@@ -1,0 +1,40 @@
+http:
+  middlewares:
+    secHeaders:
+      headers:
+        accessControlAllowOrigin: "origin-list-or-null"
+        accessControlMaxAge: 100
+        addVaryHeader: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 315360000
+        forceSTSHeader: true
+
+        sslRedirect: true
+        sslForceHost: true
+        sslHost: 'pbillerot.freeboxos.fr'
+
+        customFrameOptionsValue: "SAMEORIGIN"
+        # contentSecurityPolicy: "script-src 'self'; img-src 'self'"
+        referrerPolicy: "same-origin"
+        featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
+
+    httpsRedirect:
+      scheme: "https"
+      permanent: true
+
+    add-crud:
+      addPrefix:
+        prefix: "/crud"
+
+    crud-auth:
+      forwardAuth:
+        address: "https://192.168.1.76:7601/auth"
+        authResponseHeaders:
+          - "X-Auth-User"
+          - "X-My-Header"
+          # - "X-Secret"

@@ -1,0 +1,92 @@
+# https://gist.github.com/w0rldart/1d5c5204723690d6b5845e4d7da06595
+# https://www.digitalocean.com/community/tutorials/how-to-use-traefik-1-7-21-as-a-reverse-proxy-for-docker-containers-on-centos-7-2"
+
+version: "3.3"
+services:
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - "9080:9000"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 9090:8080
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/letsencrypt
+      # - ./traefik.toml:/etc/traefik/traefik.toml
+      # - ./custom_toml:/etc/traefik/custom_services
+      - ./traefik.yaml:/etc/traefik/traefik.yaml
+      - ./custom_services:/etc/traefik/custom_services
+    networks:
+      - traefik
+
+  mysql:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: sme3-Aprt
+      MYSQL_DATABASE: beedule
+      MYSQL_USER: beedule
+      MYSQL_PASSWORD: beedule
+    volumes:
+      - /mnt/nas/data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - traefik
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - 9070:8080
+    networks:
+      - traefik
+
+  beedule:
+    build:
+      context: /home/billerot/go/src/github.com/pbillerot/beedule
+    container_name: beedule
+    restart: unless-stopped
+    ports:
+      - "7601:3945"
+    volumes:
+      - /mnt/nas/data/beedule/custom.conf:/src/conf/custom.conf
+      - /mnt/nas/data/beedule/beedule.sqlite:/src/database/beedule.sqlite
+      - /mnt/nas/data/picsou/picsou.sqlite:/src/database/picsou.sqlite
+      - /mnt/nas/data/picsou:/src/data/picsou
+
+    networks:
+      - traefik
+
+volumes:
+  certs:
+
+networks:
+  traefik:
+      external:
+          name: traefik
+
+# Pour reconstruire le container
+# docker container ls -a | grep beedule
+# docker container stop c1cdc677d547
+# docker container rm c1cdc677d547
+
+# docker rmi nom de l'image
+
+
+# docker ps -a | grep beedule | awk '{print $1}' | xargs docker rm -f
+# docker-compose up -d --build

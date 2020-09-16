@@ -1,0 +1,41 @@
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  docker:
+    exposedByDefault: false
+    watch : true
+    endpoint: "unix:///var/run/docker.sock"
+
+  file:
+    directory: /etc/traefik/custom_services/
+    watch: true
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      middlewares:
+      - httpsRedirect@file
+
+  websecure:
+    address: :443
+    http:
+      tls:
+        certResolver: letsencrypt
+        options: intermediate
+      middlewares:
+      - secHeaders@file
+      # - crud-auth@file
+
+accessLog: {}
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "philippe.billerot@gmail.com"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: "web"
+
