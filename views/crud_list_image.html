@@ -81,7 +81,7 @@
         <p>&nbsp;</p>
       </div>
       <!-- ITEMS -->
-      <div class="ui cards">
+      <div class="ui cards crud-searchable">
         {{ range $irecord, $record := .Records }}
         {{ range $num, $key := $cols }}
         {{ $val := CrudIndex $record $key }}
@@ -90,13 +90,13 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <a class="card raised crud-card-view" {{if $url}} href="{{$url}}" {{else}} href="{{$path}}?{{$composter}}"
+        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable" {{if $url}} href="{{$url}}" {{else}} href="{{$path}}?{{$composter}}"
           {{end}}>
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}">
           </div>
           <div class="content">
-            <div class="center aligned description">
+            <div class="center aligned description searchable">
               <b>{{CrudMacro $element.Params.Legend $record $session}}</b>
             </div>
           </div>

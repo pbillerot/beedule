@@ -2,7 +2,7 @@
  * Script.js
  */
 $(document).ready(function () {
-    $('table').tablesort()
+    // $('table').tablesort()
     $('.ui.checkbox').checkbox();
     $('.ui.radio.checkbox').checkbox();
     $('.ui.dropdown').dropdown();
@@ -104,26 +104,56 @@ $(document).ready(function () {
         });
     // Calendar
     $('#standard_calendar')
-    .calendar({
-        ampm: false,
-        text: {
-            days: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
-            monthsShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
-            today: 'Aujourd\'hui',
-            now: 'Maintenant',
-            am: 'AM',
-            pm: 'PM'
-          },
-        // formatter: {
-        //     date: function (date, settings) {
-        //         if (!date) return '';
-        //         var day = date.getDate();
-        //         var month = date.getMonth() + 1;
-        //         var year = date.getFullYear();
-        //         return year + '-' + month + '-' + day;
-        //     }
-        // }
-      })
+        .calendar({
+            ampm: false,
+            text: {
+                days: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+                monthsShort: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+                today: 'Aujourd\'hui',
+                now: 'Maintenant',
+                am: 'AM',
+                pm: 'PM'
+            },
+            // formatter: {
+            //     date: function (date, settings) {
+            //         if (!date) return '';
+            //         var day = date.getDate();
+            //         var month = date.getMonth() + 1;
+            //         var year = date.getFullYear();
+            //         return year + '-' + month + '-' + day;
+            //     }
+            // }
+        })
         ;
+
+    // Positionnement sur la ligne dernièrement sélectionnée
+    var anchor_url = $('#anchor').val()
+    if (anchor_url.length > 0) {
+        anchor = $('#' + anchor_url)
+        $('html, body').animate({
+            scrollTop: anchor.offset().top - 100
+        }, 1000)
+        anchor.css("background-color","seashell"); 
+    }
+
+    // Recherche dans la LIST
+    $( '.crud-searchable' ).searchable({
+		searchField: '#crud-search-input',
+		selector: '.crud-item-searchable',
+		childSelector: '.searchable',
+		show: function( elem ) {
+			elem.fadeIn(100);		
+		},
+		hide: function( elem ) {
+			elem.fadeOut( 100 );
+		},
+		onSearchActive : function( elem, term ) {
+		    elem.show();
+		},
+		onSearchEmpty: function( elem ) {
+	        elem.show();
+	    }
+	})
+
 });

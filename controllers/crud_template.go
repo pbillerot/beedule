@@ -24,10 +24,22 @@ func init() {
 	beego.AddFuncMap("CrudFormat", CrudFormat)
 	beego.AddFuncMap("CrudItem", CrudItem)
 	beego.AddFuncMap("CrudIndex", CrudIndex)
+	beego.AddFuncMap("CrudIndexAnchor", CrudIndexAnchor)
 	beego.AddFuncMap("CrudIndexSQL", CrudIndexSQL)
 	beego.AddFuncMap("CrudMacro", CrudMacro)
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
+}
+
+// CrudIndexAnchor Calcul de l'ancre à partir de la clé
+func CrudIndexAnchor(record orm.Params, key string) (out string) {
+	out = ""
+	if val, ok := record[key]; ok {
+		if reflect.ValueOf(val).IsValid() {
+			out = "anch_" + strings.ReplaceAll(val.(string), ".", "_")
+		}
+	}
+	return
 }
 
 // CrudIndex équivalent de index mais avec computeSQL en +

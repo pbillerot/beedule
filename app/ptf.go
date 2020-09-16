@@ -230,7 +230,7 @@ var ptfElements = types.Elements{
 		LabelShort: "Graph J",
 		Params: types.Params{
 			Path:   "/crud/data/picsou/png/day/{ptf_id}.png",
-			URL:    "/crud/edit/picsou/ptf/vactiv/fedit/{ptf_id}",
+			URL:    "/crud/edit/picsou/ptf/vdiapo/fedit/{ptf_id}",
 			Legend: "{ptf_name} {ptf_id} - {ptf_rem}",
 		},
 	},

@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 
@@ -62,6 +65,7 @@ func (c *CrudEditController) Get() {
 	form := app.Tables[tableid].Forms[formid]
 
 	// c.SetSession("from", c.Ctx.Request.Referer())
+	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]

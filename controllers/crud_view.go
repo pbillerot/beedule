@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
@@ -66,6 +67,7 @@ func (c *CrudViewController) Get() {
 	}
 
 	c.SetSession("from", fmt.Sprintf("/crud/view/%s/%s/%s/%s", appid, tableid, viewid, id))
+	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	setContext(c.Controller)
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)

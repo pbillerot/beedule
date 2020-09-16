@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 
@@ -43,5 +45,6 @@ func (c *CrudDeleteController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	}
+	c.DelSession(fmt.Sprintf("anch_%s_%s", tableid, viewid))
 	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
 }
