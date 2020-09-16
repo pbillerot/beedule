@@ -67,7 +67,7 @@ var ordersViews = types.Views{
 	"vvente": {
 		Title:     "Vente",
 		Info:      "Historique des placements",
-		IconName:  "money check",
+		IconName:  "trophy",
 		FormEdit:  "feditbuy",
 		FormView:  "fviewsell",
 		Deletable: true,

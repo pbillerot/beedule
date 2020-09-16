@@ -92,7 +92,7 @@ var ptfViews = types.Views{
 		FormView:  "fview",
 		Deletable: true,
 		Title:     "Les Valeurs TOP",
-		IconName:  "building outline",
+		IconName:  "city",
 		Mask: types.MaskList{
 			Header: []string{
 				"ptf_name",
@@ -171,7 +171,12 @@ var ptfForms = types.Forms{
 			"ptf_isin":    {Order: 30},
 			"ptf_enabled": {Order: 40},
 			"ptf_top":     {Order: 50},
+			"ptf_note":    {Order: 60, Protected: true},
 			"ptf_rem":     {Order: 70},
+		},
+		PostSQL: []string{
+			"UPDATE PTF set ptf_note = 'TOP' where ptf_note = '' and ptf_top = '1' and ptf_id = '{ptf_id}'",
+			"UPDATE PTF set ptf_note = '' where ptf_note = 'TOP' and ptf_top = '0' and ptf_id = '{ptf_id}'",
 		},
 	},
 }
@@ -231,7 +236,7 @@ var ptfElements = types.Elements{
 		Params: types.Params{
 			Path:   "/crud/data/picsou/png/day/{ptf_id}.png",
 			URL:    "/crud/edit/picsou/ptf/vdiapo/fedit/{ptf_id}",
-			Legend: "{ptf_name} {ptf_id} - {ptf_rem}",
+			Legend: "{ptf_name} {ptf_id} - {ptf_note} - {ptf_rem}",
 		},
 	},
 	"_image_histo": {

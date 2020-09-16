@@ -8,7 +8,6 @@ import (
 	"github.com/pbillerot/beedule/models"
 
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
 )
 
 // CrudEditController as
@@ -184,7 +183,7 @@ func (c *CrudEditController) Post() {
 	}
 	// PostSQL
 	for _, postsql := range form.PostSQL {
-		sql := macro(c.Controller, postsql, orm.Params{})
+		sql := macro(c.Controller, postsql, records[0])
 		if sql != "" {
 			err = models.CrudExec(sql, table.AliasDB)
 			if err != nil {

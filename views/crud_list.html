@@ -95,11 +95,12 @@
           <div class="header">
             {{range $im, $key := $view.Mask.Header}}
             {{ $element := index $elements $key }}
+            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "combo")}}
-            <span class="ui {{$element.Class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
+            <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
             {{else}}
-            <span class="ui {{$element.Class}} text searchable">{{CrudFormat $element.Format $val}}</span>
+            <span class="ui {{$class}} text searchable">{{CrudFormat $element.Format $val}}</span>
             {{end}}
             {{end}}
           </div>
@@ -108,6 +109,7 @@
           <div class="meta">
             {{range $im, $key := $view.Mask.Meta}}
             {{ $element := index $elements $key }}
+            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "checkbox")}}
             {{if (eq $val "1") }}
@@ -117,10 +119,10 @@
             {{end}}
             {{else if (eq $element.Type "combo")}}
             {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-            <span class="ui {{$element.Class}} text searchable"><b>{{CrudItem $element.Items $val}} ({{$val}})</b></span>
+            <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}} ({{$val}})</b></span>
             {{else}}
             {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-            <span class="ui {{$element.Class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
+            <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
             {{end}}
             {{end}}
           </div>
@@ -129,8 +131,9 @@
           <div class="description">
             {{range $im, $key := $view.Mask.Description}}
             {{ $element := index $elements $key }}
+            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
             {{ $val := CrudIndex $record $key}}
-            <span class="ui orange {{$element.Class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
+            <span class="ui orange {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
             {{end}}
           </div>
           {{end}}
@@ -138,23 +141,24 @@
           <div class="extra">
             {{range $im, $key := $view.Mask.Extra}}
             {{ $element := index $elements $key }}
+            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "checkbox")}}
-            {{if (eq $val "1") }}
-            <i class="check square outline icon"></i> <span class="searchable">{{$element.LabelLong}}</span>
-            {{else}}
-            <i class="square outline icon"></i> <b>{{$element.LabelLong}}</b>
-            {{end}}
+              {{if (eq $val "1") }}
+              <i class="check square outline icon"></i> <span class="searchable">{{$element.LabelLong}}</span>
+              {{else}}
+              <i class="square outline icon"></i> <b>{{$element.LabelLong}}</b>
+              {{end}}
             {{else if (eq $element.Type "combo")}}
-            <span class="ui {{$element.Class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
+              <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
             {{else if (eq $element.Type "tag")}}
-            {{$arr := CrudSplit $val ","}}
-            {{range $i, $item := $arr}}
-            <div class="ui tag label"><b>{{$item}}</b></div>
-            {{end}}
-            {{else}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui tag label"><b>{{$item}}</b></div>
+              {{end}}
+            {{else}} <!-- autre type -->
             {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-            <span class="ui {{$element.Class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
+            <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
             {{end}}
             {{end}}
           </div>
