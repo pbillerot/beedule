@@ -58,7 +58,7 @@
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
-          <button class="ui labeled icon positive button crud-jquery-submit">
+          <button class="ui labeled icon button crud-jquery-submit">
             <i class="check icon"></i>
             Enregistrer
           </button>
@@ -111,7 +111,7 @@
             {{else if (eq $element.Type "counter")}}
             <div class="disabled field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
-              <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}"
+              <input type="number" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
             </div>
             {{else if (eq $element.Type "checkbox")}}
