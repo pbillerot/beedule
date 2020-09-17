@@ -21,41 +21,62 @@
   <!-- NAVBAR -->
   <div class="ui container">
     <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-      <a href="/crud" class="item" style="padding: 0.4em;">
-        <i class="home icon"></i>
-      </a>
-      <div class="item">
-        <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
           <img src="{{$app.Image}}">
-        </a>
+        </div>
+        <div class="menu">
+          <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.AppViews}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $appView := $app.AppViews }}
+          {{$t := index $portail.Tables $appView.Tableid }}
+          {{$v := index $t.Views $appView.Viewid }}
+          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
+            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            <i class="{{$v.IconName}} icon"></i>
+            {{$v.Title}}
+          </a>
+          {{end}}
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/crud/logout">Se déconnecter</a>
+          <a href="/crud/about" class="item">À propos</a>
+        </div>
       </div>
-      <div class="header item">{{$view.Title}}</div>
+      <div class="header item" id="crud-header">{{$view.Title}}</div>
+      <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="ui icon item">
           <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
+          <!-- Recherche -->
+          <div style="display: none" id="crud-search">
+            <div class="ui icon input">
+              <input type="text" id="crud-search-input" placeholder="Recherche...">
+              <i class="search icon"></i>
+            </div>
+          </div>
         </div>
-        {{if $view.FormAdd}}
-        <a class="ui icon item crud-jquery-url" data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}"
-          title="Ajouter un article...">
-          <i class="plus square icon"></i>
-        </a>
-        {{end}}
-        <!-- MENU à droite -->
+        {{if or $view.Actions $view.FormAdd}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
           <div class="menu">
-            {{ range $iv, $appView := $app.AppViews }}
-            {{$t := index $portail.Tables $appView.Tableid }}
-            {{$v := index $t.Views $appView.Viewid }}
-            <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-              href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
-              <i class="{{$v.IconName}} icon"></i>
-              {{$v.Title}}
+            {{if $view.FormAdd}}
+            <a class="ui icon item crud-jquery-url"
+              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}">
+              <i class="plus square icon"></i> Ajouter un article...
             </a>
             {{end}}
-            <!-- end range appViewq-->
             {{if $view.Actions}}
+            {{if $view.FormAdd}}
             <div class="divider"></div>
+            {{end}}
             {{range $iaction, $action := $view.Actions}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
               data-url="/crud/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
@@ -65,10 +86,11 @@
             <!-- end if actions-->
           </div>
         </div>
+        {{end}}
         <!-- end dropdown MENU à droite -->
       </div>
+      <!-- end right menu -->
     </div>
-  </div>
   </div>
   <!-- MAIN -->
   <main>
@@ -92,7 +114,8 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable" href="{{$path}}?{{$composter}}">
+        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable"
+          href="{{$path}}?{{$composter}}">
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}">
           </div>

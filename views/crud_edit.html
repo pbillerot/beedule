@@ -23,18 +23,39 @@
   <!-- NAVBAR -->
   <div class="ui container">
     <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-      <a href="/crud" class="item" style="padding: 0.4em;">
-        <i class="home icon"></i>
-      </a>
-      <div class="item">
-        <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
-          <img class="ui mini image" src="{{$app.Image}}">
-        </a>
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.AppViews}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $appView := $app.AppViews }}
+          {{$t := index $portail.Tables $appView.Tableid }}
+          {{$v := index $t.Views $appView.Viewid }}
+          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
+            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            <i class="{{$v.IconName}} icon"></i>
+            {{$v.Title}}
+          </a>
+          {{end}}
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/crud/logout">Se déconnecter</a>
+          <a href="/crud/about" class="item">À propos</a>
+        </div>
       </div>
       <a href="{{$from}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
-      <!-- <div class="header item">{{$form.Title}}: {{$coldisplay}}</div> -->
+      <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
           <button class="ui labeled icon positive button crud-jquery-submit">
@@ -42,9 +63,6 @@
             Enregistrer
           </button>
         </div>
-        <!-- <a class="ui icon item crud-jquery-submit" title="Valider le formulaire">
-          <i class="check icon"></i>
-        </a> -->
       </div>
     </div>
   </div>

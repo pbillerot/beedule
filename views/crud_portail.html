@@ -8,10 +8,21 @@
     <!-- NAVBAR -->
     <div class="ui container">
         <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-            <div class="item">
-                <a class="ui mini image" href="/crud">
+            <!-- LEFT MENU -->
+            <div class="ui dropdown item">
+                <div class="ui mini image">
                     <img src="/crud/static/img/beedule.png">
-                </a>
+                </div>
+                <div class="menu">
+                    <a href="/crud" class="item disabled"><i class="home icon"></i> Page d'accueil</a>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="user icon"></i>
+                        {{.Session.Username}}
+                    </div>
+                    <a class="item" href="/crud/logout">Se déconnecter</a>
+                    <a href="/crud/about" class="item">À propos</a>
+                </div>
             </div>
             <div class="header item">{{.Portail.Title}}</div>
         </div>
@@ -20,33 +31,35 @@
         <div class="ui container">
             {{template "_crud_flash.html" .}}
             <div class="ui centered cards">
-            {{range $appid, $app := .Portail.Applications}}
+                {{range $appid, $app := .Portail.Applications}}
                 {{if $app.Path}}
-                    <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
-                        <div class="ui circular image">
-                            <img src="{{$app.Image}}">
-                        </div>
-                        <div class="content">
-                            <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                        </div>
-                    </a>
+                <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
+                    <div class="ui circular image">
+                        <img src="{{$app.Image}}">
+                    </div>
+                    <div class="content">
+                        <div class="center aligned description"><b>{{$app.Title}}</b></div>
+                    </div>
+                </a>
                 {{else if $app.AppViews}}
                 {{ $appView := index $app.AppViews 0 }}
-                <a class="card raised crud-card-portail" href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
-                        <div class="ui circular image">
-                            <img src="{{$app.Image}}">
-                        </div>
-                        <div class="content">
-                            <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                        </div>
-                    </a>
-                {{end}} <!-- end if -->
-            {{end}} <!-- end range applications -->
+                <a class="card raised crud-card-portail"
+                    href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+                    <div class="ui circular image">
+                        <img src="{{$app.Image}}">
+                    </div>
+                    <div class="content">
+                        <div class="center aligned description"><b>{{$app.Title}}</b></div>
+                    </div>
+                </a>
+                {{end}}
+                <!-- end if -->
+                {{end}}
+                <!-- end range applications -->
             </div>
         </div>
         </div>
     </main>
-    {{template "_crud_footer.html" .}}
     {{template "_crud_foot.html" .}}
 </body>
 

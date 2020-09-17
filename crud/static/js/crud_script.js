@@ -26,7 +26,9 @@ $(document).ready(function () {
 
     // Affichage du champ de recherche
     $('#crud-search-active').on('click', function (event) {
-        $('#crud-search').toggle();
+        $('#crud-search').show();
+        $('#crud-header').hide();
+        $('#crud-search-active').hide();
         $('#crud-search-input').focus();
     });
     // Recherche plein texte dans le body de la table

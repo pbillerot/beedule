@@ -7,10 +7,21 @@
     <!-- NAVBAR -->
     <div class="ui container">
         <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-            <div class="item">
-                <a class="ui icon image" href="/crud">
-                    <img class="ui mini image" src="/crud/static/img/beedule.png">
-                </a>
+            <!-- LEFT MENU -->
+            <div class="ui dropdown item">
+                <div class="ui mini image">
+                    <img src="/crud/static/img/beedule.png">
+                </div>
+                <div class="menu">
+                    <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="user icon"></i>
+                        {{.Session.Username}}
+                    </div>
+                    <a class="item" href="/crud/logout">Se déconnecter</a>
+                    <a href="/crud/about" class="item disabled">À propos</a>
+                </div>
             </div>
             <div class="header item">{{.Title}}</div>
         </div>
@@ -44,7 +55,7 @@
         </div>
         </div>
     </main>
-    {{template "_crud_footer.html" .}}
+    {{template "_crud_foot.html" .}}
 </body>
 
 </html>

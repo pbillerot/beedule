@@ -24,25 +24,50 @@
   <!-- NAVBAR -->
   <div class="ui container">
     <div class="ui {{$theme}} inverted large fixed menu navbar">
-      <a href="/crud" class="item" style="padding: 0.5em;">
-        <i class="home icon"></i>
-      </a>
-      <div class="item">
-        <a class="ui mini image" href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}/">
-          <img class="ui mini image" src="{{$app.Image}}">
-        </a>
-      </div>
-      <div class="header item">{{$form.Title}}: {{$coldisplay}}</div>
-      <div class="right menu">
-        {{if $view.Deletable}}
-        <a class="ui icon item crud-jquery-delete" title="Supprimer la fiche...">
-          <i class="trash icon"></i>
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.AppViews}}
+          <div class="divider"></div>
           {{end}}
-        </a>
-        {{if $form.Actions}}
+          {{ range $iv, $appView := $app.AppViews }}
+          {{$t := index $portail.Tables $appView.Tableid }}
+          {{$v := index $t.Views $appView.Viewid }}
+          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
+            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            <i class="{{$v.IconName}} icon"></i>
+            {{$v.Title}}
+          </a>
+          {{end}}
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/crud/logout">Se déconnecter</a>
+          <a href="/crud/about" class="item">À propos</a>
+        </div>
+      </div>
+      <a href="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
+        <i class="arrow left icon"></i>
+      </a>
+      <div class="header item">{{$form.Title}}</div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        {{if or $form.Actions $view.Deletable}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
           <div class="menu">
+            {{if $view.Deletable}}
+            <a class="ui icon item crud-jquery-delete">
+              <i class="trash icon"></i> Supprimmer la fiche...
+            </a>
+            {{end}}
             {{range $iaction, $action := $form.Actions}}
             {{if not $action.Hide}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"

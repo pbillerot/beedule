@@ -124,6 +124,8 @@ var ptfViews = types.Views{
 	},
 	"vdiapo": {
 		Title:    "Graphiques",
+		FormEdit: "fedit",
+		FormView: "fview",
 		IconName: "photo video",
 		Type:     "image",
 		Elements: types.Elements{
@@ -235,7 +237,7 @@ var ptfElements = types.Elements{
 		LabelShort: "Graph J",
 		Params: types.Params{
 			Path:   "/crud/data/picsou/png/day/{ptf_id}.png",
-			URL:    "/crud/edit/picsou/ptf/vdiapo/fedit/{ptf_id}",
+			URL:    "/crud/view/picsou/ptf/vdiapo/{ptf_id}",
 			Legend: "{ptf_name} {ptf_id} - {ptf_note} - {ptf_rem}",
 		},
 	},
@@ -254,7 +256,7 @@ var ptfElements = types.Elements{
 		LabelShort: "Analyse",
 		Params: types.Params{
 			Path:   "/crud/data/picsou/png/ana/{ptf_id}.gif",
-			Legend: "{ptf_name} {ptf_id}",
+			Legend: "{ptf_name} {ptf_id} - {ptf_note}",
 		},
 	},
 }
