@@ -96,14 +96,6 @@
   <main>
     <div class="ui container">
       {{template "_crud_flash.html" .}}
-      <!-- Recherche -->
-      <div style="display: none" id="crud-search">
-        <div class="ui icon input">
-          <input type="text" id="crud-search-input" placeholder="Recherche...">
-          <i class="search icon"></i>
-        </div>
-        <p>&nbsp;</p>
-      </div>
       <!-- ITEMS -->
       <div class="ui cards crud-searchable">
         {{ range $irecord, $record := .Records }}
