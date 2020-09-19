@@ -134,6 +134,9 @@ func (c *CrudAddController) Post() {
 		view := app.Tables[tableid].Views[viewid]
 		form := app.Tables[tableid].Forms[formid]
 
+		// Calcul des éléments (valeur par défaut comprise)
+		elements = computeElements(c.Controller, true, elements, records[0])
+
 		setContext(c.Controller)
 		c.Data["AppId"] = appid
 		c.Data["Application"] = app.Applications[appid]

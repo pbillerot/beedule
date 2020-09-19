@@ -178,7 +178,7 @@
               class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}"
-                {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="***">
+                {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{if $val}}***{{end}}">
             </div>
             {{else if (eq $element.Type "percent")}}
             <div

@@ -119,7 +119,7 @@ var ptfViews = types.Views{
 			"ptf_quote":   {},
 			"ptf_gain":    {},
 		},
-		Where:   "ptf_top = '1'",
+		Where:   "ptf_enabled = '1' and ptf_top = '1'",
 		OrderBy: "ptf_name",
 	},
 	"vdiapo": {
@@ -138,6 +138,7 @@ var ptfViews = types.Views{
 			"_image_analyse": {Order: 120},
 		},
 		OrderBy: "ptf_name",
+		Where:   "ptf_enabled = '1'",
 	},
 }
 
@@ -229,7 +230,7 @@ var ptfElements = types.Elements{
 		Type:       "percent",
 		LabelLong:  "Gain du jour",
 		LabelShort: "Gain",
-		ClassSQL:   "select case when {ptf_gain} > 0 then 'green' when {ptf_gain} < 0 then 'red' end",
+		ClassSQL:   "select case when '{ptf_gain}' > 0 then 'green' when '{ptf_gain}' < 0 then 'red' end",
 	},
 	"_image_day": {
 		Type:       "image",

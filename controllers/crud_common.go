@@ -253,6 +253,7 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 	default:
 		element.Value = c.GetString(key)
 	}
+	record[key] = element.Value
 
 	if element.Required && element.Value == "" {
 		labelError = fmt.Sprintf(

@@ -153,6 +153,9 @@ func (c *CrudEditController) Post() {
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
 
+		// Calcul des éléments (valeur par défaut comprise)
+		elements = computeElements(c.Controller, true, elements, records[0])
+
 		setContext(c.Controller)
 		c.Data["AppId"] = appid
 		c.Data["Application"] = app.Applications[appid]
