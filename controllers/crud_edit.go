@@ -23,24 +23,50 @@ func (c *CrudEditController) Get() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
-	// Ctrl tableid et viewid
+	flash := beego.ReadFromRequest(&c.Controller)
+
+	// Ctrl appid tableid viewid formid
+	if _, ok := app.Applications[appid]; !ok {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
+				beego.Error("Form not found", c.GetSession("Username").(string), formid)
 				c.Ctx.Redirect(302, c.GetSession("from").(string))
 				return
 			}
 		} else {
+			beego.Error("View not found", c.GetSession("Username").(string), viewid)
 			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
+		beego.Error("table not found", c.GetSession("Username").(string), tableid)
 		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
-	flash := beego.ReadFromRequest(&c.Controller)
+	// Contrôle d'accès
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	form := app.Tables[tableid].Forms[formid]
+	if form.Group == "" {
+		form.Group = view.Group
+	}
+	if form.Group == "" {
+		form.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, form.Group) {
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -58,10 +84,6 @@ func (c *CrudEditController) Get() {
 	}
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
-
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
 
 	// c.SetSession("from", c.Ctx.Request.Referer())
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))

@@ -21,6 +21,7 @@ type Application struct {
 	Image    string
 	IconFile string
 	IconName string
+	Group    string
 	Path     string    // Path ou URL de l'application externe
 	DataPath string    // répertoire des données valorisé dans custom.conf [app] datapath lu par {$datapath}
 	AppViews []AppView // Vues des tables liées à l'application
@@ -130,7 +131,7 @@ type MaskList struct {
 type Form struct {
 	Actions  Actions // TODO Action appel d'un formulaire ou exécution d'une requête SQL
 	Title    string
-	Groupe   string // groupe qui peut accéder au formulaire  // TODO
+	Group    string // groupe qui peut accéder au formulaire  // TODO
 	Elements Elements
 	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
 }
@@ -163,6 +164,7 @@ type Actions []Action
 
 // Action as Formulaire ou Requête SQL
 type Action struct {
+	Group       string
 	Label       string
 	URL         string
 	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
@@ -201,9 +203,10 @@ type Config struct {
 	Theme   string
 }
 
-// Session Données de session dans le contextx
+// Session Données de session dans le contexte
 type Session struct {
 	LoggedIn bool
 	Username string
 	IsAdmin  bool
+	Groups   string
 }

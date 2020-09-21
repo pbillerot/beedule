@@ -21,20 +21,46 @@ func (c *CrudAddController) Get() {
 	formid := c.Ctx.Input.Param(":form")
 	var id = ""
 
-	// Ctrl tableid et viewid
+	flash := beego.ReadFromRequest(&c.Controller)
+	// Ctrl appid tableid viewid formid
+	if _, ok := app.Applications[appid]; !ok {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				c.Ctx.Redirect(302, "/crud")
+				beego.Error("Form not found", c.GetSession("Username").(string), formid)
+				c.Ctx.Redirect(302, c.GetSession("from").(string))
 				return
 			}
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
+
+	// Contrôle d'accès
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	form := app.Tables[tableid].Forms[formid]
+	if form.Group == "" {
+		form.Group = view.Group
+	}
+	if form.Group == "" {
+		form.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, form.Group) {
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
@@ -51,10 +77,6 @@ func (c *CrudAddController) Get() {
 
 	// Calcul des éléments
 	elements = computeElements(c.Controller, true, elements, records[0])
-
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
 
 	c.SetSession("from", c.Ctx.Request.Referer())
 	setContext(c.Controller)

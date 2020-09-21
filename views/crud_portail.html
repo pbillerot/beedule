@@ -1,5 +1,6 @@
 <!-- home.html -->
 {{$theme := .Config.Theme}}
+{{$session := .Session}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -32,28 +33,31 @@
             {{template "_crud_flash.html" .}}
             <div class="ui centered cards">
                 {{range $appid, $app := .Portail.Applications}}
-                {{if $app.Path}}
-                <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
-                    <div class="ui circular image">
-                        <img src="{{$app.Image}}">
-                    </div>
-                    <div class="content">
-                        <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                    </div>
-                </a>
-                {{else if $app.AppViews}}
-                {{ $appView := index $app.AppViews 0 }}
-                <a class="card raised crud-card-portail"
-                    href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
-                    <div class="ui circular image">
-                        <img src="{{$app.Image}}">
-                    </div>
-                    <div class="content">
-                        <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                    </div>
-                </a>
+                {{if (CrudIsInGroup $app.Group $session)}}
+                    {{if $app.Path }}
+                    <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
+                        <div class="ui circular image">
+                            <img src="{{$app.Image}}">
+                        </div>
+                        <div class="content">
+                            <div class="center aligned description"><b>{{$app.Title}}</b></div>
+                        </div>
+                    </a>
+                    {{else if $app.AppViews}}
+                        {{ $appView := index $app.AppViews 0 }}
+                        <a class="card raised crud-card-portail"
+                            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+                            <div class="ui circular image">
+                                <img src="{{$app.Image}}">
+                            </div>
+                            <div class="content">
+                                <div class="center aligned description"><b>{{$app.Title}}</b></div>
+                            </div>
+                        </a>
+                    {{end}}
+                    <!-- end if app-->
                 {{end}}
-                <!-- end if -->
+                <!-- end if isInGroup app-->
                 {{end}}
                 <!-- end range applications -->
             </div>

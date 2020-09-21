@@ -26,9 +26,27 @@ func init() {
 	beego.AddFuncMap("CrudIndex", CrudIndex)
 	beego.AddFuncMap("CrudIndexAnchor", CrudIndexAnchor)
 	beego.AddFuncMap("CrudIndexSQL", CrudIndexSQL)
+	beego.AddFuncMap("CrudIsInGroup", CrudIsInGroup)
 	beego.AddFuncMap("CrudMacro", CrudMacro)
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
+}
+
+// CrudIsInGroup as
+func CrudIsInGroup(group string, session types.Session) (out bool) {
+	out = false
+	if group == "" {
+		out = true
+		return
+	}
+	groups := strings.Split(session.Groups, ",")
+	for _, g := range groups {
+		if g == group {
+			out = true
+			return
+		}
+	}
+	return
 }
 
 // CrudIndexAnchor Calcul de l'ancre à partir de la clé

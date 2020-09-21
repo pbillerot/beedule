@@ -21,9 +21,28 @@ import (
 
 var err error
 
+// IsInGroup as
+func IsInGroup(c beego.Controller, group string) (out bool) {
+	out = false
+	if group == "" {
+		out = true
+		return
+	}
+	sgroups := c.GetSession("Groups").(string)
+	groups := strings.Split(sgroups, ",")
+	for _, g := range groups {
+		if g == group {
+			out = true
+			return
+		}
+	}
+	return
+}
+
 // mergeElements fusionne les attributs des éléments de la table avec ceux de la vue ou formulaire
 // cols contiendra les keys ordonnés comme présentées dans le dictionnaire
 func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.Elements, id string) (types.Elements, map[int]string) {
+	table := app.Tables[tableid]
 
 	elements := types.Elements{}
 
@@ -92,6 +111,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				}
 				if element.Class == "" {
 					element.Class = "crud-cell-nowrap"
+				}
+			case "section":
+				if !IsInGroup(c, table.Forms[element.Params.Form].Group) {
+					element.Params.Form = ""
 				}
 			case "textarea":
 				if element.Class == "" {
@@ -308,6 +331,9 @@ func setContext(c beego.Controller) {
 	}
 	if c.GetSession("IsAdmin") != nil {
 		session.IsAdmin = c.GetSession("IsAdmin").(bool)
+	}
+	if c.GetSession("Groups") != nil {
+		session.Groups = c.GetSession("Groups").(string)
 	}
 	c.Data["Session"] = &session
 

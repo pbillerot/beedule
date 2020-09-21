@@ -46,7 +46,7 @@ var groupsViews = types.Views{
 			},
 			Meta: []string{},
 			Description: []string{
-				"group_id",
+				"group_note",
 			},
 			Extra: []string{},
 		},
@@ -59,16 +59,16 @@ var groupsViews = types.Views{
 
 var groupsForms = types.Forms{
 	"fadd": {
-		Title:  "Fiche Groupe",
-		Groupe: "admin",
+		Title: "Fiche Groupe",
+		Group: "admin",
 		Elements: types.Elements{
 			"group_id":   {},
 			"group_note": {},
 		},
 	},
 	"fedit": {
-		Title:  "Fiche Groupe",
-		Groupe: "admin",
+		Title: "Fiche Groupe",
+		Group: "admin",
 		Elements: types.Elements{
 			"group_id":   {},
 			"group_note": {},

@@ -23,8 +23,8 @@ func (c *AuthRouter) Prepare() {
 	} else {
 		c.Ctx.Redirect(302, "/crud/login")
 	}
-	c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
-	c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
+	// c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
+	// c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
 	c.Ctx.Redirect(200, c.Ctx.Request.RequestURI)
 }
 
@@ -121,6 +121,7 @@ func (c *LoginController) Post() {
 	// C'est OK enregistrement du compte dans la session
 	c.SetSession("LoggedIn", true)
 	c.SetSession("Username", user.Username)
+	c.SetSession("Groups", user.Groupes)
 	if user.IsAdmin == 1 {
 		c.SetSession("IsAdmin", true)
 	} else {
@@ -135,6 +136,7 @@ func (c *LogoutController) Get() {
 	c.SetSession("LoggedIn", false)
 	c.DelSession("Username")
 	c.DelSession("IsAdmin")
+	c.DelSession("Groups")
 	setContext(c.Controller)
 	c.Ctx.Redirect(302, "/crud/login")
 }

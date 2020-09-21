@@ -7,6 +7,7 @@ var Applications = map[string]types.Application{
 	"users": {
 		Title: "Gestion des utilisateurs et des groupes",
 		Image: "/crud/static/img/groups.svg",
+		Group: "admin",
 		AppViews: []types.AppView{
 			{Tableid: "users", Viewid: "vall"},
 			{Tableid: "groups", Viewid: "vall"},
@@ -14,6 +15,7 @@ var Applications = map[string]types.Application{
 	},
 	"tasks": {
 		Title: "Mes Tâches",
+		Group: "admin",
 		Image: "/crud/static/img/tasks.svg",
 		AppViews: []types.AppView{
 			{Tableid: "tasks", Viewid: "vall"},
@@ -21,6 +23,7 @@ var Applications = map[string]types.Application{
 	},
 	"picsou": {
 		Title:    "Picsou, pour bricoler sur la bourse",
+		Group:    "picsou",
 		Image:    "/crud/static/img/picsou.jpg",
 		DataPath: "", // valorisé dans custom.conf
 		AppViews: []types.AppView{

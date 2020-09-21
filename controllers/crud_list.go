@@ -22,22 +22,53 @@ func (c *CrudListController) Get() {
 	viewid := c.Ctx.Input.Param(":view")
 
 	flash := beego.ReadFromRequest(&c.Controller)
-	// Ctrl tableid et viewid
+
+	// Ctrl appid tableid viewid formid
+	if _, ok := app.Applications[appid]; !ok {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
+	}
+
+	// Contrôle d'accès à la vue
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	if view.Group == "" {
+		view.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, view.Group) {
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
+	// Ctrl d'accès FormAdd FormView FormEdit
+	if !IsInGroup(c.Controller, table.Forms[view.FormView].Group) {
+		view.FormView = ""
+	}
+	if !IsInGroup(c.Controller, table.Forms[view.FormAdd].Group) {
+		view.FormAdd = ""
+	}
+	if !IsInGroup(c.Controller, table.Forms[view.FormEdit].Group) {
+		view.FormEdit = ""
 	}
 
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Views[viewid].Elements, "")
 	// Calcul des champs SQL
-	view := app.Tables[tableid].Views[viewid]
 	if view.OrderBy != "" {
 		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
 	}
@@ -64,14 +95,11 @@ func (c *CrudListController) Get() {
 	// Remplissage du contexte pour le template
 	c.SetSession("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 	setContext(c.Controller)
-	table := app.Tables[tableid]
-	formAddid := app.Tables[tableid].Views[viewid].FormAdd
 	c.Data["Title"] = view.Title
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
-	c.Data["FormAddId"] = formAddid
 	c.Data["Table"] = &table
 	c.Data["View"] = &view
 	c.Data["Elements"] = elements

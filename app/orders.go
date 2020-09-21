@@ -186,6 +186,7 @@ var ordersForms = types.Forms{
 	},
 	"feditbuy": {
 		Title: "Ordre d'achat",
+		Group: "order",
 		Elements: types.Elements{
 			"orders_id":       {Order: 1},
 			"orders_ptf_id":   {Order: 10},
@@ -206,6 +207,7 @@ var ordersForms = types.Forms{
 	},
 	"feditsell": {
 		Title: "Ordre de vente",
+		Group: "order",
 		Elements: types.Elements{
 			"orders_id":         {Order: 1},
 			"orders_ptf_id":     {Order: 10},
@@ -227,6 +229,7 @@ var ordersForms = types.Forms{
 	},
 	"frem": {
 		Title: "Remarques",
+		Group: "order",
 		Elements: types.Elements{
 			"orders_id":     {Order: 1},
 			"orders_ptf_id": {Order: 10},

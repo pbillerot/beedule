@@ -25,25 +25,43 @@ func (c *CrudActionViewController) Post() {
 
 	flash := beego.NewFlash()
 
-	// Ctrl tableid et viewid
-	if table, ok := app.Tables[tableid]; ok {
-		if _, ok := table.Views[viewid]; ok {
+	// Ctrl appid tableid viewid formid
+	if _, ok := app.Applications[appid]; !ok {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
+	if val, ok := app.Tables[tableid]; ok {
+		if _, ok := val.Views[viewid]; ok {
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
+
+	// Contrôle d'accès
 	table := app.Tables[tableid]
-	view := table.Views[viewid]
+	view := app.Tables[tableid].Views[viewid]
+	if view.Group == "" {
+		view.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, view.Group) {
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 	if iactionid <= len(view.Actions) {

@@ -29,6 +29,9 @@ main {
 .ui.link.message {
     cursor: pointer;
 }
+.ui.cards>.link {
+    cursor: pointer;
+}
 pre {
     font-size: 0.9em;
 }

@@ -25,20 +25,64 @@ func (c *CrudViewController) Get() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	// Ctrl tableid et viewid
+	// Ctrl appid tableid viewid formid
+	if _, ok := app.Applications[appid]; !ok {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
+
+	// Contrôle d'accès
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	if view.Group == "" {
+		view.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, view.Group) {
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
 	formviewid := app.Tables[tableid].Views[viewid].FormView
+	formview := app.Tables[tableid].Views[formviewid]
+	// Ctrl accès à formviewid
+	if formview.Group == "" {
+		formview.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, formview.Group) {
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, view.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		return
+	}
+	// Ctrl d'accès FormAdd FormView FormEdit
+	if !IsInGroup(c.Controller, table.Forms[view.FormView].Group) {
+		view.FormView = ""
+	}
+	if !IsInGroup(c.Controller, table.Forms[view.FormAdd].Group) {
+		view.FormAdd = ""
+	}
+	if !IsInGroup(c.Controller, table.Forms[view.FormEdit].Group) {
+		view.FormEdit = ""
+	}
+
 	var elementsVF types.Elements
 	if formviewid == "" {
 		elementsVF = app.Tables[tableid].Views[viewid].Elements
@@ -57,12 +101,10 @@ func (c *CrudViewController) Get() {
 	// Calcul des éléments
 	elements = computeElements(c.Controller, false, elements, records[0])
 
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
 	if len(records) == 0 {
 		flash.Error("Article non trouvé: ", id)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
 

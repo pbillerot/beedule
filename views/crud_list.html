@@ -6,7 +6,6 @@
 {{$theme := .Config.Theme}}
 {{$tableid := .TableId}}
 {{$viewid := .ViewId}}
-{{$formaddid := .FormAddId}}
 {{$table := .Table}}
 {{$tablekey := .Table.Key}}
 {{$view := .View}}
@@ -34,11 +33,13 @@
           {{ range $iv, $appView := $app.AppViews }}
           {{$t := index $portail.Tables $appView.Tableid }}
           {{$v := index $t.Views $appView.Viewid }}
+          {{if (CrudIsInGroup $v.Group $session)}}
           <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
             href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
+          {{end}}<!-- end if isingroup -->
           {{end}}
           <!-- end range appViewq-->
           <div class="divider"></div>
@@ -69,7 +70,7 @@
           <div class="menu">
             {{if $view.FormAdd}}
             <a class="ui icon item crud-jquery-url"
-              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formaddid}}">
+              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
               <i class="plus square icon"></i> Ajouter un élément...
             </a>
             {{end}}

@@ -62,6 +62,7 @@ var usersViews = types.Views{
 		FormView:  "fview",
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
+		Group:     "admin",
 		Deletable: true,
 		Info:      "Gestion des Comptes",
 		Title:     "Comptes",
@@ -92,6 +93,7 @@ var usersViews = types.Views{
 var usersForms = types.Forms{
 	"fadd": {
 		Title: "Fiche Compte",
+		Group: "admin",
 		Elements: types.Elements{
 			"user_name":  {Order: 10},
 			"user_email": {Order: 20},
@@ -99,6 +101,7 @@ var usersForms = types.Forms{
 	},
 	"fview": {
 		Title: "Fiche Compte",
+		Group: "admin",
 		Elements: types.Elements{
 			"user_name":     {Order: 10},
 			"user_email":    {Order: 20},
@@ -110,6 +113,7 @@ var usersForms = types.Forms{
 	},
 	"fmdp": {
 		Title: "Sécurité",
+		Group: "admin",
 		Elements: types.Elements{
 			"user_name":     {Order: 10, ReadOnly: true},
 			"user_password": {Order: 40},
@@ -119,6 +123,7 @@ var usersForms = types.Forms{
 	},
 	"fedit": {
 		Title: "Fiche Compte",
+		Group: "admin",
 		Elements: types.Elements{
 			"user_name":  {Order: 10},
 			"user_email": {Order: 20},
