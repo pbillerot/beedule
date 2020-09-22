@@ -231,13 +231,6 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 				if val == "" {
 					val = "0"
 				}
-			case "checkbox":
-				if val == "" {
-					val = "0"
-				} else {
-					// le mot de passe a été changé
-					val = "1"
-				}
 			}
 			// Update record avec valeur calculée
 			if col, ok := record[key]; ok {

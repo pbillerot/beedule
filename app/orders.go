@@ -129,9 +129,9 @@ var ordersForms = types.Forms{
 			"orders_cost_price": {Order: 110},
 			"orders_optimum":    {Order: 120},
 			"orders_quote":      {Order: 130},
+			"_refresh_buy":      {Order: 160},
 			"orders_gain":       {Order: 140},
 			"orders_gainp":      {Order: 150},
-			"_refresh_buy":      {Order: 160},
 			"orders_rem":        {Order: 170},
 			"_action_sell":      {Order: 270},
 			// Images
