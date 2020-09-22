@@ -69,6 +69,7 @@ var Tables = types.Tables{
 
 // Params paramètres globaux aux applications
 var Params = map[string]string{
-	"__cost":    "0.0047", // Coût transaction 0.47 %
-	"__optimum": "0.03",   // Seuil rentabilité à 3 %
+	"__cost":       "0.0047", // Coût transaction 0.47 %
+	"__optimum":    "0.03",   // Seuil rentabilité à 3 %
+	"__amount_min": "1200",   // Montant minimum de la transaction
 }

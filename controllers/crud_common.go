@@ -181,16 +181,6 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			var list []types.Item
 			for _, rec := range recs {
 				item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
-				// item := types.Item{}
-				// la 1ère colonne représente la clé
-				// la 2ème le label à afficher
-				// for _, label := range rec {
-				// 	if item.Key == "" {
-				// 		item.Key = label.(string)
-				// 	} else {
-				// 		item.Label = label.(string)
-				// 	}
-				// }
 				list = append(list, item)
 			}
 			element.Items = list
@@ -214,6 +204,40 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			}
 			if val == "" && element.Default != "" {
 				val = macro(c, element.Default, record)
+			}
+			// Valorisation avec les args de l'url
+			if c.GetStrings(key) != nil {
+				val = c.GetString(key)
+			}
+			// Valeur par défaut
+			switch element.Type {
+			case "amount":
+				if val == "" {
+					val = "0"
+				}
+			case "float":
+				if val == "" {
+					val = "0"
+				}
+			case "month":
+				if val == "" {
+					val = "0"
+				}
+			case "number":
+				if val == "" {
+					val = "0"
+				}
+			case "percent":
+				if val == "" {
+					val = "0"
+				}
+			case "checkbox":
+				if val == "" {
+					val = "0"
+				} else {
+					// le mot de passe a été changé
+					val = "1"
+				}
 			}
 			// Update record avec valeur calculée
 			if col, ok := record[key]; ok {
@@ -372,12 +396,14 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 	}
 	re := regexp.MustCompile(`.*{(.*)}.*`)
 	for strings.Contains(out, "{") {
-		match := re.FindStringSubmatch(in)
+		match := re.FindStringSubmatch(out)
 		if len(match) > 0 {
 			key := match[1]
 			if val, ok := record[key]; ok {
 				if reflect.ValueOf(val).IsValid() {
+					// beego.Debug("avant", key, val.(string), out)
 					out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
+					// beego.Debug("apres", out)
 				} else {
 					beego.Error("Colonne NULL", key)
 					out = ""

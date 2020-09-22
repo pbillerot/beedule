@@ -82,6 +82,7 @@ func (c *CrudEditController) Get() {
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, c.GetSession("from").(string))
 	}
+
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
 
@@ -172,12 +173,11 @@ func (c *CrudEditController) Post() {
 		}
 		elements[key] = element
 	}
+	// Calcul des éléments (valeur par défaut comprise)
+	elements = computeElements(c.Controller, true, elements, records[0])
+
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
-
-		// Calcul des éléments (valeur par défaut comprise)
-		elements = computeElements(c.Controller, true, elements, records[0])
-
 		setContext(c.Controller)
 		c.Data["AppId"] = appid
 		c.Data["Application"] = app.Applications[appid]

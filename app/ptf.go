@@ -153,6 +153,7 @@ var ptfForms = types.Forms{
 			"ptf_rem":        {Order: 60},
 			"ptf_quote":      {Order: 70},
 			"ptf_gain":       {Order: 80},
+			"_action_buy":    {Order: 90},
 			"_image_day":     {Order: 100},
 			"_image_histo":   {Order: 110},
 			"_image_analyse": {Order: 120},
@@ -185,6 +186,15 @@ var ptfForms = types.Forms{
 }
 
 var ptfElements = types.Elements{
+	"_action_buy": {
+		Type:      "action",
+		LabelLong: "Acheter la valeur...",
+		Action: types.Action{
+			Label: "Acheter cette valeur",
+			URL:   "/crud/add/picsou/orders/vachat/feditbuy?orders_order=buy&orders_ptf_id={ptf_id}&orders_quote={ptf_quote}&orders_buy={ptf_quote}",
+		},
+	},
+
 	"ptf_id": {
 		Type:       "text",
 		LabelLong:  "Valeur",

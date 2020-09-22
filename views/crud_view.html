@@ -147,7 +147,7 @@
                 <!-- DEBUT type -->
                 {{else if (eq $element.Type "action")}}
                 {{if $element.Action.URL}}
-                <button class="ui {{$theme}} button crud-jquery-url" data-url="{{$element.Action.URL}}">
+                <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Action.URL}}">
                   {{$element.LabelLong}}
                 </button>
                 {{else}}

@@ -254,10 +254,10 @@ var ordersElements = types.Elements{
 	},
 	"_action_sell": {
 		Type:      "action",
-		LabelLong: "Vendre l'action...",
+		LabelLong: "Vendre cette valeur...",
 		Action: types.Action{
 			Label: "Vendre cette valeur",
-			URL:   "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}",
+			URL:   "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}?orders_order=sell&orders_sell={orders_quote}",
 		},
 	},
 	"orders_id": {
@@ -287,6 +287,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Order",
 		LabelShort: "Order",
 		ColAlign:   "center",
+		Required:   true,
 		Items: []types.Item{
 			{Key: "buy", Label: "Achat"},
 			{Key: "sell", Label: "Vente"},
@@ -319,19 +320,23 @@ var ordersElements = types.Elements{
 		Type:       "number",
 		LabelLong:  "Quantité",
 		LabelShort: "Qt",
+		Required:   true,
 		Refresh:    true,
+		DefaultSQL: "select '{__amount_min}' / '{orders_buy}'",
 	},
 	"orders_buy": {
 		Type:       "amount",
 		LabelLong:  "Cours d'achat",
 		LabelShort: "Achat à",
+		Required:   true,
 		Refresh:    true,
 	},
 	"orders_sell": {
 		Type:       "amount",
 		LabelLong:  "Cours de vente",
 		LabelShort: "Vente à",
-		Default:    "{orders_quote}",
+		DefaultSQL: "select '{orders_quote}'",
+		Required:   true,
 		Refresh:    true,
 	},
 	"orders_cost_price": {
@@ -356,7 +361,7 @@ var ordersElements = types.Elements{
 		LabelShort: "Débit",
 		ColWith:    80,
 		Protected:  true,
-		// ComputeSQL: "select {orders_buy} * {orders_quantity} + {orders_buy} * {orders_quantity} * {__cost}",
+		ComputeSQL: "select '{orders_buy}' * '{orders_quantity}' + '{orders_buy}' * '{orders_quantity}' * '{__cost}'",
 	},
 	"orders_credit": {
 		Type:       "amount",
@@ -408,7 +413,7 @@ var ordersElements = types.Elements{
 		LabelShort: "Gain",
 		ColWith:    80,
 		Protected:  true,
-		ClassSQL:   "select case when {orders_sell_gain} > 0 then 'green' when {orders_sell_gain} < 0 then 'red' end",
+		ClassSQL:   "select case when '{orders_sell_gain}' > 0 then 'green' when '{orders_sell_gain}' < 0 then 'red' end",
 		// ComputeSQL: "select {orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_sell_gainp": {
@@ -417,7 +422,7 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		ColWith:    80,
 		Protected:  true,
-		ClassSQL:   "select case when {orders_sell_gainp} > 0 then 'green' when {orders_sell_gainp} < 0 then 'red' end",
+		ClassSQL:   "select case when '{orders_sell_gainp}' > 0 then 'green' when '{orders_sell_gainp}' < 0 then 'red' end",
 		// ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
 	},
 	"_image_day": {

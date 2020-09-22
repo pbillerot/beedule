@@ -70,7 +70,11 @@ func (c *CrudAddController) Get() {
 	// Création d'un record fictif vide ""
 	record := orm.Params{}
 	for _, colname := range cols {
-		record[colname] = ""
+		if c.GetStrings(colname) != nil {
+			record[colname] = c.GetString(colname)
+		} else {
+			record[colname] = ""
+		}
 	}
 	var records []orm.Params
 	records = append(records, record)

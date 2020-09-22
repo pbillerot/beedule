@@ -42,6 +42,23 @@ $(document).ready(function () {
 
     // Appel URL dans la même fenêtre
     $('.crud-jquery-url').on('click', function (event) {
+        if (event.target.nodeName == "BUTTON") {
+            // pour laisser la main à crud-jquery-button
+            // Cas d'un button dans une card
+            event.preventDefault();
+            return
+        }
+        var $target = $(this).data('target');
+        if (!$target || $target == '') {
+            window.location = $(this).data('url');
+        } else {
+            window.open($(this).data('url'), $target);
+        }
+        event.preventDefault();
+    });
+
+    // Appel URL dans la même fenêtre
+    $('.crud-jquery-button').on('click', function (event) {
         var $target = $(this).data('target');
         if (!$target || $target == '') {
             window.location = $(this).data('url');
