@@ -60,7 +60,7 @@ func (c *CrudEditController) Get() {
 	if form.Group == "" {
 		form.Group = app.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, form.Group) {
+	if !IsInGroup(c.Controller, form.Group, id) {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
@@ -137,6 +137,9 @@ func (c *CrudEditController) Post() {
 		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	form := app.Tables[tableid].Forms[formid]
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -149,9 +152,6 @@ func (c *CrudEditController) Post() {
 		c.Ctx.Redirect(302, c.GetSession("from").(string))
 		return
 	}
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
 
 	if len(records) == 0 {
 		flash.Error("Article non trouvé: ", id)

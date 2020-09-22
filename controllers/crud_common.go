@@ -22,9 +22,17 @@ import (
 var err error
 
 // IsInGroup as
-func IsInGroup(c beego.Controller, group string) (out bool) {
+func IsInGroup(c beego.Controller, group string, id string) (out bool) {
 	out = false
 	if group == "" {
+		out = true
+		return
+	}
+	if IsAdmin(c) {
+		out = true
+		return
+	}
+	if group == "owner" && IsOwner(c, id) {
 		out = true
 		return
 	}
@@ -35,6 +43,22 @@ func IsInGroup(c beego.Controller, group string) (out bool) {
 			out = true
 			return
 		}
+	}
+	return
+}
+
+// IsAdmin as
+func IsAdmin(c beego.Controller) (out bool) {
+	out = c.GetSession("IsAdmin").(bool)
+	return
+}
+
+// IsOwner as
+func IsOwner(c beego.Controller, key string) (out bool) {
+	if c.GetSession("Username").(string) == key {
+		out = true
+	} else {
+		out = false
 	}
 	return
 }
@@ -113,7 +137,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 					element.Class = "crud-cell-nowrap"
 				}
 			case "section":
-				if !IsInGroup(c, table.Forms[element.Params.Form].Group) {
+				if !IsInGroup(c, table.Forms[element.Params.Form].Group, id) {
 					element.Params.Form = ""
 				}
 			case "textarea":
@@ -156,17 +180,17 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			}
 			var list []types.Item
 			for _, rec := range recs {
-				// item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
-				item := types.Item{}
+				item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
+				// item := types.Item{}
 				// la 1ère colonne représente la clé
 				// la 2ème le label à afficher
-				for _, label := range rec {
-					if item.Key == "" {
-						item.Key = label.(string)
-					} else {
-						item.Label = label.(string)
-					}
-				}
+				// for _, label := range rec {
+				// 	if item.Key == "" {
+				// 		item.Key = label.(string)
+				// 	} else {
+				// 		item.Label = label.(string)
+				// 	}
+				// }
 				list = append(list, item)
 			}
 			element.Items = list
@@ -196,65 +220,6 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 				if reflect.ValueOf(col).IsValid() {
 					record[key] = val
 				}
-			}
-		}
-		elements[key] = element
-	}
-	return elements
-}
-
-// computeElements calcule les éléments
-func defaultElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
-	tableid := c.Ctx.Input.Param(":table")
-	table := app.Tables[tableid]
-
-	elements := types.Elements{}
-	for key, element := range viewOrFormElements {
-		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL, HideSQL
-		if element.ClassSQL != "" {
-			element.Class = macroSQL(c, element.ClassSQL, record)
-		}
-		if element.HideSQL != "" {
-			if macroSQL(c, element.HideSQL, record) != "" {
-				element.Hide = true
-			}
-		}
-		if element.ItemsSQL != "" {
-			sql := macro(c, element.ItemsSQL, record)
-			recs, err := models.CrudSQL(sql, table.AliasDB)
-			if err != nil {
-				beego.Error(err)
-			}
-			var list []types.Item
-			for _, rec := range recs {
-				// item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
-				item := types.Item{}
-				// la 1ère colonne représente la clé
-				// la 2ème le label à afficher
-				for _, label := range rec {
-					if item.Key == "" {
-						item.Key = label.(string)
-					} else {
-						item.Label = label.(string)
-					}
-				}
-				list = append(list, item)
-			}
-			element.Items = list
-		}
-		if element.Action.URL != "" {
-			element.Action.URL = macro(c, element.Action.URL, record)
-		}
-
-		if computeValue {
-			if element.ComputeSQL != "" {
-				element.Value = macroSQL(c, element.ComputeSQL, record)
-			}
-			if element.Value == "" && element.DefaultSQL != "" {
-				element.Value = macroSQL(c, element.DefaultSQL, record)
-			}
-			if element.Value == "" && element.Default != "" {
-				element.Value = macro(c, element.Default, record)
 			}
 		}
 		elements[key] = element
@@ -294,6 +259,36 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 	if labelError == "" {
 		// Valorisation de SQLout pour l'enregistrement
 		switch element.Type {
+		case "amount":
+			if element.Value == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = element.Value
+			}
+		case "float":
+			if element.Value == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = element.Value
+			}
+		case "month":
+			if element.Value == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = element.Value
+			}
+		case "number":
+			if element.Value == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = element.Value
+			}
+		case "percent":
+			if element.Value == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = element.Value
+			}
 		case "checkbox":
 			if element.Value == "" {
 				element.SQLout = "0"

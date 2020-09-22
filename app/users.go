@@ -45,7 +45,7 @@ var usersElements = types.Elements{
 		Type:       "tag",
 		LabelLong:  "Groupes",
 		LabelShort: "Groupes",
-		ItemsSQL:   "select group_id as key, group_id as value from groups order by group_id",
+		ItemsSQL:   "select group_id as key, group_id as label from groups order by group_id",
 	},
 	"_SECTION_MDP": {
 		Type:      "section",
@@ -109,6 +109,15 @@ var usersForms = types.Forms{
 			"user_password": {Order: 40},
 			"user_is_admin": {Order: 50},
 			"user_groupes":  {Order: 60},
+		},
+	},
+	"fprofil": {
+		Title: "Mon Profil",
+		Group: "owner",
+		Elements: types.Elements{
+			"user_name":    {Order: 10},
+			"user_email":   {Order: 20},
+			"user_groupes": {Order: 60, Protected: true},
 		},
 	},
 	"fmdp": {

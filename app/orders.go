@@ -186,15 +186,15 @@ var ordersForms = types.Forms{
 	},
 	"feditbuy": {
 		Title: "Ordre d'achat",
-		Group: "order",
+		Group: "trader",
 		Elements: types.Elements{
 			"orders_id":       {Order: 1},
-			"orders_ptf_id":   {Order: 10},
+			"orders_ptf_id":   {Order: 10, Required: true},
 			"orders_order":    {Order: 20, Default: "buy"},
-			"orders_time":     {Order: 30},
-			"orders_quote":    {Order: 40},
-			"orders_buy":      {Order: 50},
-			"orders_quantity": {Order: 60},
+			"orders_time":     {Order: 30, Required: true},
+			"orders_quote":    {Order: 40, ReadOnly: true},
+			"orders_buy":      {Order: 50, Required: true},
+			"orders_quantity": {Order: 60, Required: true},
 			"orders_debit":    {Order: 70},
 		},
 		PostSQL: []string{
@@ -203,11 +203,12 @@ var ordersForms = types.Forms{
 			"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
 			"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
 			"update orders set orders_cost = orders_buy * orders_quantity * {__cost}",
+			"update orders set orders_cost_price = (orders_buy * orders_quantity + orders_buy * orders_quantity * ({__cost}*2))/orders_quantity",
 		},
 	},
 	"feditsell": {
 		Title: "Ordre de vente",
-		Group: "order",
+		Group: "trader",
 		Elements: types.Elements{
 			"orders_id":         {Order: 1},
 			"orders_ptf_id":     {Order: 10},
@@ -229,7 +230,7 @@ var ordersForms = types.Forms{
 	},
 	"frem": {
 		Title: "Remarques",
-		Group: "order",
+		Group: "trader",
 		Elements: types.Elements{
 			"orders_id":     {Order: 1},
 			"orders_ptf_id": {Order: 10},
@@ -260,7 +261,7 @@ var ordersElements = types.Elements{
 		},
 	},
 	"orders_id": {
-		Type:       "number",
+		Type:       "counter",
 		LabelLong:  "N°",
 		LabelShort: "N°",
 		ColAlign:   "center",

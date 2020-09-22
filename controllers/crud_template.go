@@ -197,7 +197,9 @@ func CrudMacroSQL(in string, record orm.Params, session types.Session) (out stri
 		}
 		for _, rec := range recs {
 			for _, val := range rec {
-				out = val.(string)
+				if reflect.ValueOf(val).IsValid() {
+					out = val.(string)
+				}
 			}
 		}
 	}

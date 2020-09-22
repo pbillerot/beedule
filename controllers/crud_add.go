@@ -57,7 +57,7 @@ func (c *CrudAddController) Get() {
 	if form.Group == "" {
 		form.Group = app.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, form.Group) {
+	if !IsInGroup(c.Controller, form.Group, id) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, c.GetSession("from").(string))
@@ -124,6 +124,10 @@ func (c *CrudAddController) Post() {
 
 	flash := beego.NewFlash()
 
+	table := app.Tables[tableid]
+	view := app.Tables[tableid].Views[viewid]
+	form := app.Tables[tableid].Forms[formid]
+
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
 
@@ -152,9 +156,6 @@ func (c *CrudAddController) Post() {
 	}
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
-		table := app.Tables[tableid]
-		view := app.Tables[tableid].Views[viewid]
-		form := app.Tables[tableid].Forms[formid]
 
 		// Calcul des éléments (valeur par défaut comprise)
 		elements = computeElements(c.Controller, true, elements, records[0])
@@ -185,6 +186,23 @@ func (c *CrudAddController) Post() {
 		c.Data["error"] = "error"
 		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
 		return
+	}
+	// PostSQL
+	for _, postsql := range form.PostSQL {
+		sql := macro(c.Controller, postsql, records[0])
+		if sql != "" {
+			err = models.CrudExec(sql, table.AliasDB)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+			}
+		} else {
+			beego.Error("Ordre sql incorrect ", postsql)
+			flash.Error("Ordre sql incorrect ", postsql)
+			flash.Store(&c.Controller)
+			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			return
+		}
 	}
 
 	flash.Notice("Création effectuée avec succès")

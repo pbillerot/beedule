@@ -47,7 +47,7 @@ func (c *CrudDeleteController) Post() {
 	if view.Group == "" {
 		view.Group = app.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, view.Group) {
+	if !IsInGroup(c.Controller, view.Group, id) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, c.GetSession("from").(string))

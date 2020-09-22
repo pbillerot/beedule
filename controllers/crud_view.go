@@ -50,7 +50,7 @@ func (c *CrudViewController) Get() {
 	if view.Group == "" {
 		view.Group = app.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, view.Group) {
+	if !IsInGroup(c.Controller, view.Group, id) {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
@@ -65,7 +65,7 @@ func (c *CrudViewController) Get() {
 	if formview.Group == "" {
 		formview.Group = app.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, formview.Group) {
+	if !IsInGroup(c.Controller, formview.Group, id) {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, view.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
@@ -73,13 +73,13 @@ func (c *CrudViewController) Get() {
 		return
 	}
 	// Ctrl d'accès FormAdd FormView FormEdit
-	if !IsInGroup(c.Controller, table.Forms[view.FormView].Group) {
+	if !IsInGroup(c.Controller, table.Forms[view.FormView].Group, id) {
 		view.FormView = ""
 	}
-	if !IsInGroup(c.Controller, table.Forms[view.FormAdd].Group) {
+	if !IsInGroup(c.Controller, table.Forms[view.FormAdd].Group, id) {
 		view.FormAdd = ""
 	}
-	if !IsInGroup(c.Controller, table.Forms[view.FormEdit].Group) {
+	if !IsInGroup(c.Controller, table.Forms[view.FormEdit].Group, id) {
 		view.FormEdit = ""
 	}
 

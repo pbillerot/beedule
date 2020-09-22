@@ -101,8 +101,8 @@
       {{ range $irecord, $record := .Records }}
       <a id="{{CrudIndexAnchor $record $tablekey}}"
         class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-item-searchable"
-        {{if $view.FormView}} data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
-        {{else if $view.FormEdit}}
+        {{if or $view.FormView $view.Deletable}} data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        {{else if and $view.FormEdit}}
         data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}>
         <i class="mini {{$theme}} {{$view.IconName}} middle aligned icon"></i>
