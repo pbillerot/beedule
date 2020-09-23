@@ -105,7 +105,7 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 	return maps, err
 }
 
-// CrudUpdate as
+// CrudUpdate avec element.SQLout
 func CrudUpdate(tableid string, id string, elements types.Elements) error {
 
 	// Remplissage de la map des valeurs
@@ -146,7 +146,7 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 	return err
 }
 
-// CrudInsert as
+// CrudInsert avec element.SQLout
 func CrudInsert(tableid string, elements types.Elements) error {
 
 	// Construction de l'ordre sql

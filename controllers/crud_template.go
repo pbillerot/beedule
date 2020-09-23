@@ -60,7 +60,7 @@ func CrudIndexAnchor(record orm.Params, key string) (out string) {
 	return
 }
 
-// CrudIndex équivalent de index mais avec computeSQL en +
+// CrudIndex équivalent de index mais sans valeur nulle
 func CrudIndex(record orm.Params, key string) (out string) {
 	out = ""
 	if val, ok := record[key]; ok {
@@ -74,15 +74,15 @@ func CrudIndex(record orm.Params, key string) (out string) {
 // CrudIndexSQL équivalent de index mais avec computeSQL en +
 func CrudIndexSQL(record orm.Params, key string, element types.Element, session types.Session) (out string) {
 	out = ""
-	if element.ComputeSQL != "" {
-		out = CrudMacroSQL(element.ComputeSQL, record, session)
-	} else {
-		if val, ok := record[key]; ok {
-			if reflect.ValueOf(val).IsValid() {
-				out = val.(string)
-			}
+	// if element.ComputeSQL != "" {
+	// 	out = CrudMacroSQL(element.ComputeSQL, record, session)
+	// } else {
+	if val, ok := record[key]; ok {
+		if reflect.ValueOf(val).IsValid() {
+			out = val.(string)
 		}
 	}
+	// }
 	return
 }
 

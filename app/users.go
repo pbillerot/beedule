@@ -161,6 +161,14 @@ var usersForms = types.Forms{
 			"update users set user_password = '{_new_password}' where user_name = '{user_name}'",
 		},
 	},
+	"fmdp": {
+		Title: "Changer le mot de passe",
+		Group: "admin",
+		Elements: types.Elements{
+			"user_name":     {Order: 10, ReadOnly: true},
+			"user_password": {Order: 50},
+		},
+	},
 	"fedit": {
 		Title: "Fiche Compte",
 		Group: "admin",

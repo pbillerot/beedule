@@ -166,14 +166,15 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 	return elements, cols
 }
 
-// computeElements calcule les éléments
+// computeElements calcule les éléments de l'UI
+// si computeValue, valorise à 0 les champ numériques dans record
 func computeElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
 	tableid := c.Ctx.Input.Param(":table")
 	table := app.Tables[tableid]
 
 	elements := types.Elements{}
 	for key, element := range viewOrFormElements {
-		// Valorisation de Items ClassSQL ItemsSQL, ComputeSQL, DefaultSQL, HideSQL
+		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
 			element.Class = macroSQL(c, element.ClassSQL, record)
 		}
@@ -255,30 +256,31 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 }
 
 // checkElement:
-// - recup de la saisie dans element.Value
+// - recup de la saisie dans val
 // - contrôle de la saisie
 // - valorisation de element.SQLout pour l'enregistrement dans la bdd
 func checkElement(c *beego.Controller, key string, element *types.Element, record orm.Params) error {
 	labelError := ""
+	val := ""
 
 	// Récupération de la saisie
 	switch element.Type {
 	case "tag":
-		element.Value = strings.Join(c.GetStrings(key)[:], ",")
+		val = strings.Join(c.GetStrings(key)[:], ",")
 	default:
-		element.Value = c.GetString(key)
+		val = c.GetString(key)
 	}
-	record[key] = element.Value
+	record[key] = val
 
-	if element.Required && element.Value == "" {
+	if element.Required && val == "" {
 		labelError = fmt.Sprintf(
 			"[%s] est obligatoire", element.LabelLong)
 	}
-	if element.MinLength > 0 && len(element.Value) < element.MinLength {
+	if element.MinLength > 0 && len(val) < element.MinLength {
 		labelError = fmt.Sprintf(
 			"%d caractères minimum pour [%s]", element.MinLength, element.LabelLong)
 	}
-	if element.MaxLength > 0 && len(element.Value) > element.MaxLength {
+	if element.MaxLength > 0 && len(val) > element.MaxLength {
 		labelError = fmt.Sprintf(
 			"%d caractères maximum pour [%s]", element.MinLength, element.LabelLong)
 	}
@@ -287,51 +289,51 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 		// Valorisation de SQLout pour l'enregistrement
 		switch element.Type {
 		case "amount":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
-				element.SQLout = element.Value
+				element.SQLout = val
 			}
 		case "float":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
-				element.SQLout = element.Value
+				element.SQLout = val
 			}
 		case "month":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
-				element.SQLout = element.Value
+				element.SQLout = val
 			}
 		case "number":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
-				element.SQLout = element.Value
+				element.SQLout = val
 			}
 		case "percent":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
-				element.SQLout = element.Value
+				element.SQLout = val
 			}
 		case "checkbox":
-			if element.Value == "" {
+			if val == "" {
 				element.SQLout = "0"
 			} else {
 				// le mot de passe a été changé
 				element.SQLout = "1"
 			}
 		case "password":
-			if element.Value == "***" {
+			if val == "***" {
 				element.SQLout = record[key].(string)
 			} else {
 				// le mot de passe a été changé
-				element.SQLout = element.HashPassword()
+				element.SQLout = element.HashPassword(val)
 			}
 		default:
-			element.SQLout = element.Value
+			element.SQLout = val
 		}
 	}
 	var err error
@@ -381,7 +383,6 @@ func setContext(c beego.Controller) {
 	c.Data["beeReturn"] = c.Ctx.Request.Referer()
 	c.Data["Composter"] = time.Now().Unix()
 	if c.GetSession("from") != nil {
-		beego.Debug("*** FROM:", c.GetSession("from"))
 		c.Data["From"] = c.GetSession("from").(string)
 	}
 }

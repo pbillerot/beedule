@@ -57,7 +57,7 @@ type Element struct {
 	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error        string // contiendra "error" si le champ est en erreur de saisie
 	Format       string //
-	ComputeSQL   string // formule de calcul de Value en SQL
+	ComputeSQL   string // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
 	Height       int    // TODO
 	Help         string // TODO
 	HelpSQL      string // TODO
@@ -83,7 +83,6 @@ type Element struct {
 	Required     bool
 	SQLout       string // Valeur à enregistrer dans la base de données
 	Type         string // action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
-	Value        string
 }
 
 // Table Table de l'application
@@ -184,8 +183,8 @@ type Item struct {
 }
 
 // HashPassword hashage de Value
-func (element *Element) HashPassword() string {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(element.Value), 14)
+func (element *Element) HashPassword(password string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
 		beego.Error(err)
 	}
