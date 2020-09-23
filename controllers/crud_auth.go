@@ -9,25 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// AuthRouter as
-type AuthRouter struct {
-	beego.Controller
-}
-
-// Prepare implements Prepare method for loggedRouter.
-func (c *AuthRouter) Prepare() {
-	if c.GetSession("LoggedIn") != nil {
-		if c.GetSession("LoggedIn").(bool) != true {
-			c.Ctx.Redirect(302, "/crud/login")
-		}
-	} else {
-		c.Ctx.Redirect(302, "/crud/login")
-	}
-	// c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
-	// c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
-	c.Ctx.Redirect(200, c.Ctx.Request.RequestURI)
-}
-
 // loggedRouter implements global settings for all other routers.
 type loggedRouter struct {
 	beego.Controller
@@ -42,8 +23,14 @@ func (c *loggedRouter) Prepare() {
 	} else {
 		c.Ctx.Redirect(302, "/crud/login")
 	}
-	// c.Ctx.ResponseWriter.Header().Add("X-My-Header", c.GetSession("Username").(string))
-	// c.Ctx.ResponseWriter.Header().Add("X-Auth-User", c.GetSession("Username").(string))
+	appid := c.Ctx.Input.Param(":app")
+	if appid != "" {
+		c.Data["TabIcon"] = app.Applications[appid].Image
+		c.Data["TabTitle"] = app.Applications[appid].Title
+	} else {
+		c.Data["TabIcon"] = app.Portail.IconFile
+		c.Data["TabTitle"] = app.Portail.Title
+	}
 }
 
 // adminRouter implements global settings for all other routers.
@@ -53,7 +40,7 @@ type adminRouter struct {
 
 // Prepare implements Prepare method for loggedRouter.
 func (c *adminRouter) Prepare() {
-	beego.Debug("adminRouter")
+	// beego.Debug("adminRouter")
 	if c.GetSession("LoggedIn") != nil {
 		if c.GetSession("LoggedIn").(bool) != true {
 			c.Ctx.Redirect(302, "/crud/login")
@@ -63,6 +50,14 @@ func (c *adminRouter) Prepare() {
 		}
 	} else {
 		c.Ctx.Redirect(302, "/crud/login")
+	}
+	appid := c.Ctx.Input.Param(":app")
+	if appid != "" {
+		c.Data["TabIcon"] = app.Applications[appid].Image
+		c.Data["TabTitle"] = app.Applications[appid].Title
+	} else {
+		c.Data["TabIcon"] = app.Portail.IconFile
+		c.Data["TabTitle"] = app.Portail.Title
 	}
 }
 

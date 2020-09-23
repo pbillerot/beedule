@@ -9,9 +9,6 @@ import (
 func init() {
 	// PORTAIL liste des applications externes et CRUD
 
-	// Aut
-	// beego.Router("/auth", &controllers.AuthRouter{})
-
 	// LOGIN MANAGER
 	beego.Router("/crud/login", &controllers.LoginController{})
 	beego.Router("/crud/logout", &controllers.LogoutController{})

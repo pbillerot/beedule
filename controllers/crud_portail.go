@@ -1,6 +1,8 @@
 package controllers
 
-import "github.com/astaxie/beego"
+import (
+	"github.com/astaxie/beego"
+)
 
 // CrudPortailController as
 type CrudPortailController struct {
