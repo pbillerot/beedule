@@ -21,6 +21,16 @@ import (
 
 var err error
 
+// ReturnFrom as
+func ReturnFrom(c beego.Controller) {
+	if c.GetSession("from") != nil {
+		c.Ctx.Redirect(302, c.GetSession("from").(string))
+	} else {
+		c.Ctx.Redirect(302, "/crud")
+	}
+	return
+}
+
 // IsInGroup as
 func IsInGroup(c beego.Controller, group string, id string) (out bool) {
 	out = false

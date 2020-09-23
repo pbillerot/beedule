@@ -8,6 +8,7 @@ import (
 	"github.com/pbillerot/beedule/models"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 )
 
 // CrudEditController as
@@ -28,7 +29,7 @@ func (c *CrudEditController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
 		beego.Error("App not found", c.GetSession("Username").(string), appid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	if val, ok := app.Tables[tableid]; ok {
@@ -36,17 +37,17 @@ func (c *CrudEditController) Get() {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
 				beego.Error("Form not found", c.GetSession("Username").(string), formid)
-				c.Ctx.Redirect(302, c.GetSession("from").(string))
+				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
 			beego.Error("View not found", c.GetSession("Username").(string), viewid)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
 		beego.Error("table not found", c.GetSession("Username").(string), tableid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -64,7 +65,7 @@ func (c *CrudEditController) Get() {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -75,12 +76,14 @@ func (c *CrudEditController) Get() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
+		return
 	}
 	if len(records) == 0 {
 		flash.Error("Article non trouvé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Calcul des éléments (valeur par défaut comprise)
@@ -123,19 +126,19 @@ func (c *CrudEditController) Post() {
 			} else {
 				flash.Error("Formulaire non trouvé :", formid)
 				flash.Store(&c.Controller)
-				c.Ctx.Redirect(302, c.GetSession("from").(string))
+				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
 			flash.Error("Vue non trouvée :", viewid)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
 		flash.Error("Application non trouvée :", appid)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	table := app.Tables[tableid]
@@ -150,14 +153,14 @@ func (c *CrudEditController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
 	if len(records) == 0 {
 		flash.Error("Article non trouvé: ", id)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -172,6 +175,14 @@ func (c *CrudEditController) Post() {
 			flash.Error(err.Error())
 		}
 		elements[key] = element
+	}
+	// CheckSQL
+	for _, checksql := range form.CheckSQL {
+		sql := macroSQL(c.Controller, checksql, records[0])
+		if sql != "" {
+			berr = true
+			flash.Error(sql)
+		}
 	}
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
@@ -203,35 +214,29 @@ func (c *CrudEditController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	// PostSQL
 	for _, postsql := range form.PostSQL {
-		sql := macro(c.Controller, postsql, records[0])
+		// Remplissage d'un record avec les elements.SQLout
+		record := orm.Params{}
+		for key, element := range elements {
+			record[key] = element.SQLout
+		}
+		sql := macro(c.Controller, postsql, record)
 		if sql != "" {
 			err = models.CrudExec(sql, table.AliasDB)
 			if err != nil {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
 			}
-		} else {
-			beego.Error("Ordre sql incorrect ", postsql)
-			flash.Error("Ordre sql incorrect ", postsql)
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
-			return
 		}
 	}
 
 	flash.Notice("Mise à jour effectuée avec succès")
 	flash.Store(&c.Controller)
 
-	// if view.FormView == "" {
-	// 	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
-	// } else {
-	// 	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
-	// }
-	c.Ctx.Redirect(302, c.GetSession("from").(string))
-
+	ReturnFrom(c.Controller)
+	return
 }

@@ -129,6 +129,10 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 		sql += k + " = ?"
 		args = append(args, element.SQLout)
 	}
+	if len(sql) == 0 {
+		// Pas de champ à mettre à jour
+		return nil
+	}
 	sql += " WHERE " + app.Tables[tableid].Key + " = ?"
 	args = append(args, id)
 

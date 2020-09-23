@@ -27,6 +27,7 @@
       </h2>
       <form class="ui large form" action="/crud/login" method="POST">
         {{ .xsrfdata }}
+        <input type="hidden" name="from" value="{{.From}}">
         <div class="ui stacked segment">
           <div class="field">
             <div class="ui left icon input">

@@ -49,15 +49,15 @@ type Elements map[string]Element
 type Element struct {
 	Action       Action // bouton d'action
 	Args         Args
-	Class        string // TODO Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL     string // TODO SQL pour alimenter Class error warning info green blue
-	ColAlign     string // TODO
+	Class        string // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
+	ClassSQL     string // SQL pour alimenter Class error warning info green blue
+	ColAlign     string //
 	ColWith      int    // TODO
 	Default      string // Valeur par défaut (macro possible)
 	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error        string // contiendra "error" si le champ est en erreur de saisie
-	Format       string // TODO
-	ComputeSQL   string // TODO formule de calcul de Value en SQL
+	Format       string //
+	ComputeSQL   string // formule de calcul de Value en SQL
 	Height       int    // TODO
 	Help         string // TODO
 	HelpSQL      string // TODO
@@ -66,7 +66,7 @@ type Element struct {
 	HideOnMobile bool     // La colonne dans une vue sera cachée sur Mobile
 	Items        []Item   // slice d'item
 	ItemsSQL     string   // Ordre SQL qui retournera la colonne pour alimenter Items
-	Jointure     Jointure // TODO
+	Jointure     Jointure //
 	LabelLong    string
 	LabelShort   string
 	Max          int // TODO
@@ -76,9 +76,9 @@ type Element struct {
 	Order        int // Ordre de l'élément dans une vue ou formulaire
 	Params       Params
 	PlaceHolder  string
-	Pattern      string // TODO Pattern de l'input HTML
+	Pattern      string // Pattern de l'input HTML
 	Protected    bool
-	ReadOnly     bool // TODO
+	ReadOnly     bool //
 	Refresh      bool // TODO
 	Required     bool
 	SQLout       string // Valeur à enregistrer dans la base de données
@@ -99,7 +99,7 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	Actions   Actions // TODO Action sur la vue (ordres sql)
+	Actions   Actions // Action sur la vue (ordres sql)
 	ClassSQL  string  // couleur theme de la ligne
 	Deletable bool    // Suppression fiche autorisée
 	FormAdd   string
@@ -110,7 +110,7 @@ type View struct {
 	IconName  string
 	Info      string
 	Limit     int    // TODO
-	Group     string // groupe qui peut accéder à la vue  // TODO
+	Group     string // groupe qui peut accéder à la vue
 	OrderBy   string
 	Where     string
 	Type      string // type de vue normal,image
@@ -129,10 +129,11 @@ type MaskList struct {
 
 // Form formulaire
 type Form struct {
-	Actions  Actions // TODO Action appel d'un formulaire ou exécution d'une requête SQL
+	Actions  Actions // Action appel d'un formulaire ou exécution d'une requête SQL
 	Title    string
-	Group    string // groupe qui peut accéder au formulaire  // TODO
+	Group    string // groupe qui peut accéder au formulair
 	Elements Elements
+	CheckSQL []string // retourne le libellé des erreurs lors du contrôle des rubriques
 	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
 }
 

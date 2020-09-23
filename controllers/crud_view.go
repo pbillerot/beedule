@@ -28,19 +28,19 @@ func (c *CrudViewController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
 		beego.Error("App not found", c.GetSession("Username").(string), appid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	if val, ok := app.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			beego.Error("View not found", c.GetSession("Username").(string), viewid)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
 		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -54,7 +54,7 @@ func (c *CrudViewController) Get() {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -66,10 +66,10 @@ func (c *CrudViewController) Get() {
 		formview.Group = app.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, formview.Group, id) {
-		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, view.Group)
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, formview.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	// Ctrl d'accès FormAdd FormView FormEdit
@@ -104,7 +104,7 @@ func (c *CrudViewController) Get() {
 	if len(records) == 0 {
 		flash.Error("Article non trouvé: ", id)
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 

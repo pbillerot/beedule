@@ -86,6 +86,7 @@ func (c *AboutController) Get() {
 // Get of LoginController
 func (c *LoginController) Get() {
 	setContext(c.Controller)
+	c.Data["From"] = c.Ctx.Request.Referer()
 	c.Data["Title"] = "Beedule"
 	c.TplName = "crud_login.html"
 }
@@ -122,7 +123,12 @@ func (c *LoginController) Post() {
 	} else {
 		c.SetSession("IsAdmin", false)
 	}
-	c.Ctx.Redirect(302, "/crud")
+	from := c.GetString("from")
+	if from != "" {
+		c.Ctx.Redirect(302, from)
+	} else {
+		c.Ctx.Redirect(302, "/crud")
+	}
 }
 
 // Get of LogoutController

@@ -14,6 +14,14 @@ var Users = types.Table{
 }
 
 var usersElements = types.Elements{
+	"_pwd_change": {
+		Type:      "action",
+		LabelLong: "Changer le mot de passe...",
+		Action: types.Action{
+			Label: "Changer le mot de passe...",
+			URL:   "/crud/edit/users/users/vall/fpwd/{user_name}",
+		},
+	},
 	"user_name": {
 		Type:       "text",
 		Order:      1,
@@ -26,6 +34,23 @@ var usersElements = types.Elements{
 		Type:       "password",
 		LabelLong:  "Mot de passe",
 		LabelShort: "Mot de passe",
+		Pattern:    "[a-zA-Z0-9_-]+",
+		Required:   true,
+		MinLength:  3,
+	},
+	"_confirm_password": {
+		Type:       "password",
+		LabelLong:  "Nouveau mot de passe confirmé",
+		LabelShort: "Mot de passe",
+		Pattern:    "[a-zA-Z0-9_-]+",
+		Required:   true,
+		MinLength:  3,
+	},
+	"_new_password": {
+		Type:       "password",
+		LabelLong:  "Nouveau mot de passe",
+		LabelShort: "Mot de passe",
+		Pattern:    "[a-zA-Z0-9_-]+",
 		Required:   true,
 		MinLength:  3,
 	},
@@ -118,16 +143,22 @@ var usersForms = types.Forms{
 			"user_name":    {Order: 10},
 			"user_email":   {Order: 20},
 			"user_groupes": {Order: 60, Protected: true},
+			"_pwd_change":  {Order: 100},
 		},
 	},
-	"fmdp": {
-		Title: "Sécurité",
-		Group: "admin",
+	"fpwd": {
+		Title: "Changer le mot de passe",
+		Group: "owner",
 		Elements: types.Elements{
-			"user_name":     {Order: 10, ReadOnly: true},
-			"user_password": {Order: 40},
-			"user_is_admin": {Order: 50},
-			"user_groupes":  {Order: 60},
+			"user_name":         {Order: 10, ReadOnly: true},
+			"_new_password":     {Order: 50},
+			"_confirm_password": {Order: 60},
+		},
+		CheckSQL: []string{
+			"select 'les mots de passe ne sont pas identiques' where '{_new_password}' <> '{_confirm_password}' ",
+		},
+		PostSQL: []string{
+			"update users set user_password = '{_new_password}' where user_name = '{user_name}'",
 		},
 	},
 	"fedit": {

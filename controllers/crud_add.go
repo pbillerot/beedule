@@ -25,7 +25,7 @@ func (c *CrudAddController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
 		beego.Error("App not found", c.GetSession("Username").(string), appid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 	if val, ok := app.Tables[tableid]; ok {
@@ -33,17 +33,17 @@ func (c *CrudAddController) Get() {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
 				beego.Error("Form not found", c.GetSession("Username").(string), formid)
-				c.Ctx.Redirect(302, c.GetSession("from").(string))
+				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
 			beego.Error("View not found", c.GetSession("Username").(string), viewid)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
 		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -60,7 +60,7 @@ func (c *CrudAddController) Get() {
 	if !IsInGroup(c.Controller, form.Group, id) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -204,7 +204,7 @@ func (c *CrudAddController) Post() {
 			beego.Error("Ordre sql incorrect ", postsql)
 			flash.Error("Ordre sql incorrect ", postsql)
 			flash.Store(&c.Controller)
-			c.Ctx.Redirect(302, c.GetSession("from").(string))
+			ReturnFrom(c.Controller)
 			return
 		}
 	}
