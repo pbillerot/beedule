@@ -58,6 +58,7 @@ type Element struct {
 	Error        string // contiendra "error" si le champ est en erreur de saisie
 	Format       string //
 	ComputeSQL   string // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	Group        string // Groupe autorisé à accéder à cette rubrique
 	Height       int    // TODO
 	Help         string // TODO
 	HelpSQL      string // TODO

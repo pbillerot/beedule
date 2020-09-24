@@ -250,6 +250,12 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 				}
 			}
 		}
+		if key == "_action_sell" {
+			elements[key] = element
+		}
+		if !IsInGroup(c, element.Group, "") {
+			element.Type = "hidden" // l'élément ne sera pas visible
+		}
 		elements[key] = element
 	}
 	return elements

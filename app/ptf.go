@@ -20,6 +20,7 @@ var ptfViews = types.Views{
 		FormEdit:  "fedit",
 		FormView:  "fview",
 		Deletable: true,
+		Group:     "picsou",
 		Title:     "Valeurs actives",
 		IconName:  "building",
 		Mask: types.MaskList{
@@ -55,6 +56,7 @@ var ptfViews = types.Views{
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		FormView:  "fview",
+		Group:     "picsou",
 		Deletable: true,
 		Title:     "Les Valeurs inactives",
 		IconName:  "building outline",
@@ -90,6 +92,7 @@ var ptfViews = types.Views{
 	"vtop": {
 		FormEdit:  "fedit",
 		FormView:  "fview",
+		Group:     "picsou",
 		Deletable: true,
 		Title:     "Les Valeurs TOP",
 		IconName:  "city",
@@ -126,6 +129,7 @@ var ptfViews = types.Views{
 		Title:    "Graphiques",
 		FormEdit: "fedit",
 		FormView: "fview",
+		Group:    "picsou",
 		IconName: "photo video",
 		Type:     "image",
 		Elements: types.Elements{
@@ -145,6 +149,7 @@ var ptfViews = types.Views{
 var ptfForms = types.Forms{
 	"fview": {
 		Title: "Fiche Valeur",
+		Group: "picsou",
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
@@ -161,6 +166,7 @@ var ptfForms = types.Forms{
 	},
 	"fadd": {
 		Title: "Ajout d'une valeur",
+		Group: "picsou",
 		Elements: types.Elements{
 			"ptf_id":   {Order: 10},
 			"ptf_name": {Order: 20},
@@ -169,6 +175,7 @@ var ptfForms = types.Forms{
 	},
 	"fedit": {
 		Title: "Fiche Valeur",
+		Group: "picsou",
 		Elements: types.Elements{
 			"ptf_id":      {Order: 10},
 			"ptf_name":    {Order: 20},
@@ -189,6 +196,7 @@ var ptfElements = types.Elements{
 	"_action_buy": {
 		Type:      "action",
 		LabelLong: "Acheter la valeur...",
+		Group:     "trader",
 		Action: types.Action{
 			Label: "Acheter cette valeur",
 			URL:   "/crud/add/picsou/orders/vachat/feditbuy?orders_order=buy&orders_ptf_id={ptf_id}&orders_quote={ptf_quote}&orders_buy={ptf_quote}",

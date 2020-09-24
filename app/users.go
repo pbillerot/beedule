@@ -162,11 +162,13 @@ var usersForms = types.Forms{
 		},
 	},
 	"fmdp": {
-		Title: "Changer le mot de passe",
+		Title: "Sécurité",
 		Group: "admin",
 		Elements: types.Elements{
 			"user_name":     {Order: 10, ReadOnly: true},
 			"user_password": {Order: 50},
+			"user_is_admin": {Order: 60},
+			"user_groupes":  {Order: 70},
 		},
 	},
 	"fedit": {

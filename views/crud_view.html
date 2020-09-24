@@ -177,6 +177,8 @@
                     {{end}}
                   </h4>
                 </div>
+                {{else if (eq $element.Type "hidden")}}
+                <input type="hidden" name="{{$key}}">
                 {{else if (eq $element.Type "image")}}
                 {{$url := CrudMacro $element.Params.Path $record $session}}
                 <!-- Fermeture de la card et ouverture d'une autre -->

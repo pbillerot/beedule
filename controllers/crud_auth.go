@@ -124,12 +124,7 @@ func (c *LoginController) Post() {
 		c.SetSession("IsAdmin", false)
 	}
 	beego.Info(fmt.Sprintf("CONNEXION de [%s] groupe:[%s]", user.Username, user.Groupes))
-	from := c.GetString("from")
-	if from != "" {
-		c.Ctx.Redirect(302, from)
-	} else {
-		c.Ctx.Redirect(302, "/crud")
-	}
+	c.Ctx.Redirect(302, "/crud")
 }
 
 // Get of LogoutController

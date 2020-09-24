@@ -254,6 +254,7 @@ var ordersElements = types.Elements{
 	},
 	"_action_sell": {
 		Type:      "action",
+		Group:     "trader",
 		LabelLong: "Vendre cette valeur...",
 		Action: types.Action{
 			Label: "Vendre cette valeur",

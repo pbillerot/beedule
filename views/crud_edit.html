@@ -153,6 +153,8 @@
               <input type="number" step="any" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
             </div>
+            {{else if (eq $element.Type "hidden")}}
+            <input type="hidden" name="{{$key}}" value="{{$val}}">
             {{else if (eq $element.Type "radio")}}
             <div
               class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}inline fields {{$element.Error}}">

@@ -173,6 +173,8 @@
             {{range $i, $item := $arr}}
             <div class="ui tag label"><b>{{$item}}</b></div>
             {{end}}
+            {{else if (eq $element.Type "hidden")}}
+            <input type="hidden" name="{{$key}}">
             {{else}}
             <!-- autre type -->
             {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
