@@ -13,6 +13,7 @@
 {{$elements := .Elements}}
 {{$cols := .Cols}}
 {{$composter := .Composter}}
+{{$qrecords := .Qrecords}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -51,7 +52,16 @@
           <a href="/crud/about" class="item">À propos</a>
         </div>
       </div>
-      <div class="header item" id="crud-header">{{$view.Title}}</div>
+      <div class="header item" id="crud-header">
+        {{$view.Title}}
+        {{if (eq $qrecords 0)}}
+        (auncun élément)
+        {{else if (eq $qrecords 1)}}
+        (1 élément)
+        {{else}}
+        ({{$qrecords}} éléments)
+        {{end}}
+      </div>
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="ui icon item">
@@ -103,7 +113,7 @@
         {{ range $num, $key := $cols }}
         {{ $val := CrudIndex $record $key }}
         {{ $element := index $elements $key }}
-
+        <!-- On ne prend que les element image-->
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
@@ -113,18 +123,118 @@
             <img src="{{$path}}?{{$composter}}">
           </div>
           <div class="content">
-            <div class="center aligned description searchable">
-              <b>{{CrudMacro $element.Params.Legend $record $session}}</b>
+
+            <div class="center aligned description">
+              {{$element.LabelLong}}
             </div>
-            {{if $url}}
-            <div class="ui icon button crud-jquery-url" data-url="{{$url}}">
-              <i class="edit icon"></i>
-            </div>
+
+            {{if $element.Params.Header}}
+            <div class="header">
+              {{if $url}}
+              <span class="ui icon button crud-jquery-url" data-url="{{$url}}">
+                <i class="edit icon"></i>
+              </span>
+              {{end}}
+              {{range $im, $key := $element.Params.Header}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "combo")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else}}
+              <span class="ui {{$class}} text searchable">{{CrudFormat $ele.Format $val}}</span>
+              {{end}}
+              {{end}}
+  
+            </div><!-- end Header -->
             {{end}}
-          </div>
+
+            {{if $element.Params.Meta}}
+            <div class="right floated meta">
+              {{range $im, $key := $view.Mask.Meta}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <div class="ui label">
+                <i class="check square outline icon"></i>
+                <span class="searchable">{{$ele.LabelLong}}</span>
+              </div>
+              {{else}}
+              <div class="ui label">
+                <i class="square outline icon"></i>
+                <span>{{$ele.LabelLong}}</span>
+              </div>
+              {{end}}
+              {{else if (eq $ele.Type "combo")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else if (eq $ele.Type "tag")}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui tag label"><b>{{$item}}</b></div>
+              {{end}}
+              {{else if (eq $ele.Type "hidden")}}
+              <input type="hidden" name="{{$key}}">
+              {{else}}
+              <!-- autre type -->
+              {{if $ele.LabelShort}}<span class="ui grey text">{{$ele.LabelShort}} : </span>{{end}}
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+              {{end}}
+            </div><!-- end Meta -->
+            {{end}}
+            {{if $element.Params.Description}}
+            <div class="description">
+              {{range $im, $key := $view.Mask.Description}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              <span class="ui orange {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+            </div><!-- end Description -->
+            {{end}}
+
+            {{if $element.Params.Extra}}
+            <div class="right floated extra">
+              {{range $im, $key := $element.Params.Extra}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <div class="ui label">
+                <i class="check square outline icon"></i>
+                <span class="searchable">{{$ele.LabelLong}}</span>
+              </div>
+              {{else}}
+              <div class="ui label">
+                <i class="square outline icon"></i>
+                <span>{{$ele.LabelLong}}</span>
+              </div>
+              {{end}}
+              {{else if (eq $ele.Type "combo")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else if (eq $ele.Type "tag")}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui tag label"><b>{{$item}}</b></div>
+              {{end}}
+              {{else if (eq $ele.Type "hidden")}}
+              <input type="hidden" name="{{$key}}">
+              {{else}}
+              <!-- autre type -->
+              {{if $ele.LabelShort}}<span class="ui grey text">{{$ele.LabelShort}} : </span>{{end}}
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+              {{end}}
+            </div><!-- end Extra -->
+            {{end}}
+  
+          </div><!-- end content-->
         </a>
         {{end}}
-        <!-- end if-->
+        <!-- end if image -->
         {{end}}
         <!-- end range records-->
         {{end}}

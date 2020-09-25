@@ -151,13 +151,16 @@ type Jointure struct {
 
 // Params paramètres de l'élément
 type Params struct {
-	Action   string
-	Form     string
-	IconName string
-	Legend   string
-	URL      string
-	Path     string
-	SQL      []string
+	Action      string
+	Form        string
+	IconName    string
+	Header      []string
+	Description []string
+	Meta        []string
+	Extra       []string
+	URL         string
+	Path        string
+	SQL         []string
 }
 
 // Actions as

@@ -135,6 +135,7 @@ var ptfViews = types.Views{
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
+			"ptf_top":        {Order: 25},
 			"ptf_rem":        {Order: 30},
 			"ptf_note":       {Order: 40},
 			"_image_day":     {Order: 100},
@@ -255,9 +256,18 @@ var ptfElements = types.Elements{
 		LabelLong:  "Graph du jour",
 		LabelShort: "Graph J",
 		Params: types.Params{
-			Path:   "/crud/data/picsou/png/day/{ptf_id}.png",
-			URL:    "/crud/view/picsou/ptf/vdiapo/{ptf_id}",
-			Legend: "{ptf_name} {ptf_id} - {ptf_note} - {ptf_rem}",
+			Path: "/crud/data/picsou/png/day/{ptf_id}.png",
+			URL:  "/crud/view/picsou/ptf/vdiapo/{ptf_id}",
+			Header: []string{
+				"ptf_name",
+				"ptf_id",
+			},
+			Description: []string{
+				"ptf_rem",
+			},
+			Extra: []string{
+				"ptf_top",
+			},
 		},
 	},
 	"_image_histo": {
@@ -265,8 +275,14 @@ var ptfElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			Path:   "/crud/data/picsou/png/quotes/{ptf_id}.png",
-			Legend: "{ptf_name} {ptf_id} - {ptf_note}",
+			Path: "/crud/data/picsou/png/quotes/{ptf_id}.png",
+			Header: []string{
+				"ptf_name",
+				"ptf_id",
+			},
+			Extra: []string{
+				"ptf_top",
+			},
 		},
 	},
 	"_image_analyse": {
@@ -274,8 +290,14 @@ var ptfElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			Path:   "/crud/data/picsou/png/ana/{ptf_id}.gif",
-			Legend: "{ptf_name} {ptf_id} - {ptf_note}",
+			Path: "/crud/data/picsou/png/ana/{ptf_id}.gif",
+			Header: []string{
+				"ptf_name",
+				"ptf_id",
+			},
+			Extra: []string{
+				"ptf_top",
+			},
 		},
 	},
 }

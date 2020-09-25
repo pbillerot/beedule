@@ -104,6 +104,7 @@ func (c *CrudListController) Get() {
 	c.Data["View"] = &view
 	c.Data["Elements"] = elements
 	c.Data["Records"] = records
+	c.Data["Qrecords"] = len(records)
 	c.Data["Cols"] = cols
 
 	if c.GetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid)) != nil {
