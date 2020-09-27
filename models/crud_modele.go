@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/pbillerot/beedule/app"
@@ -47,6 +48,10 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	if view.Where != "" {
 		where = " WHERE " + view.Where
 	}
+	limit := ""
+	if view.Limit > 0 {
+		limit = fmt.Sprintf(" LIMIT %d", view.Limit)
+	}
 	orderby := ""
 	if view.OrderBy != "" {
 		orderby = " ORDER BY " + view.OrderBy
@@ -59,7 +64,8 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 		" FROM " + tableid +
 		" " + strings.Join(joins, " ") +
 		where +
-		orderby
+		orderby +
+		limit
 	_, err = o.Raw(sql).Values(&maps)
 	if err != nil {
 		beego.Error(err)

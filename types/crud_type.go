@@ -99,24 +99,25 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	Actions   Actions // Action sur la vue (ordres sql)
-	ClassSQL  string  // couleur theme de la ligne
-	Deletable bool    // Suppression fiche autorisée
-	FormAdd   string
-	FormEdit  string
-	FormView  string
-	FooterSQL string // requête sur la table courante
-	Hide      bool   // TODO
-	IconName  string
-	Info      string
-	Limit     int    // TODO
-	Group     string // groupe qui peut accéder à la vue
-	OrderBy   string
-	Where     string
-	Type      string // type de vue normal,image
-	Title     string // Titre de la vue
-	Elements  Elements
-	Mask      MaskList // Masque html d'une ligne dans la vue
+	Actions      Actions // Action sur la vue (ordres sql)
+	ClassSQL     string  // couleur theme de la ligne
+	Deletable    bool    // Suppression fiche autorisée
+	FormAdd      string
+	FormEdit     string
+	FormView     string
+	FooterSQL    string // requête sur la table courante
+	Hide         bool   // TODO
+	HideOnMobile bool   // TODO
+	IconName     string
+	Info         string
+	Limit        int    // TODO
+	Group        string // groupe qui peut accéder à la vue
+	OrderBy      string
+	Where        string
+	Type         string // type de vue : card(default),image,table
+	Title        string // Titre de la vue
+	Elements     Elements
+	Mask         MaskList // Masque html d'une ligne dans la vue
 }
 
 // MaskList as

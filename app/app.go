@@ -33,6 +33,7 @@ var Applications = map[string]types.Application{
 			{Tableid: "ptf", Viewid: "vactiv"},
 			{Tableid: "ptf", Viewid: "vinactiv"},
 			{Tableid: "ptf", Viewid: "vdiapo"},
+			{Tableid: "quotes", Viewid: "vlast"},
 		},
 	},
 	"filebrowser": {
@@ -48,15 +49,6 @@ var Applications = map[string]types.Application{
 	},
 }
 
-// Portail as
-var Portail = types.Portail{
-	Title:        "Beedule",
-	Info:         "Le prototype d'utilisation du framework",
-	IconFile:     "/crud/static/img/beedule.png",
-	Applications: Applications,
-	Tables:       Tables,
-}
-
 // Tables Liens vers les tables
 // "nom de la table": Structure
 var Tables = types.Tables{
@@ -65,6 +57,16 @@ var Tables = types.Tables{
 	"groups": Groups,
 	"orders": Orders,
 	"ptf":    Ptf,
+	"quotes": Quotes,
+}
+
+// Portail as
+var Portail = types.Portail{
+	Title:        "Beedule",
+	Info:         "Le prototype d'utilisation du framework",
+	IconFile:     "/crud/static/img/beedule.png",
+	Applications: Applications,
+	Tables:       Tables,
 }
 
 // Params paramètres globaux aux applications

@@ -7,6 +7,7 @@ $(document).ready(function () {
     $('.ui.radio.checkbox').checkbox();
     $('.ui.dropdown').dropdown();
     $('select.dropdown').dropdown();
+    $('table').tablesort()
     $('.message .close')
         .on('click', function () {
             $(this)
