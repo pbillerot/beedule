@@ -107,9 +107,6 @@ func (c *CrudListController) Get() {
 	c.Data["Qrecords"] = len(records)
 	c.Data["Cols"] = cols
 
-	if c.GetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid)) != nil {
-		c.Data["Anchor"] = c.GetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid)).(string)
-	}
 	if view.Type == "image" {
 		c.TplName = "crud_list_image.html"
 	} else if view.Type == "table" {

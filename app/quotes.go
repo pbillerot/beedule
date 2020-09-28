@@ -7,7 +7,7 @@ import (
 // Quotes table des cotations
 var Quotes = types.Table{
 	AliasDB:    "picsou",
-	Key:        "id",
+	Key:        "keyid",
 	ColDisplay: "id",
 	IconName:   "atom",
 	Elements:   quotesElements,
@@ -30,6 +30,15 @@ CREATE TABLE IF NOT EXISTS "quotes" (
 );
 */
 var quotesElements = types.Elements{
+	"keyid": {
+		Type:       "text",
+		LabelLong:  "Clé",
+		LabelShort: "clé",
+		Jointure: types.Jointure{
+			Join:   "",
+			Column: "date || '-' || id",
+		},
+	},
 	"id": {
 		Type:       "text",
 		LabelLong:  "Valeur",
@@ -37,8 +46,8 @@ var quotesElements = types.Elements{
 	},
 	"name": {
 		Type:       "text",
-		LabelLong:  "Valeur",
-		LabelShort: "Valeur",
+		LabelLong:  "Nom",
+		LabelShort: "Nom",
 	},
 	"date": {
 		Type:       "date",
@@ -125,6 +134,10 @@ var quotesViews = types.Views{
 		Where:    "date = (select max(date) from quotes)",
 		Type:     "table",
 		Elements: types.Elements{
+			"keyid": {
+				Order: 1,
+				Hide:  true,
+			},
 			"id": {
 				Order: 10,
 			},
@@ -139,22 +152,22 @@ var quotesViews = types.Views{
 				Order:        40,
 				HideOnMobile: true,
 			},
-			"adjclose": {
-				Order:        50,
-				HideOnMobile: true,
-			},
-			"open": {
-				Order:        70,
-				HideOnMobile: true,
-			},
-			"high": {
-				Order:        80,
-				HideOnMobile: true,
-			},
-			"low": {
-				Order:        90,
-				HideOnMobile: true,
-			},
+			// "adjclose": {
+			// 	Order:        50,
+			// 	HideOnMobile: true,
+			// },
+			// "open": {
+			// 	Order:        70,
+			// 	HideOnMobile: true,
+			// },
+			// "high": {
+			// 	Order:        80,
+			// 	HideOnMobile: true,
+			// },
+			// "low": {
+			// 	Order:        90,
+			// 	HideOnMobile: true,
+			// },
 			"close": {
 				Order: 100,
 			},
@@ -174,6 +187,7 @@ var quotesForms = types.Forms{
 		Title: "Cotation",
 		Group: "picsou",
 		Elements: types.Elements{
+			"keyid":          {Order: 1},
 			"name":           {Order: 10},
 			"id":             {Order: 20},
 			"close1":         {Order: 30},

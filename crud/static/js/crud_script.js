@@ -2,12 +2,37 @@
  * Script.js
  */
 $(document).ready(function () {
-    // $('table').tablesort()
+    // Positionnement sur la ligne dernièrement sélectionnée
+    // var $anchor_url = $('#anchor').val()
+    // if ($anchor_url.length > 0) {
+    //     $anchor = $('#' + $anchor_url)
+    //     $('html, body').animate({
+    //         scrollTop: $anchor.offset().top - 100
+    //     }, 1000)
+    //     $anchor.css("background-color", "seashell");
+    // }
+
+    // Initialisation du contexte
+    var $crud_view = $('#crud_view').val()
+    if ($crud_view && $crud_view.length > 0) {
+        // Nous sommes dans une vue 
+        if (Cookies.get($crud_view)) {
+            // Positionnement sur la dernière ligne sélectionnée
+            $anchor = $('#' + Cookies.get($crud_view))
+            $('html, body').animate({
+                scrollTop: $anchor.offset().top - 100
+            }, 1000)
+            $anchor.css("background-color", "seashell");
+        }
+    }
+
+    // tablesort
+    $('table').tablesort()
+
     $('.ui.checkbox').checkbox();
     $('.ui.radio.checkbox').checkbox();
     $('.ui.dropdown').dropdown();
     $('select.dropdown').dropdown();
-    $('table').tablesort()
     $('.message .close')
         .on('click', function () {
             $(this)
@@ -49,6 +74,11 @@ $(document).ready(function () {
             event.preventDefault();
             return
         }
+        // Mémo du contexte dans un cookie
+        if ($crud_view.length > 0) {
+            Cookies.set($crud_view, this.id)
+        }
+
         var $target = $(this).data('target');
         if (!$target || $target == '') {
             window.location = $(this).data('url');
@@ -147,33 +177,23 @@ $(document).ready(function () {
         })
         ;
 
-    // Positionnement sur la ligne dernièrement sélectionnée
-    var anchor_url = $('#anchor').val()
-    if (anchor_url.length > 0) {
-        anchor = $('#' + anchor_url)
-        $('html, body').animate({
-            scrollTop: anchor.offset().top - 100
-        }, 1000)
-        anchor.css("background-color","seashell"); 
-    }
-
     // Recherche dans la LIST
-    $( '.crud-searchable' ).searchable({
-		searchField: '#crud-search-input',
-		selector: '.crud-item-searchable',
-		childSelector: '.searchable',
-		show: function( elem ) {
-			elem.fadeIn(100);		
-		},
-		hide: function( elem ) {
-			elem.fadeOut( 100 );
-		},
-		onSearchActive : function( elem, term ) {
-		    elem.show();
-		},
-		onSearchEmpty: function( elem ) {
-	        elem.show();
-	    }
-	})
+    $('.crud-searchable').searchable({
+        searchField: '#crud-search-input',
+        selector: '.crud-item-searchable',
+        childSelector: '.searchable',
+        show: function (elem) {
+            elem.fadeIn(100);
+        },
+        hide: function (elem) {
+            elem.fadeOut(100);
+        },
+        onSearchActive: function (elem, term) {
+            elem.show();
+        },
+        onSearchEmpty: function (elem) {
+            elem.show();
+        }
+    })
 
 });

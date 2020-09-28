@@ -64,6 +64,8 @@
         ({{$qrecords}} éléments)
         {{end}}
       </div>
+      <!-- CONTEXTE -->
+      <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="ui icon item">
@@ -118,7 +120,7 @@
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
             {{if (ne $element.Hide true)}}
-            <th class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}}">
+            <th id="col_{{$key}}" class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}}">
               {{$element.LabelShort}}
             </th>
             {{end}}
@@ -130,7 +132,7 @@
         <tbody id="bee-table">
           <!-- LOOP $RECORD -->
           {{ range $irecord, $record := .Records }}
-          <tr {{if or $view.FormView $view.FormView}}
+          <tr id="{{CrudIndexAnchor $record $tablekey}}"{{if or $view.FormView $view.FormView}}
             class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
             data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
             {{else}}
