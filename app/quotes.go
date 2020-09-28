@@ -67,8 +67,8 @@ var quotesElements = types.Elements{
 	},
 	"close": {
 		Type:       "amount",
-		LabelLong:  "Close",
-		LabelShort: "Close",
+		LabelLong:  "Quote",
+		LabelShort: "Quote",
 	},
 	"adjclose": {
 		Type:       "amount",
@@ -90,12 +90,34 @@ var quotesElements = types.Elements{
 		},
 		ClassSQL: "select case when {percent} > 0 then 'green' when {percent} < 0 then 'red' end",
 	},
+	"_image_day": {
+		Type:      "image",
+		LabelLong: "Graph du jour",
+		Params: types.Params{
+			Path: "/crud/data/picsou/png/day/{id}.png",
+		},
+	},
+	"_image_histo": {
+		Type:      "image",
+		LabelLong: "Historique sur 1 mois",
+		Params: types.Params{
+			Path: "/crud/data/picsou/png/quotes/{id}.png",
+		},
+	},
+	"_image_analyse": {
+		Type:      "image",
+		LabelLong: "Analyse sur 7 mois",
+		Params: types.Params{
+			Path: "/crud/data/picsou/png/ana/{id}.gif",
+		},
+	},
 }
 
 var quotesViews = types.Views{
 	"vlast": {
 		Info:     "Cotations du jour",
 		Title:    "Cotations du jour",
+		FormView: "fview",
 		IconName: "atom",
 		OrderBy:  "id,date",
 		Group:    "picsou",
@@ -114,7 +136,8 @@ var quotesViews = types.Views{
 				Order: 30,
 			},
 			"close1": {
-				Order: 40,
+				Order:        40,
+				HideOnMobile: true,
 			},
 			"adjclose": {
 				Order:        50,
@@ -146,4 +169,24 @@ var quotesViews = types.Views{
 	},
 }
 
-var quotesForms = types.Forms{}
+var quotesForms = types.Forms{
+	"fview": {
+		Title: "Cotation",
+		Group: "picsou",
+		Elements: types.Elements{
+			"name":           {Order: 10},
+			"id":             {Order: 20},
+			"close1":         {Order: 30},
+			"adjclose":       {Order: 40},
+			"percent":        {Order: 50},
+			"open":           {Order: 60},
+			"high":           {Order: 70},
+			"low":            {Order: 80},
+			"close":          {Order: 90},
+			"volume":         {Order: 100},
+			"_image_day":     {Order: 200},
+			"_image_histo":   {Order: 210},
+			"_image_analyse": {Order: 220},
+		},
+	},
+}
