@@ -75,7 +75,7 @@ $(document).ready(function () {
             return
         }
         // Mémo du contexte dans un cookie
-        if ($crud_view.length > 0) {
+        if ($crud_view && $crud_view.length > 0) {
             Cookies.set($crud_view, this.id)
         }
 
