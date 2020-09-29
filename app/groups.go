@@ -35,7 +35,6 @@ var groupsViews = types.Views{
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		Deletable: true,
-		Info:      "Gestion des Groupes",
 		Title:     "Groupes",
 		IconName:  "users",
 		OrderBy:   "group_id",

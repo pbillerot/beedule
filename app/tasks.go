@@ -53,7 +53,6 @@ var tasksViews = types.Views{
 		FormAdd:   "fadd",
 		FormEdit:  "fedit",
 		Deletable: false,
-		Info:      "Mes Tâches",
 		Title:     "Tâches",
 		IconName:  "tasks",
 		ClassSQL:  "select 'positive' where '{task_status}' = '1'",

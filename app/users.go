@@ -89,7 +89,6 @@ var usersViews = types.Views{
 		FormEdit:  "fedit",
 		Group:     "admin",
 		Deletable: true,
-		Info:      "Gestion des Comptes",
 		Title:     "Comptes",
 		IconName:  "user",
 		OrderBy:   "user_name",

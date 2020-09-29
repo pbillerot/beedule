@@ -47,43 +47,43 @@ type Elements map[string]Element
 
 // Element is ... Rubrique de l'application
 type Element struct {
-	Action       Action // bouton d'action
+	Action       Action // bouton d'action - utilise Params
 	Args         Args
-	Class        string // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL     string // SQL pour alimenter Class error warning info green blue
-	ColAlign     string //
-	ColWith      int    // TODO
-	Default      string // Valeur par défaut (macro possible)
-	DefaultSQL   string // Ordre SQL qui retournera la colonne pour alimenter Default
-	Error        string // contiendra "error" si le champ est en erreur de saisie
-	Format       string //
-	ComputeSQL   string // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
-	Group        string // Groupe autorisé à accéder à cette rubrique
-	Height       int    // TODO
-	Help         string // TODO
-	HelpSQL      string // TODO
-	Hide         bool
+	Class        string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
+	ClassSQL     string   // SQL pour alimenter Class error warning info green blue
+	ColAlign     string   //
+	ColWith      int      // TODO
+	Default      string   // Valeur par défaut (macro possible)
+	DefaultSQL   string   // Ordre SQL qui retournera la colonne pour alimenter Default
+	Error        string   // contiendra "error" si le champ est en erreur de saisie
+	Format       string   //
+	ComputeSQL   string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	Group        string   // Groupe autorisé à accéder à cette rubrique
+	Height       int      // TODO
+	Help         string   // TODO
+	HelpSQL      string   // TODO
+	Hide         bool     // élémnt caché dans la vue ou formulaire
 	HideSQL      string   // TODO cachée si condition
 	HideOnMobile bool     // La colonne dans une vue sera cachée sur Mobile
 	Items        []Item   // slice d'item
 	ItemsSQL     string   // Ordre SQL qui retournera la colonne pour alimenter Items
-	Jointure     Jointure //
-	LabelLong    string
-	LabelShort   string
-	Max          int // TODO
-	MaxLength    int // TODO
-	Min          int // TODO
-	MinLength    int // TODO
-	Order        int // Ordre de l'élément dans une vue ou formulaire
-	Params       Params
-	PlaceHolder  string
-	Pattern      string // Pattern de l'input HTML
-	Protected    bool
-	ReadOnly     bool //
-	Refresh      bool // TODO
-	Required     bool
-	SQLout       string // Valeur à enregistrer dans la base de données
-	Type         string // action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
+	Jointure     Jointure // élément issu d'une jointure SQL (lecture seule)
+	LabelLong    string   // Label dans un formulaire
+	LabelShort   string   // Label dans une vue
+	Max          int      // TODO
+	MaxLength    int      // TODO
+	Min          int      // TODO
+	MinLength    int      // TODO
+	Order        int      // Ordre de l'élément dans une vue ou formulaire
+	Params       Params   // paramètres optionnels
+	PlaceHolder  string   // Label dans le champ en saisie si vide
+	Pattern      string   // Pattern de l'input HTML
+	Protected    bool     // Est en misa à jour mais protégé en saisie
+	ReadOnly     bool     // Lecteur seule
+	Refresh      bool     // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
+	Required     bool     // obligatoire
+	SQLout       string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
+	Type         string   // Type : action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
@@ -99,28 +99,27 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	Actions      Actions // Action sur la vue (ordres sql)
-	ClassSQL     string  // couleur theme de la ligne
-	Deletable    bool    // Suppression fiche autorisée
-	FormAdd      string
-	FormEdit     string
-	FormView     string
-	FooterSQL    string // requête sur la table courante
-	Hide         bool   // TODO
-	HideOnMobile bool   // TODO
-	IconName     string
-	Info         string
-	Limit        int    // TODO
-	Group        string // groupe qui peut accéder à la vue
-	OrderBy      string
-	Where        string
-	Type         string // type de vue : card(default),image,table
-	Title        string // Titre de la vue
-	Elements     Elements
+	Actions      Actions  // Action sur la vue (ordres sql)
+	ClassSQL     string   // couleur theme de la ligne
+	Deletable    bool     // Suppression fiche autorisée
+	FormAdd      string   // Formulaire d'ajout
+	FormEdit     string   // Formulaire d'édition
+	FormView     string   // Masque de visualisation d'un enregistreement
+	FooterSQL    string   // requête sur la table courante
+	Hide         bool     // Vue cahchée dans le menu
+	HideOnMobile bool     // Vue cachée dur mobile
+	IconName     string   // nom de l'icone glyph
+	Limit        int      // pour limiter le nbre de ligne dans la vue
+	Group        string   // groupe qui peut accéder à la vue
+	OrderBy      string   // Tri des données SQL
+	Where        string   // Condition SQL
+	Type         string   // type de vue : card(default),image,table
+	Title        string   // Titre de la vue
+	Elements     Elements // Eléments à récupérer de la base de données
 	Mask         MaskList // Masque html d'une ligne dans la vue
 }
 
-// MaskList as
+// MaskList Content d'une card https://fomantic-ui.com/views/card.html
 type MaskList struct {
 	Header      []string
 	Meta        []string
@@ -130,27 +129,27 @@ type MaskList struct {
 
 // Form formulaire
 type Form struct {
-	Actions  Actions // Action appel d'un formulaire ou exécution d'une requête SQL
-	Title    string
-	Group    string // groupe qui peut accéder au formulair
-	Elements Elements
+	Actions  Actions  // Action appel d'un formulaire ou exécution d'une requête SQL
+	Title    string   // Titre du formulaire
+	Group    string   // groupe qui peut accéder au formulair
+	Elements Elements // Eléments à récupérer de la base de données
 	CheckSQL []string // retourne le libellé des erreurs lors du contrôle des rubriques
 	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
 }
 
 // DBAlias alias des connections aux bases de données
 type DBAlias struct {
-	DriverName string
-	DataSource string
+	DriverName string // mysql
+	DataSource string // <user>:<mdp>@tcp(<host>:3306)/<basename>?charset=utf8
 }
 
 // Jointure entre tables
 type Jointure struct {
-	Join   string
-	Column string
+	Join   string // la commande du genre : left outer join on field = field
+	Column string // colonne retournée par la jointure
 }
 
-// Params paramètres de l'élément
+// Params paramètres d'un élément
 type Params struct {
 	Action      string
 	Form        string
@@ -167,36 +166,27 @@ type Params struct {
 // Actions as
 type Actions []Action
 
-// Action as Formulaire ou Requête SQL
+// Action as Bouton Formulaire ou Requête SQL
 type Action struct {
-	Group       string
-	Label       string
-	URL         string
+	Group       string   // Groupe autorisée à lancer l'action
+	Label       string   // label de l'action
+	URL         string   // URL d'appel du formulaire
 	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
-	WithConfirm bool
-	Hide        bool
-	HideSQL     string
+	WithConfirm bool     // demande de  confirmation
+	Hide        bool     // Action non visible
+	HideSQL     string   // requête pour cachée l'action
 }
 
 // Args paramètres à transmettre lors de l'appel
 type Args map[string]string
 
-// Item entre tables
+// Item pour définir un combo
 type Item struct {
-	Key   string
-	Label string
+	Key   string // valeur dans la base de données
+	Label string // label à afficher
 }
 
-// HashPassword hashage de Value
-func (element *Element) HashPassword(password string) string {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	if err != nil {
-		beego.Error(err)
-	}
-	return string(bytes)
-}
-
-// Config Paramètres de config dans le contexte
+// Config Paramètres de config pour alimenter le "A propos"
 type Config struct {
 	Appname string
 	Appnote string
@@ -214,4 +204,13 @@ type Session struct {
 	Username string
 	IsAdmin  bool
 	Groups   string
+}
+
+// HashPassword hashage de Value
+func (element *Element) HashPassword(password string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		beego.Error(err)
+	}
+	return string(bytes)
 }

@@ -16,7 +16,6 @@ var Orders = types.Table{
 var ordersViews = types.Views{
 	"vachat": {
 		Title:     "Achat",
-		Info:      "Liste des Valeurs placées",
 		IconName:  "shopping cart",
 		FormAdd:   "feditbuy",
 		FormEdit:  "feditbuy",
@@ -66,7 +65,6 @@ var ordersViews = types.Views{
 	},
 	"vvente": {
 		Title:     "Vente",
-		Info:      "Historique des placements",
 		IconName:  "trophy",
 		FormEdit:  "feditbuy",
 		FormView:  "fviewsell",

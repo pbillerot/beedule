@@ -124,7 +124,6 @@ var quotesElements = types.Elements{
 
 var quotesViews = types.Views{
 	"vlast": {
-		Info:     "Cotations du jour",
 		Title:    "Cotations du jour",
 		FormView: "fview",
 		IconName: "atom",
