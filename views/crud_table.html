@@ -38,7 +38,7 @@
           <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}{{if $v.HideOnMobile}} bee-mobile-hide{{end}}"
             href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
-            {{$v.Title}} 
+            {{$v.Title}}
           </a>
           {{end}}
           <!-- end if isingroup -->
@@ -64,8 +64,6 @@
         ({{$qrecords}} éléments)
         {{end}}
       </div>
-      <!-- CONTEXTE -->
-      <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="ui icon item">
@@ -76,6 +74,7 @@
               <input type="text" id="crud-search-input" placeholder="Recherche...">
               <i class="search icon"></i>
             </div>
+            <i class="close link icon" id="crud-search-close" title="Fin recherche"></i>
           </div>
         </div>
         {{if or $view.Actions $view.FormAdd}}
@@ -112,15 +111,17 @@
     <div class="ui container">
       {{template "_crud_flash.html" .}}
       <!-- LIST TABLE -->
-      <table class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled table" data-role="table"
-        data-mode="columntoggle">
+      <table
+        class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled table"
+        data-role="table" data-mode="columntoggle">
         <thead>
           <!-- ENTETE TABLE -->
           <tr>
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
             {{if (ne $element.Hide true)}}
-            <th id="col_{{$key}}" class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}}">
+            <th id="col_{{$key}}"
+              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}}">
               {{$element.LabelShort}}
             </th>
             {{end}}
@@ -132,42 +133,40 @@
         <tbody id="bee-table">
           <!-- LOOP $RECORD -->
           {{ range $irecord, $record := .Records }}
-          <tr id="{{CrudIndexAnchor $record $tablekey}}"{{if or $view.FormView $view.FormView}}
+          <tr id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.FormView}}
             class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
-            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
-            {{else}}
-            class="{{CrudMacroSQL $view.ClassSQL $record $session}}"
-            {{end}}
-            >
+            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
+            class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
             {{ $val := CrudIndexSQL $record $key $element $session}}
             {{if (ne $element.Hide true)}}
-            <td class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}"
-            {{if or (eq $element.Type `amount`) (eq $element.Type `percent`) (eq $element.Type `number`) (eq $element.Type `counter`) (eq $element.Type `month`) (eq $element.Type `week`)}}data-sort-value="{{$val}}"{{end}}
-            >
+            <td
+              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}"
+              {{if or (eq $element.Type `amount`) (eq $element.Type `percent`) (eq $element.Type `number`) (eq $element.Type `counter`) (eq $element.Type `month`) (eq $element.Type `week`)}}data-sort-value="{{$val}}"
+              {{end}}>
               {{if (eq $element.Type "combo")}}
-                <!-- combo -->
-                {{CrudItem $element.Items $val}} ({{$val}})
+              <!-- combo -->
+              {{CrudItem $element.Items $val}} ({{$val}})
               {{else if (eq $element.Type "checkbox")}}
-                <!-- checkbox -->
-                {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
-                {{else if (eq $element.Type "password")}}
-                <!-- password -->
-                ***
+              <!-- checkbox -->
+              {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
+              {{else if (eq $element.Type "password")}}
+              <!-- password -->
+              ***
               {{else if (eq $element.Type "tag")}}
-                <!--   tag -->
-                {{$arr := CrudSplit $val ","}}
-                {{range $i, $item := $arr}}
-                <div c  lass="ui small label">{{$item}}</div>
-                {{end}}
+              <!--   tag -->
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div c lass="ui small label">{{$item}}</div>
+              {{end}}
               {{else}}
-                <!-- autres -->
-                {{if and $element.Format $val}}
-                  {{CrudFormat $element.Format $val}}
-                {{else}}
-                  {{$val}}
-                {{end}}
+              <!-- autres -->
+              {{if and $element.Format $val}}
+              {{CrudFormat $element.Format $val}}
+              {{else}}
+              {{$val}}
+              {{end}}
               {{end}}
             </td>
             {{end}}
@@ -182,7 +181,7 @@
     </div>
   </main>
   <!-- Demande de confirmation de l'action' -->
-  <div class="ui modal">
+  <div id="crud-modal-confirm" class="ui modal">
     <div class="header" id="crud-action">Texte à venir</div>
     <div class="content">
       <p>Veuillez le confirmer</p>
@@ -191,11 +190,22 @@
       <div class="ui cancel button">Annuler</div>
       <div class="ui approve button">Je confirme</div>
     </div>
-  </div> <!-- Action-->
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui basic modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
   <form action="" method="POST">
     {{ .xsrfdata }}
   </form>
-
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
   {{template "_crud_foot.html" .}}
 </body>
 

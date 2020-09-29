@@ -184,7 +184,7 @@
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
-            <div class="link card raised crud-card-view crud-jquery-url" data-url="{{$url}}?{{$composter}}">
+            <div class="link card raised crud-card-view crud-popup-image" data-url="{{$url}}?{{$composter}}">
               <div class="ui image">
                 <img src="{{$url}}?{{$composter}}">
               </div>
@@ -257,6 +257,16 @@
       <div class="ui approve button">Je confirme</div>
     </div>
   </div>
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
   <form action="/crud/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" method="POST">
     {{ .xsrfdata }}
   </form>

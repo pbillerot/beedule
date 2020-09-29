@@ -72,6 +72,7 @@
               <input type="text" id="crud-search-input" placeholder="Recherche...">
               <i class="search icon"></i>
             </div>
+            <i class="close link icon" id="crud-search-close" title="Fin recherche"></i>
           </div>
         </div>
         {{if or $view.Actions $view.FormAdd}}
@@ -117,8 +118,8 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <a id="{{CrudIndexAnchor $record $tablekey}}" class="card raised crud-card-view crud-item-searchable"
-          href="{{$path}}?{{$composter}}">
+        <a id="{{CrudIndexAnchor $record $tablekey}}"
+          class="card raised crud-card-view crud-card-searchable crud-popup-image" data-url="{{$path}}?{{$composter}}">
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}">
           </div>
@@ -145,7 +146,7 @@
               <span class="ui {{$class}} text searchable">{{CrudFormat $ele.Format $val}}</span>
               {{end}}
               {{end}}
-  
+
             </div><!-- end Header -->
             {{end}}
 
@@ -230,7 +231,7 @@
               {{end}}
             </div><!-- end Extra -->
             {{end}}
-  
+
           </div><!-- end content-->
         </a>
         {{end}}
@@ -243,7 +244,7 @@
     </div> <!-- end container-->
   </main>
   <!-- Demande de confirmation de l'action' -->
-  <div class="ui modal">
+  <div id="crud-modal-confirm" class="ui modal">
     <div class="header" id="crud-action">Texte à venir</div>
     <div class="content">
       <p>Veuillez le confirmer</p>
@@ -252,10 +253,21 @@
       <div class="ui cancel button">Annuler</div>
       <div class="ui approve button">Je confirme</div>
     </div>
-  </div> <!-- Action-->
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
   <form action="" method="POST">
     {{ .xsrfdata }}
   </form>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
 
   {{template "_crud_foot.html" .}}
 </body>

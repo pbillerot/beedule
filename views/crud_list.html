@@ -38,7 +38,7 @@
           <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
             href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
-            {{$v.Title}} 
+            {{$v.Title}}
           </a>
           {{end}}
           <!-- end if isingroup -->
@@ -74,6 +74,7 @@
               <input type="text" id="crud-search-input" placeholder="Recherche...">
               <i class="search icon"></i>
             </div>
+            <i class="close link icon" id="crud-search-close" title="Fin recherche"></i>
           </div>
         </div>
         {{if or $view.Actions $view.FormAdd}}
@@ -112,7 +113,7 @@
       <!-- ITEMS -->
       {{ range $irecord, $record := .Records }}
       <a id="{{CrudIndexAnchor $record $tablekey}}"
-        class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-item-searchable"
+        class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-card-searchable"
         {{if or $view.FormView $view.Deletable}}
         data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
         {{else if and $view.FormEdit}}
@@ -223,7 +224,7 @@
     </div> <!-- end container-->
   </main>
   <!-- Demande de confirmation de l'action' -->
-  <div class="ui modal">
+  <div id="crud-modal-confirm" class="ui modal">
     <div class="header" id="crud-action">Texte à venir</div>
     <div class="content">
       <p>Veuillez le confirmer</p>
@@ -232,10 +233,22 @@
       <div class="ui cancel button">Annuler</div>
       <div class="ui approve button">Je confirme</div>
     </div>
-  </div> <!-- Action-->
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui basic modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
   <form action="" method="POST">
     {{ .xsrfdata }}
   </form>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
 
   {{template "_crud_foot.html" .}}
 </body>

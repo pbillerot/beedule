@@ -2,16 +2,8 @@
  * Script.js
  */
 $(document).ready(function () {
-    // Positionnement sur la ligne dernièrement sélectionnée
-    // var $anchor_url = $('#anchor').val()
-    // if ($anchor_url.length > 0) {
-    //     $anchor = $('#' + $anchor_url)
-    //     $('html, body').animate({
-    //         scrollTop: $anchor.offset().top - 100
-    //     }, 1000)
-    //     $anchor.css("background-color", "seashell");
-    // }
 
+    // POSITIONNEMENT DERNIERE LIGNE SELECTIONNEE
     // Initialisation du contexte
     var $crud_view = $('#crud_view').val()
     if ($crud_view && $crud_view.length > 0) {
@@ -26,9 +18,158 @@ $(document).ready(function () {
         }
     }
 
-    // tablesort
+    // TABLESORT
     $('table').tablesort()
 
+    // RECHERCHE
+    $('#crud-search-active').on('click', function (event) {
+        $('#crud-search').show();
+        $('#crud-header').hide();
+        $('#crud-search-active').hide();
+        $('#crud-search-input').focus();
+    });
+    // Recherche plein texte dans le body de la table
+    // Les lignes sans le mot sont cachées
+    $("#crud-search-input").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        if ($crud_view && $crud_view.length > 0) {
+            Cookies.set($crud_view + '_search', value)
+        }
+        $("#bee-table tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    // Recherche dans la LIST CARD
+    $('.crud-searchable').searchable({
+        searchField: '#crud-search-input',
+        selector: '.crud-card-searchable',
+        childSelector: '.searchable',
+        show: function (elem) {
+            elem.fadeIn(100);
+        },
+        hide: function (elem) {
+            elem.fadeOut(100);
+        },
+        onSearchActive: function (elem, term) {
+            elem.show();
+        },
+        onSearchEmpty: function (elem) {
+            elem.show();
+        }
+    })
+    // Si recherche dans Cookie : aff du input et sélection
+    if ($crud_view && $crud_view.length > 0) {
+        if (Cookies.get($crud_view + '_search')) {
+            $('#crud-search-active').trigger('click');
+            $('#crud-search-input').val(Cookies.get($crud_view + '_search'))
+            $("#crud-search-input").trigger('keyup')
+        }
+    }
+    // Fermer la recherche
+    $('#crud-search-close').on('click', function (event) {
+        $('#crud-search').hide();
+        $('#crud-header').show();
+        $('#crud-search-active').show();
+        $('#crud-search-input').val('')
+        $("#crud-search-input").trigger('keyup')
+    });
+
+    // CLIC URL
+    $('.crud-jquery-url').on('click', function (event) {
+        if (event.target.nodeName == "BUTTON") {
+            // pour laisser la main à crud-jquery-button
+            // Cas d'un button dans une card
+            event.preventDefault();
+            return
+        }
+        // Mémo du contexte dans un cookie
+        if ($crud_view && $crud_view.length > 0) {
+            if (this.id) {
+                Cookies.set($crud_view, this.id)
+            } else {
+                // on remonte sur <a pour trover l'id
+                var ele = this.closest('a');
+                Cookies.set($crud_view, ele.id)
+            }
+        }
+
+        var $target = $(this).data('target');
+        if (!$target || $target == '') {
+            window.location = $(this).data('url');
+        } else {
+            window.open($(this).data('url'), $target);
+        }
+        event.preventDefault();
+    });
+
+    // CLIC BUTTON URL
+    $('.crud-jquery-button').on('click', function (event) {
+        var $target = $(this).data('target');
+        if (!$target || $target == '') {
+            window.location = $(this).data('url');
+        } else {
+            window.open($(this).data('url'), $target);
+        }
+        event.preventDefault();
+    });
+
+    // VALIDATION FORMULAIRE
+    $('.crud-jquery-submit').on('click', function (event) {
+        $('form', document).submit();
+        event.preventDefault();
+    });
+
+    // ACTION DEMANDE CONFIRMATION
+    $('.crud-jquery-action').on('click', function (event) {
+        var $url = $(this).data('url');
+        if ($(this).data('confirm') == true) {
+            $('#crud-action').html($(this).html());
+            $('#crud-modal-confirm')
+                .modal({
+                    closable: false,
+                    onDeny: function () {
+                        return true;
+                    },
+                    onApprove: function () {
+                        $('form').attr('action', $url);
+                        $('form', document).submit();
+                    }
+                }).modal('show');
+        } else {
+            // Sans demande de confirmation
+            $('form').attr('action', $url);
+            $('form', document).submit()
+        }
+        event.preventDefault();
+    });
+
+    // CLIC IMAGE POPUP
+    $('.crud-popup-image').on('click', function (event) {
+        var $url = $(this).data('url');
+        $('#crud-image').attr('src', $url)
+        $('#crud-modal-image')
+            .modal({
+                closable: true,
+            }).modal('show');
+        event.preventDefault();
+    });
+
+    // SUPPRESSION D'UN ENREGISTREMENT
+    $('.crud-jquery-delete').on('click', function (event) {
+        $('.ui.modal')
+            .modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    $('form', document).submit();
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
+
+    // IHM SEMANTIC
     $('.ui.checkbox').checkbox();
     $('.ui.radio.checkbox').checkbox();
     $('.ui.dropdown').dropdown();
@@ -49,101 +190,6 @@ $(document).ready(function () {
                 ;
         }
         );
-
-    // Affichage du champ de recherche
-    $('#crud-search-active').on('click', function (event) {
-        $('#crud-search').show();
-        $('#crud-header').hide();
-        $('#crud-search-active').hide();
-        $('#crud-search-input').focus();
-    });
-    // Recherche plein texte dans le body de la table
-    // Les lignes sans le mot sont cachées
-    $("#crud-search-input").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
-        $("#bee-table tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    });
-
-    // Appel URL dans la même fenêtre
-    $('.crud-jquery-url').on('click', function (event) {
-        if (event.target.nodeName == "BUTTON") {
-            // pour laisser la main à crud-jquery-button
-            // Cas d'un button dans une card
-            event.preventDefault();
-            return
-        }
-        // Mémo du contexte dans un cookie
-        if ($crud_view && $crud_view.length > 0) {
-            Cookies.set($crud_view, this.id)
-        }
-
-        var $target = $(this).data('target');
-        if (!$target || $target == '') {
-            window.location = $(this).data('url');
-        } else {
-            window.open($(this).data('url'), $target);
-        }
-        event.preventDefault();
-    });
-
-    // Appel URL dans la même fenêtre
-    $('.crud-jquery-button').on('click', function (event) {
-        var $target = $(this).data('target');
-        if (!$target || $target == '') {
-            window.location = $(this).data('url');
-        } else {
-            window.open($(this).data('url'), $target);
-        }
-        event.preventDefault();
-    });
-
-    // Validation du formulaire
-    $('.crud-jquery-submit').on('click', function (event) {
-        $('form', document).submit();
-        event.preventDefault();
-    });
-
-    // Action
-    // Demande confirmation
-    $('.crud-jquery-action').on('click', function (event) {
-        var $url = $(this).data('url');
-        if ($(this).data('confirm') == true) {
-            $('#crud-action').html($(this).html());
-            $('.ui.modal')
-                .modal({
-                    closable: false,
-                    onDeny: function () {
-                        return true;
-                    },
-                    onApprove: function () {
-                        $('form').attr('action', $url);
-                        $('form', document).submit();
-                    }
-                }).modal('show');
-        } else {
-            // Sans demande de confirmation
-            $('form').attr('action', $url);
-            $('form', document).submit()
-        }
-        event.preventDefault();
-    });
-
-    // Suppression d'un enregistrement
-    $('.crud-jquery-delete').on('click', function (event) {
-        $('.ui.modal')
-            .modal({
-                closable: false,
-                onDeny: function () {
-                    return true;
-                },
-                onApprove: function () {
-                    $('form', document).submit();
-                }
-            }).modal('show');
-        event.preventDefault();
-    });
 
     // Toaster
     $('#toaster')
@@ -176,24 +222,4 @@ $(document).ready(function () {
             // }
         })
         ;
-
-    // Recherche dans la LIST
-    $('.crud-searchable').searchable({
-        searchField: '#crud-search-input',
-        selector: '.crud-item-searchable',
-        childSelector: '.searchable',
-        show: function (elem) {
-            elem.fadeIn(100);
-        },
-        hide: function (elem) {
-            elem.fadeOut(100);
-        },
-        onSearchActive: function (elem, term) {
-            elem.show();
-        },
-        onSearchEmpty: function (elem) {
-            elem.show();
-        }
-    })
-
 });

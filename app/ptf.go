@@ -280,6 +280,9 @@ var ptfElements = types.Elements{
 				"ptf_name",
 				"ptf_id",
 			},
+			Description: []string{
+				"ptf_rem",
+			},
 			Extra: []string{
 				"ptf_top",
 			},
