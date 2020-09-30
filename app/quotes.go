@@ -99,6 +99,24 @@ var quotesElements = types.Elements{
 		},
 		ClassSQL: "select case when {percent} > 0 then 'green' when {percent} < 0 then 'red' end",
 	},
+	"ptf_top": {
+		Type:       "checkbox",
+		LabelLong:  "TOP",
+		LabelShort: "TOP",
+		Jointure: types.Jointure{
+			Join:   "left outer join ptf on ptf_id = id",
+			Column: "ptf.ptf_top",
+		},
+	},
+	"ptf_rem": {
+		Type:       "textarea",
+		LabelLong:  "Rem.",
+		LabelShort: "Rem.",
+		Jointure: types.Jointure{
+			// Join:   "left outer join ptf on ptf_id = id",
+			Column: "ptf.ptf_rem",
+		},
+	},
 	"_image_day": {
 		Type:      "image",
 		LabelLong: "Graph du jour",
@@ -147,10 +165,10 @@ var quotesViews = types.Views{
 			"date": {
 				Order: 30,
 			},
-			"close1": {
-				Order:        40,
-				HideOnMobile: true,
-			},
+			// "close1": {
+			// 	Order:        40,
+			// 	HideOnMobile: true,
+			// },
 			// "adjclose": {
 			// 	Order:        50,
 			// 	HideOnMobile: true,
@@ -177,6 +195,12 @@ var quotesViews = types.Views{
 			"percent": {
 				Order: 200,
 			},
+			"ptf_top": {
+				Order: 300,
+			},
+			"ptf_rem": {
+				Order: 310,
+			},
 		},
 	},
 }
@@ -186,20 +210,27 @@ var quotesForms = types.Forms{
 		Title: "Cotation",
 		Group: "picsou",
 		Elements: types.Elements{
-			"keyid":          {Order: 1},
-			"name":           {Order: 10},
-			"id":             {Order: 20},
-			"close1":         {Order: 30},
-			"adjclose":       {Order: 40},
-			"percent":        {Order: 50},
-			"open":           {Order: 60},
-			"high":           {Order: 70},
-			"low":            {Order: 80},
-			"close":          {Order: 90},
-			"volume":         {Order: 100},
+			"keyid":   {Order: 1},
+			"name":    {Order: 10},
+			"id":      {Order: 20},
+			"close1":  {Order: 30},
+			"close":   {Order: 40},
+			"percent": {Order: 50},
+			"volume":  {Order: 60},
+			"_ptf": {
+				Order:     100,
+				Type:      "section",
+				LabelLong: "Portefeuille",
+				Params: types.Params{
+					URL:      "/crud/edit/picsou/ptf/vactiv/fedit/{id}",
+					IconName: "building",
+				},
+			},
+			"ptf_top":        {Order: 110},
+			"ptf_rem":        {Order: 120},
 			"_image_day":     {Order: 200},
-			"_image_histo":   {Order: 210},
-			"_image_analyse": {Order: 220},
+			"_image_histo":   {Order: 300},
+			"_image_analyse": {Order: 400},
 		},
 	},
 }

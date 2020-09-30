@@ -135,7 +135,10 @@
           {{if $element.Params.Form}}
           <div class="link card raised crud-card-view crud-jquery-url"
             data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
-            {{else}}
+          {{else if $element.Params.URL}}
+          <div class="link card raised crud-card-view crud-jquery-url"
+            data-url="{{$element.Params.URL}}">
+          {{else}}
             <div class="card raised crud-card-view">
               {{end}}
               <div class="content">

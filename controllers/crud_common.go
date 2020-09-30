@@ -199,6 +199,12 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		if element.Action.URL != "" {
 			element.Action.URL = macro(c, element.Action.URL, record)
 		}
+		if element.Params.URL != "" {
+			element.Params.URL = macro(c, element.Params.URL, record)
+		}
+		if element.Params.Path != "" {
+			element.Params.URL = macro(c, element.Params.Path, record)
+		}
 
 		if computeValue {
 			val := ""
