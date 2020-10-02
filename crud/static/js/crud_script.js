@@ -3,6 +3,8 @@
  */
 $(document).ready(function () {
 
+    var isUsed = false;
+
     // TABLESORT
     // TRI COLONNE DE LA TABLE
     $(document).on('click', '.crud-ajax-sort', function (event) {
@@ -85,6 +87,10 @@ $(document).ready(function () {
 
     // CLIC URL
     $('.crud-jquery-url').on('click', function (event) {
+        if ( isUsed ) {
+            event.preventDefault();
+            return
+        }
         if (event.target.nodeName == "BUTTON") {
             // pour laisser la main à crud-jquery-button
             // Cas d'un button dans une card
@@ -149,12 +155,13 @@ $(document).ready(function () {
 
     // CLIC IMAGE POPUP
     $('.crud-popup-image').on('click', function (event) {
+        isUsed = true;
         // Mémo du contexte dans un cookie
         if ($crud_view && $crud_view.length > 0) {
-            $anchor = $('#' + Cookies.get($crud_view))
-            Cookies.set($crud_view, this.id)
-            $(this).closest('div').find('.crud-list-selected').removeClass('crud-list-selected');
-            $(this).addClass("crud-list-selected");
+            var $anchor = $(this).closest('.card');
+            Cookies.set($crud_view, $anchor.attr('id'))
+            $(this).closest('.cards').find('.crud-list-selected').removeClass('crud-list-selected');
+            $anchor.addClass("crud-list-selected");
         }
 
         var $url = $(this).data('url');
@@ -239,21 +246,6 @@ $(document).ready(function () {
     // CONTEXTE DE LA VUE
     var $crud_view = $('#crud_view').val()
     if ($crud_view && $crud_view.length > 0) {
-        // Repositionnement du tri
-        // if (Cookies.get($crud_view + '_sortid')) {
-        //     $id = Cookies.get($crud_view + '_sortid');
-        //     $direction = Cookies.get($crud_view + '_sortdirection');
-        //     $th = $('#' + $id)
-        //     if ($th.length) {
-        //         if ($direction == 'descending') {
-        //             $th.trigger('click');
-        //             $th.trigger('click');
-        //         } else {
-        //             $th.trigger('click');
-        //         }
-        //         $('table').trigger("update")
-        //     }
-        // }
         // Si recherche dans Cookie : aff du input et sélection
         if (Cookies.get($crud_view + '_search')) {
             $('#crud-search-active').trigger('click');
@@ -267,7 +259,6 @@ $(document).ready(function () {
                 $('html, body').animate({
                     scrollTop: $anchor.offset().top - 100
                 }, 1000)
-                // $anchor.css("background-color", "seashell");
                 $anchor.addClass("crud-list-selected");
             }
         }

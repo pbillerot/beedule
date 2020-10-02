@@ -118,24 +118,22 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <a id="{{CrudIndexAnchor $record $tablekey}}"
-          class="card raised crud-card-view crud-card-searchable crud-popup-image" data-url="{{$path}}?{{$composter}}">
+        <div id="{{CrudIndexAnchor $record $tablekey}}"
+        {{if or $view.FormView $view.FormView}}
+            class="card raised crud-card-view crud-card-searchable crud-jquery-url"
+            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
+            class="card raised crud-card-view crud-card-searchable" {{end}}
+          >
           <div class="ui image">
-            <img src="{{$path}}?{{$composter}}">
+            <img src="{{$path}}?{{$composter}}" class="crud-popup-image" data-url="{{$path}}?{{$composter}}">
           </div>
           <div class="content">
-
             <div class="center aligned description">
               {{$element.LabelLong}}
             </div>
 
             {{if $element.Params.Header}}
             <div class="header">
-              {{if $url}}
-              <span class="ui icon button crud-jquery-url" data-url="{{$url}}">
-                <i class="edit icon"></i>
-              </span>
-              {{end}}
               {{range $im, $key := $element.Params.Header}}
               {{ $ele := index $elements $key }}
               {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
@@ -233,7 +231,7 @@
             {{end}}
 
           </div><!-- end content-->
-        </a>
+        </div>
         {{end}}
         <!-- end if image -->
         {{end}}
