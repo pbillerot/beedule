@@ -47,43 +47,44 @@ type Elements map[string]Element
 
 // Element is ... Rubrique de l'application
 type Element struct {
-	Action       Action // bouton d'action - utilise Params
-	Args         Args
-	Class        string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL     string   // SQL pour alimenter Class error warning info green blue
-	ColAlign     string   //
-	ColWith      int      // TODO
-	Default      string   // Valeur par défaut (macro possible)
-	DefaultSQL   string   // Ordre SQL qui retournera la colonne pour alimenter Default
-	Error        string   // contiendra "error" si le champ est en erreur de saisie
-	Format       string   //
-	ComputeSQL   string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
-	Group        string   // Groupe autorisé à accéder à cette rubrique
-	Height       int      // TODO
-	Help         string   // TODO
-	HelpSQL      string   // TODO
-	Hide         bool     // élémnt caché dans la vue ou formulaire
-	HideSQL      string   // TODO cachée si condition
-	HideOnMobile bool     // La colonne dans une vue sera cachée sur Mobile
-	Items        []Item   // slice d'item
-	ItemsSQL     string   // Ordre SQL qui retournera la colonne pour alimenter Items
-	Jointure     Jointure // élément issu d'une jointure SQL (lecture seule)
-	LabelLong    string   // Label dans un formulaire
-	LabelShort   string   // Label dans une vue
-	Max          int      // TODO
-	MaxLength    int      // TODO
-	Min          int      // TODO
-	MinLength    int      // TODO
-	Order        int      // Ordre de l'élément dans une vue ou formulaire
-	Params       Params   // paramètres optionnels
-	PlaceHolder  string   // Label dans le champ en saisie si vide
-	Pattern      string   // Pattern de l'input HTML
-	Protected    bool     // Est en misa à jour mais protégé en saisie
-	ReadOnly     bool     // Lecteur seule
-	Refresh      bool     // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
-	Required     bool     // obligatoire
-	SQLout       string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type         string   // Type : action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
+	Action        Action // bouton d'action - utilise Params
+	Args          Args
+	Class         string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
+	ClassSQL      string   // SQL pour alimenter Class error warning info green blue
+	ColAlign      string   //
+	ColWith       int      // TODO
+	Default       string   // Valeur par défaut (macro possible)
+	DefaultSQL    string   // Ordre SQL qui retournera la colonne pour alimenter Default
+	Error         string   // contiendra "error" si le champ est en erreur de saisie
+	Format        string   //
+	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	Group         string   // Groupe autorisé à accéder à cette rubrique
+	Height        int      // TODO
+	Help          string   // TODO
+	HelpSQL       string   // TODO
+	Hide          bool     // élémnt caché dans la vue ou formulaire
+	HideSQL       string   // TODO cachée si condition
+	HideOnMobile  bool     // La colonne dans une vue sera cachée sur Mobile
+	Items         []Item   // slice d'item
+	ItemsSQL      string   // Ordre SQL qui retournera la colonne pour alimenter Items
+	Jointure      Jointure // élément issu d'une jointure SQL (lecture seule)
+	LabelLong     string   // Label dans un formulaire
+	LabelShort    string   // Label dans une vue
+	Max           int      // TODO
+	MaxLength     int      // TODO
+	Min           int      // TODO
+	MinLength     int      // TODO
+	Order         int      // Ordre de l'élément dans une vue ou formulaire
+	Params        Params   // paramètres optionnels
+	PlaceHolder   string   // Label dans le champ en saisie si vide
+	Pattern       string   // Pattern de l'input HTML
+	Protected     bool     // Est en misa à jour mais protégé en saisie
+	ReadOnly      bool     // Lecteur seule
+	Refresh       bool     // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
+	Required      bool     // obligatoire
+	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
+	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
+	Type          string   // Type : action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application

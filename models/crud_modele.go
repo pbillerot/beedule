@@ -30,6 +30,11 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	// Rédaction de la requête
 	var keys []string
 	joins := []string{}
+	type Sorter struct {
+		id       string
+		direcion string
+	}
+	sorter := Sorter{}
 	for k, element := range elements {
 		if strings.HasPrefix(k, "_") {
 			keys = append(keys, "'' as "+k)
@@ -40,6 +45,15 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 			joins = append(joins, element.Jointure.Join)
 		} else {
 			keys = append(keys, tableid+"."+k)
+		}
+		if element.SortDirection != "" {
+			if element.SortDirection == "ascending" {
+				sorter.id = k
+				sorter.direcion = "ASC"
+			} else {
+				sorter.id = k
+				sorter.direcion = "DESC"
+			}
 		}
 	}
 	skey := strings.Join(keys, ", ")
@@ -55,6 +69,9 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	orderby := ""
 	if view.OrderBy != "" {
 		orderby = " ORDER BY " + view.OrderBy
+	}
+	if sorter.id != "" {
+		orderby = " ORDER BY " + sorter.id + " " + sorter.direcion
 	}
 
 	o := orm.NewOrm()

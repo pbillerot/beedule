@@ -163,7 +163,8 @@ var quotesViews = types.Views{
 				HideOnMobile: true,
 			},
 			"date": {
-				Order: 30,
+				Order:        30,
+				HideOnMobile: true,
 			},
 			// "close1": {
 			// 	Order:        40,

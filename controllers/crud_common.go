@@ -78,7 +78,17 @@ func IsOwner(c beego.Controller, key string) (out bool) {
 func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.Elements, id string) (types.Elements, map[int]string) {
 	table := app.Tables[tableid]
 
-	elements := types.Elements{}
+	// Gestion du TRI dans la session
+	sortID := ""
+	sortDirection := ""
+	if v, ok := c.Data["SortID"]; ok {
+		sortID = v.(string)
+	}
+	if v, ok := c.Data["SortDirection"]; ok {
+		sortDirection = v.(string)
+	}
+
+	elements := make(types.Elements, len(viewOrFormElements))
 
 	cols := make(map[int]string, len(elements))
 
@@ -107,6 +117,9 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			}
 			if element.Jointure.Join != "" {
 				element.Jointure.Join = macro(c, element.Jointure.Join, orm.Params{})
+			}
+			if sortID == key {
+				element.SortDirection = sortDirection
 			}
 			// Attributs par défaut en fonction du type
 			switch element.Type {

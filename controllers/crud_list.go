@@ -66,9 +66,30 @@ func (c *CrudListController) Get() {
 		view.FormEdit = ""
 	}
 
+	// Gestion du TRI enregistré dans la session et contexte
+	sortID := c.GetString("sortid")
+	sortDirection := c.GetString("sortdirection")
+	ctxSortid := fmt.Sprintf("%s-%s-%s-sortid", appid, tableid, viewid)
+	ctxSortdirection := fmt.Sprintf("%s-%s-%s-sortdirection", appid, tableid, viewid)
+	if sortID != "" {
+		c.SetSession(ctxSortid, sortID)
+		c.SetSession(ctxSortdirection, sortDirection)
+	} else {
+		if c.GetSession(ctxSortid) != nil {
+			sortID = c.GetSession(ctxSortid).(string)
+		}
+		if c.GetSession(ctxSortdirection) != nil {
+			sortDirection = c.GetSession(ctxSortdirection).(string)
+		}
+	}
+	// Data récupéré dans mergeElements et dans le template ensuite
+	c.Data["SortID"] = sortID
+	c.Data["SortDirection"] = sortDirection
+
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Views[viewid].Elements, "")
-	// Calcul des champs SQL
+
+	// Calcul des champs SQL de la vue
 	if view.OrderBy != "" {
 		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
 	}
@@ -84,8 +105,6 @@ func (c *CrudListController) Get() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		// c.Ctx.Redirect(302, "/crud")
-		// return
 	}
 	if len(records) > 0 {
 		// Calcul des éléments hors values

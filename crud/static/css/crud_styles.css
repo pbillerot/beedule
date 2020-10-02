@@ -20,11 +20,18 @@ main {
 .ui.cards>.crud-card-view {
     width: 360px;
 }
-.ui.form {
-    width: 360px;
+.ui.cards>.crud-list-selected {
+    background-color: seashell
+}
+.ui.container>.crud-list-selected {
+    background-color: seashell
 }
 .crud-cell-nowrap {
     white-space: nowrap;
+}
+
+.ui.form {
+    width: 360px;
 }
 .ui.link.message {
     cursor: pointer;
@@ -34,6 +41,9 @@ main {
 }
 pre {
     font-size: 0.9em;
+}
+.crud-list-selected {
+    background-color: seashell
 }
 
 /* Mobile */
