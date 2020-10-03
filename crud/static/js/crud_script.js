@@ -175,7 +175,7 @@ $(document).ready(function () {
 
     // SUPPRESSION D'UN ENREGISTREMENT
     $('.crud-jquery-delete').on('click', function (event) {
-        $('.ui.modal')
+        $('#crud-modal-confirm')
             .modal({
                 closable: false,
                 onDeny: function () {

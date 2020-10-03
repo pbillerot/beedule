@@ -67,7 +67,7 @@
             {{if and $view.Deletable $view.FormAdd}}
             <!-- On ne peut supprimer que si la vue possède un formulaire d'ajout avec les droits d'accès-->
             <a class="ui icon item crud-jquery-delete">
-              <i class="trash icon"></i> Supprimmer la fiche...
+              <i class="trash icon"></i> Supprimer cet enregistrement...
             </a>
             {{end}}
             {{range $iaction, $action := $form.Actions}}
@@ -250,7 +250,7 @@
         </div>
   </main>
   <!-- Demande de confirmation de la suppression -->
-  <div class="ui modal">
+  <div id="crud-modal-confirm" class="ui modal">
     <div class="header">Suppression de {{$coldisplay}}</div>
     <div class="content">
       <p>Veuillez le confirmer</p>
