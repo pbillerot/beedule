@@ -5,7 +5,39 @@ $(document).ready(function () {
 
     var isUsed = false;
 
-    // TABLESORT
+    // RECHERCHE
+    // Ouvrir la recherche
+    $('#crud-search-active').on('click', function (event) {
+        $('#crud-search').show();
+        // $('#crud-header').hide();
+        $('#crud-search-active').hide();
+        $('#search').focus();
+        event.preventDefault();
+    });
+    // Fermer la recherche
+    $('#crud-search-close').on('click', function (event) {
+        $('#crud-search').hide();
+        // $('#crud-header').show();
+        $('#crud-search-active').show();
+        $('#search').val('');
+        var $url = $('#search').data('url') + "?search_stop=true";
+        window.location = $url;
+        event.preventDefault();
+    });
+    // Validation par touche entrée
+    $('#search').on('keypress',function(e) {
+        if(e.which == 13) {
+            $('#crud-search-go').trigger('click');
+        }
+    });
+    // Lancement de la recherche
+    $('#crud-search-go').on('click', function (event) {
+        var value = $('#search').val().toLowerCase();
+        var $url = $('#search').data('url') + "?search="+value;
+        window.location = $url;
+        event.preventDefault();
+    });
+
     // TRI COLONNE DE LA TABLE
     $(document).on('click', '.crud-ajax-sort', function (event) {
         var $sortdirection = "ascending"
@@ -28,61 +60,6 @@ $(document).ready(function () {
             + '&sortdirection=' + $sortdirection
         window.location = $url;
         event.preventDefault();
-    });
-
-    // $('table').tablesort()
-    // $.tablesort.DEBUG = true;
-    // $('table').on('tablesort:complete', function (event, tablesort) {
-    //     if ($crud_view && $crud_view.length > 0) {
-    //         // console.log(tablesort.$sortCells[tablesort.index].id)
-    //         Cookies.set($crud_view + '_sort_id', tablesort.$sortCells[tablesort.index].id);
-    //         Cookies.set($crud_view + '_sort_direction', tablesort.direction);
-    //     }
-    // });
-
-    // RECHERCHE
-    $('#crud-search-active').on('click', function (event) {
-        $('#crud-search').show();
-        $('#crud-header').hide();
-        $('#crud-search-active').hide();
-        $('#crud-search-input').focus();
-    });
-    // Recherche plein texte dans le body de la table
-    // Les lignes sans le mot sont cachées
-    $("#crud-search-input").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
-        if ($crud_view && $crud_view.length > 0) {
-            Cookies.set($crud_view + '_search', value)
-        }
-        $("#bee-table tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    });
-    // Recherche dans la LIST CARD
-    $('.crud-searchable').searchable({
-        searchField: '#crud-search-input',
-        selector: '.crud-card-searchable',
-        childSelector: '.searchable',
-        show: function (elem) {
-            elem.fadeIn(100);
-        },
-        hide: function (elem) {
-            elem.fadeOut(100);
-        },
-        onSearchActive: function (elem, term) {
-            elem.show();
-        },
-        onSearchEmpty: function (elem) {
-            elem.show();
-        }
-    })
-    // Fermer la recherche
-    $('#crud-search-close').on('click', function (event) {
-        $('#crud-search').hide();
-        $('#crud-header').show();
-        $('#crud-search-active').show();
-        $('#crud-search-input').val('')
-        $("#crud-search-input").trigger('keyup')
     });
 
     // CLIC URL
@@ -248,10 +225,9 @@ $(document).ready(function () {
     var $crud_view = $('#crud_view').val()
     if ($crud_view && $crud_view.length > 0) {
         // Si recherche dans Cookie : aff du input et sélection
-        if (Cookies.get($crud_view + '_search')) {
+        var $search = $('#search').val();
+        if ($search != "") {
             $('#crud-search-active').trigger('click');
-            $('#crud-search-input').val(Cookies.get($crud_view + '_search'))
-            $("#crud-search-input").trigger('keyup')
         }
         // Positionnement sur la dernière ligne sélectionnée
         if (Cookies.get($crud_view)) {

@@ -118,6 +118,7 @@ type View struct {
 	Title        string   // Titre de la vue
 	Elements     Elements // Eléments à récupérer de la base de données
 	Mask         MaskList // Masque html d'une ligne dans la vue
+	Search       string   // Chaîne de recherche dans toutes les colonnes de la vue
 }
 
 // MaskList Content d'une card https://fomantic-ui.com/views/card.html

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
@@ -99,6 +100,44 @@ func (c *CrudListController) Get() {
 	if view.Where != "" {
 		view.Where = macro(c.Controller, view.Where, orm.Params{})
 	}
+
+	// RECHERCHE DANS LA VUE
+	search := strings.ToLower(c.GetString("search"))
+	ctxSearch := fmt.Sprintf("%s-%s-%s-search", appid, tableid, viewid)
+	if strings.ToLower(c.GetString("search_stop")) != "" {
+		c.DelSession(ctxSearch)
+		search = ""
+	}
+	if search != "" {
+		c.SetSession(ctxSearch, search)
+	} else {
+		if c.GetSession(ctxSearch) != nil {
+			search = c.GetSession(ctxSearch).(string)
+		}
+	}
+
+	if search != "" {
+		for key, element := range elements {
+			if strings.HasPrefix(key, "_") {
+				continue
+			}
+			switch element.Type {
+			case "checkbox":
+				if strings.Contains(strings.ToLower(element.LabelShort), search) {
+					if view.Search != "" {
+						view.Search += " OR "
+					}
+					view.Search += key + " = '1'"
+				}
+			default:
+				if view.Search != "" {
+					view.Search += " OR "
+				}
+				view.Search += key + " LIKE '%" + search + "%'"
+			}
+		}
+	}
+	c.Data["Search"] = search
 
 	// lecture des records
 	records, err := models.CrudList(tableid, viewid, &view, elements)

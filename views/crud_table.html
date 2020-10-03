@@ -15,6 +15,7 @@
 {{$qrecords := .Qrecords}}
 {{$sortid := .SortID}}
 {{$sortdirection := .SortDirection}}
+{{$search := .Search}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -73,10 +74,14 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="crud-search-input" placeholder="Recherche...">
+              <input type="text" id="search" 
+              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" 
+              value="{{$search}}"
+              placeholder="Recherche...">
               <i class="search icon"></i>
             </div>
-            <i class="close link icon" id="crud-search-close" title="Fin recherche"></i>
+            <i class="check icon" id="crud-search-go" title="Rechercher"></i>
+            <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
           </div>
         </div>
         {{if or $view.Actions $view.FormAdd}}

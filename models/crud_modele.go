@@ -62,6 +62,14 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 	if view.Where != "" {
 		where = " WHERE " + view.Where
 	}
+	if view.Search != "" {
+		if view.Where != "" {
+			where += " AND (" + view.Search + ")"
+		} else {
+			where += " WHERE " + view.Search
+		}
+	}
+
 	limit := ""
 	if view.Limit > 0 {
 		limit = fmt.Sprintf(" LIMIT %d", view.Limit)
