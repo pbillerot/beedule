@@ -150,7 +150,7 @@
 
             {{if $element.Params.Meta}}
             <div class="right floated meta">
-              {{range $im, $key := $view.Mask.Meta}}
+              {{range $im, $key := $element.Params.Meta}}
               {{ $ele := index $elements $key }}
               {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
               {{ $val := CrudIndex $record $key}}
@@ -183,13 +183,14 @@
               {{end}}
             </div><!-- end Meta -->
             {{end}}
+
             {{if $element.Params.Description}}
             <div class="description">
-              {{range $im, $key := $view.Mask.Description}}
+              {{range $im, $key := $element.Params.Description}}
               {{ $ele := index $elements $key }}
               {{ $class := CrudMacroSQL $ele.ClassSQL $record $session}}
               {{ $val := CrudIndex $record $key}}
-              <span class="ui orange {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
               {{end}}
             </div><!-- end Description -->
             {{end}}

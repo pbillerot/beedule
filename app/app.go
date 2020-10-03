@@ -29,10 +29,9 @@ var Applications = map[string]types.Application{
 		AppViews: []types.AppView{
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},
-			{Tableid: "ptf", Viewid: "vtop"},
-			{Tableid: "ptf", Viewid: "vactiv"},
-			{Tableid: "ptf", Viewid: "vinactiv"},
+			{Tableid: "ptf", Viewid: "vall"},
 			{Tableid: "ptf", Viewid: "vdiapo"},
+			{Tableid: "ptf", Viewid: "vtop"},
 			{Tableid: "quotes", Viewid: "vlast"},
 		},
 	},

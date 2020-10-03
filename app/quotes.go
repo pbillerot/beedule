@@ -203,6 +203,15 @@ var quotesViews = types.Views{
 				Order: 310,
 			},
 		},
+		Actions: types.Actions{
+			{
+				Label: "Effacer les remarques...",
+				SQL: []string{
+					"update ptf set ptf_rem = ''",
+				},
+				WithConfirm: false,
+			},
+		},
 	},
 }
 
@@ -223,7 +232,7 @@ var quotesForms = types.Forms{
 				Type:      "section",
 				LabelLong: "Portefeuille",
 				Params: types.Params{
-					URL:      "/crud/edit/picsou/ptf/vactiv/fedit/{id}",
+					URL:      "/crud/edit/picsou/ptf/vall/fedit/{id}",
 					IconName: "building",
 				},
 			},

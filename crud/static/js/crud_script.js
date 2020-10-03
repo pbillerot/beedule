@@ -104,10 +104,11 @@ $(document).ready(function () {
         }
 
         var $target = $(this).data('target');
+        var $url = $(this).data('url');
         if (!$target || $target == '') {
-            window.location = $(this).data('url');
+            window.location = $url;
         } else {
-            window.open($(this).data('url'), $target);
+            window.open($url, $target);
         }
         event.preventDefault();
     });

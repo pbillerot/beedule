@@ -412,7 +412,7 @@ var ordersElements = types.Elements{
 		LabelShort: "Gain",
 		ColWith:    80,
 		Protected:  true,
-		ClassSQL:   "select case when '{orders_sell_gain}' > 0 then 'green' when '{orders_sell_gain}' < 0 then 'red' end",
+		ClassSQL:   "select case when {orders_sell_gain} > 0 then 'green' when {orders_sell_gain} < 0 then 'red' end",
 		// ComputeSQL: "select {orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}",
 	},
 	"orders_sell_gainp": {
@@ -421,7 +421,7 @@ var ordersElements = types.Elements{
 		LabelShort: "en %",
 		ColWith:    80,
 		Protected:  true,
-		ClassSQL:   "select case when '{orders_sell_gainp}' > 0 then 'green' when '{orders_sell_gainp}' < 0 then 'red' end",
+		ClassSQL:   "select case when {orders_sell_gainp} > 0 then 'green' when {orders_sell_gainp} < 0 then 'red' end",
 		// ComputeSQL: "select ( ({orders_sell} * {orders_quantity} - {orders_buy} * {orders_quantity} - {orders_buy} * {orders_quantity} * {__cost} - {orders_sell} * {orders_quantity} * {__cost}) / ({orders_buy} * {orders_quantity}) )*100",
 	},
 	"_image_day": {

@@ -15,86 +15,12 @@ var Ptf = types.Table{
 	Forms:      ptfForms,
 }
 var ptfViews = types.Views{
-	"vactiv": {
-		FormAdd:   "fadd",
-		FormEdit:  "fedit",
-		FormView:  "fview",
-		Deletable: true,
-		Group:     "picsou",
-		Title:     "Valeurs actives",
-		IconName:  "building",
-		Mask: types.MaskList{
-			Header: []string{
-				"ptf_name",
-				"ptf_id",
-			},
-			Meta: []string{
-				"ptf_enabled",
-				"ptf_top",
-			},
-			Description: []string{
-				"ptf_rem",
-			},
-			Extra: []string{
-				"ptf_quote",
-				"ptf_gain",
-			},
-		},
-		Elements: types.Elements{
-			"ptf_id":      {},
-			"ptf_name":    {},
-			"ptf_enabled": {},
-			"ptf_top":     {},
-			"ptf_rem":     {},
-			"ptf_quote":   {},
-			"ptf_gain":    {},
-		},
-		Where:   "ptf_enabled = '1'",
-		OrderBy: "ptf_name",
-	},
-	"vinactiv": {
-		FormAdd:   "fadd",
+	"vall": {
 		FormEdit:  "fedit",
 		FormView:  "fview",
 		Group:     "picsou",
 		Deletable: true,
-		Title:     "Les Valeurs inactives",
-		IconName:  "building outline",
-		Mask: types.MaskList{
-			Header: []string{
-				"ptf_name",
-				"ptf_id",
-			},
-			Meta: []string{
-				"ptf_enabled",
-				"ptf_top",
-			},
-			Description: []string{
-				"ptf_rem",
-			},
-			Extra: []string{
-				"ptf_quote",
-				"ptf_gain",
-			},
-		},
-		Elements: types.Elements{
-			"ptf_id":      {},
-			"ptf_name":    {},
-			"ptf_enabled": {},
-			"ptf_top":     {},
-			"ptf_rem":     {},
-			"ptf_quote":   {},
-			"ptf_gain":    {},
-		},
-		Where:   "ptf_enabled <> '1'",
-		OrderBy: "ptf_name",
-	},
-	"vtop": {
-		FormEdit:  "fedit",
-		FormView:  "fview",
-		Group:     "picsou",
-		Deletable: true,
-		Title:     "Les Valeurs TOP",
+		Title:     "Les Valeurs",
 		IconName:  "city",
 		Mask: types.MaskList{
 			Header: []string{
@@ -121,9 +47,22 @@ var ptfViews = types.Views{
 			"ptf_rem":     {},
 			"ptf_quote":   {},
 			"ptf_gain":    {},
+			"_raz_rem": {
+				Type:      "action",
+				LabelLong: "Effacer les remarques",
+			},
 		},
-		Where:   "ptf_enabled = '1' and ptf_top = '1'",
+		// Where:   "ptf_enabled = '1' and ptf_top = '1'",
 		OrderBy: "ptf_name",
+		Actions: types.Actions{
+			{
+				Label: "Effacer les remarques...",
+				SQL: []string{
+					"update ptf set ptf_rem = ''",
+				},
+				WithConfirm: true,
+			},
+		},
 	},
 	"vdiapo": {
 		Title:    "Graphiques",
@@ -138,12 +77,54 @@ var ptfViews = types.Views{
 			"ptf_top":        {Order: 25},
 			"ptf_rem":        {Order: 30},
 			"ptf_note":       {Order: 40},
+			"ptf_gain":       {Order: 50},
+			"ptf_quote":      {Order: 60},
 			"_image_day":     {Order: 100},
 			"_image_histo":   {Order: 110},
 			"_image_analyse": {Order: 120},
 		},
 		OrderBy: "ptf_name",
 		Where:   "ptf_enabled = '1'",
+		Actions: types.Actions{
+			{
+				Label: "Effacer les remarques...",
+				SQL: []string{
+					"update ptf set ptf_rem = ''",
+				},
+				WithConfirm: true,
+			},
+		},
+	},
+	"vtop": {
+		Title:    "Graphiques TOP",
+		FormEdit: "fedit",
+		FormView: "fview",
+		Group:    "picsou",
+		IconName: "photo video",
+		Type:     "image",
+		Elements: types.Elements{
+			"ptf_id":         {Order: 10},
+			"ptf_name":       {Order: 20},
+			"ptf_top":        {Order: 25},
+			"ptf_rem":        {Order: 30},
+			"ptf_note":       {Order: 40},
+			"ptf_gain":       {Order: 50},
+			"ptf_quote":      {Order: 60},
+			"_image_day":     {Order: 100},
+			"_image_histo":   {Order: 110},
+			"_image_analyse": {Order: 120},
+		},
+		OrderBy: "ptf_name",
+		Where:   "ptf_enabled = '1' and ptf_top = '1'",
+		Actions: types.Actions{
+			{
+				Label: "Effacer les remarques...",
+				SQL: []string{
+					"update ptf set ptf_rem = ''",
+				},
+				WithConfirm: true,
+			},
+		},
 	},
 }
 
@@ -228,7 +209,7 @@ var ptfElements = types.Elements{
 		Type:       "text",
 		LabelLong:  "Remarque",
 		LabelShort: "Remarque",
-		Class:      "orange",
+		ClassSQL:   "select 'orange'",
 	},
 	"ptf_enabled": {
 		Type:       "checkbox",
@@ -249,7 +230,7 @@ var ptfElements = types.Elements{
 		Type:       "percent",
 		LabelLong:  "Gain du jour",
 		LabelShort: "Gain",
-		ClassSQL:   "select case when '{ptf_gain}' > 0 then 'green' when '{ptf_gain}' < 0 then 'red' end",
+		ClassSQL:   "select case when {ptf_gain} > 0 then 'green' when {ptf_gain} < 0 then 'red' end",
 	},
 	"_image_day": {
 		Type:       "image",
@@ -267,6 +248,8 @@ var ptfElements = types.Elements{
 			},
 			Extra: []string{
 				"ptf_top",
+				"ptf_quote",
+				"ptf_gain",
 			},
 		},
 	},
@@ -280,11 +263,10 @@ var ptfElements = types.Elements{
 				"ptf_name",
 				"ptf_id",
 			},
-			Description: []string{
-				"ptf_rem",
-			},
 			Extra: []string{
 				"ptf_top",
+				"ptf_quote",
+				"ptf_gain",
 			},
 		},
 	},
@@ -300,6 +282,8 @@ var ptfElements = types.Elements{
 			},
 			Extra: []string{
 				"ptf_top",
+				"ptf_quote",
+				"ptf_gain",
 			},
 		},
 	},
