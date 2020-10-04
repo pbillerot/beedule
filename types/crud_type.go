@@ -192,6 +192,7 @@ type Item struct {
 type Config struct {
 	Appname string
 	Appnote string
+	Date    string
 	Icone   string
 	Site    string
 	Email   string

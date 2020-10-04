@@ -389,6 +389,7 @@ func setContext(c beego.Controller) {
 	config := types.Config{}
 	config.Appname = beego.AppConfig.String("appname")
 	config.Appnote = beego.AppConfig.String("appnote")
+	config.Date = beego.AppConfig.String("date")
 	config.Icone = beego.AppConfig.String("icone")
 	config.Site = beego.AppConfig.String("site")
 	config.Email = beego.AppConfig.String("email")

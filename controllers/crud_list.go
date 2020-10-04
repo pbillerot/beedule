@@ -16,8 +16,8 @@ type CrudListController struct {
 	loggedRouter
 }
 
-// Get CrudListController
-func (c *CrudListController) Get() {
+// CrudList CrudListController
+func (c *CrudListController) CrudList() {
 	appid := c.Ctx.Input.Param(":app")
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
@@ -104,7 +104,7 @@ func (c *CrudListController) Get() {
 	// RECHERCHE DANS LA VUE
 	search := strings.ToLower(c.GetString("search"))
 	ctxSearch := fmt.Sprintf("%s-%s-%s-search", appid, tableid, viewid)
-	if strings.ToLower(c.GetString("search_stop")) != "" {
+	if strings.ToLower(c.GetString("searchstop")) != "" {
 		c.DelSession(ctxSearch)
 		search = ""
 	}

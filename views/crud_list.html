@@ -76,9 +76,8 @@
               data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" 
               value="{{$search}}"
               placeholder="Recherche...">
-              <i class="search icon"></i>
+              <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
-            <i class="check icon" id="crud-search-go" title="Rechercher"></i>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
           </div>
         </div>
@@ -249,8 +248,12 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form action="" method="POST">
+  <form method="POST" action="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
     {{ .xsrfdata }}
+    <input type="hidden" id="crud-form-search" name="search">
+    <input type="hidden" id="crud-form-searchstop" name="searchstop">
+    <input type="hidden" id="crud-form-sortid" name="sortid">
+    <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
   </form>
   <!-- CONTEXTE -->
   <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">

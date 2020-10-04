@@ -20,8 +20,9 @@ $(document).ready(function () {
         // $('#crud-header').show();
         $('#crud-search-active').show();
         $('#search').val('');
-        var $url = $('#search').data('url') + "?search_stop=true";
-        window.location = $url;
+        $('#crud-form-search').val('')
+        $('#crud-form-searchstop').val('true')
+        $('form').submit();
         event.preventDefault();
     });
     // Validation par touche entrée
@@ -33,8 +34,13 @@ $(document).ready(function () {
     // Lancement de la recherche
     $('#crud-search-go').on('click', function (event) {
         var value = $('#search').val().toLowerCase();
-        var $url = $('#search').data('url') + "?search="+value;
-        window.location = $url;
+        if (value.length > 0) {
+            $('#crud-form-search').val(value)
+        } else {
+            $('#crud-form-search').val('')
+            $('#crud-form-searchstop').val('true')
+        }
+        $('form').submit();
         event.preventDefault();
     });
 
@@ -55,10 +61,9 @@ $(document).ready(function () {
                 $(this).addClass($sortdirection)
             }
         }
-        var $url = $(this).data('url')
-            + '?sortid=' + this.id.substring(4) // col_<id>
-            + '&sortdirection=' + $sortdirection
-        window.location = $url;
+        $('#crud-form-sortid').val(this.id.substring(4))
+        $('#crud-form-sortdirection').val($sortdirection)
+        $('form').submit();
         event.preventDefault();
     });
 

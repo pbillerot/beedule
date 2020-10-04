@@ -18,7 +18,7 @@ func init() {
 	beego.Router("/crud", &controllers.CrudPortailController{})
 
 	// CRUD MANAGER
-	beego.Router("/crud/list/:app/:table/:view", &controllers.CrudListController{})
+	beego.Router("/crud/list/:app/:table/:view", &controllers.CrudListController{}, "get:CrudList;post:CrudList")
 	beego.Router("/crud/view/:app/:table/:view/:id", &controllers.CrudViewController{})
 	beego.Router("/crud/add/:app/:table/:view/:form", &controllers.CrudAddController{})
 	beego.Router("/crud/edit/:app/:table/:view/:form/:id", &controllers.CrudEditController{})
