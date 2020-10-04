@@ -46,12 +46,6 @@ pre {
     background-color: seashell
 }
 
-/* Mobile */
-@media only screen and (max-width: 767px) {
-    .bee-mobile-hide {
-        display: none;
-    }
-}  
 /* tablesort */
 th.sorted.ascending:after {
 	content: "  \2191";
@@ -60,3 +54,15 @@ th.sorted.ascending:after {
 th.sorted.descending:after {
 	content: " \2193";
 }
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    .crud-mobile-hide {
+        display: none !important;
+    }
+}  
+@media only screen and (min-width: 768px) {
+    .crud-mobile-show {
+        display: none !important;
+    }
+}  

@@ -38,7 +38,7 @@
           {{$t := index $portail.Tables $appView.Tableid }}
           {{$v := index $t.Views $appView.Viewid }}
           {{if (CrudIsInGroup $v.Group $session)}}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}{{if $v.HideOnMobile}} bee-mobile-hide{{end}}"
+          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}{{if $v.HideOnMobile}} crud-mobile-hide{{end}}"
             href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
@@ -58,14 +58,16 @@
         </div>
       </div>
       <div class="header item" id="crud-header">
-        {{$view.Title}}
-        {{if (eq $qrecords 0)}}
-        (auncun élément)
-        {{else if (eq $qrecords 1)}}
-        (1 élément)
-        {{else}}
-        ({{$qrecords}} éléments)
-        {{end}}
+        <span class="crud-mobile-hide">
+          {{$view.Title}}
+          {{if (eq $qrecords 0)}}
+          (auncun élément)
+          {{else if (eq $qrecords 1)}}
+          (1 élément)
+          {{else}}
+          ({{$qrecords}} éléments)
+          {{end}}
+        </span>
       </div>
       <!-- RIGHT MENU -->
       <div class="right menu">
@@ -74,10 +76,8 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" 
-              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" 
-              value="{{$search}}"
-              placeholder="Recherche...">
+              <input type="text" id="search" data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+                value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
@@ -116,6 +116,17 @@
   <main>
     <div class="ui container">
       {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+          {{$view.Title}}
+          {{if (eq $qrecords 0)}}
+          (auncun élément)
+          {{else if (eq $qrecords 1)}}
+          (1 élément)
+          {{else}}
+          ({{$qrecords}} éléments)
+          {{end}}
+      </div>
       <!-- LIST TABLE -->
       <table
         class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled table"
@@ -127,7 +138,8 @@
             {{ $element := index $elements $key }}
             {{if (ne $element.Hide true)}}
             <th id="col_{{$key}}"
-              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}}{{if (eq $sortid $key)}} sorted {{$sortdirection}}{{end}} crud-ajax-sort" data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}{{if (eq $sortid $key)}} sorted {{$sortdirection}}{{end}} crud-ajax-sort"
+              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
               {{$element.LabelShort}}
             </th>
             {{end}}
@@ -148,7 +160,7 @@
             {{ $val := CrudIndexSQL $record $key $element $session}}
             {{if (ne $element.Hide true)}}
             <td
-              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} bee-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
+              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
               {{if (eq $element.Type "combo")}}
               <!-- combo -->
               {{CrudItem $element.Items $val}} ({{$val}})
