@@ -54,14 +54,16 @@
         </div>
       </div>
       <div class="header item" id="crud-header">
-        {{$view.Title}}
-        {{if (eq $qrecords 0)}}
-        (auncun élément)
-        {{else if (eq $qrecords 1)}}
-        (1 élément)
-        {{else}}
-        ({{$qrecords}} éléments)
-        {{end}}
+        <span class="crud-mobile-hide">
+          {{$view.Title}}
+          {{if (eq $qrecords 0)}}
+          (auncun élément)
+          {{else if (eq $qrecords 1)}}
+          (1 élément)
+          {{else}}
+          ({{$qrecords}} éléments)
+          {{end}}
+        </span>
       </div>
       <!-- RIGHT MENU -->
       <div class="right menu">
@@ -70,10 +72,8 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" 
-              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" 
-              value="{{$search}}"
-              placeholder="Recherche...">
+              <input type="text" id="search" data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+                value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
@@ -112,6 +112,18 @@
   <main>
     <div class="ui container">
       {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{$view.Title}}
+        {{if (eq $qrecords 0)}}
+        (auncun élément)
+        {{else if (eq $qrecords 1)}}
+        (1 élément)
+        {{else}}
+        ({{$qrecords}} éléments)
+        {{end}}
+      </div>
+      <div>&nbsp;</div>
       <!-- ITEMS -->
       <div class="ui cards crud-searchable">
         {{ range $irecord, $record := .Records }}
@@ -122,12 +134,10 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <div id="{{CrudIndexAnchor $record $tablekey}}"
-        {{if or $view.FormView $view.FormView}}
-            class="card raised crud-card-view crud-card-searchable crud-jquery-url"
-            data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
-            class="card raised crud-card-view crud-card-searchable" {{end}}
-          >
+        <div id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.FormView}}
+          class="card raised crud-card-view crud-card-searchable crud-jquery-url"
+          data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
+          class="card raised crud-card-view crud-card-searchable" {{end}}>
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}" class="crud-popup-image" data-url="{{$path}}?{{$composter}}">
           </div>
