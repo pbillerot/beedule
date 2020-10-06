@@ -24,6 +24,8 @@ func (c *CrudEditController) Get() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
+	beego.Debug("from", c.Ctx.Input.Cookie("from"))
+
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
@@ -89,7 +91,6 @@ func (c *CrudEditController) Get() {
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
 
-	// c.SetSession("from", c.Ctx.Request.Referer())
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	setContext(c.Controller)
 	c.Data["AppId"] = appid

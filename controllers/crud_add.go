@@ -82,7 +82,6 @@ func (c *CrudAddController) Get() {
 	// Calcul des éléments
 	elements = computeElements(c.Controller, true, elements, records[0])
 
-	c.SetSession("from", c.Ctx.Request.Referer())
 	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
@@ -114,15 +113,15 @@ func (c *CrudAddController) Post() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				c.Ctx.Redirect(302, "/crud")
+				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		ReturnFrom(c.Controller)
 		return
 	}
 
@@ -188,7 +187,7 @@ func (c *CrudAddController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		ReturnFrom(c.Controller)
 		return
 	}
 	// PostSQL
@@ -212,5 +211,5 @@ func (c *CrudAddController) Post() {
 	flash.Notice("Création effectuée avec succès")
 	flash.Store(&c.Controller)
 
-	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	ReturnFrom(c.Controller)
 }

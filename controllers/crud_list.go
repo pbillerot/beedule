@@ -151,7 +151,6 @@ func (c *CrudListController) CrudList() {
 	}
 
 	// Remplissage du contexte pour le template
-	c.SetSession("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 	setContext(c.Controller)
 	c.Data["Title"] = view.Title
 	c.Data["AppId"] = appid
@@ -164,6 +163,8 @@ func (c *CrudListController) CrudList() {
 	c.Data["Records"] = records
 	c.Data["Qrecords"] = len(records)
 	c.Data["Cols"] = cols
+
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 
 	if view.Type == "image" {
 		c.TplName = "crud_list_image.html"

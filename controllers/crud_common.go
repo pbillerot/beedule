@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"net/url"
 	"reflect"
 	"regexp"
 	"strings"
@@ -23,8 +22,8 @@ var err error
 
 // ReturnFrom as
 func ReturnFrom(c beego.Controller) {
-	if c.GetSession("from") != nil {
-		c.Ctx.Redirect(302, c.GetSession("from").(string))
+	if c.Ctx.Input.Cookie("from") != "" {
+		c.Ctx.Redirect(302, c.Ctx.Input.Cookie("from"))
 	} else {
 		c.Ctx.Redirect(302, "/crud")
 	}
@@ -403,14 +402,9 @@ func setContext(c beego.Controller) {
 	// Title
 	c.Data["Title"] = config.Appname
 	c.Data["Portail"] = &app.Portail
-	// Contexte bee
-	u, _ := url.Parse(c.Ctx.Request.RequestURI)
-	c.Data["beePath"] = u.Path
-	c.Data["beeReturn"] = c.Ctx.Request.Referer()
+	// Contexte crud
+	c.Data["From"] = c.Ctx.Input.Cookie("from")
 	c.Data["Composter"] = time.Now().Unix()
-	if c.GetSession("from") != nil {
-		c.Data["From"] = c.GetSession("from").(string)
-	}
 }
 
 func setSession(c beego.Controller, param string, value string) {

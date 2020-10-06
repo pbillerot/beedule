@@ -85,13 +85,8 @@ $(document).ready(function () {
             $(this).addClass("crud-list-selected");
         }
 
-        var $target = $(this).data('target');
         var $url = $(this).data('url');
-        if (!$target || $target == '') {
-            window.location = $url;
-        } else {
-            window.open($url, $target);
-        }
+        window.location = $url;
         event.preventDefault();
     });
 
@@ -152,6 +147,10 @@ $(document).ready(function () {
         $('#crud-modal-image')
             .modal({
                 closable: true,
+                onHide: function () {
+                    isUsed = false;
+                    return true;
+                }
             }).modal('show');
         event.preventDefault();
     });

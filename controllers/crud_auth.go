@@ -86,7 +86,6 @@ func (c *AboutController) Get() {
 // Get of LoginController
 func (c *LoginController) Get() {
 	setContext(c.Controller)
-	c.Data["From"] = c.Ctx.Request.Referer()
 	c.Data["Title"] = "Beedule"
 	c.TplName = "crud_login.html"
 }
