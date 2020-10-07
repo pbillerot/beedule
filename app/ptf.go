@@ -126,6 +126,37 @@ var ptfViews = types.Views{
 			},
 		},
 	},
+	"vntop": {
+		Title:    "Graphiques NON TOP",
+		FormEdit: "fedit",
+		FormView: "fview",
+		Group:    "picsou",
+		IconName: "photo video",
+		Type:     "image",
+		Elements: types.Elements{
+			"ptf_id":         {Order: 10},
+			"ptf_name":       {Order: 20},
+			"ptf_top":        {Order: 25},
+			"ptf_rem":        {Order: 30},
+			"ptf_note":       {Order: 40},
+			"ptf_gain":       {Order: 50},
+			"ptf_quote":      {Order: 60},
+			"_image_day":     {Order: 100},
+			"_image_histo":   {Order: 110},
+			"_image_analyse": {Order: 120},
+		},
+		OrderBy: "ptf_name",
+		Where:   "ptf_enabled = '1' and ptf_top <> '1'",
+		Actions: types.Actions{
+			{
+				Label: "Effacer les remarques...",
+				SQL: []string{
+					"update ptf set ptf_rem = ''",
+				},
+				WithConfirm: true,
+			},
+		},
+	},
 }
 
 var ptfForms = types.Forms{

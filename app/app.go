@@ -32,6 +32,7 @@ var Applications = map[string]types.Application{
 			{Tableid: "ptf", Viewid: "vall"},
 			{Tableid: "ptf", Viewid: "vdiapo"},
 			{Tableid: "ptf", Viewid: "vtop"},
+			{Tableid: "ptf", Viewid: "vntop"},
 			{Tableid: "quotes", Viewid: "vlast"},
 		},
 	},

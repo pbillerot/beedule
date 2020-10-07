@@ -52,16 +52,16 @@ type Element struct {
 	Class         string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL      string   // SQL pour alimenter Class error warning info green blue
 	ColAlign      string   //
-	ColWith       int      // TODO
+	ColWith       int      // TODO largeur de la colonne
 	Default       string   // Valeur par défaut (macro possible)
 	DefaultSQL    string   // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string   // contiendra "error" si le champ est en erreur de saisie
 	Format        string   //
 	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
 	Group         string   // Groupe autorisé à accéder à cette rubrique
-	Height        int      // TODO
-	Help          string   // TODO
-	HelpSQL       string   // TODO
+	Height        int      // TODO hauteur de la colonne
+	Help          string   // TODO aide sur la rubrique
+	HelpSQL       string   // TODO aide sql sur la rubrique
 	Hide          bool     // élémnt caché dans la vue ou formulaire
 	HideSQL       string   // TODO cachée si condition
 	HideOnMobile  bool     // La colonne dans une vue sera cachée sur Mobile
@@ -70,10 +70,10 @@ type Element struct {
 	Jointure      Jointure // élément issu d'une jointure SQL (lecture seule)
 	LabelLong     string   // Label dans un formulaire
 	LabelShort    string   // Label dans une vue
-	Max           int      // TODO
-	MaxLength     int      // TODO
-	Min           int      // TODO
-	MinLength     int      // TODO
+	Max           int      // TODO valeur max
+	MaxLength     int      // TODO longeur max
+	Min           int      // TODO valeur min
+	MinLength     int      // TODO longueur min
 	Order         int      // Ordre de l'élément dans une vue ou formulaire
 	Params        Params   // paramètres optionnels
 	PlaceHolder   string   // Label dans le champ en saisie si vide
