@@ -92,8 +92,18 @@ func (c *CrudViewController) Get() {
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, cols := mergeElements(c.Controller, tableid, elementsVF, id)
 
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
 	// lecture du record
-	records, err := models.CrudRead(tableid, id, elements)
+	records, err := models.CrudRead(filter, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
@@ -102,7 +112,7 @@ func (c *CrudViewController) Get() {
 	elements = computeElements(c.Controller, false, elements, records[0])
 
 	if len(records) == 0 {
-		flash.Error("Article non trouvé: ", id)
+		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
 		return
@@ -115,7 +125,7 @@ func (c *CrudViewController) Get() {
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
 	} else {
-		c.Data["ColDisplay"] = "Article non trouvé"
+		c.Data["ColDisplay"] = "Enregistrement non trouvé"
 	}
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]

@@ -74,7 +74,17 @@ func (c *CrudEditController) Get() {
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
 
-	records, err := models.CrudRead(tableid, id, elements)
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
+	records, err := models.CrudRead(filter, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
@@ -82,7 +92,7 @@ func (c *CrudEditController) Get() {
 		return
 	}
 	if len(records) == 0 {
-		flash.Error("Article non trouvé")
+		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
 		return
@@ -149,8 +159,18 @@ func (c *CrudEditController) Post() {
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
 
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
 	// lecture du record
-	records, err := models.CrudRead(tableid, id, elements)
+	records, err := models.CrudRead(filter, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
@@ -159,7 +179,7 @@ func (c *CrudEditController) Post() {
 	}
 
 	if len(records) == 0 {
-		flash.Error("Article non trouvé: ", id)
+		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
 		return

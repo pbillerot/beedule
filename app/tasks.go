@@ -24,6 +24,7 @@ var tasksElements = types.Elements{
 	},
 	"task_user": {
 		Type:       "text",
+		Group:      "owner",
 		LabelLong:  "Propriétaire",
 		LabelShort: "Propriétaire",
 		Default:    "{$user}",
@@ -56,7 +57,7 @@ var tasksViews = types.Views{
 		Title:     "Tâches",
 		IconName:  "tasks",
 		ClassSQL:  "select 'positive' where '{task_status}' = '1'",
-		OrderBy:   "task_status",
+		OrderBy:   "task_status, task_id desc",
 		// Where:   "task_user = '{$user}'",
 		Mask: types.MaskList{
 			Header: []string{

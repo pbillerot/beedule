@@ -266,7 +266,7 @@ var ordersElements = types.Elements{
 		ColAlign:   "center",
 	},
 	"orders_ptf_id": {
-		Type:       "combo",
+		Type:       "combobox",
 		LabelLong:  "Valeur",
 		LabelShort: "Valeur",
 		ItemsSQL:   "SELECT ptf_id as 'key', ptf_name as 'label' From ptf order by ptf_name",
@@ -282,7 +282,7 @@ var ordersElements = types.Elements{
 		},
 	},
 	"orders_order": {
-		Type:       "combo",
+		Type:       "combobox",
 		LabelLong:  "Order",
 		LabelShort: "Order",
 		ColAlign:   "center",

@@ -221,7 +221,7 @@ func (c *CrudActionElementController) Post() {
 	formviewid := app.Tables[tableid].Views[viewid].FormView
 	var elementsVF types.Elements
 	if formviewid == "" {
-		flash.Error("Article non trouvé")
+		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return
@@ -230,14 +230,24 @@ func (c *CrudActionElementController) Post() {
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, _ := mergeElements(c.Controller, tableid, elementsVF, id)
 
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
 	// lecture du record
-	records, err := models.CrudRead(tableid, id, elements)
+	records, err := models.CrudRead(filter, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	}
 	if len(records) == 0 {
-		flash.Error("Article non trouvé")
+		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return

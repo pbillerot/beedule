@@ -272,7 +272,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			elements[key] = element
 		}
 		if !IsInGroup(c, element.Group, "") {
-			element.Type = "hidden" // l'élément ne sera pas visible
+			element.Hide = true
 		}
 		elements[key] = element
 	}

@@ -58,7 +58,7 @@ type Element struct {
 	Error         string   // contiendra "error" si le champ est en erreur de saisie
 	Format        string   //
 	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
-	Group         string   // Groupe autorisé à accéder à cette rubrique
+	Group         string   // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
 	Height        int      // TODO hauteur de la colonne
 	Help          string   // TODO aide sur la rubrique
 	HelpSQL       string   // TODO aide sql sur la rubrique
@@ -84,7 +84,7 @@ type Element struct {
 	Required      bool     // obligatoire
 	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string   // Type : action amount checkbox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
+	Type          string   // Type : action amount checkbox combobox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
@@ -182,7 +182,7 @@ type Action struct {
 // Args paramètres à transmettre lors de l'appel
 type Args map[string]string
 
-// Item pour définir un combo
+// Item pour définir un combobox
 type Item struct {
 	Key   string // valeur dans la base de données
 	Label string // label à afficher

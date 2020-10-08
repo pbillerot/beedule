@@ -142,7 +142,7 @@
             {{ $element := index $elements $key }}
             {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
             {{ $val := CrudIndex $record $key}}
-            {{if (eq $element.Type "combo")}}
+            {{if (eq $element.Type "combobox")}}
             <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
             {{else}}
             <span class="ui {{$class}} text searchable">{{CrudFormat $element.Format $val}}</span>
@@ -168,7 +168,7 @@
               <span>{{$element.LabelLong}}</span>
             </div>
             {{end}}
-            {{else if (eq $element.Type "combo")}}
+            {{else if (eq $element.Type "combobox")}}
             <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
             {{else if (eq $element.Type "tag")}}
             {{$arr := CrudSplit $val ","}}
@@ -213,15 +213,13 @@
               <span>{{$element.LabelLong}}</span>
             </div>
             {{end}}
-            {{else if (eq $element.Type "combo")}}
+            {{else if (eq $element.Type "combobox")}}
             <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
             {{else if (eq $element.Type "tag")}}
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
             <div class="ui tag label"><b>{{$item}}</b></div>
             {{end}}
-            {{else if (eq $element.Type "hidden")}}
-            <input type="hidden" name="{{$key}}">
             {{else}}
             <!-- autre type -->
             {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}

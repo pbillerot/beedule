@@ -129,12 +129,25 @@ func (c *CrudListController) CrudList() {
 					}
 					view.Search += key + " = '1'"
 				}
+			case "combobox":
+				// TODO recherche dans le lable du combobox
 			default:
 				if view.Search != "" {
 					view.Search += " OR "
 				}
 				view.Search += key + " LIKE '%" + search + "%'"
 			}
+		}
+	}
+	// Filtrage si élément owner
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			if view.Search != "" {
+				view.Search = "(" + view.Search + ") AND "
+			}
+			view.Search += key + " = '" + c.GetSession("Username").(string) + "'"
+			break
 		}
 	}
 	c.Data["Search"] = search

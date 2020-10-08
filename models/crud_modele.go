@@ -99,7 +99,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 }
 
 // CrudRead as
-func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params, error) {
+func CrudRead(filter string, tableid string, id string, elements types.Elements) ([]orm.Params, error) {
 
 	// Rédaction de la requête
 	var keys []string
@@ -115,6 +115,7 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 		} else {
 			keys = append(keys, tableid+"."+k)
 		}
+
 	}
 	skey := strings.Join(keys, ", ")
 
@@ -125,13 +126,16 @@ func CrudRead(tableid string, id string, elements types.Elements) ([]orm.Params,
 		" FROM " + tableid +
 		" " + strings.Join(joins, " ") +
 		" WHERE " + app.Tables[tableid].Key + " = ?"
+	if filter != "" {
+		sql += " AND " + filter
+	}
 	num, err := o.Raw(sql, id).
 		Values(&maps)
 	if err != nil {
 		beego.Error(err)
 	} else if num == 0 {
 		beego.Error(app.Tables[tableid].AliasDB, sql)
-		err = errors.New("Article non trouvé")
+		err = errors.New("Enregistrement non trouvé")
 	}
 	return maps, err
 }

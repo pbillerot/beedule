@@ -161,8 +161,8 @@
             {{if (ne $element.Hide true)}}
             <td
               class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
-              {{if (eq $element.Type "combo")}}
-              <!-- combo -->
+              {{if (eq $element.Type "combobox")}}
+              <!-- combobox -->
               {{CrudItem $element.Items $val}} ({{$val}})
               {{else if (eq $element.Type "checkbox")}}
               <!-- checkbox -->
