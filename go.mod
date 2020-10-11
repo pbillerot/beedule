@@ -3,8 +3,10 @@ module github.com/pbillerot/beedule
 go 1.14
 
 require (
+	github.com/MichaelS11/go-scheduler v0.1.0
 	github.com/astaxie/beego v1.12.2
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75 // indirect
 	github.com/imdario/mergo v0.3.11
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/prometheus/common v0.14.0 // indirect

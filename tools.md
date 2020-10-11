@@ -7,10 +7,16 @@ wget https://golang.org/dl/go1.14.6.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.14.6.linux-amd64.tar.gz
 ```
 
-## Ajout de modules markdown
+## Ajout de modules 
+### markdown
 https://github.com/gomarkdown/markdown
 https://github.com/russross/blackfriday
 - go get -u github.com/gomarkdown/markdown
+
+### Scheduler
+- https://github.com/MichaelS11/go-scheduler
+Pour traduire l'expression 
+- https://github.com/bradymholt/cRonstrue
 
 ### dans .profil
 ```console

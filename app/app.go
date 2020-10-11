@@ -4,6 +4,14 @@ import "github.com/pbillerot/beedule/types"
 
 // Applications présentées sur le portail
 var Applications = map[string]types.Application{
+	"pendule": {
+		Title: "Pendule",
+		Image: "/crud/static/img/pendule.svg",
+		Group: "admin",
+		AppViews: []types.AppView{
+			{Tableid: "batch", Viewid: "vall"},
+		},
+	},
 	"users": {
 		Title: "Gestion des utilisateurs et des groupes",
 		Image: "/crud/static/img/groups.svg",
@@ -58,6 +66,7 @@ var Tables = types.Tables{
 	"orders": Orders,
 	"ptf":    Ptf,
 	"quotes": Quotes,
+	"batch":  Batch,
 }
 
 // Portail as

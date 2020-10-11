@@ -71,7 +71,8 @@
     <div class="ui container">
       {{template "_crud_flash.html" .}}
       <!-- FORMULAIRE -->
-      <div class="ui attached message">
+      <div class="ui attached icon message">
+        <i class="{{if $form.IconName}}{{$form.IconName}}{{else}}{{$view.IconName}}{{end}} icon"></i>
         <div class="header">
           {{$form.Title}}: {{$coldisplay}}
         </div>

@@ -84,7 +84,7 @@ type Element struct {
 	Required      bool     // obligatoire
 	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string   // Type : action amount checkbox combobox counter date datetime email float image jointure list month number percent plugin section tag tel text time radio url week
+	Type          string   // Type : action amount checkbox combobox counter date datetime email float image jointure list markdown month number percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
@@ -109,7 +109,7 @@ type View struct {
 	FooterSQL    string   // requête sur la table courante
 	Hide         bool     // Vue cahchée dans le menu
 	HideOnMobile bool     // Vue cachée dur mobile
-	IconName     string   // nom de l'icone glyph
+	IconName     string   // nom de l'icone
 	Limit        int      // pour limiter le nbre de ligne dans la vue
 	Group        string   // groupe qui peut accéder à la vue
 	OrderBy      string   // Tri des données SQL
@@ -133,7 +133,8 @@ type MaskList struct {
 type Form struct {
 	Actions  Actions  // Action appel d'un formulaire ou exécution d'une requête SQL
 	Title    string   // Titre du formulaire
-	Group    string   // groupe qui peut accéder au formulair
+	Group    string   // groupe qui peut accéder au formulaire
+	IconName string   // nom de l'icone
 	Elements Elements // Eléments à récupérer de la base de données
 	CheckSQL []string // retourne le libellé des erreurs lors du contrôle des rubriques
 	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
