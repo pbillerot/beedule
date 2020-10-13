@@ -9,7 +9,8 @@ var Applications = map[string]types.Application{
 		Image: "/crud/static/img/pendule.svg",
 		Group: "admin",
 		AppViews: []types.AppView{
-			{Tableid: "batch", Viewid: "vall"},
+			{Tableid: "chains", Viewid: "vall"},
+			{Tableid: "jobs", Viewid: "vall"},
 		},
 	},
 	"users": {
@@ -66,7 +67,8 @@ var Tables = types.Tables{
 	"orders": Orders,
 	"ptf":    Ptf,
 	"quotes": Quotes,
-	"batch":  Batch,
+	"chains": Chains,
+	"jobs":   Jobs,
 }
 
 // Portail as

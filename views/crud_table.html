@@ -157,10 +157,11 @@
             class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
+            {{ $class := CrudClassSQL $element $record $session}}
             {{ $val := CrudIndexSQL $record $key $element $session}}
             {{if (ne $element.Hide true)}}
             <td
-              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
+              class="ui {{$class}} {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
               {{if (eq $element.Type "combobox")}}
               <!-- combobox -->
               {{CrudItem $element.Items $val}} ({{$val}})

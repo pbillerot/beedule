@@ -30,9 +30,6 @@ main {
     white-space: nowrap;
 }
 
-.ui.form {
-    width: 360px;
-}
 .ui.link.message {
     cursor: pointer;
 }
@@ -65,4 +62,8 @@ th.sorted.descending:after {
     .crud-mobile-show {
         display: none !important;
     }
+    .ui.form {
+        width: 520px;
+    }
+    
 }  

@@ -140,7 +140,7 @@
           <div class="header">
             {{range $im, $key := $view.Mask.Header}}
             {{ $element := index $elements $key }}
-            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
+            {{ $class := CrudClassSQL $element $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "combobox")}}
             <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
@@ -154,7 +154,7 @@
           <div class="meta">
             {{range $im, $key := $view.Mask.Meta}}
             {{ $element := index $elements $key }}
-            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
+            {{ $class := CrudClassSQL $element $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "checkbox")}}
             {{if (eq $val "1") }}
@@ -189,7 +189,7 @@
           <div class="description">
             {{range $im, $key := $view.Mask.Description}}
             {{ $element := index $elements $key }}
-            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
+            {{ $class := CrudClassSQL $element $record $session}}
             {{ $val := CrudIndex $record $key}}
             <span class="ui orange {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
             {{end}}
@@ -199,7 +199,7 @@
           <div class="extra">
             {{range $im, $key := $view.Mask.Extra}}
             {{ $element := index $elements $key }}
-            {{ $class := CrudMacroSQL $element.ClassSQL $record $session}}
+            {{ $class := CrudClassSQL $element $record $session}}
             {{ $val := CrudIndex $record $key}}
             {{if (eq $element.Type "checkbox")}}
             {{if (eq $val "1") }}

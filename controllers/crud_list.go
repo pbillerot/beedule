@@ -127,7 +127,11 @@ func (c *CrudListController) CrudList() {
 					if view.Search != "" {
 						view.Search += " OR "
 					}
-					view.Search += key + " = '1'"
+					if element.Jointure.Column != "" {
+						view.Search += element.Jointure.Column + " = '1'"
+					} else {
+						view.Search += tableid + "." + key + " = '1'"
+					}
 				}
 			case "combobox":
 				// TODO recherche dans le lable du combobox
@@ -135,7 +139,11 @@ func (c *CrudListController) CrudList() {
 				if view.Search != "" {
 					view.Search += " OR "
 				}
-				view.Search += key + " LIKE '%" + search + "%'"
+				if element.Jointure.Column != "" {
+					view.Search += element.Jointure.Column + " LIKE '%" + search + "%'"
+				} else {
+					view.Search += tableid + "." + key + " LIKE '%" + search + "%'"
+				}
 			}
 		}
 	}
@@ -146,7 +154,7 @@ func (c *CrudListController) CrudList() {
 			if view.Search != "" {
 				view.Search = "(" + view.Search + ") AND "
 			}
-			view.Search += key + " = '" + c.GetSession("Username").(string) + "'"
+			view.Search += tableid + "." + key + " = '" + c.GetSession("Username").(string) + "'"
 			break
 		}
 	}

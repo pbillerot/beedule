@@ -87,10 +87,10 @@
           {{end}}
           {{ .xsrfdata }}
           {{ range $irecord, $record := .Records }}
-          {{ range $num, $key := $cols }}
-          {{ $val := CrudIndex $record $key }}
-          {{ $element := index $elements $key }}
           <div class="ui form">
+            {{ range $num, $key := $cols }}
+            {{ $val := CrudIndex $record $key }}
+            {{ $element := index $elements $key }}
             {{if (eq $element.Type "action")}}
             {{if $element.Action.URL}}
             <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Action.URL}}">

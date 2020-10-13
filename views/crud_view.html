@@ -167,7 +167,7 @@
                   </div>
                 </div>
                 <div class="header">
-                  <h4>{{CrudItem $element.Items $val}} ({{$val}})</h4>
+                  <span class="ui medium {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
                 </div>
                 {{else if (eq $element.Type "checkbox")}}
                 <div class="description">&nbsp;</div>
@@ -220,6 +220,7 @@
                   <pre>{{$val}}</pre>
                 </div>
                 {{else}}
+                <!-- Autres type -->
                 <div class="description">
                   <div class="meta">
                     <span>{{$element.LabelLong}}</span>

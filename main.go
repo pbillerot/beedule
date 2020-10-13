@@ -9,6 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pbillerot/beedule/app"
 	_ "github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/batch"
 	_ "github.com/pbillerot/beedule/routers"
 )
 
@@ -46,6 +47,7 @@ func init() {
 	} else {
 		orm.Debug = false
 	}
+	batch.StartBatch()
 }
 func main() {
 	beego.Run()
