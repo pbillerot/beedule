@@ -6,7 +6,7 @@ import (
 
 // Groups table des groupes d'utilisateurs
 var Groups = types.Table{
-	AliasDB:    "users",
+	AliasDB:    "admin",
 	Key:        "group_id",
 	ColDisplay: "group_id",
 	IconName:   "users",

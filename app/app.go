@@ -13,13 +13,14 @@ var Applications = map[string]types.Application{
 			{Tableid: "jobs", Viewid: "vall"},
 		},
 	},
-	"users": {
-		Title: "Gestion des utilisateurs et des groupes",
-		Image: "/crud/static/img/groups.svg",
+	"admin": {
+		Title: "Gestion du site",
+		Image: "/crud/static/img/tools.png",
 		Group: "admin",
 		AppViews: []types.AppView{
 			{Tableid: "users", Viewid: "vall"},
 			{Tableid: "groups", Viewid: "vall"},
+			{Tableid: "parameters", Viewid: "vall"},
 		},
 	},
 	"tasks": {
@@ -61,14 +62,15 @@ var Applications = map[string]types.Application{
 // Tables Liens vers les tables
 // "nom de la table": Structure
 var Tables = types.Tables{
-	"tasks":  Tasks,
-	"users":  Users,
-	"groups": Groups,
-	"orders": Orders,
-	"ptf":    Ptf,
-	"quotes": Quotes,
-	"chains": Chains,
-	"jobs":   Jobs,
+	"tasks":      Tasks,
+	"users":      Users,
+	"groups":     Groups,
+	"parameters": Parameters,
+	"orders":     Orders,
+	"ptf":        Ptf,
+	"quotes":     Quotes,
+	"chains":     Chains,
+	"jobs":       Jobs,
 }
 
 // Portail as
@@ -80,9 +82,5 @@ var Portail = types.Portail{
 	Tables:       Tables,
 }
 
-// Params paramètres globaux aux applications
-var Params = map[string]string{
-	"__cost":       "0.0047", // Coût transaction 0.47 %
-	"__optimum":    "0.03",   // Seuil rentabilité à 3 %
-	"__amount_min": "1200",   // Montant minimum de la transaction
-}
+// Params paramètres globaux aux applications lus dans la table parameters
+var Params = map[string]string{}

@@ -25,6 +25,7 @@ var jobsViews = types.Views{
 		IconName:  "cog",
 		OrderBy:   "chain_label, sequence",
 		Group:     "admin",
+		ClassSQL:  "select case when '{etat}' = 'RUN' then 'blue' when '{etat}' = 'OK' then 'green' when '{etat}' = 'KO' then 'red' else '' end",
 		Mask: types.MaskList{
 			Header: []string{
 				"chain_id",
@@ -182,7 +183,7 @@ var jobsElements = types.Elements{
 			{Key: "2", Label: "Étape suivante"},
 			{Key: "3", Label: "Arrêt de la chaîne"},
 		},
-		ClassSQL: "select case when '{sierreur}' = '2' then 'green' when '{sierreur}' = '3' then 'red' end",
+		ClassSQL: "select case when '{sierreur}' = '2' then 'green' when '{sierreur}' = '3' then 'red' else '' end",
 	},
 	"type": { // Type de Job
 		Type:       "combobox",

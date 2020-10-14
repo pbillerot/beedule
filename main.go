@@ -11,13 +11,13 @@ import (
 	_ "github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/batch"
 	_ "github.com/pbillerot/beedule/routers"
+	"github.com/pbillerot/beedule/types"
 )
 
 func init() {
 	// Enregistrement des drivers des base de données
 	// l'alias : Tables[alias]string
 	// La déclaration dans conf/custom.conf [alias] drivertype= datasource= drivername=
-
 	// default
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "./database/beedule.sqlite")
@@ -47,7 +47,31 @@ func init() {
 	} else {
 		orm.Debug = false
 	}
-	batch.StartBatch()
+
+	// Enregistrement des Modèles de table gérés par le module orm
+	orm.RegisterModel(new(types.Parameters), new(batch.Chain), new(batch.Job))
+
+	// Chargement des Parameters dans app.Params (préfixé par __)
+	o := orm.NewOrm()
+	o.Using(app.Parameters.AliasDB)
+	var parameters []types.Parameters
+	num, err := o.QueryTable("parameters").All(&parameters)
+	if err != nil {
+		beego.Error("parameters", err)
+		return
+	}
+	if num > 0 {
+		for _, parameter := range parameters {
+			app.Params["__"+parameter.ID] = parameter.Value
+		}
+	}
+	beego.Info("Params", app.Params)
+	if param, ok := app.Params["__batch"]; ok {
+		if param == "autostart" {
+			batch.StartBatch()
+		}
+	}
+
 }
 func main() {
 	beego.Run()

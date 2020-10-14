@@ -4,7 +4,7 @@ import "github.com/pbillerot/beedule/types"
 
 // Users Table des comptes utilisateurs pour gérer les habilitations
 var Users = types.Table{
-	AliasDB:    "users",
+	AliasDB:    "admin",
 	Key:        "user_name",
 	ColDisplay: "user_name",
 	IconName:   "user",

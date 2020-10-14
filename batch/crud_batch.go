@@ -29,29 +29,36 @@ import (
 	"github.com/pbillerot/beedule/app"
 )
 
+// BatchScheduler as
+var BatchScheduler *scheduler.Scheduler
+
 // Chain as
 type Chain struct {
-	ID         int    `orm:"pk;column(chain_id);int"`
-	Label      string `orm:"pk;column(label)"`
-	Planif     string `orm:"pk;column(planif)"`
-	Etat       string `orm:"pk;column(etat)"`
-	HeureDebut string `orm:"pk;column(heuredebut)"`
-	HeureFin   string `orm:"pk;column(heurefin)"`
-	DureeMn    string `orm:"pk;column(dureemn)"`
+	ID         int    `orm:"pk;column(chain_id)"`
+	Label      string `orm:"column(label)"`
+	Planif     string `orm:"column(planif)"`
+	Active     string `orm:"column(active)"`
+	Etat       string `orm:"column(etat)"`
+	HeureDebut string `orm:"column(heuredebut)"`
+	HeureFin   string `orm:"column(heurefin)"`
+	DureeMn    string `orm:"column(dureemn)"`
 }
 
 // Job as
 type Job struct {
-	ID         int    `orm:"pk;column(job_id);int"`
-	Label      string `orm:"pk;column(label)"`
-	SiErreur   string `orm:"pk;column(sierreur)"` // 1: Job suivant 2: Etape suivante 3: Arrêt chaîne
-	Type       string `orm:"pk;column(type)"`
-	Commandes  string `orm:"pk;column(commandes)"`
-	Etat       string `orm:"pk;column(etat)"` // INI, OK, KO, RUN
-	Result     string `orm:"pk;column(result)"`
-	HeureDebut string `orm:"pk;column(heuredebut)"`
-	HeureFin   string `orm:"pk;column(heurefin)"`
-	DureeMn    string `orm:"pk;column(dureemn)"`
+	ID         int    `orm:"pk;column(job_id)"`
+	ChainID    int    `orm:"column(chain_id)"`
+	Label      string `orm:"column(label)"`
+	Sequence   int    `orm:"column(sequence)"`
+	SiErreur   string `orm:"column(sierreur)"` // 1: Job suivant 2: Etape suivante 3: Arrêt chaîne
+	Active     string `orm:"column(active)"`
+	Type       string `orm:"column(type)"`
+	Commandes  string `orm:"column(commandes)"`
+	Etat       string `orm:"column(etat)"` // INI, OK, KO, RUN
+	Result     string `orm:"column(result)"`
+	HeureDebut string `orm:"column(heuredebut)"`
+	HeureFin   string `orm:"column(heurefin)"`
+	DureeMn    string `orm:"column(dureemn)"`
 }
 
 // TableName as
@@ -61,71 +68,68 @@ func (u *Chain) TableName() string {
 
 // TableName as
 func (u *Job) TableName() string {
-	return "jobss"
+	return "jobs"
 }
 
 func updateChain(chain *Chain) {
 	o := orm.NewOrm()
 	o.Using(app.Chains.AliasDB)
-	_, err := o.Update(&chain)
+	_, err := o.Update(chain, "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
 		beego.Error("batch", chain.Label, err)
-		return
 	}
 }
 func updateJob(job *Job) {
 	o := orm.NewOrm()
 	o.Using(app.Jobs.AliasDB)
-	_, err := o.Update(&job)
+	_, err := o.Update(job, "result", "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
 		beego.Error("batch", job.Label, err)
-		return
 	}
 }
 
 // StartBatch démarrage des chaîne batch
 func StartBatch() {
-	// Enregistrement des modèles
-	orm.RegisterModel(new(Chain), new(Job))
+	// Connexion bd
 	o := orm.NewOrm()
 	o.Using(app.Chains.AliasDB)
 
 	var chains []Chain
-	err := o.Read(&chains)
+	num, err := o.QueryTable("chains").Filter("active", "1").All(&chains)
 	if err != nil {
 		beego.Error("batch", app.Chains.AliasDB, err)
 		return
 	}
+	if num == 0 {
+		beego.Error("batch", "aucune chaîne trouvée")
+		return
+	}
 
-	s := scheduler.NewScheduler()
+	BatchScheduler = scheduler.NewScheduler()
+
 	for _, chain := range chains {
-		err = s.Make(chain.Label, chain.Planif, startChain, &chain)
+		err = BatchScheduler.Make(chain.Label, chain.Planif, startChain, chain)
 		if err != nil {
-			beego.Error("batch", chain.Label, chain.Planif)
-			beego.Error("batch", err)
+			beego.Error("batch", chain.Label, chain.Planif, err)
 			return
 		}
 		beego.Info("batch", "planification", chain.Label, chain.Planif)
-		s.Start(chain.Label)
+		BatchScheduler.Start(chain.Label)
 	}
 
 }
 
 func startChain(dataInterface interface{}) {
 	chain := dataInterface.(Chain)
-	beego.Info("batch", "Démarrage de la chaîne", chain.Label)
+	beego.Info("batch", chain.Label, "Start")
 	o := orm.NewOrm()
-	o.Using(app.Chains.AliasDB)
+	o.Using(app.Jobs.AliasDB)
 
 	t1 := time.Now()
-	chain.HeureDebut = t1.Format("2000-01-02 15:04:05")
+	chain.HeureDebut = t1.Format("2006-01-02 15:04:05")
 	chain.HeureFin = ""
 	chain.Etat = "RUN"
-	_, err := o.Update(&chain)
-	if err != nil {
-		beego.Error("batch", app.Chains.AliasDB, err)
-		return
-	}
+	updateChain(&chain)
 
 	// Lecture des Jobs
 	var jobs []Job
@@ -151,24 +155,21 @@ func startChain(dataInterface interface{}) {
 	}
 
 	t2 := time.Now()
-	chain.HeureFin = t2.Format("2000-01-02 15:04:05")
-	chain.DureeMn = t2.Sub(t1).String()
+	chain.HeureFin = t2.Format("2006-01-02 15:04:05")
+	chain.DureeMn = fmt.Sprintf("%s", t2.Sub(t1))
 	if chain.Etat == "RUN" {
 		chain.Etat = "OK"
 	}
-	_, err = o.Update(&chain)
-	if err != nil {
-		beego.Error("batch", app.Chains.AliasDB, err)
-		return
-	}
+	updateChain(&chain)
+	beego.Info("batch", chain.Label, "End")
 }
 
 func startJob(job *Job, chain *Chain) (err error) {
-	beego.Info("batch", chain.Label, job.Label, "run")
+	beego.Info("batch", chain.Label, job.Label, "Start")
 
 	job.Etat = "RUN"
 	t1 := time.Now()
-	job.HeureDebut = t1.Format("2000-01-02 15:04:05")
+	job.HeureDebut = t1.Format("2006-01-02 15:04:05")
 	updateJob(job)
 
 	switch job.Type {
@@ -176,13 +177,17 @@ func startJob(job *Job, chain *Chain) (err error) {
 		err = runSQL(job, chain)
 		if err != nil {
 			chain.Etat = "KO"
+			job.Etat = "KO"
 		}
 	}
-	beego.Info("batch", chain.Label, job.Label, "end")
 	t2 := time.Now()
-	job.HeureFin = t2.Format("2000-01-02 15:04:05")
-	job.DureeMn = t2.Sub(t1).String()
+	job.HeureFin = t2.Format("2006-01-02 15:04:05")
+	job.DureeMn = fmt.Sprintf("%s", t2.Sub(t1))
+	if job.Etat == "RUN" {
+		job.Etat = "OK"
+	}
 	updateJob(job)
+	beego.Info("batch", chain.Label, job.Label, "End")
 
 	return
 }

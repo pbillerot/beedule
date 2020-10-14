@@ -25,6 +25,7 @@ var chainsViews = types.Views{
 		IconName:  "calendar alternate outline",
 		OrderBy:   "label",
 		Group:     "admin",
+		ClassSQL:  "select case when '{etat}' = 'RUN' then 'blue' when '{etat}' = 'OK' then 'green' when '{etat}' = 'KO' then 'red' else '' end",
 		Mask: types.MaskList{
 			Header: []string{
 				"chain_id",

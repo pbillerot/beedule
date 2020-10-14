@@ -461,7 +461,7 @@ func macroSQL(c beego.Controller, in string, record orm.Params) (out string) {
 				if reflect.ValueOf(val).IsValid() {
 					out = val.(string)
 				} else {
-					beego.Error(in)
+					beego.Error(sql)
 					out = ""
 				}
 			}

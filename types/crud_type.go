@@ -218,3 +218,15 @@ func (element *Element) HashPassword(password string) string {
 	}
 	return string(bytes)
 }
+
+// Parameters as Table Parameters dans base default sqlite
+type Parameters struct {
+	ID    string `orm:"pk;column(id)"`
+	Label string
+	Value string
+}
+
+// TableName as
+func (u *Parameters) TableName() string {
+	return "parameters"
+}
