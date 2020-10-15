@@ -66,8 +66,8 @@ func init() {
 		}
 	}
 	beego.Info("Params", app.Params)
-	if param, ok := app.Params["__batch"]; ok {
-		if param == "autostart" {
+	if param, ok := app.Params["__batch_etat"]; ok {
+		if param == "1" {
 			batch.StartBatch()
 		}
 	}

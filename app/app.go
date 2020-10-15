@@ -83,4 +83,8 @@ var Portail = types.Portail{
 }
 
 // Params paramètres globaux aux applications lus dans la table parameters
-var Params = map[string]string{}
+var Params = map[string]string{
+	"__amount_min": "1200",
+	"__cost":       "0.0047",
+	"__optimum":    "0.03",
+}

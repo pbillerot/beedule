@@ -92,16 +92,6 @@
             {{ $val := CrudIndex $record $key }}
             {{ $element := index $elements $key }}
             {{if (eq $element.Type "action")}}
-            {{if $element.Action.URL}}
-            <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Action.URL}}">
-              {{$element.LabelLong}}
-            </button>
-            {{else}}
-            <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Action.WithConfirm}}"
-              data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}">
-              {{$element.LabelLong}}
-            </button>
-            {{end}}
             {{else if (eq $element.Type "amount")}}
             <div
               class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">

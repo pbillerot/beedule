@@ -36,9 +36,10 @@ var jobsViews = types.Views{
 				"active",
 				"sequence",
 				"sierreur",
+				"type",
 			},
 			Description: []string{
-				"type",
+				"result",
 			},
 			Extra: []string{
 				"etat",
@@ -98,6 +99,7 @@ var jobsForms = types.Forms{
 				},
 			},
 			"etat":       {Order: 510},
+			"result":     {Order: 510},
 			"heuredebut": {Order: 520},
 			"heurefin":   {Order: 530},
 			"dureemn":    {Order: 540},
@@ -123,10 +125,14 @@ var jobsForms = types.Forms{
 		Title: "Pendule ajout d'un job",
 		Group: "admin",
 		Elements: types.Elements{
-			"job_id":   {Order: 01},
-			"chain_id": {Order: 10},
-			"label":    {Order: 20},
-			"sequence": {Order: 30},
+			"job_id":    {Order: 01, Hide: true},
+			"active":    {Order: 10},
+			"chain_id":  {Order: 20},
+			"label":     {Order: 30},
+			"sequence":  {Order: 40},
+			"sierreur":  {Order: 50},
+			"type":      {Order: 60},
+			"commandes": {Order: 70},
 		},
 	},
 	"fjob": {

@@ -19,8 +19,11 @@ Utilisation du module
 	Year           No           1970-2099         * / , -
 */
 import (
+	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/MichaelS11/go-scheduler"
@@ -119,6 +122,15 @@ func StartBatch() {
 
 }
 
+// StopBatch as
+func StopBatch() {
+	if len(BatchScheduler.Jobs()) > 0 {
+		beego.Info("batch", "stopping...", BatchScheduler.Jobs())
+		BatchScheduler.StopAllWait(time.Second)
+		beego.Info("batch", "stopped", BatchScheduler.Jobs())
+	}
+}
+
 func startChain(dataInterface interface{}) {
 	chain := dataInterface.(Chain)
 	beego.Info("batch", chain.Label, "Start")
@@ -128,12 +140,13 @@ func startChain(dataInterface interface{}) {
 	t1 := time.Now()
 	chain.HeureDebut = t1.Format("2006-01-02 15:04:05")
 	chain.HeureFin = ""
+	chain.DureeMn = ""
 	chain.Etat = "RUN"
 	updateChain(&chain)
 
 	// Lecture des Jobs
 	var jobs []Job
-	num, err := o.QueryTable("jobs").Filter("chain_id", chain.ID).All(&jobs)
+	num, err := o.QueryTable("jobs").Filter("chain_id", chain.ID).OrderBy("sequence").All(&jobs)
 	if err != nil {
 		beego.Error("batch", app.Chains.AliasDB, err)
 		return
@@ -143,10 +156,20 @@ func startChain(dataInterface interface{}) {
 		return
 	}
 
+	// Nettoyage des jobs
+	for _, job := range jobs {
+		job.Etat = "INI"
+		job.Result = ""
+		job.HeureDebut = ""
+		job.HeureFin = ""
+		job.DureeMn = ""
+		updateJob(&job)
+	}
+
 	// Démarrage des jobs
 	for _, job := range jobs {
-		err = startJob(&job, &chain)
-		if err != nil {
+		startJob(&job, &chain)
+		if job.Etat == "KO" {
 			chain.Etat = "KO"
 			if job.SiErreur == "3" { // Fin chaîne
 				break
@@ -164,8 +187,10 @@ func startChain(dataInterface interface{}) {
 	beego.Info("batch", chain.Label, "End")
 }
 
-func startJob(job *Job, chain *Chain) (err error) {
+func startJob(job *Job, chain *Chain) {
 	beego.Info("batch", chain.Label, job.Label, "Start")
+
+	var err error
 
 	job.Etat = "RUN"
 	t1 := time.Now()
@@ -173,10 +198,15 @@ func startJob(job *Job, chain *Chain) (err error) {
 	updateJob(job)
 
 	switch job.Type {
+	case "plugin":
+		out, err := RunPlugin(job.Commandes)
+		if err != nil {
+			job.Etat = "KO"
+		}
+		job.Result = out
 	case "sql":
 		err = runSQL(job, chain)
 		if err != nil {
-			chain.Etat = "KO"
 			job.Etat = "KO"
 		}
 	}
@@ -220,4 +250,43 @@ func runSQL(job *Job, chain *Chain) (err error) {
 		job.Result = res
 	}
 	return
+}
+
+// RunPlugin as fonctions appelée par les job
+func RunPlugin(command string) (string, error) {
+	var out string
+	var err error
+
+	if strings.Contains(command, "StartStopPendule") {
+		re := regexp.MustCompile(`StartStopPendule\((.*)\)`)
+		match := re.FindStringSubmatch(command)
+		if len(match) > 0 {
+			val := match[1]
+			if val == "1" {
+				StopBatch()
+				out = strings.Join(BatchScheduler.Jobs()[:], ",")
+			} else {
+				StartBatch()
+				out = strings.Join(BatchScheduler.Jobs()[:], ",")
+			}
+		}
+	} else if strings.Contains(command, "Wait") {
+		re := regexp.MustCompile(`Wait\((.*)\)`)
+		match := re.FindStringSubmatch(command)
+		if len(match) > 0 {
+			val := match[1]
+			num, er := strconv.Atoi(val)
+			if er == nil {
+				time.Sleep(time.Duration(num) * time.Second)
+				out = "Wait ended"
+			} else {
+				out = er.Error()
+				err = errors.New(er.Error())
+			}
+		}
+	} else {
+		out = "Plugin inconnu"
+		err = errors.New("Plugin inconnu")
+	}
+	return out, err
 }

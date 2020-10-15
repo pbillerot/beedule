@@ -32,12 +32,26 @@ var parametersElements = types.Elements{
 		LabelLong:  "Désignation",
 		LabelShort: "Désignation",
 	},
+	"action": {
+		Type:       "action",
+		Order:      40,
+		LabelLong:  "Démarrer/Arrêter le pendule",
+		LabelShort: "Démarrer/Arrêter le pendule",
+		Action: types.Action{
+			SQL: []string{
+				"update parameters set value = case when value = '1' then '0' else '1' end where id = 'batch_etat'",
+			},
+			// WithConfirm: true,
+			Plugin: "StartStopPendule({value})",
+		},
+	},
 }
 
 var parametersViews = types.Views{
 	"vall": {
 		FormAdd:   "fedit",
 		FormEdit:  "fedit",
+		FormView:  "fedit",
 		Deletable: true,
 		Title:     "Paramètres",
 		IconName:  "tools",
@@ -49,6 +63,7 @@ var parametersViews = types.Views{
 			},
 			Meta: []string{
 				"value",
+				"action",
 			},
 			Description: []string{
 				"label",
@@ -65,12 +80,13 @@ var parametersViews = types.Views{
 
 var parametersForms = types.Forms{
 	"fedit": {
-		Title: "Pramètre",
+		Title: "Paramètre",
 		Group: "admin",
 		Elements: types.Elements{
-			"id":    {},
-			"value": {},
-			"label": {},
+			"id":     {},
+			"value":  {},
+			"label":  {},
+			"action": {},
 		},
 	},
 }

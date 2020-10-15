@@ -90,15 +90,35 @@ func CrudIndexSQL(record orm.Params, key string, element types.Element, session 
 // CrudFormat préféré à text/template/printf car les données fournies sont toujours des strings
 func CrudFormat(in string, value string) (out string) {
 	out = value
-	if in != "" {
-		recs, err := models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
+	if in != "" && value != "" {
+		var recs []orm.Params
+		var err error
+		if in == "datetime" {
+			if strings.Contains(value, "0001-01") {
+				return ""
+			}
+			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d %H:%M:%S','"+value+"')", "default")
+		} else if in == "date" {
+			if strings.Contains(value, "0001-01") {
+				return ""
+			}
+			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d','"+value+"')", "default")
+		} else if in == "time" {
+			if strings.Contains(value, "00-00-00") {
+				return ""
+			}
+			recs, err = models.CrudSQL("SELECT strftime('%H:%M:%S','"+value+"')", "default")
+		} else {
+			recs, err = models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
+		}
 		if err != nil {
 			beego.Error(err)
-		}
-		for _, rec := range recs {
-			for _, val := range rec {
-				if reflect.ValueOf(val).IsValid() {
-					out = val.(string)
+		} else {
+			for _, rec := range recs {
+				for _, val := range rec {
+					if reflect.ValueOf(val).IsValid() {
+						out = val.(string)
+					}
 				}
 			}
 		}

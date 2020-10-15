@@ -56,7 +56,7 @@ type Element struct {
 	Default       string   // Valeur par défaut (macro possible)
 	DefaultSQL    string   // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string   // contiendra "error" si le champ est en erreur de saisie
-	Format        string   //
+	Format        string   // "%3.2f %%" "%3.2f €" date datetime time
 	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
 	Group         string   // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
 	Height        int      // TODO hauteur de la colonne
@@ -178,6 +178,7 @@ type Action struct {
 	WithConfirm bool     // demande de  confirmation
 	Hide        bool     // Action non visible
 	HideSQL     string   // requête pour cachée l'action
+	Plugin      string   // Fonction Système à appeler nomFonction(p1, p2, ...)
 }
 
 // Args paramètres à transmettre lors de l'appel

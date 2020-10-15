@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/batch"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
 
@@ -74,6 +75,12 @@ func (c *CrudActionViewController) Post() {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
+			}
+		}
+		// Appel duPlugin
+		if err == nil {
+			if view.Actions[iactionid].Plugin != "" {
+				batch.RunPlugin(view.Actions[iactionid].Plugin)
 			}
 		}
 	} else {
@@ -160,6 +167,12 @@ func (c *CrudActionFormController) Post() {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
+			}
+		}
+		// Appel du Plugin
+		if err == nil {
+			if form.Actions[iactionid].Plugin != "" {
+				batch.RunPlugin(form.Actions[iactionid].Plugin)
 			}
 		}
 	} else {
@@ -265,6 +278,12 @@ func (c *CrudActionElementController) Post() {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
+			}
+		}
+		// Appel du Plugin
+		if err == nil {
+			if elements[actionid].Action.Plugin != "" {
+				batch.RunPlugin(elements[actionid].Action.Plugin)
 			}
 		}
 	} else {

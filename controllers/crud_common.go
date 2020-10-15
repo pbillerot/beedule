@@ -136,6 +136,14 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
 				}
+			case "date":
+				if element.Format == "" {
+					element.Format = "date"
+				}
+			case "datetime":
+				if element.Format == "" {
+					element.Format = "datetime"
+				}
 			case "float":
 				if element.ColAlign == "" {
 					element.ColAlign = "right"
@@ -165,6 +173,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 			case "textarea":
 				if element.Class == "" {
 					element.Class = "warning"
+				}
+			case "time":
+				if element.Format == "" {
+					element.Format = "time"
 				}
 			case "week":
 				if element.ColAlign == "" {
@@ -210,6 +222,9 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		}
 		if element.Action.URL != "" {
 			element.Action.URL = macro(c, element.Action.URL, record)
+		}
+		if element.Action.Plugin != "" {
+			element.Action.Plugin = macro(c, element.Action.Plugin, record)
 		}
 		if element.Params.URL != "" {
 			element.Params.URL = macro(c, element.Params.URL, record)
