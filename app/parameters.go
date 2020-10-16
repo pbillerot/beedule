@@ -42,7 +42,7 @@ var parametersElements = types.Elements{
 				"update parameters set value = case when value = '1' then '0' else '1' end where id = 'batch_etat'",
 			},
 			// WithConfirm: true,
-			Plugin: "StartStopPendule({value})",
+			Plugin: "StartStopPendule()",
 		},
 	},
 }

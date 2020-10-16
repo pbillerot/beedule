@@ -24,6 +24,12 @@ var ordersViews = types.Views{
 		Hide:      false,
 		Where:     "orders_order = 'buy'",
 		ClassSQL:  "select case when {orders_cost_price} + {orders_cost_price} * {__optimum} < {orders_quote} then 'positive' when {orders_cost_price} < {orders_quote} then 'blue' else 'negative' end",
+		PreUpdateSQL: []string{
+			"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
+			"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
+			"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+			"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
+		},
 		Mask: types.MaskList{
 			Header: []string{
 				"orders_ptf_id",
@@ -49,18 +55,6 @@ var ordersViews = types.Views{
 			"orders_quote":      {Order: 110, HideOnMobile: true},
 			"orders_gain":       {Order: 120},
 			"orders_rem":        {Order: 140, HideOnMobile: true},
-		},
-		Actions: types.Actions{
-			{
-				Label: "Mettre à jour avec le cours du jour",
-				SQL: []string{
-					"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
-					"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
-					"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
-					"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
-				},
-				WithConfirm: false,
-			},
 		},
 	},
 	"vvente": {

@@ -31,6 +31,7 @@ func init() {
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudClassSQL", CrudClassSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
+	beego.AddFuncMap("CrudSQL", CrudSQL)
 }
 
 // CrudIsInGroup as
@@ -213,6 +214,25 @@ func CrudMacroSQL(in string, record orm.Params, session types.Session) (out stri
 	sql := CrudMacro(in, record, session)
 	if sql != "" {
 		recs, err := models.CrudSQL(sql, "default")
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, rec := range recs {
+			for _, val := range rec {
+				if reflect.ValueOf(val).IsValid() {
+					out = val.(string)
+				}
+			}
+		}
+	}
+	return
+}
+
+// CrudSQL retourne le résulat de la requête
+func CrudSQL(sql string, aliasDB string) (out string) {
+	out = ""
+	if sql != "" {
+		recs, err := models.CrudSQL(sql, aliasDB)
 		if err != nil {
 			beego.Error(err)
 		}

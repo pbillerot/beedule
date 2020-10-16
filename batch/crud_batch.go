@@ -30,6 +30,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/models"
 )
 
 // BatchScheduler as
@@ -111,22 +112,25 @@ func StartBatch() {
 	BatchScheduler = scheduler.NewScheduler()
 
 	for _, chain := range chains {
-		err = BatchScheduler.Make(chain.Label, chain.Planif, startChain, chain)
-		if err != nil {
-			beego.Error("batch", chain.Label, chain.Planif, err)
-			return
+		if chain.Planif != "" {
+			err = BatchScheduler.Make(chain.Label, chain.Planif, startChain, chain)
+			if err != nil {
+				beego.Error("batch", chain.Label, chain.Planif, err)
+				return
+			}
+			beego.Info("batch", "planification", chain.Label, chain.Planif)
+			BatchScheduler.Start(chain.Label)
 		}
-		beego.Info("batch", "planification", chain.Label, chain.Planif)
-		BatchScheduler.Start(chain.Label)
 	}
 
 }
 
 // StopBatch as
 func StopBatch() {
-	if len(BatchScheduler.Jobs()) > 0 {
+	if BatchScheduler != nil && len(BatchScheduler.Jobs()) > 0 {
 		beego.Info("batch", "stopping...", BatchScheduler.Jobs())
 		BatchScheduler.StopAllWait(time.Second)
+		time.Sleep(time.Duration(2) * time.Second)
 		beego.Info("batch", "stopped", BatchScheduler.Jobs())
 	}
 }
@@ -252,23 +256,41 @@ func runSQL(job *Job, chain *Chain) (err error) {
 	return
 }
 
+// TestJob Test unitaire d'un job
+func TestJob(idjob int) {
+	o := orm.NewOrm()
+	o.Using(app.Jobs.AliasDB)
+	job := Job{ID: idjob}
+	err := o.Read(&job)
+	if err != nil {
+		beego.Error("batch", "read job", idjob, err)
+		return
+	}
+	chain := Chain{ID: job.ChainID}
+	err = o.Read(&chain)
+	if err != nil {
+		beego.Error("batch", "read chain", job.ChainID, err)
+		return
+	}
+	startJob(&job, &chain)
+}
+
 // RunPlugin as fonctions appelée par les job
 func RunPlugin(command string) (string, error) {
 	var out string
 	var err error
 
-	if strings.Contains(command, "StartStopPendule") {
-		re := regexp.MustCompile(`StartStopPendule\((.*)\)`)
-		match := re.FindStringSubmatch(command)
-		if len(match) > 0 {
-			val := match[1]
-			if val == "1" {
-				StopBatch()
-				out = strings.Join(BatchScheduler.Jobs()[:], ",")
-			} else {
-				StartBatch()
-				out = strings.Join(BatchScheduler.Jobs()[:], ",")
-			}
+	if strings.Contains(command, "StartStopPendule()") {
+		// Pas de paramètre
+		// Le pendule est-il démarré ?
+		if BatchScheduler == nil || len(BatchScheduler.Jobs()) == 0 {
+			StartBatch()
+			out = strings.Join(BatchScheduler.Jobs()[:], ",")
+			err = models.CrudExec("update parameters set value = '1' where id = 'batch_etat'", "admin")
+		} else {
+			StopBatch()
+			out = strings.Join(BatchScheduler.Jobs()[:], ",")
+			err = models.CrudExec("update parameters set value = '0' where id = 'batch_etat'", "admin")
 		}
 	} else if strings.Contains(command, "Wait") {
 		re := regexp.MustCompile(`Wait\((.*)\)`)
@@ -279,6 +301,19 @@ func RunPlugin(command string) (string, error) {
 			if er == nil {
 				time.Sleep(time.Duration(num) * time.Second)
 				out = "Wait ended"
+			} else {
+				out = er.Error()
+				err = errors.New(er.Error())
+			}
+		}
+	} else if strings.Contains(command, "StartJob") {
+		re := regexp.MustCompile(`StartJob\((.*)\)`)
+		match := re.FindStringSubmatch(command)
+		if len(match) > 0 {
+			val := match[1]
+			num, er := strconv.Atoi(val)
+			if er == nil {
+				TestJob(num)
 			} else {
 				out = er.Error()
 				err = errors.New(er.Error())

@@ -57,6 +57,16 @@ var chainsViews = types.Views{
 			"heurefin":   {},
 			"dureemn":    {},
 		},
+		Actions: types.Actions{
+			{
+				Label:  "Démarrer / Arrêter le pendule",
+				Plugin: "StartStopPendule()",
+				Checkbox: types.Setters{
+					GetSQL:  "select value from parameters where id = 'batch_etat'",
+					AliasDB: "admin",
+				},
+			},
+		},
 	},
 }
 

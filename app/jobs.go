@@ -99,10 +99,18 @@ var jobsForms = types.Forms{
 				},
 			},
 			"etat":       {Order: 510},
-			"result":     {Order: 510},
+			"result":     {Order: 515},
 			"heuredebut": {Order: 520},
 			"heurefin":   {Order: 530},
 			"dureemn":    {Order: 540},
+			"_action_job": {
+				Order:     550,
+				Type:      "action",
+				LabelLong: "Démarrer ce job",
+				Action: types.Action{
+					Plugin: "StartJob({job_id})",
+				},
+			},
 			"_SECTION_CHAINE": {
 				Order:     700,
 				Type:      "section",

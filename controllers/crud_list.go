@@ -95,7 +95,21 @@ func (c *CrudListController) CrudList() {
 		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
 	}
 	if view.FooterSQL != "" {
-		view.FooterSQL = requeteSQL(c.Controller, view.OrderBy, orm.Params{}, app.Tables[tableid].AliasDB)
+		view.FooterSQL = requeteSQL(c.Controller, view.FooterSQL, orm.Params{}, app.Tables[tableid].AliasDB)
+	}
+	if len(view.PreUpdateSQL) > 0 {
+		for _, presql := range view.PreUpdateSQL {
+			// Remplissage d'un record avec les elements.SQLout
+			record := orm.Params{}
+			sql := macro(c.Controller, presql, record)
+			if sql != "" {
+				err = models.CrudExec(sql, table.AliasDB)
+				if err != nil {
+					flash.Error(err.Error())
+					flash.Store(&c.Controller)
+				}
+			}
+		}
 	}
 	if view.Where != "" {
 		view.Where = macro(c.Controller, view.Where, orm.Params{})
@@ -134,7 +148,7 @@ func (c *CrudListController) CrudList() {
 					}
 				}
 			case "combobox":
-				// TODO recherche dans le lable du combobox
+				// TODO recherche dans le label du combobox
 			default:
 				if view.Search != "" {
 					view.Search += " OR "

@@ -118,6 +118,7 @@ type View struct {
 	Title        string   // Titre de la vue
 	Elements     Elements // Eléments à récupérer de la base de données
 	Mask         MaskList // Masque html d'une ligne dans la vue
+	PreUpdateSQL []string // requêtes SQL avant l'affichage
 	Search       string   // Chaîne de recherche dans toutes les colonnes de la vue
 }
 
@@ -173,12 +174,20 @@ type Actions []Action
 type Action struct {
 	Group       string   // Groupe autorisée à lancer l'action
 	Label       string   // label de l'action
+	Checkbox    Setters  // checkbox pour mettre à jour la donnée
 	URL         string   // URL d'appel du formulaire
 	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
 	WithConfirm bool     // demande de  confirmation
 	Hide        bool     // Action non visible
 	HideSQL     string   // requête pour cachée l'action
 	Plugin      string   // Fonction Système à appeler nomFonction(p1, p2, ...)
+}
+
+// Setters as
+type Setters struct {
+	GetSQL  string // requête pour lire la données
+	SetSQL  string // requête pour mettre à jour la données
+	AliasDB string // Connecteur base de données
 }
 
 // Args paramètres à transmettre lors de l'appel
