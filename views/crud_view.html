@@ -10,6 +10,7 @@
 {{$table := .Table}}
 {{$view := .View}}
 {{$form := .FormView}}
+{{$formviewid := .FormViewId}}
 {{$id := .Id}}
 {{$tablekey := .Table.Key}}
 {{$coldisplay := .ColDisplay}}
@@ -269,7 +270,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form action="/crud/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" method="POST">
+  <form action="/crud/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}" method="POST">
     {{ .xsrfdata }}
   </form>
   {{template "_crud_foot.html" .}}

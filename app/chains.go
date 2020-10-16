@@ -94,6 +94,10 @@ var chainsForms = types.Forms{
 			"heurefin":   {Order: 540},
 			"dureemn":    {Order: 550},
 		},
+		PostSQL: []string{
+			// suppression des jobs attachés à la chaîne
+			"delete from jobs where chain_id = '{chain_id}'",
+		},
 	},
 	"fadd": {
 		Title:    "Ajout d'une Chaîne",

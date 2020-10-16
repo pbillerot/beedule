@@ -133,6 +133,7 @@ func (c *CrudViewController) Get() {
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
 	c.Data["FormView"] = app.Tables[tableid].Forms[formviewid]
+	c.Data["FormViewId"] = formviewid
 	c.Data["FormId"] = app.Tables[tableid].Views[viewid].FormEdit
 	c.Data["Table"] = &table
 	c.Data["View"] = &view
