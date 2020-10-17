@@ -117,6 +117,15 @@ var quotesElements = types.Elements{
 			Column: "ptf.ptf_rem",
 		},
 	},
+	"order_buy": {
+		Type:       "text",
+		LabelLong:  "Achat en cours",
+		LabelShort: "Achat",
+		Jointure: types.Jointure{
+			Join:   "left outer join orders on orders_ptf_id = id and orders_order = 'buy'",
+			Column: "orders_order",
+		},
+	},
 	"_image_day": {
 		Type:      "image",
 		LabelLong: "Graph du jour",
@@ -150,6 +159,7 @@ var quotesViews = types.Views{
 		Limit:    50,
 		Where:    "date = (select max(date) from quotes)",
 		Type:     "table",
+		ClassSQL: "select case when '{order_buy}' = 'buy' then 'blue' else '' end",
 		Elements: types.Elements{
 			"keyid": {
 				Order: 1,
@@ -195,6 +205,10 @@ var quotesViews = types.Views{
 			},
 			"percent": {
 				Order: 200,
+			},
+			"order_buy": {
+				Order: 250,
+				Hide:  true,
 			},
 			"ptf_top": {
 				Order: 300,
