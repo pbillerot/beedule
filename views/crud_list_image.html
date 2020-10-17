@@ -134,10 +134,10 @@
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
-        <div id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.FormView}}
-          class="card raised crud-card-view crud-card-searchable crud-jquery-url"
+        <div id="{{CrudIndexAnchor $record $tablekey}}" {{if $view.FormView}}
+          class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable crud-jquery-url"
           data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
-          class="card raised crud-card-view crud-card-searchable" {{end}}>
+          class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable" {{end}}>
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}" class="crud-popup-image" data-url="{{$path}}?{{$composter}}">
           </div>

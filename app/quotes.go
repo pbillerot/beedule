@@ -117,6 +117,15 @@ var quotesElements = types.Elements{
 			Column: "ptf.ptf_rem",
 		},
 	},
+	"ptf_note": {
+		Type:       "textarea",
+		LabelLong:  "Note",
+		LabelShort: "Note",
+		Jointure: types.Jointure{
+			// Join:   "left outer join ptf on ptf_id = id",
+			Column: "ptf.ptf_note",
+		},
+	},
 	"order_buy": {
 		Type:       "text",
 		LabelLong:  "Achat en cours",
@@ -159,7 +168,7 @@ var quotesViews = types.Views{
 		Limit:    50,
 		Where:    "date = (select max(date) from quotes)",
 		Type:     "table",
-		ClassSQL: "select case when '{order_buy}' = 'buy' then 'blue' else '' end",
+		ClassSQL: "select case when '{order_buy}' = 'buy' then 'violet' else '' end",
 		Elements: types.Elements{
 			"keyid": {
 				Order: 1,

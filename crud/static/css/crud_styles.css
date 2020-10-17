@@ -20,12 +20,6 @@ main {
 .ui.cards>.crud-card-view {
     width: 360px;
 }
-.ui.cards>.crud-list-selected {
-    background-color: seashell
-}
-.ui.container>.crud-list-selected {
-    background-color: seashell
-}
 .crud-cell-nowrap {
     white-space: nowrap;
 }
@@ -39,8 +33,22 @@ main {
 pre {
     font-size: 0.9em;
 }
-.crud-list-selected {
-    background-color: seashell
+/* TABLE */
+tr.crud-list-selected {
+    -webkit-box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+     box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+}
+.ui.cards>.crud-list-selected {
+    -webkit-box-shadow: 0 0 0 2px #767676, 0 3px 0 0 #767676, 0 2px 4px 0 #767676;
+     box-shadow: 0 0 0 2px #767676, 0 3px 0 0 #767676, 0 2px 4px 0 #767676;
+}
+/* LIST-IMAGE */
+.ui.message.crud-list-selected {
+    -webkit-box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+     box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+}
+.ui.cards>.crud-gondole {
+    background-color: lavender;
 }
 
 /* tablesort */

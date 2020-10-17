@@ -71,6 +71,7 @@ var ptfViews = types.Views{
 		Group:    "picsou",
 		IconName: "photo video",
 		Type:     "image",
+		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
@@ -102,6 +103,7 @@ var ptfViews = types.Views{
 		Group:    "picsou",
 		IconName: "photo video",
 		Type:     "image",
+		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
@@ -133,6 +135,7 @@ var ptfViews = types.Views{
 		Group:    "picsou",
 		IconName: "photo video",
 		Type:     "image",
+		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
 		Elements: types.Elements{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
@@ -168,6 +171,7 @@ var ptfForms = types.Forms{
 			"ptf_name":       {Order: 20},
 			"ptf_enabled":    {Order: 30},
 			"ptf_top":        {Order: 50},
+			"ptf_note":       {Order: 55},
 			"ptf_rem":        {Order: 60},
 			"ptf_quote":      {Order: 70},
 			"ptf_gain":       {Order: 80},
