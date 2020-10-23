@@ -49,13 +49,17 @@ var Applications = map[string]types.Application{
 	"filebrowser": {
 		Title: "Gestionnaire de fichiers",
 		Image: "/crud/static/img/filebrowser.svg",
-		// Path:  "http://localhost:7602/fb",
-		Path: "/fb",
+		Path:  "/fb",
 	},
 	"navidrome": {
 		Title: "Serveur de streaming de musique",
 		Image: "/crud/static/img/navidrome.png",
 		Path:  "/nv",
+	},
+	"public": {
+		Title: "Portail Public",
+		Image: "/crud/static/img/public.png",
+		Path:  "/public",
 	},
 }
 

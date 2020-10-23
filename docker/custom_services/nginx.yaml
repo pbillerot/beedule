@@ -1,10 +1,10 @@
+# Portail
 http:
   routers:
     nginx:
       entryPoints: 
       - websecure
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
-      # rule: "Host(`pbillerot.freeboxos.fr`)"
       service: nginx
 
   services:
