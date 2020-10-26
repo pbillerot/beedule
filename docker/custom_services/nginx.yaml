@@ -1,4 +1,4 @@
-# Portail
+# Portail Serveur de répertoires
 http:
   routers:
     nginx:
