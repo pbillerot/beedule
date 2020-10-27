@@ -249,22 +249,22 @@ func CrudSQL(sql string, aliasDB string) (out string) {
 
 // CrudClassSQL retourne le résulat de la requête avec macro
 func CrudClassSQL(element types.Element, record orm.Params, session types.Session) (out string) {
-	out = CrudMacro(element.Class, record, session)
-	if out == "" {
-		sql := CrudMacro(element.ClassSQL, record, session)
-		if sql != "" {
-			recs, err := models.CrudSQL(sql, "default")
-			if err != nil {
-				beego.Error(err)
-			}
-			for _, rec := range recs {
-				for _, val := range rec {
-					if reflect.ValueOf(val).IsValid() {
-						out = val.(string)
-					}
+	// out = CrudMacro(element.Class, record, session)
+	// if out == "" {
+	sql := CrudMacro(element.ClassSQL, record, session)
+	if sql != "" {
+		recs, err := models.CrudSQL(sql, "default")
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, rec := range recs {
+			for _, val := range rec {
+				if reflect.ValueOf(val).IsValid() {
+					out = val.(string)
 				}
 			}
 		}
 	}
+	// }
 	return
 }

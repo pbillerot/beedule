@@ -76,7 +76,7 @@ services:
     image: nginx
     container_name: nginx
     volumes:
-    - /home/billerot/Carbone/foirexpo/docs:/usr/share/nginx/html/public
+    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
     ports:
     - "7603:80"
     environment:
