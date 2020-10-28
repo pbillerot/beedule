@@ -56,10 +56,10 @@ var Applications = map[string]types.Application{
 		Image: "/crud/static/img/navidrome.png",
 		Path:  "/nv",
 	},
-	"public": {
-		Title: "Portail Public",
+	"foirexpo": {
+		Title: "Portail foirexpo",
 		Image: "/crud/static/img/public.png",
-		Path:  "/public",
+		Path:  "/foirexpo",
 	},
 }
 

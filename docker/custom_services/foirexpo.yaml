@@ -1,13 +1,13 @@
-http:
-  routers:
-    foirexpo:
-      entryPoints: 
-      - websecure
-      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/foirexpo`)"
-      service: foirexpo
+# http:
+#   routers:
+#     foirexpo:
+#       entryPoints: 
+#       - websecure
+#       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/foirexpo`)"
+#       service: foirexpo
 
-  services:
-    foirexpo:
-      loadBalancer:
-        servers:
-        - url: "https://maixentexpo.github.io/foirexpo"
+#   services:
+#     foirexpo:
+#       loadBalancer:
+#         servers:
+#         - url: "https://maixentexpo.github.io/foirexpo"
