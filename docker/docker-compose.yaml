@@ -85,6 +85,17 @@ services:
     networks:
         - traefik
 
+  filebrowser:
+      image: filebrowser/filebrowser
+      container_name: filebrowser
+      restart: unless-stopped
+      ports:
+        - "7602:80"
+      volumes:
+        - /home/billerot/Abri/foirexpo/content:/srv
+        - /mnt/nas/data/filebrowser/database.db:/database.db
+        - ./filebrowser.json:/.filebrowser.json    
+
 volumes:
   certs:
 
