@@ -75,6 +75,7 @@ services:
   web:
     image: nginx
     container_name: nginx
+    restart: unless-stopped
     volumes:
     - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
     ports:
