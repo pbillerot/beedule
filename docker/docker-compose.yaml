@@ -86,7 +86,7 @@ services:
         - traefik
 
   filebrowser:
-      image: filebrowser/filebrowser
+      image: filebrowser/filebrowser:latest
       container_name: filebrowser
       restart: unless-stopped
       ports:
