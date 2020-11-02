@@ -319,6 +319,15 @@ func RunPlugin(command string) (string, error) {
 				err = errors.New(er.Error())
 			}
 		}
+	} else if strings.Contains(command, "hugoDirectoriesToSQL") {
+		re := regexp.MustCompile(`hugoDirectoriesToSQL\((.*),(.*),(.*)\)`)
+		match := re.FindStringSubmatch(command)
+		if len(match) > 0 {
+			path := match[1]
+			table := match[2]
+			aliasDB := match[3]
+			hugoDirectoriesToSQL(path, table, aliasDB)
+		}
 	} else {
 		out = "Plugin inconnu"
 		err = errors.New("Plugin inconnu")

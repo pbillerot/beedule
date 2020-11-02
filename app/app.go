@@ -61,20 +61,29 @@ var Applications = map[string]types.Application{
 		Image: "/crud/static/img/public.png",
 		Path:  "/foirexpo",
 	},
+	"foiredit": {
+		Title: "Admin Foirexpo",
+		Group: "admin",
+		Image: "/crud/static/img/hugoSM.png",
+		AppViews: []types.AppView{
+			{Tableid: "hugodocument", Viewid: "vall"},
+		},
+	},
 }
 
 // Tables Liens vers les tables
 // "nom de la table": Structure
 var Tables = types.Tables{
-	"tasks":      Tasks,
-	"users":      Users,
-	"groups":     Groups,
-	"parameters": Parameters,
-	"orders":     Orders,
-	"ptf":        Ptf,
-	"quotes":     Quotes,
-	"chains":     Chains,
-	"jobs":       Jobs,
+	"tasks":        Tasks,
+	"users":        Users,
+	"groups":       Groups,
+	"parameters":   Parameters,
+	"orders":       Orders,
+	"ptf":          Ptf,
+	"quotes":       Quotes,
+	"chains":       Chains,
+	"jobs":         Jobs,
+	"hugodocument": Hugodocument,
 }
 
 // Portail as
