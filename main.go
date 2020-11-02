@@ -49,7 +49,7 @@ func init() {
 	}
 
 	// Enregistrement des Modèles de table gérés par le module orm
-	orm.RegisterModel(new(types.Parameters), new(batch.Chain), new(batch.Job), new(batch.Hugodocument))
+	orm.RegisterModel(new(types.Parameters), new(batch.Chain), new(batch.Job), new(batch.Hugodoc))
 
 	// Chargement des Parameters dans app.Params (préfixé par __)
 	o := orm.NewOrm()

@@ -37,8 +37,8 @@ func hugoDirectoriesToSQL(hugoDirectory string, table string, aliasDB string) {
 	}
 }
 
-// Hugodocument table
-type Hugodocument struct {
+// Hugodoc table
+type Hugodoc struct {
 	Path       string `orm:"pk;column(path)"`
 	Base       string `orm:"column(base)"`
 	Dir        string `orm:"column(dir)"`
@@ -68,7 +68,7 @@ func hugoFileToSQL(table string, aliasDB string, hugoDirectory string, pathAbsol
 		return
 	}
 
-	var record Hugodocument
+	var record Hugodoc
 	record.Path = path // on enlève la partie hugoDirectory du chemin
 	record.Dir = filepath.Dir(path)
 	record.Base = filepath.Base(path)

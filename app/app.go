@@ -66,7 +66,7 @@ var Applications = map[string]types.Application{
 		Group: "admin",
 		Image: "/crud/static/img/hugoSM.png",
 		AppViews: []types.AppView{
-			{Tableid: "hugodocument", Viewid: "vall"},
+			{Tableid: "hugodoc", Viewid: "vall"},
 		},
 	},
 }
@@ -74,16 +74,16 @@ var Applications = map[string]types.Application{
 // Tables Liens vers les tables
 // "nom de la table": Structure
 var Tables = types.Tables{
-	"tasks":        Tasks,
-	"users":        Users,
-	"groups":       Groups,
-	"parameters":   Parameters,
-	"orders":       Orders,
-	"ptf":          Ptf,
-	"quotes":       Quotes,
-	"chains":       Chains,
-	"jobs":         Jobs,
-	"hugodocument": Hugodocument,
+	"tasks":      Tasks,
+	"users":      Users,
+	"groups":     Groups,
+	"parameters": Parameters,
+	"orders":     Orders,
+	"ptf":        Ptf,
+	"quotes":     Quotes,
+	"chains":     Chains,
+	"jobs":       Jobs,
+	"hugodoc":    Hugodoc,
 }
 
 // Portail as

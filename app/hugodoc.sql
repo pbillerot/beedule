@@ -1,7 +1,6 @@
 --
--- table hugodocument de la base foirexpo
---
-CREATE TABLE "hugodocument" (
+-- table hugodoc 
+CREATE TABLE "hugodoc" (
 	"path"	varchar(100) NOT NULL,
 	"base"	varchar(50) NOT NULL,
 	"dir"	varchar(100) NOT NULL,

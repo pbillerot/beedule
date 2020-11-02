@@ -6,8 +6,8 @@ import (
 	"github.com/pbillerot/beedule/types"
 )
 
-// Hugodocument Les documents du site foirexpo
-var Hugodocument = types.Table{
+// Hugodoc Les documents du site
+var Hugodoc = types.Table{
 	AliasDB:    "foiredit",
 	Key:        "path",
 	ColDisplay: "path",
@@ -94,7 +94,7 @@ var hugoViews = types.Views{
 			{
 				// on ne supprime que ses propres tâches
 				Label:  "Recharger le répertoire",
-				Plugin: fmt.Sprintf("hugoDirectoriesToSQL(%s,%s,%s)", "/home/billerot/Abri/foirexpo", "hugodocument", "foiredit"), // path,table,aliasDB
+				Plugin: fmt.Sprintf("hugoDirectoriesToSQL(%s,%s,%s)", "/home/billerot/Abri/foirexpo", "hugodoc", "foiredit"), // path,table,aliasDB
 			},
 		},
 	},
