@@ -68,6 +68,7 @@ var Applications = map[string]types.Application{
 		AppViews: []types.AppView{
 			{Tableid: "hugodoc", Viewid: "vall"},
 			{Tableid: "hugodoc", Viewid: "vfolder"},
+			{Tableid: "hugodoc", Viewid: "velfinder"},
 		},
 	},
 }

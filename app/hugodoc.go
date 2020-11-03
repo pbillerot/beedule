@@ -126,6 +126,31 @@ var hugoViews = types.Views{
 			},
 		},
 	},
+	"velfinder": {
+		Title:    "Explorateur de fichiers",
+		IconName: "folder",
+		Type:     "elfinder",
+		Elements: types.Elements{
+			"path":       {Order: 1, Hide: true},
+			"isdir":      {Order: 5},
+			"level":      {Order: 7},
+			"dir":        {Order: 20},
+			"base":       {Order: 30},
+			"ext":        {Order: 35},
+			"draft":      {Order: 40},
+			"title":      {Order: 50},
+			"date":       {Order: 60},
+			"tags":       {Order: 70},
+			"categories": {Order: 80},
+		},
+		Actions: types.Actions{
+			{
+				// on ne supprime que ses propres tâches
+				Label:  "Recharger le répertoire",
+				Plugin: fmt.Sprintf("hugoDirectoriesToSQL(%s,%s,%s)", "/home/billerot/Abri/foirexpo", "hugodoc", "foiredit"), // path,table,aliasDB
+			},
+		},
+	},
 }
 
 var hugoForms = types.Forms{

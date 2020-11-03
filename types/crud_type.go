@@ -96,6 +96,7 @@ type Table struct {
 	Elements   Elements
 	Views      Views
 	Forms      Forms
+	Variables  map[string]string
 }
 
 // View Vue d'une table

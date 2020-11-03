@@ -2,5 +2,26 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js?v={{.Config.Version}}"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js?v={{.Config.Version}}"></script>
+{{ if .ElFinder }}
+<!-- ElFinder -->
+<script defer src="/crud/static/jquery-ui/jquery-ui.min.js"></script>
+<script defer src="/crud/static/elfinder/js/elfinder.full.js"></script>
+<script defer src="/crud/static/elfinder/js/i18n/elfinder.fr.js"></script>
+{{end}}
+
 <script defer src="/crud/static/js/js.cookie.min.js?v={{.Config.Version}}"></script>
 <script defer src="/crud/static/js/crud_script.js?v={{.Config.Version}}"></script>
+
+{{ if .ElFinder }}
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+    var elf_connector = $('#elfinder').data("url");
+    $('#elfinder').elfinder({
+      url: elf_connector  // connector URL (REQUIRED)
+      , lang: 'fr'        // language (OPTIONAL)
+      , debug: false
+      , height: '500px'
+    });
+  });
+</script>
+{{end}}

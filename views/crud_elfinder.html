@@ -1,0 +1,145 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$tableid := .TableId}}
+{{$viewid := .ViewId}}
+{{$table := .Table}}
+{{$view := .View}}
+{{$composter := .Composter}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.AppViews}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $appView := $app.AppViews }}
+          {{$t := index $portail.Tables $appView.Tableid }}
+          {{$v := index $t.Views $appView.Viewid }}
+          {{if (CrudIsInGroup $v.Group $session)}}
+          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
+            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            <i class="{{$v.IconName}} icon"></i>
+            {{$v.Title}}
+          </a>
+          {{end}}
+          <!-- end if isingroup -->
+          {{end}}
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/crud/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/crud/logout">Se déconnecter</a>
+          <a href="/crud/about" class="item">À propos</a>
+        </div>
+      </div>
+      <div class="header item" id="crud-header">
+        <span class="crud-mobile-hide">
+          {{$view.Title}}
+        </span>
+      </div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        {{if or $view.Actions $view.FormAdd}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{if $view.FormAdd}}
+            <a class="ui icon item crud-jquery-url"
+              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
+              <i class="plus square icon"></i> Ajouter un élément...
+            </a>
+            {{end}}
+            {{if $view.Actions}}
+            {{if $view.FormAdd}}
+            <div class="divider"></div>
+            {{end}}
+            {{range $iaction, $action := $view.Actions}}
+            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+              data-url="/crud/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
+              {{if $action.Checkbox.GetSQL}}
+              <div class="ui toggle checkbox">
+                <input type="checkbox" {{if (eq (CrudSQL $action.Checkbox.GetSQL $action.Checkbox.AliasDB) `1`)}}
+                  checked="checked" {{end}}>
+                <label>{{$action.Label}}</label>
+              </div>
+              {{else}}
+              {{str2html $action.Label}}
+              {{end}}
+            </a>
+            {{end}}
+            <!-- end range actions-->
+            {{end}}
+            <!-- end if actions-->
+          </div>
+        </div>
+        {{end}}
+        <!-- end if action formadd -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container crud-searchable">
+      {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{$view.Title}}
+      </div>
+      <!-- Explorateur de fichiers ElFinder -->
+      <div id="elfinder" data-url="/crud/elf/{{$appid}}/{{$tableid}}/{{$viewid}}"></div>
+    </div> <!-- end container-->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui basic modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
+  <form method="POST" action="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+    {{ .xsrfdata }}
+    <input type="hidden" id="crud-form-search" name="search">
+    <input type="hidden" id="crud-form-searchstop" name="searchstop">
+    <input type="hidden" id="crud-form-sortid" name="sortid">
+    <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
+  </form>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

@@ -3,6 +3,7 @@ module github.com/pbillerot/beedule
 go 1.14
 
 require (
+	github.com/LeeEirc/elfinder v0.0.12
 	github.com/MichaelS11/go-scheduler v0.1.0
 	github.com/astaxie/beego v1.12.2
 	github.com/go-sql-driver/mysql v1.5.0

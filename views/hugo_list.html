@@ -14,6 +14,8 @@
 {{$composter := .Composter}}
 {{$qrecords := .Qrecords}}
 {{$search := .Search}}
+{{$datapath := .DataPath}}
+{{$dataurl := .DataUrl}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -190,7 +192,18 @@
   {{ end }}
 {{ else }}
     <!-- document -->
-    <div class="description" style="display: none;">{{$base}}</div>
+    {{ if or (eq $ext ".png") (eq $ext ".jpg")}}
+    <a class="description crud-popup-image" 
+    data-url="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" 
+    style="display: none;"><i class="image outline blue icon"></i>{{$base}}</a>
+    {{ else if (eq $ext ".pdf")}}
+    <a class="description" 
+    href="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" target="_blank" 
+    style="display: none;"><i class="file pdf outline red icon"></i>{{$base}}</a>
+    {{else}}
+    <div class="description" style="display: none;">
+      <i class="file alternate outline green icon"></i>{{$base}}</div>
+    {{end}}
 {{ end }}
     <!-- / isdir-->
   {{ $currentLevel = $level }}

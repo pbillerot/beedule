@@ -12,6 +12,7 @@ sudo tar -C /usr/local -xzf go1.14.6.linux-amd64.tar.gz
 https://github.com/gomarkdown/markdown
 https://github.com/russross/blackfriday
 - go get -u github.com/gomarkdown/markdown
+- go get -u github.com/LeeEirc/elfinder
 
 ### Scheduler
 - https://github.com/MichaelS11/go-scheduler
