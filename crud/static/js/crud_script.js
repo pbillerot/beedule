@@ -5,6 +5,19 @@ $(document).ready(function () {
 
     var isUsed = false;
 
+    // Collapse
+    $('.crud-collapse').on('click', function (event) {
+        var portlet = $(this).closest('div');
+        if ( $(this).hasClass('open') ) {
+            portlet.find('.icon').removeClass("open");
+		} else {
+            portlet.find('.icon').addClass("open");
+        }
+        portlet.find('.list').toggle();
+        portlet.find('.description').toggle();
+        event.preventDefault();
+    });
+
     // RECHERCHE
     // Ouvrir la recherche
     $('#crud-search-active').on('click', function (event) {
