@@ -35,6 +35,13 @@ func init() {
 	beego.AddFuncMap("CrudSQL", CrudSQL)
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
+	beego.AddFuncMap("CrudDebug", CrudDebug)
+}
+
+// CrudDebug as
+func CrudDebug(msg string) (out string) {
+	beego.Debug(msg)
+	return
 }
 
 // CrudIncrement as
@@ -49,6 +56,7 @@ func CrudIncrement(snum string) (out string) {
 func CrudDecrement(snum string) (out string) {
 	in, _ := strconv.Atoi(snum)
 	in--
+	out = strconv.Itoa(in)
 	return
 }
 
