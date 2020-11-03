@@ -44,6 +44,7 @@ type Hugodoc struct {
 	Dir        string `orm:"column(dir)"`
 	Ext        string `orm:"column(ext)"`
 	IsDir      string `orm:"column(isdir)"`
+	Level      int    `orm:"column(level)"`
 	Title      string `orm:"column(title)"`
 	Draft      string `orm:"column(draft)"`
 	Date       string `orm:"column(date)"`
@@ -79,11 +80,11 @@ func hugoFileToSQL(table string, aliasDB string, hugoDirectory string, pathAbsol
 		} else {
 			record.Dir += "/" + record.Base
 		}
-		record.Base = ""
 	} else {
 		record.IsDir = "0"
 	}
 	record.Ext = filepath.Ext(path)
+	record.Level = strings.Count(record.Dir, "/")
 	ext := filepath.Ext(path)
 	if ext == ".md" {
 		// lecture des metadata du fichier markdown

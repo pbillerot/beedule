@@ -6,6 +6,7 @@ CREATE TABLE "hugodoc" (
 	"dir"	varchar(100) NOT NULL,
 	"ext"	varchar(10),
 	"isdir"	varchar(1),
+	"level"	integer,
 	"title"	varchar(100),
 	"date"	varchar(50),
 	"draft"	varchar(10),

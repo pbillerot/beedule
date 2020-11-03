@@ -205,6 +205,8 @@ func (c *CrudHugoController) CrudHugo() {
 		c.TplName = "crud_list_image.html"
 	} else if view.Type == "table" {
 		c.TplName = "crud_table.html"
+	} else if view.Type == "hugo" {
+		c.TplName = "hugo_list.html"
 	} else {
 		c.TplName = "crud_list.html"
 	}

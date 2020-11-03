@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -32,6 +33,23 @@ func init() {
 	beego.AddFuncMap("CrudClassSQL", CrudClassSQL)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
 	beego.AddFuncMap("CrudSQL", CrudSQL)
+	beego.AddFuncMap("CrudIncrement", CrudIncrement)
+	beego.AddFuncMap("CrudDecrement", CrudDecrement)
+}
+
+// CrudIncrement as
+func CrudIncrement(snum string) (out string) {
+	in, _ := strconv.Atoi(snum)
+	in++
+	out = strconv.Itoa(in)
+	return
+}
+
+// CrudDecrement as
+func CrudDecrement(snum string) (out string) {
+	in, _ := strconv.Atoi(snum)
+	in--
+	return
 }
 
 // CrudIsInGroup as
