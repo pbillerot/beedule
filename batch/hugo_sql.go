@@ -39,7 +39,8 @@ func hugoDirectoriesToSQL(hugoDirectory string, table string, aliasDB string) {
 
 // Hugodoc table
 type Hugodoc struct {
-	Path       string `orm:"pk;column(path)"`
+	ID         int    `orm:"pk;auto;column(id)"`
+	Path       string `orm:"column(path)"`
 	Base       string `orm:"column(base)"`
 	Dir        string `orm:"column(dir)"`
 	Ext        string `orm:"column(ext)"`
@@ -50,6 +51,7 @@ type Hugodoc struct {
 	Date       string `orm:"column(date)"`
 	Tags       string `orm:"column(tags)"`
 	Categories string `orm:"column(categories)"`
+	Content    string `orm:"column(content)"`
 }
 
 type hugoMeta struct {
@@ -107,6 +109,7 @@ func hugoFileToSQL(table string, aliasDB string, hugoDirectory string, pathAbsol
 		}
 		record.Tags = strings.Join(meta.Tags, ",")
 		record.Categories = strings.Join(meta.Categories, ",")
+		record.Content = string(content[:])
 	}
 	o := orm.NewOrm()
 	o.Using(aliasDB)

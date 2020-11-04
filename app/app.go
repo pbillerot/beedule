@@ -66,8 +66,8 @@ var Applications = map[string]types.Application{
 		Group: "admin",
 		Image: "/crud/static/img/hugoSM.png",
 		AppViews: []types.AppView{
-			{Tableid: "hugodoc", Viewid: "vall"},
 			{Tableid: "hugodoc", Viewid: "vfolder"},
+			{Tableid: "hugodoc", Viewid: "vall"},
 			{Tableid: "hugodoc", Viewid: "velfinder"},
 		},
 	},

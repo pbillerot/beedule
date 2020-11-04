@@ -86,22 +86,27 @@
           action="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
           {{end}}
           {{ .xsrfdata }}
+          {{$section := false}}
           {{ range $irecord, $record := .Records }}
           <div class="ui form">
             {{ range $num, $key := $cols }}
             {{ $val := CrudIndex $record $key }}
             {{ $element := index $elements $key }}
-            {{if (eq $element.Type "action")}}
+            {{if (eq $element.Type "section")}}
+            {{ if $section}}</div>{{end}}
+            <div class="fields">
+              {{$section = true}}
+            {{else if (eq $element.Type "action")}}
             {{else if (eq $element.Type "amount")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="text" pattern="\$\d{1,3}(,\d{3})*(\.\d+)?$" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
             </div>
             {{else if (eq $element.Type "combobox")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <select name="{{$key}}" id="{{$key}}" class="ui fluid search dropdown">
                 <option value="">{{$element.PlaceHolder}}</option>
@@ -112,14 +117,14 @@
               </select>
             </div>
             {{else if (eq $element.Type "counter")}}
-            <div class="disabled field {{$element.Error}}">
+            <div class="disabled  {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="number" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
             </div>
             {{else if (eq $element.Type "checkbox")}}
             <div
-              class="inline {{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="inline {{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <div class="ui checkbox">
                 <input type="checkbox" name="{{$key}}" id="{{$key}}" {{if(eq $val `1`)}} checked{{end}}>
                 <label>{{$element.LabelLong}}</label>
@@ -127,7 +132,7 @@
             </div>
             {{else if (eq $element.Type "datetime")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <div class="ui calendar" id="standard_calendar">
                 <div class="ui input left icon">
@@ -137,9 +142,15 @@
                 </div>
               </div>
             </div>
+            {{else if (eq $element.Type "editor")}}
+            <div
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <textarea style="font-family:monospace;width: 100%;height: 500px;" name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
+            </div>
             {{else if (eq $element.Type "float")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="number" step="any" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
@@ -148,7 +159,7 @@
             <input type="hidden" name="{{$key}}" value="{{$val}}">
             {{else if (eq $element.Type "radio")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}inline fields {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}inline  {{$element.Grid}}  fields {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               {{ $items := CrudSplit $element.Items ","}}
               {{range $num, $item := $items}}
@@ -162,7 +173,7 @@
             </div>
             {{else if (eq $element.Type "tag")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <select name="{{$key}}" id="{{$key}}" multiple="" class="ui fluid dropdown">
                 <option value="">{{$element.PlaceHolder}}</option>
@@ -174,20 +185,20 @@
             </div>
             {{else if (eq $element.Type "textarea")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
-              <label>{{$element.LabelLong}}</label>
-              <textarea name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
+                <label>{{$element.LabelLong}}</label>
+                <textarea name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
             </div>
             {{else if (eq $element.Type "password")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{if $val}}***{{end}}">
             </div>
             {{else if (eq $element.Type "percent")}}
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="number" step="any" name="{{$key}}" id="{{$key}}"
                 {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
@@ -195,7 +206,7 @@
             {{else}}
             <!-- date email month number tel text time url week -->
             <div
-              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}field {{$element.Error}}">
+              class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
               <label>{{$element.LabelLong}}</label>
               <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
                 placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
@@ -206,6 +217,7 @@
             {{end}}
             <!-- end range cols -->
             {{end}}
+            {{ if $section }}</div>{{end}}
             <!-- end range records -->
           </div> <!-- end ui form -->
         </form>

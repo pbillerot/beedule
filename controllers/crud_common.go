@@ -136,6 +136,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
 				}
+			case "editor":
+				if element.Class == "" {
+					element.Class = "warning"
+				}
 			case "date":
 				if element.Format == "" {
 					element.Format = "date"

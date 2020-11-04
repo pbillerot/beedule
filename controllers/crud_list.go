@@ -214,7 +214,7 @@ func (c *CrudListController) CrudList() {
 	} else if view.Type == "table" {
 		c.TplName = "crud_table.html"
 	} else if view.Type == "hugo" {
-		c.TplName = "hugo_list.html"
+		c.TplName = "crud_hugo.html"
 	} else if view.Type == "elfinder" {
 		c.TplName = "crud_elfinder.html"
 	} else {

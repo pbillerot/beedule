@@ -15,6 +15,7 @@ $(document).ready(function () {
         }
         portlet.find('.list').toggle();
         portlet.find('.description').toggle();
+        // portlet.find('.content').toggle();
         event.preventDefault();
     });
 
@@ -247,6 +248,7 @@ $(document).ready(function () {
             $('#crud-search-active').trigger('click');
         }
         // Positionnement sur la dernière ligne sélectionnée
+        // voir ligne avec CrudIndexAnchor
         if (Cookies.get($crud_view)) {
             $anchor = $('#' + Cookies.get($crud_view))
             if ($anchor.length) {
@@ -254,6 +256,11 @@ $(document).ready(function () {
                     scrollTop: $anchor.offset().top - 100
                 }, 1000)
                 $anchor.addClass("crud-list-selected");
+                // Collpase du folder
+                if ($anchor.hasClass("description")) {
+                    $anchorCollapse = $('.' + Cookies.get($crud_view))
+                    $anchorCollapse.trigger("click");
+                }
             }
         }
     }

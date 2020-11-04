@@ -137,11 +137,13 @@
         ({{$qrecords}} éléments)
         {{end}}
       </div>
-      <div class="ui large list">
+      <div class="ui large divided list">
         <!-- ITEMS -->
       {{ $currentLevel := "0"}}
+      {{ $anchor := ""}}
       {{ range $irecord, $record := .Records }}
       <!-- lecture des champs -->
+      {{ $id := index $record "id" }}
       {{ $isdir := index $record "isdir" }}
       {{ $level := index $record "level" }}
       {{ $path := index $record "path" }}
@@ -172,27 +174,27 @@
   </div> <!-- /list-->
   {{ $currentLevel = CrudDecrement $currentLevel }}
 {{ end }}
-
 {{ if eq $isdir "1" }}
+  {{if eq $level `1`}}{{$anchor = CrudIndexAnchor $record $tablekey}}{{end}}
   {{ if eq $level $currentLevel}}
   {{ if gt $currentLevel "0"}}
     </div><!-- /content -->
     </div><!-- /item-->
   {{end}}
       <div class="item">
-      <i class="folder outline large {{$theme}} icon link crud-collapse"></i>
+      <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
         <div class="content">
           <div class="header">{{$base}}</div>
   {{ else if gt $level $currentLevel }}
-            {{if gt $level "1"}}<div class="list" style="display: none;">{{end}}
+            {{if gt $level `1`}}<div class="list" style="display: none;">{{end}}
               <div class="item">
-                <i class="folder outline large {{$theme}} icon link crud-collapse"></i>
+                <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
                 <div class="content">
                   <div class="header">{{$base}}</div>
   {{ end }}
 {{ else }}
     <!-- document -->
-    {{ if or (eq $ext ".png") (eq $ext ".jpg")}}
+    {{ if or (eq $ext ".png") (eq $ext ".jpg") (eq $ext ".svg")}}
     <a class="description crud-popup-image" 
     data-url="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" 
     style="display: none;"><i class="image outline blue icon"></i>{{$base}}</a>
@@ -201,8 +203,24 @@
     href="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" target="_blank" 
     style="display: none;"><i class="file pdf outline red icon"></i>{{$base}}</a>
     {{else}}
-    <div class="description" style="display: none;">
-      <i class="file alternate outline green icon"></i>{{$base}}</div>
+      <a id="{{$anchor}}" class="description crud-jquery-url" style="display: none;"
+      {{if or $view.FormView $view.Deletable}}
+        data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        {{else if and $view.FormEdit}}
+        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        {{end}}
+      >
+        <i class="file alternate outline green icon"></i>
+        {{$base}} <span class="ui green text">[{{$title}}]</span>
+        {{$arr := CrudSplit $tags ","}}
+        {{range $i, $item := $arr}}
+          <div class="ui label"><b>#{{$item}}</b></div>
+        {{end}}
+        {{$arr := CrudSplit $categories ","}}
+        {{range $i, $item := $arr}}
+          <div class="ui tag label"><b>{{$item}}</b></div>
+        {{end}}
+      </a>
     {{end}}
 {{ end }}
     <!-- / isdir-->

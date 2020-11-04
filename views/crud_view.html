@@ -181,6 +181,15 @@
                     {{end}}
                   </h4>
                 </div>
+                {{else if (eq $element.Type "editor")}}
+                <div class="description">
+                  <div class="meta">
+                    <span>{{$element.LabelLong}}</span>
+                  </div>
+                </div>
+                <div class="ui {{$element.Class}} message">
+                  <pre>{{$val}}</pre>
+                </div>
                 {{else if (eq $element.Type "image")}}
                 {{$url := CrudMacro $element.Params.Path $record $session}}
                 <!-- Fermeture de la card et ouverture d'une autre -->

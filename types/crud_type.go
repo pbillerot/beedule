@@ -58,6 +58,7 @@ type Element struct {
 	Error         string   // contiendra "error" si le champ est en erreur de saisie
 	Format        string   // "%3.2f %%" "%3.2f €" date datetime time
 	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	Grid          string   // Class pour donner la largeur du champ dans le formulaire "four wide field" 16 colonnes
 	Group         string   // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
 	Height        int      // TODO hauteur de la colonne
 	Help          string   // TODO aide sur la rubrique
@@ -76,8 +77,9 @@ type Element struct {
 	MinLength     int      // TODO longueur min
 	Order         int      // Ordre de l'élément dans une vue ou formulaire
 	Params        Params   // paramètres optionnels
-	PlaceHolder   string   // Label dans le champ en saisie si vide
 	Pattern       string   // Pattern de l'input HTML
+	PlaceHolder   string   // Label dans le champ en saisie si vide
+	PostAction    Actions  // actions sql ou plugin à exécuter après la mise à jour
 	Protected     bool     // Est en misa à jour mais protégé en saisie
 	ReadOnly      bool     // Lecteur seule
 	Refresh       bool     // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour

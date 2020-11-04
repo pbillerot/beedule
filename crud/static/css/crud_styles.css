@@ -71,8 +71,8 @@ pre {
     .crud-mobile-show {
         display: none !important;
     }
-    .ui.form {
+    /* .ui.form {
         width: 520px;
-    }
+    } */
     
 }  
