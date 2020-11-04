@@ -17,9 +17,6 @@ func init() {
 	// Accueuil du CRUD (liste des vues des tables)
 	beego.Router("/crud", &controllers.CrudPortailController{})
 
-	// Explorateur de fcihier ElFinder
-	beego.Router("/crud/elf/:app/:table/:view", &controllers.CrudElFinderController{}, "get:CrudElFinder;post:CrudElFinder")
-
 	// CRUD MANAGER
 	beego.Router("/crud/list/:app/:table/:view", &controllers.CrudListController{}, "get:CrudList;post:CrudList")
 	beego.Router("/crud/view/:app/:table/:view/:id", &controllers.CrudViewController{})

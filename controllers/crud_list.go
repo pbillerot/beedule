@@ -203,10 +203,6 @@ func (c *CrudListController) CrudList() {
 	c.Data["DataUrl"] = "/crud/data/" + table.AliasDB
 	c.Data["DataPath"] = section["datapath"]
 
-	if view.Type == "elfinder" {
-		c.Data["ElFinder"] = true
-	}
-
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 
 	if view.Type == "image" {
@@ -215,8 +211,6 @@ func (c *CrudListController) CrudList() {
 		c.TplName = "crud_table.html"
 	} else if view.Type == "hugo" {
 		c.TplName = "crud_hugo.html"
-	} else if view.Type == "elfinder" {
-		c.TplName = "crud_elfinder.html"
 	} else {
 		c.TplName = "crud_list.html"
 	}
