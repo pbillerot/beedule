@@ -3,7 +3,6 @@ module github.com/pbillerot/beedule
 go 1.14
 
 require (
-	github.com/LeeEirc/elfinder v0.0.12
 	github.com/MichaelS11/go-scheduler v0.1.0
 	github.com/astaxie/beego v1.12.2
 	github.com/go-sql-driver/mysql v1.5.0
@@ -16,6 +15,5 @@ require (
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 )

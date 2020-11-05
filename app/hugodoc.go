@@ -92,7 +92,7 @@ var hugoViews = types.Views{
 		Type:     "table",
 		FormView: "fview",
 		FormEdit: "fdoc",
-		// OrderBy:  "path,isdir,base",
+		OrderBy:  "dir,isdir desc,id",
 		Elements: types.Elements{
 			"id":         {Order: 1, Hide: true},
 			"path":       {Order: 10, Hide: true},
@@ -122,7 +122,7 @@ var hugoViews = types.Views{
 		Type:     "hugo",
 		FormView: "fview",
 		FormEdit: "fdoc",
-		// OrderBy:  "path,isdir,base",
+		OrderBy:  "dir,isdir desc,id",
 		Elements: types.Elements{
 			"id":         {Order: 1},
 			"path":       {Order: 10},

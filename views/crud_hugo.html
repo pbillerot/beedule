@@ -211,7 +211,7 @@
         {{end}}
       >
         <i class="file alternate outline green icon"></i>
-        {{$base}} <span class="ui green text">[{{$title}}]</span>
+        <span class="ui medium text">{{$base}}</span> <span class="ui green text">[{{$title}}]</span>
         {{$arr := CrudSplit $tags ","}}
         {{range $i, $item := $arr}}
           <div class="ui label"><b>#{{$item}}</b></div>
