@@ -139,7 +139,7 @@
             {{if (ne $element.Hide true)}}
             <th id="col_{{$key}}"
               class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}{{if (eq $sortid $key)}} sorted {{$sortdirection}}{{end}} crud-ajax-sort"
-              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+              data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}" title="{{$key}}">
               {{$element.LabelShort}}
             </th>
             {{end}}

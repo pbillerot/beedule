@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/pbillerot/beedule/app"
@@ -131,9 +132,62 @@ func (c *CrudListController) CrudList() {
 	}
 
 	if search != "" {
+		var colName string
+		var val string
+		var ope string
+		re := regexp.MustCompile(`^(.*):(.*)`)
+		match := re.FindStringSubmatch(search)
+		if len(match) > 0 {
+			colName = match[1]
+			val = match[2]
+			ope = "LIKE"
+		}
+		re = regexp.MustCompile(`^(.*)=(.*)`)
+		match = re.FindStringSubmatch(search)
+		if len(match) > 0 {
+			colName = match[1]
+			val = match[2]
+			ope = "="
+		}
 		for key, element := range elements {
 			if strings.HasPrefix(key, "_") {
 				continue
+			}
+			if ope != "" && key == colName {
+				// recherche sur une seule colonne
+				switch element.Type {
+				case "checkbox":
+					if strings.Contains(strings.ToLower(element.LabelShort), search) {
+						if view.Search != "" {
+							view.Search += " OR "
+						}
+						if element.Jointure.Column != "" {
+							view.Search += element.Jointure.Column + " = '1'"
+						} else {
+							view.Search += tableid + "." + key + " = '1'"
+						}
+					}
+				case "combobox":
+					// TODO recherche dans le label du combobox
+				default:
+					if view.Search != "" {
+						view.Search += " OR "
+					}
+					if element.Jointure.Column != "" {
+						if ope == "=" {
+							view.Search += element.Jointure.Column + " = '" + val + "'"
+						} else {
+							view.Search += element.Jointure.Column + " = '" + val + "'"
+						}
+					} else {
+						if ope == "=" {
+							view.Search += tableid + "." + key + " = '" + val + "'"
+						} else {
+							view.Search += tableid + "." + key + " LIKE '%" + val + "%'"
+						}
+					}
+				}
+				break
 			}
 			switch element.Type {
 			case "checkbox":
