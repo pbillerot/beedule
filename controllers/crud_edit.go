@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/batch"
 	"github.com/pbillerot/beedule/models"
 
 	"github.com/astaxie/beego"
@@ -70,6 +71,7 @@ func (c *CrudEditController) Get() {
 		ReturnFrom(c.Controller)
 		return
 	}
+	setContext(c.Controller, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -102,7 +104,6 @@ func (c *CrudEditController) Get() {
 	elements = computeElements(c.Controller, true, elements, records[0])
 
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
-	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
 	c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
@@ -155,6 +156,9 @@ func (c *CrudEditController) Post() {
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
 	form := app.Tables[tableid].Forms[formid]
+
+	setContext(c.Controller, tableid)
+	var withPlugin bool
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -210,7 +214,6 @@ func (c *CrudEditController) Post() {
 
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
-		setContext(c.Controller)
 		c.Data["AppId"] = appid
 		c.Data["Application"] = app.Applications[appid]
 		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
@@ -229,6 +232,7 @@ func (c *CrudEditController) Post() {
 		c.TplName = "crud_edit.html"
 		return
 	}
+
 	// C'est OK, les données sont correctes et placées dans SQLout
 	err = models.CrudUpdate(tableid, id, elements)
 	if err != nil {
@@ -238,7 +242,47 @@ func (c *CrudEditController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
-	// PostSQL
+	// Remplissage d'un record avec les elements.SQLout
+	record := orm.Params{}
+	for key, element := range elements {
+		record[key] = element.SQLout
+	}
+	// PostActions des éléments
+	for _, element := range elements {
+		if len(element.PostAction) > 0 {
+			// Traitement des actions
+			for _, action := range element.PostAction {
+				if berr {
+					break
+				}
+				// Traitement SQL
+				for _, actionsql := range action.SQL {
+					sql := macro(c.Controller, actionsql, record)
+					if sql != "" {
+						err = models.CrudExec(sql, table.AliasDB)
+						if err != nil {
+							flash.Error(err.Error())
+							flash.Store(&c.Controller)
+							berr = true
+						}
+					}
+				}
+				// Traitement Plugin
+				if action.Plugin != "" {
+					withPlugin = true
+					plugin := macro(c.Controller, action.Plugin, record)
+					_, err := batch.RunPlugin(macro(c.Controller, plugin, record))
+					if err != nil {
+						flash.Error(err.Error())
+						flash.Store(&c.Controller)
+						berr = true
+					}
+				}
+			}
+		}
+	}
+
+	// PostSQL du formulaire
 	for _, postsql := range form.PostSQL {
 		// Remplissage d'un record avec les elements.SQLout
 		record := orm.Params{}
@@ -251,13 +295,21 @@ func (c *CrudEditController) Post() {
 			if err != nil {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
+				berr = true
 			}
 		}
 	}
 
-	flash.Notice("Mise à jour effectuée avec succès")
-	flash.Store(&c.Controller)
+	if berr == false {
+		flash.Notice("Mise à jour effectuée avec succès")
+		flash.Store(&c.Controller)
+	}
 
-	ReturnFrom(c.Controller)
+	if withPlugin {
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	} else {
+		ReturnFrom(c.Controller)
+	}
+
 	return
 }

@@ -31,14 +31,14 @@ func init() {
 		drivername := section["drivername"]
 		datasource := section["datasource"]
 		dataurl := "/crud/data/" + alias
-		datapath := section["datapath"]
+		datadir := section["datadir"]
 		if _, ok := aliass[alias]; ok == false {
 			aliass[alias] = true
 			orm.RegisterDriver(drivername, orm.DriverType(drivertype))
 			orm.RegisterDataBase(alias, drivername, datasource)
 			beego.Info("Enregistrement connecteur", alias, drivertype, drivername, datasource)
-			beego.SetStaticPath(dataurl, datapath)
-			beego.Info("Enregistrement url static", dataurl, datapath)
+			beego.SetStaticPath(dataurl, datadir)
+			beego.Info("Enregistrement url static", dataurl, datadir)
 		}
 	}
 

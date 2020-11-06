@@ -58,6 +58,8 @@ func (c *CrudActionViewController) Post() {
 		return
 	}
 
+	setContext(c.Controller, tableid)
+
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
 		flash.Error(err.Error())
@@ -80,7 +82,8 @@ func (c *CrudActionViewController) Post() {
 		// Appel duPlugin
 		if err == nil {
 			if view.Actions[iactionid].Plugin != "" {
-				batch.RunPlugin(view.Actions[iactionid].Plugin)
+				action := macro(c.Controller, view.Actions[iactionid].Plugin, orm.Params{})
+				batch.RunPlugin(action)
 			}
 		}
 	} else {
@@ -150,6 +153,9 @@ func (c *CrudActionFormController) Post() {
 		return
 	}
 
+	setContext(c.Controller, tableid)
+	var withPlugin bool
+
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
 		flash.Error(err.Error())
@@ -172,7 +178,9 @@ func (c *CrudActionFormController) Post() {
 		// Appel du Plugin
 		if err == nil {
 			if form.Actions[iactionid].Plugin != "" {
-				batch.RunPlugin(form.Actions[iactionid].Plugin)
+				withPlugin = true
+				action := macro(c.Controller, form.Actions[iactionid].Plugin, orm.Params{})
+				batch.RunPlugin(action)
 			}
 		}
 	} else {
@@ -180,7 +188,11 @@ func (c *CrudActionFormController) Post() {
 		flash.Store(&c.Controller)
 	}
 
-	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	if withPlugin {
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	} else {
+		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	}
 }
 
 // CrudActionElementController as
@@ -229,6 +241,9 @@ func (c *CrudActionElementController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
+
+	setContext(c.Controller, tableid)
+	var withPlugin bool
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
 	formviewid := app.Tables[tableid].Views[viewid].FormView
@@ -283,7 +298,9 @@ func (c *CrudActionElementController) Post() {
 		// Appel du Plugin
 		if err == nil {
 			if elements[actionid].Action.Plugin != "" {
-				batch.RunPlugin(elements[actionid].Action.Plugin)
+				withPlugin = true
+				action := macro(c.Controller, elements[actionid].Action.Plugin, orm.Params{})
+				batch.RunPlugin(action)
 			}
 		}
 	} else {
@@ -293,5 +310,9 @@ func (c *CrudActionElementController) Post() {
 		return
 	}
 
-	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	if withPlugin {
+		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	} else {
+		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	}
 }

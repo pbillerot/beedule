@@ -83,6 +83,8 @@ func (c *CrudViewController) Get() {
 		view.FormEdit = ""
 	}
 
+	setContext(c.Controller, tableid)
+
 	var elementsVF types.Elements
 	if formviewid == "" {
 		elementsVF = app.Tables[tableid].Views[viewid].Elements
@@ -121,7 +123,6 @@ func (c *CrudViewController) Get() {
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/crud/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 
-	setContext(c.Controller)
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
 	} else {

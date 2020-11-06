@@ -64,6 +64,8 @@ func (c *CrudAddController) Get() {
 		return
 	}
 
+	setContext(c.Controller, tableid)
+
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
 
@@ -82,7 +84,6 @@ func (c *CrudAddController) Get() {
 	// Calcul des éléments
 	elements = computeElements(c.Controller, true, elements, records[0])
 
-	setContext(c.Controller)
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
 	c.Data["ColDisplay"] = records[0][table.ColDisplay]
@@ -130,6 +131,7 @@ func (c *CrudAddController) Post() {
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]
 	form := app.Tables[tableid].Forms[formid]
+	setContext(c.Controller, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
@@ -163,7 +165,6 @@ func (c *CrudAddController) Post() {
 		// Calcul des éléments (valeur par défaut comprise)
 		elements = computeElements(c.Controller, true, elements, records[0])
 
-		setContext(c.Controller)
 		c.Data["AppId"] = appid
 		c.Data["Application"] = app.Applications[appid]
 		c.Data["ColDisplay"] = records[0][table.ColDisplay]

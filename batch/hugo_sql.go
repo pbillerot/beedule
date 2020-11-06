@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -12,15 +13,24 @@ import (
 )
 
 /**
- * hugoDirectoriesToSQL:
+ * hugoDirectoryToSQL:
  * - lecture des répertoires /content et /data de foirexpo
  *
  **/
-func hugoDirectoriesToSQL(hugoDirectory string, table string, aliasDB string) {
+func hugoDirectoryToSQL(command string) (err error) {
+	re := regexp.MustCompile(`hugoDirectoryToSQL\((.*),(.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+	hugoDirectory := match[1]
+	table := match[2]
+	aliasDB := match[3]
+
 	// Raz de la table
 	deleteAllRecords(table, aliasDB)
 	// Lecture des répertoires et insertion d'un record par document
-	err := filepath.Walk(hugoDirectory,
+	err = filepath.Walk(hugoDirectory,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -35,6 +45,8 @@ func hugoDirectoriesToSQL(hugoDirectory string, table string, aliasDB string) {
 	if err != nil {
 		beego.Error(err)
 	}
+
+	return
 }
 
 // Hugodoc table

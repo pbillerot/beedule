@@ -11,7 +11,7 @@ type CrudPortailController struct {
 
 // Get CrudPortailController
 func (c *CrudPortailController) Get() {
-	setContext(c.Controller)
+	setContext(c.Controller, "parameters")
 	flash := beego.ReadFromRequest(&c.Controller)
 	flash.Store(&c.Controller)
 	c.TplName = "crud_portail.html"

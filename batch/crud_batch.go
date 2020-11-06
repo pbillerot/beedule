@@ -21,6 +21,8 @@ Utilisation du module
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -279,7 +281,7 @@ func TestJob(idjob int) {
 func RunPlugin(command string) (string, error) {
 	var out string
 	var err error
-
+	beego.Info(command)
 	if strings.Contains(command, "StartStopPendule()") {
 		// Pas de paramètre
 		// Le pendule est-il démarré ?
@@ -319,18 +321,44 @@ func RunPlugin(command string) (string, error) {
 				err = errors.New(er.Error())
 			}
 		}
-	} else if strings.Contains(command, "hugoDirectoriesToSQL") {
-		re := regexp.MustCompile(`hugoDirectoriesToSQL\((.*),(.*),(.*)\)`)
-		match := re.FindStringSubmatch(command)
-		if len(match) > 0 {
-			path := match[1]
-			table := match[2]
-			aliasDB := match[3]
-			hugoDirectoriesToSQL(path, table, aliasDB)
-		}
+	} else if strings.Contains(command, "hugoDirectoryToSQL") {
+		err = hugoDirectoryToSQL(command)
+	} else if strings.Contains(command, "contentSQLToFile") {
+		err = contentSQLToFile(command)
 	} else {
 		out = "Plugin inconnu"
 		err = errors.New("Plugin inconnu")
 	}
 	return out, err
+}
+
+func contentSQLToFile(command string) (err error) {
+	re := regexp.MustCompile(`contentSQLToFile\((.*),(.*),(.*),(.*),(.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	aliasDB := match[1]
+	tableName := match[2]
+	keyID := match[3]
+	keyValue := match[4]
+	columnName := match[5]
+	pathFile := match[6]
+
+	sql := fmt.Sprintf("select %s from %s where %s = '%s'", columnName, tableName, keyID, keyValue)
+	recs, err := models.CrudSQL(sql, aliasDB)
+	if err != nil {
+		beego.Error(err)
+	}
+	var content string
+	for _, rec := range recs {
+		for _, val := range rec {
+			if reflect.ValueOf(val).IsValid() {
+				content = val.(string)
+			}
+		}
+	}
+	err = ioutil.WriteFile(pathFile, []byte(content), 0644)
+	return err
 }

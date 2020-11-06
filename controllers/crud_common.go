@@ -388,7 +388,25 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 }
 
 // setContext remplissage du controller.Data
-func setContext(c beego.Controller) {
+func setContext(c beego.Controller, table string) {
+	// Contexte de la table
+	aliasDB := app.Tables[table].AliasDB
+	section, _ := beego.AppConfig.GetSection(aliasDB)
+	dataurl := "/crud/data/" + aliasDB
+	if url, ok := section["dataurl"]; ok {
+		dataurl = url
+	}
+	datadir := "./data/" + aliasDB
+	if dir, ok := section["datadir"]; ok {
+		datadir = dir
+	}
+	c.Data["DataUrl"] = dataurl
+	c.Data["Datadir"] = datadir
+	c.Data["TableID"] = table
+	c.Data["AliasDB"] = aliasDB
+	c.Data["KeyID"] = app.Tables[table].Key
+
+	// Contexte de la session
 	session := types.Session{}
 	if c.GetSession("LoggedIn") != nil {
 		session.LoggedIn = c.GetSession("LoggedIn").(bool)
@@ -436,6 +454,21 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 
 	if strings.Contains(out, "{$user}") {
 		out = strings.ReplaceAll(out, "{$user}", c.GetSession("Username").(string))
+	}
+	if strings.Contains(out, "{$datadir}") {
+		out = strings.ReplaceAll(out, "{$datadir}", c.Data["Datadir"].(string))
+	}
+	if strings.Contains(out, "{$dataurl}") {
+		out = strings.ReplaceAll(out, "{$dataurl}", c.Data["DataUrl"].(string))
+	}
+	if strings.Contains(out, "{$table}") {
+		out = strings.ReplaceAll(out, "{$table}", c.Data["TableID"].(string))
+	}
+	if strings.Contains(out, "{$aliasdb}") {
+		out = strings.ReplaceAll(out, "{$aliasdb}", c.Data["AliasDB"].(string))
+	}
+	if strings.Contains(out, "{$key}") {
+		out = strings.ReplaceAll(out, "{$key}", c.Data["KeyID"].(string))
 	}
 	re := regexp.MustCompile(`.*{(.*)}.*`)
 	for strings.Contains(out, "{") {

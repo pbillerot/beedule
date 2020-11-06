@@ -82,6 +82,18 @@ var hugoElements = types.Elements{
 		Type:       "editor",
 		LabelLong:  "Contenu",
 		LabelShort: "Contenu",
+		PostAction: types.Actions{
+			{
+				Label: "Enregistrement du contenu dans un fichier",
+				// aliasDB, tableName, keyid, keyValue, columnName, pathFile
+				Plugin: fmt.Sprintf("contentSQLToFile(%s,%s,%s,%s,%s,%s)", "{$aliasdb}", "{$table}", "{$key}", "{id}", "content", "{$datadir}/content{path}"),
+			},
+			{
+				Label: "Recharger le répertoire",
+				// path, table, aliasDB
+				Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+			},
+		},
 	},
 }
 
@@ -111,8 +123,9 @@ var hugoViews = types.Views{
 		Actions: types.Actions{
 			{
 				// on ne supprime que ses propres tâches
-				Label:  "Recharger le répertoire",
-				Plugin: fmt.Sprintf("hugoDirectoriesToSQL(%s,%s,%s)", "/home/billerot/Abri/foirexpo", "hugodoc", "foiredit"), // path,table,aliasDB
+				Label: "Recharger le répertoire",
+				// path,table,aliasDB
+				Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
 			},
 		},
 	},
@@ -141,8 +154,9 @@ var hugoViews = types.Views{
 		Actions: types.Actions{
 			{
 				// on ne supprime que ses propres tâches
-				Label:  "Recharger le répertoire",
-				Plugin: fmt.Sprintf("hugoDirectoriesToSQL(%s,%s,%s)", "/home/billerot/Abri/foirexpo", "hugodoc", "foiredit"), // path,table,aliasDB
+				Label: "Recharger le répertoire",
+				// path,table,aliasDB
+				Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
 			},
 		},
 	},

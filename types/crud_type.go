@@ -23,7 +23,6 @@ type Application struct {
 	IconName string
 	Group    string
 	Path     string    // Path ou URL de l'application externe
-	DataPath string    // répertoire des données valorisé dans custom.conf [app] datapath lu par {$datapath}
 	AppViews []AppView // Vues des tables liées à l'application
 }
 

@@ -68,6 +68,8 @@ func (c *CrudListController) CrudList() {
 		view.FormEdit = ""
 	}
 
+	setContext(c.Controller, tableid)
+
 	// Gestion du TRI enregistré dans la session et contexte
 	sortID := c.GetString("sortid")
 	sortDirection := c.GetString("sortdirection")
@@ -240,7 +242,6 @@ func (c *CrudListController) CrudList() {
 	}
 
 	// Remplissage du contexte pour le template
-	setContext(c.Controller)
 	c.Data["Title"] = view.Title
 	c.Data["AppId"] = appid
 	c.Data["Application"] = app.Applications[appid]
@@ -255,7 +256,7 @@ func (c *CrudListController) CrudList() {
 
 	section, _ := beego.AppConfig.GetSection(table.AliasDB)
 	c.Data["DataUrl"] = "/crud/data/" + table.AliasDB
-	c.Data["DataPath"] = section["datapath"]
+	c.Data["Datadir"] = section["datadir"]
 
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
 

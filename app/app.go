@@ -32,10 +32,9 @@ var Applications = map[string]types.Application{
 		},
 	},
 	"picsou": {
-		Title:    "Picsou, pour bricoler sur la bourse",
-		Group:    "picsou",
-		Image:    "/crud/static/img/picsou.jpg",
-		DataPath: "", // valorisé dans custom.conf
+		Title: "Picsou, pour bricoler sur la bourse",
+		Group: "picsou",
+		Image: "/crud/static/img/picsou.jpg",
 		AppViews: []types.AppView{
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},
