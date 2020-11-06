@@ -61,6 +61,11 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+.compact.message {
+    margin: 0.5em;
+    padding: 0.5em 1em;
+}
+
 /* Mobile */
 @media only screen and (max-width: 767px) {
     .crud-mobile-hide {

@@ -14,7 +14,7 @@ $(document).ready(function () {
             portlet.find('.icon').addClass("open");
         }
         portlet.find('.list').toggle();
-        portlet.find('.description').toggle();
+        portlet.find('.message').toggle();
         // portlet.find('.content').toggle();
         event.preventDefault();
     });
@@ -257,7 +257,7 @@ $(document).ready(function () {
                 }, 1000)
                 $anchor.addClass("crud-list-selected");
                 // Collpase du folder
-                if ($anchor.hasClass("description")) {
+                if ($anchor.hasClass("message")) {
                     $anchorCollapse = $('.' + Cookies.get($crud_view))
                     $anchorCollapse.trigger("click");
                 }
