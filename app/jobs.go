@@ -107,8 +107,8 @@ var jobsForms = types.Forms{
 				Order:     550,
 				Type:      "action",
 				LabelLong: "Démarrer ce job",
-				Action: types.Action{
-					Plugin: "StartJob({job_id})",
+				Actions: types.Actions{
+					{Plugin: "StartJob({job_id})"},
 				},
 			},
 			"_SECTION_CHAINE": {

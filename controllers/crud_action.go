@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"io/ioutil"
 	"strconv"
 
 	"github.com/pbillerot/beedule/app"
@@ -205,6 +207,7 @@ func (c *CrudActionElementController) Post() {
 	appid := c.Ctx.Input.Param(":app")
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
+	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 	actionid := c.Ctx.Input.Param(":action") // l'id de l'élément
 
@@ -246,15 +249,22 @@ func (c *CrudActionElementController) Post() {
 	var withPlugin bool
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
-	formviewid := app.Tables[tableid].Views[viewid].FormView
-	var elementsVF types.Elements
-	if formviewid == "" {
-		flash.Error("Enregistrement non trouvé")
+	form := app.Tables[tableid].Forms[formid]
+	if form.Group == "" {
+		form.Group = view.Group
+	}
+	if form.Group == "" {
+		form.Group = app.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, form.Group, id) {
+		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
+		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		ReturnFrom(c.Controller)
 		return
 	}
-	elementsVF = app.Tables[tableid].Forms[formviewid].Elements
+	var elementsVF types.Elements
+	elementsVF = form.Elements
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, _ := mergeElements(c.Controller, tableid, elementsVF, id)
 
@@ -285,22 +295,46 @@ func (c *CrudActionElementController) Post() {
 
 	if element, ok := elements[actionid]; ok {
 		// Exécution des ordres SQL
-		for _, action := range element.Action.SQL {
-			sql := macro(c.Controller, action, orm.Params{})
-			if sql != "" {
-				err = models.CrudExec(sql, table.AliasDB)
-				if err != nil {
-					flash.Error(err.Error())
-					flash.Store(&c.Controller)
+		for _, action := range element.Actions {
+			if err == nil {
+				for _, actionSQL := range action.SQL {
+					sql := macro(c.Controller, actionSQL, records[0])
+					if sql != "" {
+						err = models.CrudExec(sql, table.AliasDB)
+						if err != nil {
+							flash.Error(err.Error())
+							flash.Store(&c.Controller)
+						}
+					}
 				}
 			}
-		}
-		// Appel du Plugin
-		if err == nil {
-			if elements[actionid].Action.Plugin != "" {
-				withPlugin = true
-				action := macro(c.Controller, elements[actionid].Action.Plugin, orm.Params{})
-				batch.RunPlugin(action)
+			// Appel Plugin
+			if err == nil {
+				if action.Plugin != "" {
+					withPlugin = true
+					if element.Params.WithInputFile {
+						file, handler, err := c.Ctx.Request.FormFile(actionid)
+						if err != nil {
+							beego.Error(err)
+						} else {
+							fileBytes, err := ioutil.ReadAll(file)
+							if err != nil {
+								beego.Error(err)
+							} else {
+								filepath := fmt.Sprintf("%s/%s", element.Params.Path, handler.Filename)
+								beego.Info("ajout", filepath)
+								err := ioutil.WriteFile(
+									filepath,
+									fileBytes, 0755)
+								if err != nil {
+									beego.Error(err)
+								}
+							}
+						}
+					}
+					command := macro(c.Controller, action.Plugin, records[0])
+					_, err = batch.RunPlugin(command)
+				}
 			}
 		}
 	} else {

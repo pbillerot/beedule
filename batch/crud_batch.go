@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -325,6 +326,16 @@ func RunPlugin(command string) (string, error) {
 		err = hugoDirectoryToSQL(command)
 	} else if strings.Contains(command, "contentSQLToFile") {
 		err = contentSQLToFile(command)
+	} else if strings.Contains(command, "deleteFile") {
+		err = deleteFile(command)
+	} else if strings.Contains(command, "renameFile") {
+		err = renameFile(command)
+	} else if strings.Contains(command, "deleteDirectory") {
+		err = deleteDirectory(command)
+	} else if strings.Contains(command, "renameDirectory") {
+		err = renameDirectory(command)
+	} else if strings.Contains(command, "createDirectory") {
+		err = createDirectory(command)
 	} else {
 		out = "Plugin inconnu"
 		err = errors.New("Plugin inconnu")
@@ -360,5 +371,98 @@ func contentSQLToFile(command string) (err error) {
 		}
 	}
 	err = ioutil.WriteFile(pathFile, []byte(content), 0644)
+	return err
+}
+
+func deleteFile(command string) (err error) {
+	re := regexp.MustCompile(`deleteFile\((.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	path := match[1]
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		return
+	}
+
+	err = os.Remove(path)
+	return err
+}
+
+func deleteDirectory(command string) (err error) {
+	re := regexp.MustCompile(`deleteDirectory\((.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	path := match[1]
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		return
+	}
+
+	err = os.Remove(path)
+	return err
+}
+
+func renameFile(command string) (err error) {
+	re := regexp.MustCompile(`renameFile\((.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	pathSource := match[1]
+	_, err = os.Stat(pathSource)
+	if os.IsNotExist(err) {
+		return
+	}
+	pathDest := match[2]
+	_, err = os.Stat(pathDest)
+	if os.IsExist(err) {
+		return
+	}
+	err = os.Rename(pathSource, pathDest)
+	return
+}
+
+func renameDirectory(command string) (err error) {
+	re := regexp.MustCompile(`renameDirectory\((.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	pathSource := match[1]
+	_, err = os.Stat(pathSource)
+	if os.IsNotExist(err) {
+		return
+	}
+	pathDest := match[2]
+	_, err = os.Stat(pathDest)
+	if os.IsExist(err) {
+		return
+	}
+	err = os.Rename(pathSource, pathDest)
+	return
+}
+
+func createDirectory(command string) (err error) {
+	re := regexp.MustCompile(`createDirectory\((.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	path := match[1]
+	_, err = os.Stat(path)
+	if os.IsExist(err) {
+		return
+	}
+
+	err = os.MkdirAll(path, 0666)
 	return err
 }

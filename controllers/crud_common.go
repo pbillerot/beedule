@@ -200,7 +200,8 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 	tableid := c.Ctx.Input.Param(":table")
 	table := app.Tables[tableid]
 
-	elements := types.Elements{}
+	elements := make(types.Elements, len(viewOrFormElements))
+
 	for key, element := range viewOrFormElements {
 		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
@@ -224,17 +225,19 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			}
 			element.Items = list
 		}
-		if element.Action.URL != "" {
-			element.Action.URL = macro(c, element.Action.URL, record)
-		}
-		if element.Action.Plugin != "" {
-			element.Action.Plugin = macro(c, element.Action.Plugin, record)
+		for _, action := range element.Actions {
+			if action.URL != "" {
+				action.URL = macro(c, action.URL, record)
+			}
+			if action.Plugin != "" {
+				action.Plugin = macro(c, action.Plugin, record)
+			}
 		}
 		if element.Params.URL != "" {
 			element.Params.URL = macro(c, element.Params.URL, record)
 		}
 		if element.Params.Path != "" {
-			element.Params.URL = macro(c, element.Params.Path, record)
+			element.Params.Path = macro(c, element.Params.Path, record)
 		}
 
 		if computeValue {
@@ -295,6 +298,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		}
 		elements[key] = element
 	}
+
 	return elements
 }
 

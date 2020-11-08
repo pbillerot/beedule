@@ -37,12 +37,13 @@ var parametersElements = types.Elements{
 		Order:      40,
 		LabelLong:  "Démarrer/Arrêter le pendule",
 		LabelShort: "Démarrer/Arrêter le pendule",
-		Action: types.Action{
-			SQL: []string{
-				"update parameters set value = case when value = '1' then '0' else '1' end where id = 'batch_etat'",
+		Actions: types.Actions{
+			{
+				SQL: []string{
+					"update parameters set value = case when value = '1' then '0' else '1' end where id = 'batch_etat'",
+				},
+				Plugin: "StartStopPendule()",
 			},
-			// WithConfirm: true,
-			Plugin: "StartStopPendule()",
 		},
 	},
 }

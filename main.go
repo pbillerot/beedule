@@ -42,7 +42,7 @@ func init() {
 		}
 	}
 
-	if beego.AppConfig.String("debug") == "true" {
+	if ok, _ := beego.AppConfig.Bool("debug"); ok {
 		orm.Debug = true
 	} else {
 		orm.Debug = false

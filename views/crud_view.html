@@ -61,11 +61,11 @@
       <div class="header item">{{$form.Title}}</div>
       <!-- RIGHT MENU -->
       <div class="right menu">
-        {{if or $form.Actions (and $view.Deletable $view.FormAdd)}}
+        {{if or $form.Actions $view.Deletable}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>
           <div class="menu">
-            {{if and $view.Deletable $view.FormAdd}}
+            {{if $view.Deletable}}
             <!-- On ne peut supprimer que si la vue possède un formulaire d'ajout avec les droits d'accès-->
             <a class="ui icon item crud-jquery-delete">
               <i class="trash icon"></i> Supprimer cet enregistrement...
@@ -151,16 +151,14 @@
                 </div>
                 <!-- DEBUT type -->
                 {{else if (eq $element.Type "action")}}
-                {{if $element.Action.URL}}
-                <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Action.URL}}">
+                <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
+                  data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
                   {{$element.LabelLong}}
                 </button>
-                {{else}}
-                <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Action.WithConfirm}}"
-                  data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}">
+                {{else if (eq $element.Type "button")}}
+                <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}">
                   {{$element.LabelLong}}
                 </button>
-                {{end}}
                 {{else if (eq $element.Type "combobox")}}
                 <div class="description">
                   <div class="meta">
@@ -197,7 +195,7 @@
             </div> <!-- end card -->
             <div class="link card raised crud-card-view crud-popup-image" data-url="{{$url}}?{{$composter}}">
               <div class="ui image">
-                <img src="{{$url}}?{{$composter}}">
+                <img src="{{$element.Params.Path}}?{{$composter}}">
               </div>
               <div class="content">
                 <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>

@@ -30,8 +30,8 @@ var hugoElements = types.Elements{
 	},
 	"base": {
 		Type:       "text",
-		LabelLong:  "Fichier",
-		LabelShort: "Nom Fichier",
+		LabelLong:  "Nom",
+		LabelShort: "Nom",
 	},
 	"dir": {
 		Type:       "text",
@@ -95,6 +95,24 @@ var hugoElements = types.Elements{
 			},
 		},
 	},
+	"_image": {
+		Type:       "image",
+		LabelLong:  "Image",
+		LabelShort: "Image",
+		Params: types.Params{
+			Path: "{$dataurl}/content{dir}/{base}",
+		},
+		HideSQL: "select 'hide' where '{ext}' not in ('.png','.jpg')",
+	},
+	"_pdf": {
+		Type:       "image",
+		LabelLong:  "PDF",
+		LabelShort: "PDF",
+		Params: types.Params{
+			Path: "{$dataurl}/content{dir}/{base}",
+		},
+		HideSQL: "select 'hide' where '{ext}' not in ('.pdf')",
+	},
 }
 
 var hugoViews = types.Views{
@@ -130,7 +148,7 @@ var hugoViews = types.Views{
 		},
 	},
 	"vfolder": {
-		Title:    "Les répertoires",
+		Title:    "Les répertoires de foirexpo",
 		IconName: "folder",
 		Type:     "hugo",
 		FormView: "fview",
@@ -167,34 +185,166 @@ var hugoForms = types.Forms{
 		Title:    "Document",
 		IconName: "file alternate outline",
 		Elements: types.Elements{
-			"id":    {Order: 1},
-			"path":  {Order: 10},
-			"isdir": {Order: 20},
-			"dir":   {Order: 40},
-			"base":  {Order: 50},
-			"_SECTION_METADATA": {
-				Order:     100,
+			"_SECTION_DIRECTORY": {
+				Order:     1,
 				Type:      "section",
-				LabelLong: "METADATA",
+				LabelLong: "REPERTOIRE ou FICHIER",
 				Params: types.Params{
-					IconName: "list alternate outline",
+					Form:     "ffile",
+					IconName: "folder alternate outline",
 				},
 			},
-			"title":      {Order: 110},
-			"draft":      {Order: 120},
-			"date":       {Order: 130},
-			"tags":       {Order: 140},
-			"categories": {Order: 150},
+			"id":     {Order: 5},
+			"path":   {Order: 10},
+			"isdir":  {Order: 20, Hide: true},
+			"dir":    {Order: 40, Hide: true},
+			"base":   {Order: 50},
+			"ext":    {Order: 60, Hide: true},
+			"_image": {Order: 100},
+			"_pdf":   {Order: 200},
 			"_SECTION_CONTENT": {
-				Order:     200,
+				Order:     300,
 				Type:      "section",
 				LabelLong: "DOCUMENT",
 				Params: types.Params{
 					Form:     "fdoc",
 					IconName: "file code alternate outline",
 				},
+				HideSQL: "select 'hide' where '{ext}' <> '.md' ",
 			},
-			"content": {Order: 210},
+			"content": {Order: 310},
+		},
+	},
+	"ffile": {
+		Title:    "Gestionnaire de Fichier",
+		IconName: "folder alternate outline",
+		Elements: types.Elements{
+			"_section0": {Order: 1, Type: "section"},
+			"id":        {Order: 10, Grid: "two wide"},
+			"path":      {Order: 14, Grid: "fourteen wide", ReadOnly: true},
+			"isdir":     {Order: 20, Hide: true},
+			"dir":       {Order: 40, Hide: true},
+			"base":      {Order: 50, Hide: true},
+			"ext":       {Order: 60, Hide: true},
+			"_section1": {Order: 100, Type: "section"},
+			"_rename_file": {
+				Order:     110,
+				Grid:      "ten wide",
+				LabelLong: "Renommer ou déplacer le fichier...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '1' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm: true,
+					WithInput:   true,
+				},
+				Default: "{path}",
+				Actions: types.Actions{
+					{
+						Plugin: "renameFile({$datadir}/content{path},{$datadir}/content{_rename_file})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section2": {Order: 200, Type: "section"},
+			"_rename_dir": {
+				Order:     210,
+				Grid:      "ten wide",
+				LabelLong: "Renommer ou déplacer le répertoire...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '0' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm: true,
+					WithInput:   true,
+				},
+				Default: "{path}",
+				Actions: types.Actions{
+					{
+						Plugin: "renameDir({$datadir}/content{path},{$datadir}/content{_rename_dir})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section3": {Order: 300, Type: "section"},
+			"_delete_fichier": {
+				Order:     310,
+				Grid:      "ten wide",
+				LabelLong: "Supprimer le fichier...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '1' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm: true,
+				},
+				Actions: types.Actions{
+					{
+						Plugin: "deleteFile({$datadir}/content{path})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section4": {Order: 400, Type: "section"},
+			"_create_dir": {
+				Order:     410,
+				Grid:      "ten wide",
+				LabelLong: "Créer le répertoire...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '0' then 'hide' else '' end",
+				Default:   "{path}",
+				Params: types.Params{
+					WithConfirm: true,
+					WithInput:   true,
+				},
+				Actions: types.Actions{
+					{
+						Plugin: "createDirectory({$datadir}/content{_create_dir})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section5": {Order: 500, Type: "section"},
+			"_delete_dir": {
+				Order:     510,
+				Grid:      "ten wide",
+				LabelLong: "Supprimer le répertoire...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '0' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm: true,
+				},
+				Actions: types.Actions{
+					{
+						Plugin: "deleteDir({$datadir}/content{path})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section6": {Order: 600, Type: "section"},
+			"_upload_file": {
+				Order:     610,
+				Grid:      "ten wide",
+				LabelLong: "Charger un fichier...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '0' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm:   true,
+					WithInputFile: true,
+					Path:          "{$datadir}/content{path}",
+				},
+				Actions: types.Actions{
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
 		},
 	},
 	"fdoc": {
@@ -209,7 +359,9 @@ var hugoForms = types.Forms{
 			"content":   {Order: 150, Grid: "sixteen wide"},
 		},
 		Actions: types.Actions{
-			{Plugin: "ContentToFile({$id},hugodoc,content,{$path})"},
+			{
+				Plugin: "ContentToFile({$id},hugodoc,content,{$path})",
+			},
 		},
 	},
 }

@@ -184,24 +184,40 @@
       <div class="item">
       <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
         <div class="content">
-          <div class="header">{{$base}}</div>
+          <a class="header crud-jquery-url" {{if or $view.FormView $view.Deletable}}
+          data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+          {{else if and $view.FormEdit}}
+          data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+          {{end}}>{{$base}}</a>
   {{ else if gt $level $currentLevel }}
             {{if gt $level `1`}}<div class="list"{{if eq $search ``}} style="display: none;"{{end}}>{{end}}
               <div class="item">
                 <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
                 <div class="content">
-                  <div class="header">{{$base}}</div>
+                  <a class="header crud-jquery-url" {{if or $view.FormView $view.Deletable}}
+                  data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+                  {{else if and $view.FormEdit}}
+                  data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+                  {{end}}>{{$base}}</a>
   {{ end }}
 {{ else }}
     <!-- document -->
     {{ if or (eq $ext ".png") (eq $ext ".jpg") (eq $ext ".svg")}}
-    <a class="ui compact message crud-popup-image" 
-    data-url="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" 
-    {{if eq $search ``}} style="display: none;"{{end}}><i class="image outline blue large icon"></i>{{$base}}</a>
+    <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
+    {{if or $view.FormView $view.Deletable}}
+        data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        {{else if and $view.FormEdit}}
+        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        {{end}}
+        ><i class="image outline blue large icon"></i>{{$base}}</a>
     {{ else if (eq $ext ".pdf")}}
-    <a class="ui compact message" 
-    href="{{$dataurl}}/content/{{$dir}}/{{$base}}?{{$composter}}" target="_blank" 
-    {{if eq $search ``}} style="display: none;"{{end}}><i class="file pdf outline red large icon"></i>{{$base}}</a>
+    <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
+    {{if or $view.FormView $view.Deletable}}
+        data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        {{else if and $view.FormEdit}}
+        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        {{end}}>
+        <i class="file pdf outline red large icon"></i>{{$base}}</a>
     {{else}}
       <a id="{{$anchor}}" class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
       {{if or $view.FormView $view.Deletable}}
@@ -211,14 +227,14 @@
         {{end}}
       >
         <i class="file alternate outline green large icon"></i>
-        <span class="ui medium text">{{$base}}</span> <span class="ui green text">[{{$title}}]</span>
+        <span class="ui medium grey text">{{$base}}</span> <span class="ui purple text">[{{$title}}]</span>
         {{$arr := CrudSplit $tags ","}}
         {{range $i, $item := $arr}}
-          <div class="ui label"><b>#{{$item}}</b></div>
+          <div class="ui green label"><b>#{{$item}}</b></div>
         {{end}}
         {{$arr := CrudSplit $categories ","}}
         {{range $i, $item := $arr}}
-          <div class="ui tag label"><b>{{$item}}</b></div>
+          <div class="ui tag brown label"><b>{{$item}}</b></div>
         {{end}}
       </a>
     {{end}}

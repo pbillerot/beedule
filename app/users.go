@@ -15,11 +15,10 @@ var Users = types.Table{
 
 var usersElements = types.Elements{
 	"_pwd_change": {
-		Type:      "action",
+		Type:      "button",
 		LabelLong: "Changer le mot de passe...",
-		Action: types.Action{
-			Label: "Changer le mot de passe...",
-			URL:   "/crud/edit/users/users/vall/fpwd/{user_name}",
+		Params: types.Params{
+			URL: "/crud/edit/users/users/vall/fpwd/{user_name}",
 		},
 	},
 	"user_name": {

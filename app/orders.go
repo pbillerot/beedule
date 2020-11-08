@@ -235,22 +235,22 @@ var ordersElements = types.Elements{
 	"_refresh_buy": {
 		Type:      "action",
 		LabelLong: "Mettre à jour avec le cours du jour",
-		Action: types.Action{
-			SQL: []string{
-				"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
-				"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
-				"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+		Actions: types.Actions{
+			{
+				SQL: []string{
+					"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
+					"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
+					"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+				},
 			},
-			WithConfirm: false,
 		},
 	},
 	"_action_sell": {
-		Type:      "action",
+		Type:      "button",
 		Group:     "trader",
 		LabelLong: "Vendre cette valeur...",
-		Action: types.Action{
-			Label: "Vendre cette valeur",
-			URL:   "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}?orders_order=sell&orders_sell={orders_quote}",
+		Params: types.Params{
+			URL: "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}?orders_order=sell&orders_sell={orders_quote}",
 		},
 	},
 	"orders_id": {

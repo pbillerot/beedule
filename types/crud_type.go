@@ -46,7 +46,7 @@ type Elements map[string]Element
 
 // Element is ... Rubrique de l'application
 type Element struct {
-	Action        Action // bouton d'action - utilise Params
+	Actions       Actions // bouton d'actions - utilise Params
 	Args          Args
 	Class         string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL      string   // SQL pour alimenter Class error warning info green blue
@@ -85,7 +85,7 @@ type Element struct {
 	Required      bool     // obligatoire
 	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string   // Type : action amount checkbox combobox counter date datetime email float image jointure list markdown month number percent plugin section tag tel text time radio url week
+	Type          string   // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
@@ -157,22 +157,25 @@ type Jointure struct {
 
 // Params paramètres d'un élément
 type Params struct {
-	Action      string
-	Form        string
-	IconName    string
-	Header      []string
-	Description []string
-	Meta        []string
-	Extra       []string
-	URL         string
-	Path        string
-	SQL         []string
+	Action        string
+	Form          string
+	IconName      string
+	Header        []string
+	Description   []string
+	Meta          []string
+	Extra         []string
+	URL           string
+	Path          string
+	SQL           []string
+	WithConfirm   bool
+	WithInput     bool
+	WithInputFile bool
 }
 
 // Actions as
 type Actions []Action
 
-// Action as Bouton Formulaire ou Requête SQL
+// Action dans le menu d'une vue ou formulaire
 type Action struct {
 	Group       string   // Groupe autorisée à lancer l'action
 	Label       string   // label de l'action
