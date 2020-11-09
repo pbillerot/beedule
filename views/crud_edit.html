@@ -58,12 +58,14 @@
       </a>
       <!-- RIGHT MENU -->
       <div class="right menu">
+        {{ if (eq $form.HideSubmit false)}}
         <div class="item">
           <button class="ui labeled icon red button crud-jquery-submit">
             <i class="check icon"></i>
             Enregistrer
           </button>
         </div>
+        {{end}}
       </div>
     </div>
   </div>

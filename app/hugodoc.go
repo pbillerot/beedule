@@ -217,8 +217,9 @@ var hugoForms = types.Forms{
 		},
 	},
 	"ffile": {
-		Title:    "Gestionnaire de Fichier",
-		IconName: "folder alternate outline",
+		Title:      "Gestionnaire de Fichier",
+		IconName:   "folder alternate outline",
+		HideSubmit: true,
 		Elements: types.Elements{
 			"_section0": {Order: 1, Type: "section"},
 			"id":        {Order: 10, Grid: "two wide"},
@@ -242,6 +243,27 @@ var hugoForms = types.Forms{
 				Actions: types.Actions{
 					{
 						Plugin: "renameFile({$datadir}/content{path},{$datadir}/content{_rename_file})",
+					},
+					{
+						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),
+					},
+				},
+			},
+			"_section12": {Order: 120, Type: "section"},
+			"_copy_file": {
+				Order:     121,
+				Grid:      "ten wide",
+				LabelLong: "Recopier le fichier...",
+				Type:      "action",
+				HideSQL:   "select case when '{isdir}' = '1' then 'hide' else '' end",
+				Params: types.Params{
+					WithConfirm: true,
+					WithInput:   true,
+				},
+				Default: "{path}",
+				Actions: types.Actions{
+					{
+						Plugin: "copyFile({$datadir}/content{path},{$datadir}/content{_copy_file})",
 					},
 					{
 						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),

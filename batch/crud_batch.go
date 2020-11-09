@@ -332,6 +332,8 @@ func RunPlugin(command string) (string, error) {
 		err = deleteFile(command)
 	} else if strings.Contains(command, "renameFile") {
 		err = renameFile(command)
+	} else if strings.Contains(command, "copyFile") {
+		err = copyFile(command)
 	} else if strings.Contains(command, "deleteDirectory") {
 		err = deleteDirectory(command)
 	} else if strings.Contains(command, "renameDirectory") {
@@ -408,6 +410,32 @@ func deleteDirectory(command string) (err error) {
 
 	err = os.Remove(path)
 	return err
+}
+
+func copyFile(command string) (err error) {
+	re := regexp.MustCompile(`copyFile\((.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	pathSource := match[1]
+	_, err = os.Stat(pathSource)
+	if os.IsNotExist(err) {
+		return
+	}
+	pathDest := match[2]
+	_, err = os.Stat(pathDest)
+	if os.IsExist(err) {
+		return
+	}
+
+	data, err := ioutil.ReadFile(pathSource)
+	if err != nil {
+		return
+	}
+	err = ioutil.WriteFile(pathDest, data, 0644)
+	return
 }
 
 func renameFile(command string) (err error) {

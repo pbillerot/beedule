@@ -109,7 +109,7 @@ type View struct {
 	FormEdit     string   // Formulaire d'édition
 	FormView     string   // Masque de visualisation d'un enregistreement
 	FooterSQL    string   // requête sur la table courante
-	Hide         bool     // Vue cahchée dans le menu
+	Hide         bool     // Vue cachée dans le menu
 	HideOnMobile bool     // Vue cachée dur mobile
 	IconName     string   // nom de l'icone
 	Limit        int      // pour limiter le nbre de ligne dans la vue
@@ -134,13 +134,14 @@ type MaskList struct {
 
 // Form formulaire
 type Form struct {
-	Actions  Actions  // Action appel d'un formulaire ou exécution d'une requête SQL
-	Title    string   // Titre du formulaire
-	Group    string   // groupe qui peut accéder au formulaire
-	IconName string   // nom de l'icone
-	Elements Elements // Eléments à récupérer de la base de données
-	CheckSQL []string // retourne le libellé des erreurs lors du contrôle des rubriques
-	PostSQL  []string // Ordre exécutée après la validation si contrôle OK
+	Actions    Actions  // Action appel d'un formulaire ou exécution d'une requête SQL
+	Title      string   // Titre du formulaire
+	Group      string   // groupe qui peut accéder au formulaire
+	HideSubmit bool     // pour caher le bouton valider
+	IconName   string   // nom de l'icone
+	Elements   Elements // Eléments à récupérer de la base de données
+	CheckSQL   []string // retourne le libellé des erreurs lors du contrôle des rubriques
+	PostSQL    []string // Ordre exécutée après la validation si contrôle OK
 }
 
 // DBAlias alias des connections aux bases de données
