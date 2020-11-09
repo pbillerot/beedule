@@ -22,7 +22,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/exec"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -465,4 +467,16 @@ func createDirectory(command string) (err error) {
 
 	err = os.MkdirAll(path, 0666)
 	return err
+}
+
+func runHugoServer(command string) (err error) {
+	cmd := exec.Command("hugo", "server")
+	cmd.Dir = command
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	fmt.Printf("combined out:\n%s\n", string(out))
+
+	return
 }

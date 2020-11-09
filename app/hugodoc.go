@@ -79,7 +79,7 @@ var hugoElements = types.Elements{
 		LabelShort: "Brouillon",
 	},
 	"content": {
-		Type:       "editor",
+		Type:       "markdown",
 		LabelLong:  "Contenu",
 		LabelShort: "Contenu",
 		PostAction: types.Actions{
@@ -206,6 +206,7 @@ var hugoForms = types.Forms{
 				Order:     300,
 				Type:      "section",
 				LabelLong: "DOCUMENT",
+				Class:     "crud-card-view2",
 				Params: types.Params{
 					Form:     "fdoc",
 					IconName: "file code alternate outline",
@@ -261,7 +262,7 @@ var hugoForms = types.Forms{
 				Default: "{path}",
 				Actions: types.Actions{
 					{
-						Plugin: "renameDir({$datadir}/content{path},{$datadir}/content{_rename_dir})",
+						Plugin: "renameDirectory({$datadir}/content{path},{$datadir}/content{_rename_dir})",
 					},
 					{
 						Plugin: fmt.Sprintf("hugoDirectoryToSQL(%s,%s,%s)", "{$datadir}", "{$table}", "{$aliasdb}"),

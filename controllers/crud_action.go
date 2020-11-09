@@ -344,6 +344,10 @@ func (c *CrudActionElementController) Post() {
 		return
 	}
 
+	if err != nil {
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	}
 	if withPlugin {
 		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
 	} else {

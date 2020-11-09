@@ -5,12 +5,26 @@ $(document).ready(function () {
 
     var isUsed = false;
 
+    // Coloriage syntaxique
+    if ( $("#codemirror-markdown").length != 0) {
+        var myCodeMirror = CodeMirror.fromTextArea(
+            document.getElementById('codemirror-markdown')
+            , {
+                lineNumbers: false,
+                lineWrapping: true,
+                mode: 'yaml-frontmatter',
+                readOnly: false,
+                theme: 'eclipse',
+                viewportMargin: 20
+            }
+        );
+    }
     // Collapse
     $('.crud-collapse').on('click', function (event) {
         var portlet = $(this).closest('div');
-        if ( $(this).hasClass('open') ) {
+        if ($(this).hasClass('open')) {
             portlet.find('.icon').removeClass("open");
-		} else {
+        } else {
             portlet.find('.icon').addClass("open");
         }
         portlet.find('.list').toggle();
@@ -40,8 +54,8 @@ $(document).ready(function () {
         event.preventDefault();
     });
     // Validation par touche entrée
-    $('#search').on('keypress',function(e) {
-        if(e.which == 13) {
+    $('#search').on('keypress', function (e) {
+        if (e.which == 13) {
             $('#crud-search-go').trigger('click');
         }
     });
@@ -83,7 +97,7 @@ $(document).ready(function () {
 
     // CLIC URL
     $('.crud-jquery-url').on('click', function (event) {
-        if ( isUsed ) {
+        if (isUsed) {
             event.preventDefault();
             return
         }
