@@ -236,6 +236,9 @@
         {{range $i, $item := $arr}}
           <div class="ui tag brown label"><b>{{$item}}</b></div>
         {{end}}
+        {{if (eq $draft "1") }}
+        <div class="ui red label"><i class="check square icon"></i>Brouillon</div>
+        {{end}}
       </a>
     {{end}}
 {{ end }}
