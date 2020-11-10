@@ -5,8 +5,15 @@ $(document).ready(function () {
 
     var isUsed = false;
 
+    // Image Editor
+    if ($("#image-editor").length != 0) {
+        const ImageEditor = new FilerobotImageEditor();
+        var $url = $(this).data('url');
+        ImageEditor.open($url);
+    }
+
     // Coloriage syntaxique
-    if ( $("#codemirror-markdown").length != 0) {
+    if ($("#codemirror-markdown").length != 0) {
         var myCodeMirror = CodeMirror.fromTextArea(
             document.getElementById('codemirror-markdown')
             , {
@@ -19,6 +26,7 @@ $(document).ready(function () {
             }
         );
     }
+
     // Collapse
     $('.crud-collapse').on('click', function (event) {
         var portlet = $(this).closest('div');

@@ -98,11 +98,11 @@
         {{ range $num, $key := $cols }}
         {{ $val := CrudIndex $record $key }}
         {{ $element := index $elements $key }}
-        {{if and (eq $isSectionHide true) (eq $element.Hide false) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+        {{if and (eq $isSectionHide true) (eq $element.Hide false) (or (eq $element.Type "section") (eq $element.Type "image") (eq $element.Type "pdf"))}}
         {{$isSectionHide = false}}
         <!-- les champs de la section seront affichés -->
         {{end}}
-        {{if and (eq $element.Hide true) (or (eq $element.Type "section") (eq $element.Type "image"))}}
+        {{if and (eq $element.Hide true) (or (eq $element.Type "section") (eq $element.Type "image") (eq $element.Type "pdf"))}}
         {{$isSectionHide = true}}
         <!-- les champs de la section ne seront pas affichés -->
         {{end}}
@@ -181,12 +181,15 @@
                     {{end}}
                   </h4>
                 </div>
-                {{else if (eq $element.Type "image")}}
+                {{else if or (eq $element.Type "image") (eq $element.Type "pdf")}}
                 {{$url := CrudMacro $element.Params.Path $record $session}}
+                {{if $element.Params.URL }}
+                {{$url = CrudMacro $element.Params.URL $record $session}}
+                {{end}}
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
-            <div class="link card raised crud-card-view {{$element.Class}} crud-popup-image" data-url="{{$url}}?{{$composter}}">
+            <div class="link card raised crud-card-view {{$element.Class}} {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$url}}?{{$composter}}">
               <div class="ui image">
                 <img src="{{$element.Params.Path}}?{{$composter}}">
               </div>

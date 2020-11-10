@@ -85,7 +85,7 @@ type Element struct {
 	Required      bool     // obligatoire
 	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string   // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number percent plugin section tag tel text time radio url week
+	Type          string   // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
