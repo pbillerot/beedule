@@ -5,13 +5,6 @@ $(document).ready(function () {
 
     var isUsed = false;
 
-    // Image Editor
-    if ($("#image-editor").length != 0) {
-        const ImageEditor = new FilerobotImageEditor();
-        var $url = $(this).data('url');
-        ImageEditor.open($url);
-    }
-
     // Coloriage syntaxique
     if ($("#codemirror-markdown").length != 0) {
         var myCodeMirror = CodeMirror.fromTextArea(
@@ -188,6 +181,35 @@ $(document).ready(function () {
                     return true;
                 }
             }).modal('show');
+        event.preventDefault();
+    });
+
+    // CLIC IMAGE EDITOR POPUP
+    $('.crud-popup-image-editor').on('click', function (event) {
+        isUsed = true;
+
+        var $url = $(this).data('url');
+        var $key = $(this).data('key');
+        const config = {
+            language: 'fr',
+        };
+        const ImageEditor = new FilerobotImageEditor(config, {
+            onBeforeComplete: (props) => {
+                console.log("onBeforeComplete", props);
+                console.log("canvas-id", props.canvas.id);
+                var canvas = document.getElementById(props.canvas.id);
+                var dataurl = canvas.toDataURL();
+                $("#" + $key).val(dataurl);
+                $("#" + $key + "_img").attr('src', dataurl);
+                // $('#' + $key + '_form', document).submit();
+                return false;
+            },
+            onComplete: (props) => {
+                console.log("onComplete", props);
+                return true;
+            }
+        });
+        ImageEditor.open($url);
         event.preventDefault();
     });
 

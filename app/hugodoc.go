@@ -100,7 +100,9 @@ var hugoElements = types.Elements{
 		LabelLong:  "Image",
 		LabelShort: "Image",
 		Params: types.Params{
-			Path: "{$dataurl}/content{dir}/{base}",
+			URL:  "{$dataurl}/content{path}",
+			Path: "{$datadir}/content{path}",
+			Form: "fimage",
 		},
 		HideSQL: "select 'hide' where '{ext}' not in ('.png','.jpg')",
 	},
@@ -381,6 +383,23 @@ var hugoForms = types.Forms{
 			"base":      {Order: 50, ReadOnly: true, Grid: "seven wide"},
 			"_section2": {Order: 100, Type: "section"},
 			"content":   {Order: 150, Grid: "sixteen wide"},
+		},
+		Actions: types.Actions{
+			{
+				Plugin: "ContentToFile({$id},hugodoc,content,{$path})",
+			},
+		},
+	},
+	"fimage": {
+		Title:    "Editeur d'image",
+		IconName: "image outline",
+		Elements: types.Elements{
+			"_section1": {Order: 1, Type: "section"},
+			"id":        {Order: 10, Grid: "two wide"},
+			"path":      {Order: 40, ReadOnly: true, Grid: "seven wide"},
+			"base":      {Order: 50, ReadOnly: true, Grid: "seven wide"},
+			"_section2": {Order: 100, Type: "section"},
+			"_image":    {Order: 150, Grid: "sixteen wide"},
 		},
 		Actions: types.Actions{
 			{

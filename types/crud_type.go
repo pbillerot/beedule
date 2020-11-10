@@ -158,19 +158,20 @@ type Jointure struct {
 
 // Params paramètres d'un élément
 type Params struct {
-	Action        string
-	Form          string
-	IconName      string
-	Header        []string
-	Description   []string
-	Meta          []string
-	Extra         []string
-	URL           string
-	Path          string
-	SQL           []string
-	WithConfirm   bool
-	WithInput     bool
-	WithInputFile bool
+	Action          string
+	Form            string
+	IconName        string
+	Header          []string
+	Description     []string
+	Meta            []string
+	Extra           []string
+	URL             string
+	Path            string
+	SQL             []string
+	WithConfirm     bool
+	WithInput       bool
+	WithInputFile   bool
+	WithImageEditor bool
 }
 
 // Actions as

@@ -508,3 +508,16 @@ func runHugoServer(command string) (err error) {
 
 	return
 }
+
+func saveImage(command string) (err error) {
+	re := regexp.MustCompile(`saveImage\((.*),(.*)\)`)
+	match := re.FindStringSubmatch(command)
+	if len(match) == 0 {
+		return
+	}
+
+	path := match[1]
+	sbuf := match[2]
+	err = ioutil.WriteFile(path, []byte(sbuf), 0644)
+	return
+}

@@ -15,6 +15,7 @@
 {{$coldisplay := .ColDisplay}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
+{{$composter := .Composter}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -196,6 +197,21 @@
   </div>
 {{else if (eq $element.Type "hidden")}}
   <input type="hidden" name="{{$key}}" value="{{$val}}">
+{{else if (eq $element.Type "image")}}
+<div class="ui card raised crud-card-view2 {{$element.Class}}" >
+  <div class="ui image">
+    <img id="{{$key}}_img" src="{{$element.Params.URL}}?{{$composter}}">
+  </div>
+  <div class="content">
+    <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
+  </div>
+  <div id="image-editor" class="ui bottom attached button crud-popup-image-editor"
+  data-url="{{$element.Params.URL}}" data-key="{{$key}}">
+    <i class="edit icon"></i>
+    Lancer l'éditeur
+  </div>
+  <input type="hidden" id="{{$key}}" name="{{$key}}" value="">
+</div>
 {{else if (eq $element.Type "radio")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}inline  {{$element.Grid}}  fields {{$element.Error}}">

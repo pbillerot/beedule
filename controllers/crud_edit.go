@@ -1,7 +1,12 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
+	"image/png"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/pbillerot/beedule/app"
@@ -247,6 +252,62 @@ func (c *CrudEditController) Post() {
 	for key, element := range elements {
 		record[key] = element.SQLout
 	}
+
+	// Traitements particuliers pour les images
+	// Enregistrement de l'image modifiée
+	for _, element := range elements {
+		if element.Type == "image" {
+			b64data := element.SQLout[strings.IndexByte(element.SQLout, ',')+1:]
+			unbased, err := base64.StdEncoding.DecodeString(b64data)
+			// img, _, err := image.Decode(bytes.NewReader([]byte(element.SQLout)))
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+				berr = true
+				break
+			}
+			r := bytes.NewReader(unbased)
+
+			outputFile, err := os.Create(element.Params.Path)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+				berr = true
+				break
+			}
+			defer outputFile.Close()
+			// outputFile.Write([]byte(element.SQLout))
+
+			ext := filepath.Ext(element.Params.Path)
+			if ext == ".png" {
+				im, err := png.Decode(r)
+				if err != nil {
+					flash.Error(err.Error())
+					flash.Store(&c.Controller)
+					berr = true
+					break
+				}
+				err = png.Encode(outputFile, im)
+				if err != nil {
+					flash.Error(err.Error())
+					flash.Store(&c.Controller)
+					berr = true
+				}
+			}
+			// if ext == ".jpg" {
+			// 	var opts jpeg.Options
+			// 	opts.Quality = 1
+			// 	err = jpeg.Encode(outputFile, img, &opts)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 	}
+			// }
+
+		}
+	}
+
 	// PostActions des éléments
 	for _, element := range elements {
 		if len(element.PostAction) > 0 {

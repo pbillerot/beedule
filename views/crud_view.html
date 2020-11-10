@@ -17,6 +17,7 @@
 {{$elements := .Elements}}
 {{$cols := .Cols}}
 {{$composter := .Composter}}
+{{$xsrfdata := .xsrfdata}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -183,18 +184,23 @@
                 </div>
                 {{else if or (eq $element.Type "image") (eq $element.Type "pdf")}}
                 {{$url := CrudMacro $element.Params.Path $record $session}}
-                {{if $element.Params.URL }}
-                {{$url = CrudMacro $element.Params.URL $record $session}}
-                {{end}}
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
-            <div class="link card raised crud-card-view {{$element.Class}} {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$url}}?{{$composter}}">
-              <div class="ui image">
-                <img src="{{$element.Params.Path}}?{{$composter}}">
+            <div class="card raised crud-card-view {{$element.Class}}" >
+              <div class="ui image {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$element.Params.URL}}?{{$composter}}">
+                <img src="{{$element.Params.URL}}?{{$composter}}">
               </div>
               <div class="content">
                 <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
+                </div>
+                {{if $element.Params.Form}}
+                <div class="ui bottom attached button crud-jquery-url"
+                data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+                  <i class="edit icon"></i>
+                  Mofifier l'image
+                </div>              
+                {{end}}
                 {{else if (eq $element.Type "markdown")}}
                 <div class="description">
                   <div class="meta">
