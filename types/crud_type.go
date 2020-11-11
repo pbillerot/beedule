@@ -24,6 +24,8 @@ type Application struct {
 	Group    string
 	Path     string    // Path ou URL de l'application externe
 	AppViews []AppView // Vues des tables liées à l'application
+	DataDir  string
+	DataURL  string
 }
 
 // AppView Vue liée à l'application

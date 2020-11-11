@@ -22,25 +22,57 @@ func init() {
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "./database/beedule.sqlite")
 
-	aliass := map[string]bool{}
-	for _, table := range app.Tables {
-		alias := table.AliasDB
-		section, _ := beego.AppConfig.GetSection(alias)
-		// connecteur db
-		drivertype, _ := strconv.Atoi(section["drivertype"])
-		drivername := section["drivername"]
-		datasource := section["datasource"]
-		dataurl := "/crud/data/" + alias
-		datadir := section["datadir"]
-		if _, ok := aliass[alias]; ok == false {
-			aliass[alias] = true
+	// boucle sur les applications pour charger les donnecteurs aux base de données
+	// et les répertoires statiques du serveur
+	for appid := range app.Applications {
+		section, err := beego.AppConfig.GetSection(appid)
+		if err != nil {
+			beego.Error("GetSection", appid, err)
+		}
+		if datasource, ok := section["datasource"]; ok {
+			drivertype, _ := strconv.Atoi(section["drivertype"])
+			drivername := section["drivername"]
 			orm.RegisterDriver(drivername, orm.DriverType(drivertype))
-			orm.RegisterDataBase(alias, drivername, datasource)
-			beego.Info("Enregistrement connecteur", alias, drivertype, drivername, datasource)
-			beego.SetStaticPath(dataurl, datadir)
-			beego.Info("Enregistrement url static", dataurl, datadir)
+			orm.RegisterDataBase(appid, drivername, datasource)
+			beego.Info("Enregistrement connecteur", appid, drivertype, drivername, datasource)
 		}
 	}
+	for appid := range app.Applications {
+		section, err := beego.AppConfig.GetSection(appid)
+		if err != nil {
+			beego.Error("GetSection", appid, err)
+		}
+		if datadir, ok := section["datadir"]; ok {
+			if dataurl, ok := section["dataurl"]; ok {
+				beego.SetStaticPath(dataurl, datadir)
+				beego.Info("Enregistrement url static", dataurl, datadir)
+			} else {
+				dataurl = "/crud/data/" + appid
+				beego.SetStaticPath(dataurl, datadir)
+				beego.Info("Enregistrement url static", dataurl, datadir)
+			}
+		}
+	}
+
+	// aliass := map[string]bool{}
+	// for _, table := range app.Tables {
+	// 	alias := table.AliasDB
+	// 	section, _ := beego.AppConfig.GetSection(alias)
+	// 	// connecteur db
+	// 	drivertype, _ := strconv.Atoi(section["drivertype"])
+	// 	drivername := section["drivername"]
+	// 	datasource := section["datasource"]
+	// 	dataurl := "/crud/data/" + alias
+	// 	datadir := section["datadir"]
+	// 	if _, ok := aliass[alias]; ok == false {
+	// 		aliass[alias] = true
+	// 		orm.RegisterDriver(drivername, orm.DriverType(drivertype))
+	// 		orm.RegisterDataBase(alias, drivername, datasource)
+	// 		beego.Info("Enregistrement connecteur", alias, drivertype, drivername, datasource)
+	// 		beego.SetStaticPath(dataurl, datadir)
+	// 		beego.Info("Enregistrement url static", dataurl, datadir)
+	// 	}
+	// }
 
 	if ok, _ := beego.AppConfig.Bool("debug"); ok {
 		orm.Debug = true
