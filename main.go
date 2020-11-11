@@ -14,10 +14,6 @@ import (
 	"github.com/pbillerot/beedule/types"
 )
 
-// var AppCtx map[string]map[string]string
-
-// AppCtx = make(AppCtx)
-
 func init() {
 	// Enregistrement des drivers des base de données
 	// l'alias : Tables[alias]string
@@ -63,26 +59,6 @@ func init() {
 			// app.Applications[appid].Ctx = &ctx
 		}
 	}
-
-	// aliass := map[string]bool{}
-	// for _, table := range app.Tables {
-	// 	alias := table.AliasDB
-	// 	section, _ := beego.AppConfig.GetSection(alias)
-	// 	// connecteur db
-	// 	drivertype, _ := strconv.Atoi(section["drivertype"])
-	// 	drivername := section["drivername"]
-	// 	datasource := section["datasource"]
-	// 	dataurl := "/crud/data/" + alias
-	// 	datadir := section["datadir"]
-	// 	if _, ok := aliass[alias]; ok == false {
-	// 		aliass[alias] = true
-	// 		orm.RegisterDriver(drivername, orm.DriverType(drivertype))
-	// 		orm.RegisterDataBase(alias, drivername, datasource)
-	// 		beego.Info("Enregistrement connecteur", alias, drivertype, drivername, datasource)
-	// 		beego.SetStaticPath(dataurl, datadir)
-	// 		beego.Info("Enregistrement url static", dataurl, datadir)
-	// 	}
-	// }
 
 	if ok, _ := beego.AppConfig.Bool("debug"); ok {
 		orm.Debug = true

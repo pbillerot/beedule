@@ -586,6 +586,7 @@ func setContextEdf(c beego.Controller, appid string) {
 	c.Data["Config"] = &config
 
 	// XSRF protection des formulaires
+	c.XSRFExpire = 7200
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Title
 	c.Data["Title"] = config.Appname

@@ -23,21 +23,6 @@
         </div>
         <div class="menu">
           <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
-          {{if $app.AppViews}}
-          <div class="divider"></div>
-          {{end}}
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
-          {{if (CrudIsInGroup $v.Group $session)}}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
-            <i class="{{$v.IconName}} icon"></i>
-            {{$v.Title}}
-          </a>
-          {{end}}
-          <!-- end if isingroup -->
-          {{end}}
           <!-- end range appViewq-->
           <div class="divider"></div>
           <div class="header">
@@ -51,14 +36,6 @@
       </div>
       <div class="header item" id="crud-header">
         <span class="crud-mobile-hide">
-          {{$view.Title}}
-          {{if (eq $qrecords 0)}}
-          (auncun élément)
-          {{else if (eq $qrecords 1)}}
-          (1 élément)
-          {{else}}
-          ({{$qrecords}} éléments)
-          {{end}}
         </span>
       </div>
       <!-- RIGHT MENU -->
@@ -68,46 +45,13 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+              <input type="text" id="search" data-url=""
                 value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
           </div>
         </div>
-        {{if or $view.Actions $view.FormAdd}}
-        <div class="ui dropdown item">
-          <i class="ellipsis vertical icon"></i>
-          <div class="menu">
-            {{if $view.FormAdd}}
-            <a class="ui icon item crud-jquery-url"
-              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
-              <i class="plus square icon"></i> Ajouter un élément...
-            </a>
-            {{end}}
-            {{if $view.Actions}}
-            {{if $view.FormAdd}}
-            <div class="divider"></div>
-            {{end}}
-            {{range $iaction, $action := $view.Actions}}
-            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/crud/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
-              {{if $action.Checkbox.GetSQL}}
-              <div class="ui toggle checkbox">
-                <input type="checkbox"{{if (eq (CrudSQL $action.Checkbox.GetSQL $action.Checkbox.AliasDB) `1`)}} checked="checked"{{end}}>
-                <label>{{$action.Label}}</label>
-              </div>
-              {{else}}
-              {{str2html $action.Label}}
-              {{end}}
-            </a>
-            {{end}}
-            <!-- end range actions-->
-            {{end}}
-            <!-- end if actions-->
-          </div>
-        </div>
-        {{end}}
         <!-- end dropdown MENU à droite -->
       </div>
       <!-- end right menu -->
@@ -119,122 +63,8 @@
       {{template "_crud_flash.html" .}}
       <!-- Title on Mobile -->
       <div class="crud-mobile-show ui label">
-        {{$view.Title}}
-        {{if (eq $qrecords 0)}}
-        (auncun élément)
-        {{else if (eq $qrecords 1)}}
-        (1 élément)
-        {{else}}
-        ({{$qrecords}} éléments)
-        {{end}}
       </div>
       <!-- ITEMS -->
-      {{ range $irecord, $record := .Records }}
-      <a id="{{CrudIndexAnchor $record $tablekey}}"
-        class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-card-searchable"
-        {{if or $view.FormView $view.Deletable}}
-        data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
-        {{else if and $view.FormEdit}}
-        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
-        {{end}}>
-        <i class="mini {{$theme}} {{$view.IconName}} middle aligned icon"></i>
-        <div class="content">
-          {{if $view.Mask.Header}}
-          <div class="header">
-            {{range $im, $key := $view.Mask.Header}}
-            {{ $element := index $elements $key }}
-            {{ $class := CrudClassSQL $element $record $session}}
-            {{ $val := CrudIndex $record $key}}
-            {{if (eq $element.Type "combobox")}}
-            <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
-            {{else}}
-            <span class="ui {{$class}} text searchable">{{CrudFormat $element.Format $val}}</span>
-            {{end}}
-            {{end}}
-          </div><!-- end Header -->
-          {{end}}
-          {{if $view.Mask.Meta}}
-          <div class="meta">
-            {{range $im, $key := $view.Mask.Meta}}
-            {{ $element := index $elements $key }}
-            {{ $class := CrudClassSQL $element $record $session}}
-            {{ $val := CrudIndex $record $key}}
-            {{if (eq $element.Type "checkbox")}}
-            {{if (eq $val "1") }}
-            <div class="ui label">
-              <i class="check square outline icon"></i>
-              <span class="searchable">{{$element.LabelLong}}</span>
-            </div>
-            {{else}}
-            <div class="ui label">
-              <i class="square outline icon"></i>
-              <span>{{$element.LabelLong}}</span>
-            </div>
-            {{end}}
-            {{else if (eq $element.Type "combobox")}}
-            <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
-            {{else if (eq $element.Type "tag")}}
-            {{$arr := CrudSplit $val ","}}
-            {{range $i, $item := $arr}}
-            <div class="ui tag label"><b>{{$item}}</b></div>
-            {{end}}
-            {{else if (eq $element.Type "hidden")}}
-            <input type="hidden" name="{{$key}}">
-            {{else}}
-            <!-- autre type -->
-            {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-            <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
-            {{end}}
-            {{end}}
-          </div><!-- end Meta -->
-          {{end}}
-          {{if $view.Mask.Description}}
-          <div class="description">
-            {{range $im, $key := $view.Mask.Description}}
-            {{ $element := index $elements $key }}
-            {{ $class := CrudClassSQL $element $record $session}}
-            {{ $val := CrudIndex $record $key}}
-            <span class="ui orange {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
-            {{end}}
-          </div><!-- end Description -->
-          {{end}}
-          {{if $view.Mask.Extra}}
-          <div class="extra">
-            {{range $im, $key := $view.Mask.Extra}}
-            {{ $element := index $elements $key }}
-            {{ $class := CrudClassSQL $element $record $session}}
-            {{ $val := CrudIndex $record $key}}
-            {{if (eq $element.Type "checkbox")}}
-            {{if (eq $val "1") }}
-            <div class="ui label">
-              <i class="check square outline icon"></i>
-              <span class="searchable">{{$element.LabelLong}}</span>
-            </div>
-            {{else}}
-            <div class="ui label">
-              <i class="square outline icon"></i>
-              <span>{{$element.LabelLong}}</span>
-            </div>
-            {{end}}
-            {{else if (eq $element.Type "combobox")}}
-            <span class="ui {{$class}} text searchable">{{CrudItem $element.Items $val}} ({{$val}})</span>
-            {{else if (eq $element.Type "tag")}}
-            {{$arr := CrudSplit $val ","}}
-            {{range $i, $item := $arr}}
-            <div class="ui tag label"><b>{{$item}}</b></div>
-            {{end}}
-            {{else}}
-            <!-- autre type -->
-            {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-            <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span>
-            {{end}}
-            {{end}}
-          </div><!-- end Extra -->
-          {{end}}
-        </div><!-- end content -->
-        <!-- end range $cols -->
-      </a> <!-- end item -->
-      {{end}}
       <!-- end range $records -->
       <!-- </div>end items -->
     </div> <!-- end container-->
@@ -260,7 +90,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form method="POST" action="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+  <form method="POST" action="">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
     <input type="hidden" id="crud-form-searchstop" name="searchstop">
@@ -268,7 +98,7 @@
     <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
   </form>
   <!-- CONTEXTE -->
-  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+  <input type="hidden" id="crud_view" value="">
 
   {{template "_crud_foot.html" .}}
 </body>
