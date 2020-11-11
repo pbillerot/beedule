@@ -97,7 +97,7 @@ var hugoElements = types.Elements{
 	},
 	"_image": {
 		Type:       "image",
-		LabelLong:  "Image",
+		LabelLong:  "",
 		LabelShort: "Image",
 		Params: types.Params{
 			URL:  "{$dataurl}/content{path}",
@@ -111,8 +111,8 @@ var hugoElements = types.Elements{
 		LabelLong:  "Visualiser ou Télécharger le PDF",
 		LabelShort: "PDF",
 		Params: types.Params{
-			URL:  "{$dataurl}/content{path}",
-			Path: "/crud/static/img/pdf.png",
+			URL: "{$dataurl}/content{path}",
+			Src: "/crud/static/img/pdf.png",
 		},
 		HideSQL: "select 'hide' where '{ext}' not in ('.pdf')",
 	},

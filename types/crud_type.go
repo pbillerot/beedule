@@ -167,6 +167,7 @@ type Params struct {
 	Extra           []string
 	URL             string
 	Path            string
+	Src             string
 	SQL             []string
 	WithConfirm     bool
 	WithInput       bool

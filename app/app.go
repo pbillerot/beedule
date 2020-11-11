@@ -69,6 +69,11 @@ var Applications = map[string]types.Application{
 			{Tableid: "hugodoc", Viewid: "vall"},
 		},
 	},
+	"asf": {
+		Title: "AFE : Administration Site Foirexpo",
+		Image: "/crud/static/img/hugoSM.png",
+		Path:  "/edf/asf",
+	},
 }
 
 // Tables Liens vers les tables

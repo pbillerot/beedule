@@ -188,18 +188,19 @@
               </div> <!-- end content card -->
             </div> <!-- end card -->
             <div class="card raised crud-card-view {{$element.Class}}" >
-              <div class="ui image {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$element.Params.URL}}?{{$composter}}">
-                <img src="{{$element.Params.URL}}?{{$composter}}">
-              </div>
+              <a class="ui link image {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$element.Params.URL}}?{{$composter}}">
+                <img src="{{if $element.Params.Src}}{{$element.Params.Src}}{{else}}{{$element.Params.URL}}{{end}}?{{$composter}}">
+              </a>
               <div class="content">
+                {{if $element.LabelLong }}
                 <div class="center aligned description"><b>{{$element.LabelLong}}</b></div>
-                </div>
+                {{end}}
                 {{if $element.Params.Form}}
+              </div>
                 <div class="ui bottom attached button crud-jquery-url"
                 data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
                   <i class="edit icon"></i>
                   Mofifier l'image
-                </div>              
                 {{end}}
                 {{else if (eq $element.Type "markdown")}}
                 <div class="description">

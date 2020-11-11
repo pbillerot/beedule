@@ -139,21 +139,21 @@ var quotesElements = types.Elements{
 		Type:      "image",
 		LabelLong: "Graph du jour",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/day/{id}.png",
+			URL: "/crud/data/picsou/png/day/{id}.png",
 		},
 	},
 	"_image_histo": {
 		Type:      "image",
 		LabelLong: "Historique sur 1 mois",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/quotes/{id}.png",
+			URL: "/crud/data/picsou/png/quotes/{id}.png",
 		},
 	},
 	"_image_analyse": {
 		Type:      "image",
 		LabelLong: "Analyse sur 7 mois",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/ana/{id}.gif",
+			URL: "/crud/data/picsou/png/ana/{id}.gif",
 		},
 	},
 }

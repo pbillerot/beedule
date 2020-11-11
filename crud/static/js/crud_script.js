@@ -192,16 +192,23 @@ $(document).ready(function () {
         var $key = $(this).data('key');
         const config = {
             language: 'fr',
+            tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
+            translations : {
+                fr: {
+                    'toolbar.download': 'Valider'
+                },
+            }
         };
+        var mime = $url.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        // https://github.com/scaleflex/filerobot-image-editor
         const ImageEditor = new FilerobotImageEditor(config, {
             onBeforeComplete: (props) => {
                 console.log("onBeforeComplete", props);
                 console.log("canvas-id", props.canvas.id);
                 var canvas = document.getElementById(props.canvas.id);
-                var dataurl = canvas.toDataURL();
+                var dataurl = canvas.toDataURL(mime, 1);
                 $("#" + $key).val(dataurl);
                 $("#" + $key + "_img").attr('src', dataurl);
-                // $('#' + $key + '_form', document).submit();
                 return false;
             },
             onComplete: (props) => {

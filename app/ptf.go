@@ -291,7 +291,7 @@ var ptfElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/quotes/{ptf_id}.png",
+			URL: "/crud/data/picsou/png/quotes/{ptf_id}.png",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
@@ -308,7 +308,7 @@ var ptfElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/ana/{ptf_id}.gif",
+			URL: "/crud/data/picsou/png/ana/{ptf_id}.gif",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
