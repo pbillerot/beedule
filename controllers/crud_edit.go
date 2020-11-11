@@ -1,12 +1,9 @@
 package controllers
 
 import (
-	"bytes"
 	"encoding/base64"
 	"fmt"
-	"image/png"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/pbillerot/beedule/app"
@@ -266,7 +263,6 @@ func (c *CrudEditController) Post() {
 				berr = true
 				break
 			}
-			r := bytes.NewReader(unbased)
 
 			outputFile, err := os.Create(element.Params.Path)
 			if err != nil {
@@ -276,24 +272,26 @@ func (c *CrudEditController) Post() {
 				break
 			}
 			defer outputFile.Close()
-			// outputFile.Write([]byte(element.SQLout))
 
-			ext := filepath.Ext(element.Params.Path)
-			if ext == ".png" {
-				im, err := png.Decode(r)
-				if err != nil {
-					flash.Error(err.Error())
-					flash.Store(&c.Controller)
-					berr = true
-					break
-				}
-				err = png.Encode(outputFile, im)
-				if err != nil {
-					flash.Error(err.Error())
-					flash.Store(&c.Controller)
-					berr = true
-				}
-			}
+			outputFile.Write(unbased)
+
+			// r := bytes.NewReader(unbased)
+			// ext := filepath.Ext(element.Params.Path)
+			// if ext == ".png" {
+			// 	im, err := png.Decode(r)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 		break
+			// 	}
+			// 	err = png.Encode(outputFile, im)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 	}
+			// }
 			// if ext == ".jpg" {
 			// 	var opts jpeg.Options
 			// 	opts.Quality = 1
