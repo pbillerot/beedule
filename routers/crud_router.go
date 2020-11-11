@@ -26,4 +26,8 @@ func init() {
 	beego.Router("/crud/actionv/:app/:table/:view/:action", &controllers.CrudActionViewController{})
 	beego.Router("/crud/actionf/:app/:table/:view/:form/:id/:action", &controllers.CrudActionFormController{})
 	beego.Router("/crud/actione/:app/:table/:view/:form/:id/:action", &controllers.CrudActionElementController{})
+
+	// EXPLORATEUR DE FICHIERS : EDF
+	beego.Router("/edf/list/:app/:dir/:base", &controllers.EdfListController{}, "get:EdfList;post:EdfList")
+
 }

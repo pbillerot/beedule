@@ -546,3 +546,52 @@ func requeteSQL(c beego.Controller, in string, record orm.Params, aliasDB string
 	}
 	return
 }
+
+// setContext remplissage du controller.Data
+func setContextEdf(c beego.Controller, appid string) {
+	// Contexte de l'appilcation
+	c.Data["Application"] = app.Applications[appid]
+
+	// Context lié à custom.conf
+	// c.Data["DataUrl"] = Ctx[appid]["dataurl"]
+	// c.Data["Datadir"] = Ctx[appid]["dataurl"]
+
+	// Contexte de la session
+	session := types.Session{}
+	if c.GetSession("LoggedIn") != nil {
+		session.LoggedIn = c.GetSession("LoggedIn").(bool)
+	}
+	if c.GetSession("Username") != nil {
+		session.Username = c.GetSession("Username").(string)
+	}
+	if c.GetSession("IsAdmin") != nil {
+		session.IsAdmin = c.GetSession("IsAdmin").(bool)
+	}
+	if c.GetSession("Groups") != nil {
+		session.Groups = c.GetSession("Groups").(string)
+	}
+	c.Data["Session"] = &session
+
+	// Identité du framework Beedule
+	config := types.Config{}
+	config.Appname = beego.AppConfig.String("appname")
+	config.Appnote = beego.AppConfig.String("appnote")
+	config.Date = beego.AppConfig.String("date")
+	config.Icone = beego.AppConfig.String("icone")
+	config.Site = beego.AppConfig.String("site")
+	config.Email = beego.AppConfig.String("email")
+	config.Author = beego.AppConfig.String("author")
+	config.Version = beego.AppConfig.String("version")
+	config.Theme = beego.AppConfig.String("theme")
+	c.Data["Config"] = &config
+
+	// XSRF protection des formulaires
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	// Title
+	c.Data["Title"] = config.Appname
+	c.Data["Portail"] = &app.Portail
+	// Contexte de navigation
+	c.Data["From"] = c.Ctx.Input.Cookie("from")
+	// Sera ajouté derrière les urls pour ne pas utiliser le cache des images dynamiques
+	c.Data["Composter"] = time.Now().Unix()
+}
