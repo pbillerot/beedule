@@ -89,7 +89,6 @@ func init() {
 			batch.StartBatch()
 		}
 	}
-
 }
 func main() {
 	beego.Run()

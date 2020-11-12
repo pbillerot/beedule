@@ -36,11 +36,27 @@ func init() {
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
 	beego.AddFuncMap("CrudDebug", CrudDebug)
+	beego.AddFuncMap("HugoIncrement", HugoIncrement)
+	beego.AddFuncMap("HugoDecrement", HugoDecrement)
 }
 
 // CrudDebug as
 func CrudDebug(msg string) (out string) {
 	beego.Debug(msg)
+	return
+}
+
+// HugoIncrement as
+func HugoIncrement(in int) (out int) {
+	in++
+	out = in
+	return
+}
+
+// HugoDecrement as
+func HugoDecrement(in int) (out int) {
+	in--
+	out = in
 	return
 }
 

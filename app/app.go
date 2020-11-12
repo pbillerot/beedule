@@ -1,6 +1,8 @@
 package app
 
-import "github.com/pbillerot/beedule/types"
+import (
+	"github.com/pbillerot/beedule/types"
+)
 
 // Applications présentées sur le portail
 var Applications = map[string]types.Application{
@@ -73,9 +75,10 @@ var Applications = map[string]types.Application{
 		},
 	},
 	"asf": {
-		Title: "AFE : Administration Site Foirexpo",
-		Image: "/crud/static/img/hugoSM.png",
-		Path:  "/edf/list/asf",
+		Title: "ASF : Administration du site FOIREXPO",
+		Group: "admin",
+		Image: "/crud/static/img/edf.svg",
+		Path:  "/hugo/li/asf",
 	},
 }
 

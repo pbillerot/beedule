@@ -1,0 +1,195 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$dirid := .DirId}}
+{{$baseid := .BaseId}}
+{{$composter := .Composter}}
+{{$search := .Search}}
+{{$records := .Records}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/crud" class="item"><i class="home icon"></i> Page d'accueil</a>
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/crud/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/crud/logout">Se déconnecter</a>
+          <a href="/crud/about" class="item">À propos</a>
+        </div>
+      </div>
+      <div class="header item" id="crud-header">
+        <span class="crud-mobile-hide">
+          {{.TabTitle}}
+        </span>
+      </div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="ui icon item">
+          <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
+          <!-- Recherche -->
+          <div style="display: none" id="crud-search">
+            <div class="ui icon input">
+              <input type="text" id="search" data-url=""
+                value="{{$search}}" placeholder="Recherche...">
+              <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
+            </div>
+            <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
+          </div>
+        </div>
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container crud-searchable">
+      {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{.TabTitle}}
+      </div>
+      <div class="ui large divided list">
+        <!-- ITEMS -->
+      {{ $currentLevel := 0}}
+      {{ $anchor := ""}}
+      {{ range $irecord, $record := .Records }}
+
+{{ if lt $record.Level $currentLevel}}
+    </div> <!-- /content-->
+  </div> <!-- /item-->
+</div> <!-- /list-->
+  {{ $currentLevel = HugoDecrement $currentLevel }}
+{{end}}
+{{ if lt $record.Level $currentLevel}}
+    </div> <!-- /content-->
+  </div> <!-- /item-->
+</div> <!-- /list-->
+  {{ $currentLevel = HugoDecrement $currentLevel }}
+{{end}}
+{{ if lt $record.Level $currentLevel}}
+      </div> <!-- /content-->
+    </div> <!-- /item-->
+  </div> <!-- /list-->
+  {{ $currentLevel = HugoDecrement $currentLevel }}
+{{ end }}
+{{ if eq $record.IsDir "1" }}
+  {{if eq $record.Level 1}}{{$anchor = printf "%s/%s" $record.Dir $record.Base}}{{end}}
+  {{ if eq $record.Level $currentLevel}}
+  {{ if gt $currentLevel 0}}
+    </div><!-- /content -->
+    </div><!-- /item-->
+  {{end}}
+      <div class="item">
+      <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $record.Level 1}}{{$anchor}}{{end}}"></i>
+        <div class="content">
+          <a class="header crud-jquery-url" 
+          data-url="/hugo/vi/{{$appid}}/{{$record.Dir}}/{{$record.Base}}">{{$record.Base}}</a>
+  {{ else if gt $record.Level $currentLevel }}
+            {{if gt $record.Level 1}}<div class="list"{{if eq $search ``}} style="display: none;"{{end}}>{{end}}
+              <div class="item">
+                <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $record.Level 1}}{{$anchor}}{{end}}"></i>
+                <div class="content">
+                  <a class="header crud-jquery-url" 
+                  data-url="/hugo/vi/{{$appid}}/{{$record.Dir}}/{{$record.Base}}"
+                  >{{$record.Base}}</a>
+  {{ end }}
+{{ else }}
+    <!-- document -->
+    {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
+    <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
+      data-url="/hugo/vi/{{$appid}}/{{$record.Dir}}/{{$record.Base}}">
+      <i class="image outline blue large icon"></i>{{$record.Base}}</a>
+    {{ else if (eq $record.Ext ".pdf")}}
+    <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
+      data-url="/hugo/vi/{{$appid}}/{{$record.Dir}}/{{$record.Base}}">
+      <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
+    {{else}}
+      <a id="{{$anchor}}" class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
+      data-url="/hugo/vi/{{$appid}}/{{$record.Dir}}/{{$record.Base}}">
+        <i class="file alternate outline green large icon"></i>
+        <span class="ui medium grey text">{{$record.Base}}</span> <span class="ui purple text">[{{$record.Title}}]</span>
+        {{$arr := CrudSplit $record.Tags ","}}
+        {{range $i, $item := $arr}}
+          <div class="ui green label"><b>#{{$item}}</b></div>
+        {{end}}
+        {{$arr := CrudSplit $record.Categories ","}}
+        {{range $i, $item := $arr}}
+          <div class="ui tag brown label"><b>{{$item}}</b></div>
+        {{end}}
+        {{if (eq $record.Draft "1") }}
+        <div class="ui red label"><i class="check square icon"></i>Brouillon</div>
+        {{end}}
+      </a>
+    {{end}}
+{{ end }}
+    <!-- / isdir-->
+  {{ $currentLevel = $record.Level }}
+{{end}}
+    <!-- end range $records -->
+{{ if ne $currentLevel 1}}
+  </div> <!-- /content-->
+</div> <!-- /item-->
+</div> <!-- /list-->
+{{end}}
+{{ $currentLevel = HugoDecrement $currentLevel }}
+{{ if ne $currentLevel 1}}
+  </div> <!-- /content-->
+</div> <!-- /item-->
+</div> <!-- /list-->
+{{end }}
+</div> <!-- end container-->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui basic modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
+  <form method="POST" action="">
+    {{ .xsrfdata }}
+    <input type="hidden" id="crud-form-search" name="search">
+    <input type="hidden" id="crud-form-searchstop" name="searchstop">
+    <input type="hidden" id="crud-form-sortid" name="sortid">
+    <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
+  </form>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="">
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>
