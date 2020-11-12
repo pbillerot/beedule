@@ -24,6 +24,7 @@ type Application struct {
 	Group    string
 	Path     string    // Path ou URL de l'application externe
 	AppViews []AppView // Vues des tables liées à l'application
+	Target   string    // _blank pour ouvrir l'application dans un nouvel onglet
 }
 
 // AppView Vue liée à l'application

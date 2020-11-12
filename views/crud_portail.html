@@ -36,7 +36,7 @@
                 {{range $appid, $app := .Portail.Applications}}
                 {{if (CrudIsInGroup $app.Group $session)}}
                     {{if $app.Path }}
-                    <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
+                    <a class="card raised crud-card-portail" target="{{$app.Target}}" href="{{$app.Path}}">
                         <div class="ui circular image">
                             <img src="{{$app.Image}}">
                         </div>

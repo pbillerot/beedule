@@ -46,19 +46,22 @@ var Applications = map[string]types.Application{
 		},
 	},
 	"filebrowser": {
-		Title: "Gestionnaire de fichiers",
-		Image: "/crud/static/img/filebrowser.svg",
-		Path:  "/fb",
+		Title:  "Gestionnaire de fichiers",
+		Image:  "/crud/static/img/filebrowser.svg",
+		Path:   "/fb",
+		Target: "_blank",
 	},
 	"navidrome": {
-		Title: "Serveur de streaming de musique",
-		Image: "/crud/static/img/navidrome.png",
-		Path:  "/nv",
+		Title:  "Serveur de streaming de musique",
+		Image:  "/crud/static/img/navidrome.png",
+		Path:   "/nv",
+		Target: "_blank",
 	},
 	"foirexpo": {
-		Title: "Portail foirexpo",
-		Image: "/crud/static/img/public.png",
-		Path:  "/foirexpo",
+		Title:  "Portail foirexpo",
+		Image:  "/crud/static/img/public.png",
+		Path:   "/foirexpo",
+		Target: "_blank",
 	},
 	"foiredit": {
 		Title: "Admin Foirexpo",
@@ -72,7 +75,7 @@ var Applications = map[string]types.Application{
 	"asf": {
 		Title: "AFE : Administration Site Foirexpo",
 		Image: "/crud/static/img/hugoSM.png",
-		Path:  "/edf/asf",
+		Path:  "/edf/list/asf",
 	},
 }
 
