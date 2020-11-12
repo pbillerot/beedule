@@ -87,9 +87,6 @@ func (c *AboutController) Get() {
 func (c *LoginController) Get() {
 	setContext(c.Controller, "users")
 	c.Data["Title"] = "Beedule"
-	beego.Info("XSRFToken", c.XSRFToken())
-	beego.Info("xsrfdata", c.Data["xsrfdata"])
-	beego.Info("cooki", c.Ctx.GetCookie("_xsrf"))
 	c.TplName = "crud_login.html"
 }
 
