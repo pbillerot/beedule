@@ -5,6 +5,29 @@ $(document).ready(function () {
 
     var isUsed = false;
 
+    // CLIC IMAGE POPUP
+    var $hugo_view = $('#hugo_view').val();
+    $('.hugo-modal-image').on('click', function (event) {
+        isUsed = true;
+        // Mémo du contexte dans un cookie
+        Cookies.set($hugo_view, $(this).attr('id'))
+        $(this).closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
+        $(this).addClass("crud-list-selected");
+
+        var $src = $(this).data('src');
+        $('#hugo-image').attr('src', $src)
+        $('#hugo-modal-image')
+            .modal({
+                closable: true,
+                onHide: function () {
+                    isUsed = false;
+                    return true;
+                }
+            }).modal('show');
+
+        event.preventDefault();
+    });
+
     // Coloriage syntaxique
     if ($("#codemirror-markdown").length != 0) {
         var myCodeMirror = CodeMirror.fromTextArea(
@@ -193,7 +216,7 @@ $(document).ready(function () {
         const config = {
             language: 'fr',
             tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
-            translations : {
+            translations: {
                 fr: {
                     'toolbar.download': 'Valider'
                 },
@@ -315,4 +338,78 @@ $(document).ready(function () {
             }
         }
     }
+
+    if ($hugo_view && $hugo_view.length > 0) {
+        // Si recherche dans Cookie : aff du input et sélection
+        var $search = $('#search').val();
+        if ($search != "") {
+            $('#crud-search-active').trigger('click');
+        }
+        // Positionnement sur la dernière ligne sélectionnée
+        if (Cookies.get($hugo_view)) {
+            var $anchor = $('#' + Cookies.get($hugo_view))
+            if ($anchor.length) {
+                $('html, body').animate({
+                    scrollTop: $anchor.offset().top - 100
+                }, 1000)
+                $anchor.addClass("crud-list-selected");
+                // Collpase du folder
+                var $folderid = $anchor.data("root");
+                var $folder = $('#' + $folderid);
+                $folder.trigger("click");
+            }
+        }
+    }
+
+    /**
+     * Ouverture d'une fenêtre en popup
+     * TODO voir si accepter par les browsers
+     */
+    $(document).on('click', '.hugo-window-open', function (event) {
+		var hauteur = 'max';
+		var largeur = $(this).data("largeur") ? $(this).data("largeur") : 'large';
+		var posx = $(this).data("posx") ? $(this).data("posx") : 'gauche';
+		var posy = $(this).data("posy") ? $(this).data("posy") : '3';
+		var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
+		window.open($(this).data('url')
+	    	    ,target
+		        ,calcul_taille_fenetre(posx, posy, largeur, hauteur, null));
+		  	event.preventDefault();	    
+	});
+	
 });
+
+/**
+ * Calcul du positionnement et de la taille de la fenêtre sur l'écran
+ * @param {string} posx droite centre droite ou px
+ * @param {int} posy px
+ * @param {string} largeur max large xlarge ou px
+ * @param {string} hauteur max ou px
+ * @param {boolean} plein_ecran 
+ */
+function calcul_taille_fenetre(posx, posy, largeur, hauteur, plein_ecran)
+{
+	if ( plein_ecran != null && /^oui$/gi.test(plein_ecran) ) {
+		hauteur = screen.availHeight - 70;
+		largeur = screen.availWidth - 6;
+	} 
+	var height = hauteur != null ? (/^max$/gi.test(hauteur) ? screen.availHeight - 120 : hauteur) : 830;
+	var width = 900;
+	if ( largeur != null ) {
+		width = largeur;
+		if ( /^max$/gi.test(largeur) ) width = screen.availWidth - 6;
+		if ( /^large$|^l$/gi.test(largeur) ) width = 1024;
+		if ( /^xlarge$|^xl$/gi.test(largeur) ) width = 1248;
+	} // end largeur
+	var left = 3;
+	if ( posx != null ) {
+		left = posx;
+		if ( /^gauche$/gi.test(posx) ) left = 3;
+		if ( /^droite$/gi.test(posx) ) left = screen.availWidth - width - 18;
+		if ( /^centre$/gi.test(posx) ) left = (screen.availWidth - width) / 2;
+	} // end posx
+	var top = posy != null ? posy : 3;
+
+	return 'left=' + left + ',top=' + top + ',height=' + height + ',width=' + width + ',scrolling=yes,scrollbars=yes,resizeable=yes';
+}
+

@@ -28,14 +28,14 @@ func (c *HugoController) Prepare() {
 	flash := beego.ReadFromRequest(&c.Controller)
 	if _, ok := app.Applications[appid]; !ok {
 		beego.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		c.Ctx.Redirect(302, "/crud/login")
 		return
 	}
 	if !IsInGroup(c.Controller, app.Applications[appid].Group, "") {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), appid)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		c.Ctx.Redirect(302, "/crud/login")
 		return
 	}
 
@@ -53,7 +53,7 @@ func (c *HugoController) Prepare() {
 
 	// Context lié à custom.conf
 	c.Data["DataDir"] = beego.AppConfig.String(appid + "::datadir")
-	c.Data["DataUrl"] = "crud/data/" + appid
+	c.Data["DataUrl"] = "/crud/data/" + appid
 
 	// Contexte de la session
 	session := types.Session{}

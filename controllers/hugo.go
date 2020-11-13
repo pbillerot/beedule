@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -14,15 +15,15 @@ import (
 // Liste des répertoires et fichiers du répertoire hugo
 var hugo []hugodoc
 
-// Hugoli Liste des fichiers et répertoires
-func (c *HugoController) Hugoli() {
+// HugoLi Liste des fichiers et répertoires
+func (c *HugoController) HugoLi() {
 	appid := c.Ctx.Input.Param(":app")
 	dirid := c.Ctx.Input.Param(":dir")
 	baseid := c.Ctx.Input.Param(":base")
 
 	// Chargement des répertoires et fichiers
 	if len(hugo) == 0 {
-		hugoDirectory(c.Data["DataDir"].(string))
+		hugoDirectory(c, c.Data["DataDir"].(string))
 	}
 
 	// Remplissage du contexte pour le template
@@ -38,11 +39,14 @@ func (c *HugoController) Hugoli() {
 // Hugodoc table
 type hugodoc struct {
 	ID         int
+	Key        string
+	Root       string
 	Path       string
+	PathAbsolu string
 	Base       string
 	Dir        string
 	Ext        string
-	IsDir      string
+	IsDir      int
 	Level      int
 	Title      string
 	Draft      string
@@ -50,6 +54,8 @@ type hugodoc struct {
 	Tags       string
 	Categories string
 	Content    string
+	URL        string
+	SRC        string
 }
 
 type hugoMeta struct {
@@ -65,7 +71,7 @@ type hugoMeta struct {
  * - lecture des répertoires /content et /data de foirexpo
  *
  **/
-func hugoDirectory(hugoDirectory string) (err error) {
+func hugoDirectory(c *HugoController, hugoDirectory string) (err error) {
 
 	// Lecture des répertoires et insertion d'un record par document
 	var id int
@@ -76,10 +82,21 @@ func hugoDirectory(hugoDirectory string) (err error) {
 			}
 			// On ne prend que le répertoire content
 			if strings.Contains(path, hugoDirectory+"/content") {
-				record := hugoFile(hugoDirectory, path, info)
+				record := hugoFile(c, hugoDirectory, path, info)
 				id++
 				record.ID = id
+				if record.Level == 0 {
+					return nil
+				}
+				if record.Dir[1:] == record.Base {
+					record.Key = record.Base
+				} else {
+					record.Key = strconv.Itoa(id)
+				}
+				record.URL = fmt.Sprintf("%s/%d", c.Data["DataUrl"].(string), id)
+				record.SRC = fmt.Sprintf("%s/content%s", c.Data["DataUrl"].(string), record.Path)
 				hugo = append(hugo, record)
+				// beego.Info(record.Key, record.Root, record.Path)
 				return nil
 			}
 			return nil
@@ -91,30 +108,37 @@ func hugoDirectory(hugoDirectory string) (err error) {
 	return
 }
 
-func hugoFile(hugoDirectory string, pathAbsolu string, info os.FileInfo) (record hugodoc) {
+func hugoFile(c *HugoController, hugoDirectory string, pathAbsolu string, info os.FileInfo) (record hugodoc) {
 
-	// On enlève le chemin absolu du path
+	// On elève le chemin absolu du path
 	lenPrefixe := len(hugoDirectory + "/content")
 	path := pathAbsolu[lenPrefixe:]
 	if path == "" {
 		return
 	}
 
+	record.PathAbsolu = pathAbsolu
 	record.Path = path // on enlève la partie hugoDirectory du chemin
 	record.Dir = filepath.Dir(path)
 	record.Base = filepath.Base(path)
 	if info.IsDir() {
-		record.IsDir = "1"
+		record.IsDir = 1
 		if record.Dir == "/" {
 			record.Dir += record.Base
 		} else {
 			record.Dir += "/" + record.Base
 		}
 	} else {
-		record.IsDir = "0"
+		record.IsDir = 0
 	}
-	record.Ext = filepath.Ext(path)
+	islash := strings.Index(record.Dir[1:], "/")
+	if islash > 0 {
+		record.Root = record.Dir[1 : islash+1]
+	} else {
+		record.Root = record.Dir[1:]
+	}
 	record.Level = strings.Count(record.Dir, "/")
+	record.Ext = filepath.Ext(path)
 	ext := filepath.Ext(path)
 	if ext == ".md" {
 		// lecture des metadata du fichier markdown
@@ -139,6 +163,5 @@ func hugoFile(hugoDirectory string, pathAbsolu string, info os.FileInfo) (record
 		record.Categories = strings.Join(meta.Categories, ",")
 		record.Content = string(content[:])
 	}
-
 	return
 }

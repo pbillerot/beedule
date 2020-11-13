@@ -30,7 +30,7 @@ func init() {
 	// EXPLORATEUR DE FICHIERS : HUGO
 	// beego.Router("/edf/cp/:app", &controllers.EdfListController{}, "post:Edfcp")
 	// beego.Router("/edf/ed/:app", &controllers.EdfListController{}, "get:Edfed;post:Edfed")
-	beego.Router("/hugo/li/:app", &controllers.HugoController{}, "get:Hugoli;post:Hugoli")
+	beego.Router("/hugo/li/:app", &controllers.HugoController{}, "get:HugoLi;post:HugoLi")
 	// beego.Router("/edf/mk/:app", &controllers.EdfListController{}, "post:Edfmk")
 	// beego.Router("/edf/mv/:app", &controllers.EdfListController{}, "post:Edfmv")
 	// beego.Router("/edf/rm/:app", &controllers.EdfListController{}, "post:Edfrm")
