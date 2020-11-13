@@ -208,10 +208,17 @@ $(document).ready(function () {
     });
 
     // CLIC IMAGE EDITOR POPUP
-    $('.crud-popup-image-editor').on('click', function (event) {
+    $('.hugo-popup-image-editor').on('click', function (event) {
         isUsed = true;
 
-        var $url = $(this).data('url');
+        // Mémo du contexte dans un cookie
+        if ($hugo_view && $hugo_view.length > 0) {
+            Cookies.set($hugo_view, $(this).attr('id'))
+            $(this).closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
+            $(this).addClass("crud-list-selected");
+        }
+
+        var $url = $(this).data('src');
         var $key = $(this).data('key');
         const config = {
             language: 'fr',
@@ -366,50 +373,57 @@ $(document).ready(function () {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function (event) {
-		var hauteur = 'max';
-		var largeur = $(this).data("largeur") ? $(this).data("largeur") : 'large';
-		var posx = $(this).data("posx") ? $(this).data("posx") : 'gauche';
-		var posy = $(this).data("posy") ? $(this).data("posy") : '3';
-		var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
-		window.open($(this).data('url')
-	    	    ,target
-		        ,calcul_taille_fenetre(posx, posy, largeur, hauteur, null));
-		  	event.preventDefault();	    
-	});
-	
+        var height = 'max';
+        var width = $(this).data("width") ? $(this).data("width") : 'large';
+        var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
+        var posy = $(this).data("posy") ? $(this).data("posy") : '3';
+        var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
+        window.open($(this).data('url')
+            , target
+            , computeWindow(posx, posy, width, height, null));
+        event.preventDefault();
+    });
+
+    /**
+     * Fermeture de la fenêtre popup
+     */
+    $(document).on('click', '.crud-jquery-close', function (event) {
+        window.close();
+        event.preventDefault();
+    });
+
 });
 
 /**
  * Calcul du positionnement et de la taille de la fenêtre sur l'écran
- * @param {string} posx droite centre droite ou px
+ * @param {string} posx left center right ou px
  * @param {int} posy px
- * @param {string} largeur max large xlarge ou px
- * @param {string} hauteur max ou px
- * @param {boolean} plein_ecran 
+ * @param {string} pwidth max large xlarge ou px
+ * @param {string} pheight max ou px
+ * @param {boolean} full_screen 
  */
-function calcul_taille_fenetre(posx, posy, largeur, hauteur, plein_ecran)
-{
-	if ( plein_ecran != null && /^oui$/gi.test(plein_ecran) ) {
-		hauteur = screen.availHeight - 70;
-		largeur = screen.availWidth - 6;
-	} 
-	var height = hauteur != null ? (/^max$/gi.test(hauteur) ? screen.availHeight - 120 : hauteur) : 830;
-	var width = 900;
-	if ( largeur != null ) {
-		width = largeur;
-		if ( /^max$/gi.test(largeur) ) width = screen.availWidth - 6;
-		if ( /^large$|^l$/gi.test(largeur) ) width = 1024;
-		if ( /^xlarge$|^xl$/gi.test(largeur) ) width = 1248;
-	} // end largeur
-	var left = 3;
-	if ( posx != null ) {
-		left = posx;
-		if ( /^gauche$/gi.test(posx) ) left = 3;
-		if ( /^droite$/gi.test(posx) ) left = screen.availWidth - width - 18;
-		if ( /^centre$/gi.test(posx) ) left = (screen.availWidth - width) / 2;
-	} // end posx
-	var top = posy != null ? posy : 3;
+function computeWindow(posx, posy, pwidth, pheight, full_screen) {
+    if (full_screen != null && /^oui$/gi.test(full_screen)) {
+        pheight = screen.availHeight - 70;
+        pwidth = screen.availWidth - 6;
+    }
+    var height = pheight != null ? (/^max$/gi.test(pheight) ? screen.availHeight - 120 : pheight) : 830;
+    var width = 900;
+    if (pwidth != null) {
+        width = pwidth;
+        if (/^max$/gi.test(pwidth)) width = screen.availWidth - 6;
+        if (/^large$|^l$/gi.test(pwidth)) width = 1024;
+        if (/^xlarge$|^xl$/gi.test(pwidth)) width = 1248;
+    } // end largeur
+    var left = 3;
+    if (posx != null) {
+        left = posx;
+        if (/^left$/gi.test(posx)) left = 3;
+        if (/^right$/gi.test(posx)) left = screen.availWidth - width - 18;
+        if (/^center$/gi.test(posx)) left = (screen.availWidth - width) / 2;
+    } // end posx
+    var top = posy != null ? posy : 3;
 
-	return 'left=' + left + ',top=' + top + ',height=' + height + ',width=' + width + ',scrolling=yes,scrollbars=yes,resizeable=yes';
+    return 'left=' + left + ',top=' + top + ',height=' + height + ',width=' + width + ',scrolling=yes,scrollbars=yes,resizeable=yes';
 }
 

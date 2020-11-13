@@ -32,8 +32,36 @@ func (c *HugoController) HugoLi() {
 	c.Data["Search"] = ""
 	c.Data["Records"] = hugo
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/hugo/li/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/li/%s", appid))
 	c.TplName = "hugo_list.html"
+}
+
+// HugoImage Liste des fichiers et répertoires
+func (c *HugoController) HugoImage() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	// Remplissage du contexte pour le template
+	c.Data["Search"] = ""
+	c.Data["Record"] = record
+
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/li/%s", appid))
+	c.TplName = "hugo_image.html"
 }
 
 // Hugodoc table
