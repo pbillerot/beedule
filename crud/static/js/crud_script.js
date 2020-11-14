@@ -121,10 +121,10 @@ $(document).ready(function () {
 
     // CLIC URL
     $('.crud-jquery-url').on('click', function (event) {
-        if (isUsed) {
-            event.preventDefault();
-            return
-        }
+        // if (isUsed) {
+        //     event.preventDefault();
+        //     return
+        // }
         if (event.target.nodeName == "BUTTON") {
             // pour laisser la main à crud-jquery-button
             // Cas d'un button dans une card
@@ -374,6 +374,14 @@ $(document).ready(function () {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function (event) {
+        // Mémo du contexte dans un cookie
+        if ($hugo_view && $hugo_view.length > 0) {
+            var $anchor = $(this).closest('.message');
+            Cookies.set($hugo_view, $anchor.attr('id'))
+            $anchor.closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
+            $anchor.addClass("crud-list-selected");
+        }
+
         var height = 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';

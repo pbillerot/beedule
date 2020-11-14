@@ -30,8 +30,12 @@ func init() {
 	// EXPLORATEUR DE FICHIERS : HUGO
 	// beego.Router("/edf/cp/:app", &controllers.EdfListController{}, "post:Edfcp")
 	// beego.Router("/edf/ed/:app", &controllers.EdfListController{}, "get:Edfed;post:Edfed")
-	beego.Router("/bee/hugo/list/:app", &controllers.HugoController{}, "get:HugoLi;post:HugoLi")
+	beego.Router("/bee/hugo/list/:app", &controllers.HugoController{}, "get:HugoList;post:HugoList")
 	beego.Router("/bee/hugo/image/:app/:key", &controllers.HugoController{}, "get:HugoImage;post:HugoImage")
+	beego.Router("/bee/hugo/file/:app/:key", &controllers.HugoController{}, "get:HugoFile;post:HugoFile")
+	beego.Router("/bee/hugo/mv/:app/:key", &controllers.HugoController{}, "post:HugoFileMv")
+	beego.Router("/bee/hugo/cp/:app/:key", &controllers.HugoController{}, "post:HugoFileCp")
+	beego.Router("/bee/hugo/del/:app/:key", &controllers.HugoController{}, "post:HugoFileDel")
 	// beego.Router("/edf/mk/:app", &controllers.EdfListController{}, "post:Edfmk")
 	// beego.Router("/edf/mv/:app", &controllers.EdfListController{}, "post:Edfmv")
 	// beego.Router("/edf/rm/:app", &controllers.EdfListController{}, "post:Edfrm")

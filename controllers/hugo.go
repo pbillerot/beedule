@@ -15,15 +15,17 @@ import (
 
 // Liste des répertoires et fichiers du répertoire hugo
 var hugo []hugodoc
+var hugoRacine string
 
-// HugoLi Liste des fichiers et répertoires
-func (c *HugoController) HugoLi() {
+// HugoList Liste des fichiers et répertoires
+func (c *HugoController) HugoList() {
 	appid := c.Ctx.Input.Param(":app")
 	dirid := c.Ctx.Input.Param(":dir")
 	baseid := c.Ctx.Input.Param(":base")
 
 	// Chargement des répertoires et fichiers
 	if len(hugo) == 0 {
+		hugoRacine = c.Data["DataDir"].(string) + "/content"
 		hugoDirectory(c, c.Data["DataDir"].(string))
 	}
 
@@ -37,7 +39,7 @@ func (c *HugoController) HugoLi() {
 	c.TplName = "hugo_list.html"
 }
 
-// HugoImage Liste des fichiers et répertoires
+// HugoImage Visualiser Modification d'une image
 func (c *HugoController) HugoImage() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -88,12 +90,162 @@ func (c *HugoController) HugoImage() {
 	}
 
 	// Remplissage du contexte pour le template
-	c.Data["Search"] = ""
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/image/%s", appid))
 	c.TplName = "hugo_image.html"
+}
+
+// HugoFile Renommer Déplacer Supprimer le fichier
+func (c *HugoController) HugoFile() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = record
+	c.Data["KeyID"] = keyid
+
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/file/%s/%s", appid, keyid))
+	c.TplName = "hugo_file.html"
+}
+
+// HugoFileMv Renommer le fichier
+func (c *HugoController) HugoFileMv() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+		ReturnFrom(c.Controller)
+	}
+
+	newFile := c.GetString("new_file")
+	err = os.Rename(hugoRacine+"/"+record.Path, hugoRacine+"/"+newFile)
+	if err != nil {
+		msg := fmt.Sprintf("HugoImage %s : %s", newFile, err)
+		beego.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+		ReturnFrom(c.Controller)
+	}
+
+	// Vidage de Hugo pour reconstruction
+	hugo = nil
+
+	// Fermeture de la fenêtre
+	c.TplName = "bee_parent.html"
+	return
+
+}
+
+// HugoFileCp Renommer le fichier
+func (c *HugoController) HugoFileCp() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	newFile := c.GetString("copy_file")
+	data, err := ioutil.ReadFile(hugoRacine + "/" + record.Path)
+	if err != nil {
+		msg := fmt.Sprintf("HugoImage %s : %s", record.Path, err)
+		beego.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+		ReturnFrom(c.Controller)
+	}
+	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0644)
+	if err != nil {
+		msg := fmt.Sprintf("HugoImage %s : %s", newFile, err)
+		beego.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+		ReturnFrom(c.Controller)
+	}
+
+	// Vidage de Hugo pour reconstruction
+	hugo = nil
+
+	// Fermeture de la fenêtre
+	c.TplName = "bee_parent.html"
+	return
+}
+
+// HugoFileDel Supprimer le fichier
+func (c *HugoController) HugoFileDel() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	err := os.Remove(hugoRacine + "/" + record.Path)
+	if err != nil {
+		msg := fmt.Sprintf("HugoImage %s : %s", record.Path, err)
+		beego.Error(msg)
+		flash.Error(msg)
+		flash.Store(&c.Controller)
+		ReturnFrom(c.Controller)
+	}
+
+	// Vidage de Hugo pour reconstruction
+	hugo = nil
+
+	// Fermeture de la fenêtre
+	c.TplName = "bee_parent.html"
+	return
 }
 
 // Hugodoc table
@@ -102,6 +254,7 @@ type hugodoc struct {
 	Key        string
 	Root       string
 	Path       string
+	Prefix     string
 	PathAbsolu string
 	Base       string
 	Dir        string
@@ -141,7 +294,7 @@ func hugoDirectory(c *HugoController, hugoDirectory string) (err error) {
 				return err
 			}
 			// On ne prend que le répertoire content
-			if strings.Contains(path, hugoDirectory+"/content") {
+			if strings.Contains(path, hugoRacine) {
 				record := hugoFile(c, hugoDirectory, path, info)
 				id++
 				record.ID = id

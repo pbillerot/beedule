@@ -114,8 +114,11 @@
 {{ else }}
     <!-- document -->
     {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
-    <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message hugo-window-open"{{if eq $search ``}} style="display: none;"{{end}} data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="center" target="hugo-view">
-      <i class="image outline blue large icon"></i>{{$record.Base}}</a>
+    <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message"{{if eq $search ``}} style="display: none;"{{end}}>      
+      <i class="image outline blue large icon"></i>
+      <a class="hugo-window-open" data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="center" target="hugo-view"><b>{{$record.Base}}</b>
+      </a>
+    </div>
     {{ else if (eq $record.Ext ".pdf")}}
     <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
       data-url="{{$record.URL | str2html}}">

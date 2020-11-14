@@ -38,6 +38,13 @@ func init() {
 	beego.AddFuncMap("CrudDebug", CrudDebug)
 	beego.AddFuncMap("HugoIncrement", HugoIncrement)
 	beego.AddFuncMap("HugoDecrement", HugoDecrement)
+	beego.AddFuncMap("BeeReplace", BeeReplace)
+}
+
+// BeeReplace as
+func BeeReplace(in string, old string, new string) (out string) {
+	out = strings.Replace(in, old, new, 1)
+	return
 }
 
 // CrudDebug as
