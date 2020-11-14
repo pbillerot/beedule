@@ -78,7 +78,7 @@ var Applications = map[string]types.Application{
 		Title: "Administration du site FOIREXPO",
 		Group: "admin",
 		Image: "/crud/static/img/edf.svg",
-		Path:  "/bee/hugo/li/asf",
+		Path:  "/bee/hugo/list/asf",
 	},
 }
 

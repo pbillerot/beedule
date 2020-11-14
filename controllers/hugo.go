@@ -32,7 +32,7 @@ func (c *HugoController) HugoLi() {
 	c.Data["Search"] = ""
 	c.Data["Records"] = hugo
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/li/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
 	c.TplName = "hugo_list.html"
 }
 
@@ -60,7 +60,7 @@ func (c *HugoController) HugoImage() {
 	c.Data["Search"] = ""
 	c.Data["Record"] = record
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/li/%s", appid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
 	c.TplName = "hugo_image.html"
 }
 
