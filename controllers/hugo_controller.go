@@ -91,6 +91,8 @@ func (c *HugoController) Prepare() {
 	c.Data["Portail"] = &app.Portail
 	// Contexte de navigation
 	c.Data["From"] = c.Ctx.Input.Cookie("from")
+	c.Data["URL"] = c.Ctx.Request.URL
+
 	// Sera ajouté derrière les urls pour ne pas utiliser le cache des images dynamiques
 	c.Data["Composter"] = time.Now().Unix()
 }

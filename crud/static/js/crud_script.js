@@ -237,8 +237,9 @@ $(document).ready(function () {
                 console.log("canvas-id", props.canvas.id);
                 var canvas = document.getElementById(props.canvas.id);
                 var dataurl = canvas.toDataURL(mime, 1);
-                $("#" + $key).val(dataurl);
+                $("#image").val(dataurl);
                 $("#" + $key + "_img").attr('src', dataurl);
+                $("#button_validate").removeAttr('disabled');
                 return false;
             },
             onComplete: (props) => {

@@ -9,6 +9,7 @@
 {{$record := .Record}}
 {{$keyid := .KeyID}}
 {{$from := .From}}
+{{$MethodUrl := .URL}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -26,7 +27,8 @@
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
-          <button class="ui labeled icon red button crud-jquery-submit" data-from="{{$from}}">
+          <button id="button_validate" class="ui labeled icon red button crud-jquery-submit" 
+          data-from="{{$from}}" disabled="disabled">
             <i class="check icon"></i>
             Enregistrer
           </button>
@@ -42,19 +44,20 @@
       {{template "_crud_flash.html" .}}
       <!-- FORMULAIRE -->
       <div class="ui attached icon message">
-        <i class="image icon"></i>
+        <i class="image  {{$theme}} icon"></i>
         <div class="header">
           {{$record.Path}}
         </div>
       </div>
       <!-- Formulaire d'Edition -->
-      <form class="ui form attached segment" id="beeForm" method="POST" action="/bee/hugo/vi/{{$appid}}/{{$keyid}}">
+      <form class="ui form attached segment" id="beeForm" method="POST" 
+      action="{{$MethodUrl}}">
         {{ .xsrfdata }}
         <div class="ui form">
           <section class="ui cards">
             <div class="ui centered card" style="width:unset;">
               <div class="image">
-                <img id="{{$keyid}}_img" src="{{$record.SRC}}">
+                <img id="{{$keyid}}_img" src="{{$record.SRC}}?{{$composter}}">
               </div>
               <div id="image-editor" class="ui bottom attached button hugo-popup-image-editor"
                 data-src="{{$record.SRC}}" data-key="{{$keyid}}">
@@ -64,7 +67,7 @@
             </div>
           </section>
         </div>
-        <input type="hidden" id="{{$keyid}}" name="{{$keyid}}" value="">
+        <input type="hidden" id="image" name="image" value="">
       </form>
     </div>
     </div> <!-- /container -->

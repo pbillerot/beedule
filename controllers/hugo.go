@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -56,9 +57,40 @@ func (c *HugoController) HugoImage() {
 		flash.Store(&c.Controller)
 	}
 
+	if c.Ctx.Input.Method() == "POST" {
+		// ENREGISTREMENT DE L'IMAGE
+		simage := c.GetString("image")
+		b64data := simage[strings.IndexByte(simage, ',')+1:]
+		unbased, err := base64.StdEncoding.DecodeString(b64data)
+		// img, _, err := image.Decode(bytes.NewReader([]byte(element.SQLout)))
+		if err != nil {
+			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+		}
+
+		outputFile, err := os.Create(record.PathAbsolu)
+		if err != nil {
+			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+		}
+		defer outputFile.Close()
+
+		outputFile.Write(unbased)
+		// Fermeture de la fenêtre
+		c.TplName = "bee_close.html"
+		return
+	}
+
 	// Remplissage du contexte pour le template
 	c.Data["Search"] = ""
 	c.Data["Record"] = record
+	c.Data["KeyID"] = keyid
 
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
 	c.TplName = "hugo_image.html"
