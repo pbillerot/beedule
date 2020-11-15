@@ -113,17 +113,17 @@
               {{ else }}
               {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
               <!-- IMAGE -->
-              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message" {{if eq $search ``}}
-                style="display: none;" {{end}}>
+              <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message hugo-window-open" {{if eq $search ``}}
+                style="display: none;" {{end}} data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="right"
+                target="hugo-view">
                 <i class="image outline blue large icon"></i>
-                <a class="hugo-window-open" data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="right"
-                  target="hugo-view"><b>{{$record.Base}}</b>
-                </a>
-              </div>
+                <span >{{$record.Base}}
+                </span>
+              </a>
               {{ else if (eq $record.Ext ".pdf")}}
               <!-- PDF -->
-              <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message crud-jquery-url"
-                {{if eq $search ``}} style="display: none;" {{end}} data-url="{{$record.URL | str2html}}">
+              <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message hugo-window-open"
+                {{if eq $search ``}} style="display: none;" {{end}} data-url="{{$record.SRC}}" data-posx="right" target="hugo-view">
                 <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
               {{else}}
               <!-- DOCUMENT -->
