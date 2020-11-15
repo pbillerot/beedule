@@ -97,18 +97,21 @@
     </div><!-- /item-->
     {{end}}
     <div class="item">
+      <!-- REPERTOIRES -->
       <i id="{{$record.Key}}" data-root="{{$record.Root}}" class="folder large grey icon link crud-collapse"></i>
       <div class="content">
-        <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}}
-          data-root="{{$record.Root}}" class="header crud-jquery-url" data-url="{{$record.URL}}">{{$record.Base}}</a>
+        <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}} data-root="{{$record.Root}}" class="header hugo-window-open" data-url="/bee/hugo/directory/{{$appid}}/{{$record.Key}}"
+          data-posx="right" target="hugo-view">
+          {{$record.Base}}</a>
         {{ else if gt $record.Level $currentLevel }}
         {{if gt $record.Level 1}}<div class="list" {{if eq $search ``}} style="display: none;" {{end}}>{{end}}
           <div class="item">
             <i class="folder large grey icon link crud-collapse"></i>
             <div class="content">
               <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}}
-                data-root="{{$record.Root}}" class="header crud-jquery-url"
-                data-url="{{$record.URL}}">{{$record.Base}}</a>
+                data-root="{{$record.Root}}" class="header hugo-window-open"
+                data-url="/bee/hugo/directory/{{$appid}}/{{$record.Key}}"
+                data-posx="right" target="hugo-view">{{$record.Base}}</a>
               {{ end }}
               {{ else }}
               {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}

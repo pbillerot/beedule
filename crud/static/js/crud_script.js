@@ -8,12 +8,6 @@ $(document).ready(function () {
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
     $('.hugo-modal-image').on('click', function (event) {
-        isUsed = true;
-        // Mémo du contexte dans un cookie
-        Cookies.set($hugo_view, $(this).attr('id'))
-        $(this).closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
-        $(this).addClass("crud-list-selected");
-
         var $src = $(this).data('src');
         $('#hugo-image').attr('src', $src)
         $('#hugo-modal-image')
@@ -209,15 +203,6 @@ $(document).ready(function () {
 
     // CLIC IMAGE EDITOR POPUP
     $('.hugo-popup-image-editor').on('click', function (event) {
-        isUsed = true;
-
-        // Mémo du contexte dans un cookie
-        if ($hugo_view && $hugo_view.length > 0) {
-            Cookies.set($hugo_view, $(this).attr('id'))
-            $(this).closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
-            $(this).addClass("crud-list-selected");
-        }
-
         var $url = $(this).data('src');
         var $key = $(this).data('key');
         const config = {
@@ -374,14 +359,6 @@ $(document).ready(function () {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function (event) {
-        // Mémo du contexte dans un cookie
-        if ($hugo_view && $hugo_view.length > 0) {
-            var $anchor = $(this).closest('.message');
-            Cookies.set($hugo_view, $anchor.attr('id'))
-            $anchor.closest('.container').find('.crud-list-selected').removeClass('crud-list-selected');
-            $anchor.addClass("crud-list-selected");
-        }
-
         var height = 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
@@ -390,6 +367,30 @@ $(document).ready(function () {
         window.open($(this).data('url')
             , target
             , computeWindow(posx, posy, width, height, null));
+        event.preventDefault();
+    });
+
+    // ACTION DEMANDE CONFIRMATION
+    $('.hugo-jquery-action').on('click', function (event) {
+        var $url = $(this).data('url');
+        if ($(this).data('confirm') == true) {
+            $('#crud-action').html($(this).html());
+            $('#crud-modal-confirm')
+                .modal({
+                    closable: false,
+                    onDeny: function () {
+                        return true;
+                    },
+                    onApprove: function () {
+                        $('form').attr('action', $url);
+                        $('form', document).submit();
+                    }
+                }).modal('show');
+        } else {
+            // Sans demande de confirmation
+            $('form').attr('action', $url);
+            $('form', document).submit()
+        }
         event.preventDefault();
     });
 

@@ -50,7 +50,8 @@
         </div>
       </div>
       <!-- Formulaire d'Edition -->
-      <form class="ui form attached segment" id="beeForm" method="POST" action="{{$MethodUrl}}">
+      <form class="ui form attached segment" id="beeForm" method="POST" 
+      action="{{$MethodUrl}}" enctype="multipart/form-data">
         {{ .xsrfdata }}
         <div class="ui form">
           <div class="field">
@@ -58,7 +59,7 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/bee/hugo/mv/{{$appid}}/{{$keyid}}">
                 <i class="dolly icon"></i>
-                Renommer ou déplacer le fichier vers...
+                Renommer le répertoire en...
               </button>
               <input class="hugo-action" type="text" name="new_name" id="new_name" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}">
@@ -68,8 +69,8 @@
             <div class="ui action input">
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/bee/hugo/cp/{{$appid}}/{{$keyid}}">
-                <i class="copy outline icon"></i>
-                Recopier le fichier dans...
+                <i class="clone outline icon"></i>
+                Recopier le répertoire dans...
               </button>
               <input class="hugo-action" type="text" name="copy_file" id="copy_file" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}">
@@ -80,9 +81,31 @@
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/bee/hugo/rm/{{$appid}}/{{$keyid}}">
                 <i class="trash alternate outline icon"></i>
-                Supprimer le fichier...
+                Supprimer le répertoire...
               </button>
               <input class="hugo-action" disabled="disabled" type="text" name="del_file" id="del_file" placeholder="{{$record.Path}}"
+                value="{{$record.Path}}">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui action input">
+              <button class="ui red button hugo-jquery-action" data-confirm="true"
+                data-url="/bee/hugo/mkdir/{{$appid}}/{{$keyid}}">
+                <i class="folder outline icon"></i>
+                Créer le répertoire...
+              </button>
+              <input class="hugo-action" type="text" name="new_dir" id="new_dir" placeholder="{{$record.Path}}"
+                value="{{$record.Path}}">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui action input">
+              <button class="ui red button hugo-jquery-action" data-confirm="true"
+                data-url="/bee/hugo/upload/{{$appid}}/{{$keyid}}">
+                <i class="upload icon"></i>
+                Charger le fichier sur le serveur...
+              </button>
+              <input class="hugo-action" type="file" name="new_file" id="new_file" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}">
             </div>
           </div>

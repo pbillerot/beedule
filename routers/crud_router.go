@@ -31,9 +31,12 @@ func init() {
 	beego.Router("/bee/hugo/list/:app", &controllers.HugoController{}, "get:HugoList;post:HugoList")
 	beego.Router("/bee/hugo/document/:app/:key", &controllers.HugoController{}, "get:HugoDocument;post:HugoDocument")
 	beego.Router("/bee/hugo/image/:app/:key", &controllers.HugoController{}, "get:HugoImage;post:HugoImage")
-	beego.Router("/bee/hugo/file/:app/:key", &controllers.HugoController{}, "get:HugoFile;post:HugoFile")
+	beego.Router("/bee/hugo/directory/:app/:key", &controllers.HugoController{}, "get:HugoDirectory")
+	beego.Router("/bee/hugo/file/:app/:key", &controllers.HugoController{}, "get:HugoFile")
 	beego.Router("/bee/hugo/mv/:app/:key", &controllers.HugoController{}, "post:HugoFileMv")
 	beego.Router("/bee/hugo/cp/:app/:key", &controllers.HugoController{}, "post:HugoFileCp")
-	beego.Router("/bee/hugo/del/:app/:key", &controllers.HugoController{}, "post:HugoFileDel")
+	beego.Router("/bee/hugo/rm/:app/:key", &controllers.HugoController{}, "post:HugoFileRm")
+	beego.Router("/bee/hugo/mkdir/:app/:key", &controllers.HugoController{}, "post:HugoFileMkdir")
+	beego.Router("/bee/hugo/upload/:app/:key", &controllers.HugoController{}, "post:HugoFileUpload")
 
 }
