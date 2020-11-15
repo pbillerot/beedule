@@ -39,7 +39,7 @@ func (c *HugoController) HugoList() {
 	c.TplName = "hugo_list.html"
 }
 
-// HugoImage Visualiser Modification d'une image
+// HugoImage Visualiser Modifier une image
 func (c *HugoController) HugoImage() {
 	appid := c.Ctx.Input.Param(":app")
 	keyid := c.Ctx.Input.Param(":key")
@@ -95,6 +95,54 @@ func (c *HugoController) HugoImage() {
 
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/image/%s", appid))
 	c.TplName = "hugo_image.html"
+}
+
+// HugoDocument Visualiser Modifier un document
+func (c *HugoController) HugoDocument() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	if c.Ctx.Input.Method() == "POST" {
+		// ENREGISTREMENT DU DOCUMENT
+		document := c.GetString("document")
+		err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+		if err != nil {
+			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+		}
+
+		// Vidage de Hugo pour reconstruction
+		hugo = nil
+		// Fermeture de la fenêtre
+		c.TplName = "bee_parent.html"
+		return
+
+	}
+
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = record
+	c.Data["KeyID"] = keyid
+
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/document/%s", appid))
+	c.TplName = "hugo_document.html"
 }
 
 // HugoFile Renommer Déplacer Supprimer le fichier

@@ -48,8 +48,7 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url=""
-                value="{{$search}}" placeholder="Recherche...">
+              <input type="text" id="search" data-url="" value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
@@ -70,95 +69,102 @@
       </div>
       <div class="ui large divided list">
         <!-- ITEMS -->
-      {{ $currentLevel := 0}}
-      {{ range $irecord, $record := .Records }}
+        {{ $currentLevel := 0}}
+        {{ range $irecord, $record := .Records }}
 
-{{ if lt $record.Level $currentLevel}}
-    </div> <!-- /content-->
-  </div> <!-- /item-->
-</div> <!-- /list-->
-  {{ $currentLevel = HugoDecrement $currentLevel }}
-{{end}}
-{{ if lt $record.Level $currentLevel}}
-    </div> <!-- /content-->
-  </div> <!-- /item-->
-</div> <!-- /list-->
-  {{ $currentLevel = HugoDecrement $currentLevel }}
-{{end}}
-{{ if lt $record.Level $currentLevel}}
+        {{ if lt $record.Level $currentLevel}}
       </div> <!-- /content-->
     </div> <!-- /item-->
-  </div> <!-- /list-->
-  {{ $currentLevel = HugoDecrement $currentLevel }}
-{{ end }}
-{{ if eq $record.IsDir 1 }}
-  {{ if eq $record.Level $currentLevel}}
-  {{ if gt $currentLevel 0}}
+    </div> <!-- /list-->
+    {{ $currentLevel = HugoDecrement $currentLevel }}
+    {{end}}
+    {{ if lt $record.Level $currentLevel}}
+    </div> <!-- /content-->
+    </div> <!-- /item-->
+    </div> <!-- /list-->
+    {{ $currentLevel = HugoDecrement $currentLevel }}
+    {{end}}
+    {{ if lt $record.Level $currentLevel}}
+    </div> <!-- /content-->
+    </div> <!-- /item-->
+    </div> <!-- /list-->
+    {{ $currentLevel = HugoDecrement $currentLevel }}
+    {{ end }}
+    {{ if eq $record.IsDir 1 }}
+    {{ if eq $record.Level $currentLevel}}
+    {{ if gt $currentLevel 0}}
     </div><!-- /content -->
     </div><!-- /item-->
-  {{end}}
-      <div class="item">
-      <i id="{{$record.Key}}" data-root="{{$record.Root}}" class="folder large grey icon link crud-collapse"></i>
-        <div class="content">
-          <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}"{{else}}id="{{$record.Key}}"{{end}} data-root="{{$record.Root}}" class="header crud-jquery-url" 
-          data-url="{{$record.URL}}">{{$record.Base}}</a>
-  {{ else if gt $record.Level $currentLevel }}
-            {{if gt $record.Level 1}}<div class="list"{{if eq $search ``}} style="display: none;"{{end}}>{{end}}
-              <div class="item">
-                <i class="folder large grey icon link crud-collapse"></i>
-                <div class="content">
-                  <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}"{{else}}id="{{$record.Key}}"{{end}} data-root="{{$record.Root}}" class="header crud-jquery-url" 
-                  data-url="{{$record.URL}}"
-                  >{{$record.Base}}</a>
-  {{ end }}
-{{ else }}
-    <!-- document -->
-    {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
-    <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message"{{if eq $search ``}} style="display: none;"{{end}}>      
-      <i class="image outline blue large icon"></i>
-      <a class="hugo-window-open" data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="center" target="hugo-view"><b>{{$record.Base}}</b>
-      </a>
-    </div>
-    {{ else if (eq $record.Ext ".pdf")}}
-    <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
-      data-url="{{$record.URL | str2html}}">
-      <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
-    {{else}}
-      <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message "{{if eq $search ``}} style="display: none;"{{end}}>
-        <i class="file alternate outline green large icon"></i>
-        <a class="ui medium grey text crud-jquery-url"
-        data-url="{{$record.URL | str2html}}"><b>{{$record.Base}}</b></a> 
-        <span class="ui purple text">[{{$record.Title}}]</span>
-        {{$arr := CrudSplit $record.Tags ","}}
-        {{range $i, $item := $arr}}
-          <div class="ui green label"><b>#{{$item}}</b></div>
-        {{end}}
-        {{$arr := CrudSplit $record.Categories ","}}
-        {{range $i, $item := $arr}}
-          <div class="ui tag brown label"><b>{{$item}}</b></div>
-        {{end}}
-        {{if (eq $record.Draft "1") }}
-          <div class="ui red label"><i class="check square icon"></i>Brouillon</div>
-        {{end}}
-      </div>
     {{end}}
-{{ end }}
-    <!-- / isdir-->
-  {{ $currentLevel = $record.Level }}
-{{end}}
-    <!-- end range $records -->
-{{ if ne $currentLevel 1}}
-  </div> <!-- /content-->
-</div> <!-- /item-->
-</div> <!-- /list-->
-{{end}}
-{{ $currentLevel = HugoDecrement $currentLevel }}
-{{ if ne $currentLevel 1}}
-  </div> <!-- /content-->
-</div> <!-- /item-->
-</div> <!-- /list-->
-{{end }}
-</div> <!-- end container-->
+    <div class="item">
+      <i id="{{$record.Key}}" data-root="{{$record.Root}}" class="folder large grey icon link crud-collapse"></i>
+      <div class="content">
+        <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}}
+          data-root="{{$record.Root}}" class="header crud-jquery-url" data-url="{{$record.URL}}">{{$record.Base}}</a>
+        {{ else if gt $record.Level $currentLevel }}
+        {{if gt $record.Level 1}}<div class="list" {{if eq $search ``}} style="display: none;" {{end}}>{{end}}
+          <div class="item">
+            <i class="folder large grey icon link crud-collapse"></i>
+            <div class="content">
+              <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}}
+                data-root="{{$record.Root}}" class="header crud-jquery-url"
+                data-url="{{$record.URL}}">{{$record.Base}}</a>
+              {{ end }}
+              {{ else }}
+              {{ if or (eq $record.Ext ".png") (eq $record.Ext ".jpg") (eq $record.Ext ".svg")}}
+              <!-- IMAGE -->
+              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message" {{if eq $search ``}}
+                style="display: none;" {{end}}>
+                <i class="image outline blue large icon"></i>
+                <a class="hugo-window-open" data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="right"
+                  target="hugo-view"><b>{{$record.Base}}</b>
+                </a>
+              </div>
+              {{ else if (eq $record.Ext ".pdf")}}
+              <!-- PDF -->
+              <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message crud-jquery-url"
+                {{if eq $search ``}} style="display: none;" {{end}} data-url="{{$record.URL | str2html}}">
+                <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
+              {{else}}
+              <!-- DOCUMENT -->
+              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message " {{if eq $search ``}}
+                style="display: none;" {{end}}>
+                <i class="file alternate outline green large icon"></i>
+                <a class="ui medium text hugo-window-open" data-url="/bee/hugo/document/{{$appid}}/{{$record.Key}}"
+                  data-posx="right" target="hugo-view">
+                  <b>{{$record.Base}}</b>
+                </a>
+                <span class="ui purple text">[{{$record.Title}}]</span>
+                {{$arr := CrudSplit $record.Tags ","}}
+                {{range $i, $item := $arr}}
+                <div class="ui green label"><b>#{{$item}}</b></div>
+                {{end}}
+                {{$arr := CrudSplit $record.Categories ","}}
+                {{range $i, $item := $arr}}
+                <div class="ui tag brown label"><b>{{$item}}</b></div>
+                {{end}}
+                {{if (eq $record.Draft "1") }}
+                <div class="ui red label"><i class="check square icon"></i>Brouillon</div>
+                {{end}}
+              </div>
+              {{end}}
+              {{ end }}
+              <!-- / isdir-->
+              {{ $currentLevel = $record.Level }}
+              {{end}}
+              <!-- end range $records -->
+              {{ if ne $currentLevel 1}}
+            </div> <!-- /content-->
+          </div> <!-- /item-->
+        </div> <!-- /list-->
+        {{end}}
+        {{ $currentLevel = HugoDecrement $currentLevel }}
+        {{ if ne $currentLevel 1}}
+      </div> <!-- /content-->
+    </div> <!-- /item-->
+    </div> <!-- /list-->
+    {{end }}
+    </div> <!-- end container-->
   </main>
   <!-- Demande de confirmation de l'action' -->
   <div id="crud-modal-confirm" class="ui modal">

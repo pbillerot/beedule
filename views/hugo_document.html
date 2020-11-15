@@ -1,0 +1,88 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$search := .Search}}
+{{$record := .Record}}
+{{$keyid := .KeyID}}
+{{$from := .From}}
+{{$methodurl := .URL}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui grey inverted large fixed menu navbar">
+      <div class="item">
+        <button class="ui labeled icon {{$theme}} button crud-jquery-close">
+          <i class="left arrow icon"></i>
+          Fermer
+        </button>
+      </div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="item">
+          <div class="ui labeled icon {{$theme}} button crud-jquery-url"
+            data-url="{{BeeReplace $methodurl `document` `file`}}">
+            <i class="file icon"></i>
+            Gérer le fichier...
+          </div>
+        </div>
+        <div class="item">
+          <button id="button_validate" class="ui labeled icon red button crud-jquery-submit" data-from="{{$from}}">
+            <i class="check icon"></i>
+            Enregistrer
+          </button>
+        </div>
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- FORMULAIRE -->
+      <div class="ui attached icon message">
+        <i class="image {{$theme}} icon"></i>
+        <div class="header">
+          {{$record.Path}}
+        </div>
+      </div>
+      <!-- Formulaire d'Edition -->
+      <form class="ui form attached segment" id="beeForm" method="POST" action="{{$methodurl}}">
+        {{ .xsrfdata }}
+        <div class="ui form">
+          <section>
+            <div
+              class="field">
+              <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
+            </div>
+          </section>
+        </div>
+      </form>
+    </div>
+    </div> <!-- /container -->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>
