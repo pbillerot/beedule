@@ -310,7 +310,7 @@ func (c *HugoController) HugoFileRm() {
 		flash.Store(&c.Controller)
 	}
 
-	err := os.Remove(record.PathAbsolu)
+	err = os.RemoveAll(record.PathAbsolu)
 	if err != nil {
 		msg := fmt.Sprintf("HugoImage %s : %s", record.Path, err)
 		beego.Error(msg)
