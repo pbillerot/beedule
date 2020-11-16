@@ -359,14 +359,14 @@ $(document).ready(function () {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function (event) {
-        var height = 'max';
+        var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
         var posy = $(this).data("posy") ? $(this).data("posy") : '3';
         var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
         window.open($(this).data('url')
             , target
-            , computeWindow(posx, posy, width, height, null));
+            , computeWindow(posx, posy, width, height, false));
         event.preventDefault();
     });
 
@@ -410,10 +410,10 @@ $(document).ready(function () {
  * @param {int} posy px
  * @param {string} pwidth max large xlarge ou px
  * @param {string} pheight max ou px
- * @param {boolean} full_screen 
+ * @param {srtien} full_screen yes no 0 1
  */
 function computeWindow(posx, posy, pwidth, pheight, full_screen) {
-    if (full_screen != null && /^oui$/gi.test(full_screen)) {
+    if (full_screen) {
         pheight = screen.availHeight - 70;
         pwidth = screen.availWidth - 6;
     }
@@ -432,7 +432,11 @@ function computeWindow(posx, posy, pwidth, pheight, full_screen) {
         if (/^right$/gi.test(posx)) left = screen.availWidth - width - 18;
         if (/^center$/gi.test(posx)) left = (screen.availWidth - width) / 2;
     } // end posx
-    var top = posy != null ? posy : 3;
+    var top = 6
+    if (posy != null) {
+        height = screen.availHeight - posy - 10;
+        top = posy;
+    }
 
     return 'left=' + left + ',top=' + top + ',height=' + height + ',width=' + width + ',scrolling=yes,scrollbars=yes,resizeable=yes';
 }
