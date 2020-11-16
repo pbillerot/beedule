@@ -444,6 +444,7 @@ type hugodoc struct {
 	Tags       string
 	Categories string
 	Content    string
+	HugoPath   string // url de la page sur le site
 	URL        string
 	SRC        string
 }
@@ -454,6 +455,15 @@ type hugoMeta struct {
 	Date       string   `yaml:"date"`
 	Tags       []string `yaml:"tags"`
 	Categories []string `yaml:"categories"`
+}
+
+var hugoLinks = []map[string]string{
+	{
+		"title":  "Site de test",
+		"url":    "http://localhost:1313",
+		"posx":   "left",
+		"target": "hugo_test",
+	},
 }
 
 /**
@@ -552,6 +562,7 @@ func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, 
 		record.Tags = strings.Join(meta.Tags, ",")
 		record.Categories = strings.Join(meta.Categories, ",")
 		record.Content = string(content[:])
+		record.HugoPath = strings.Replace(record.Path, ".md", "", 1)
 	}
 	return
 }

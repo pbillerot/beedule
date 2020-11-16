@@ -27,6 +27,14 @@
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
+          <div class="ui icon {{$theme}} button hugo-window-open"
+          data-url="http://localhost:1313/{{$record.HugoPath}}" 
+          data-posx="left" data-width="1200" data-height="800" data-posy="100"
+                target="hugo-test" title="Voir la page sur le site de test">
+            <i class="eye icon"></i>
+          </div>
+        </div>
+        <div class="item">
           <div class="ui labeled icon {{$theme}} button crud-jquery-url"
             data-url="{{BeeReplace $methodurl `document` `file`}}">
             <i class="file icon"></i>
@@ -60,8 +68,7 @@
         {{ .xsrfdata }}
         <div class="ui form">
           <section>
-            <div
-              class="field">
+            <div class="field">
               <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
             </div>
           </section>
