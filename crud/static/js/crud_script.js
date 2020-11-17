@@ -4,6 +4,7 @@
 $(document).ready(function () {
 
     var isUsed = false;
+    var changed = false
 
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
@@ -35,6 +36,10 @@ $(document).ready(function () {
                 viewportMargin: 20
             }
         );
+        myCodeMirror.on("change", function(cm) {
+            changed = true;
+            $('#button_validate').removeAttr('disabled');
+        })
     }
 
     // Collapse
@@ -150,6 +155,7 @@ $(document).ready(function () {
     // VALIDATION FORMULAIRE
     $('.crud-jquery-submit').on('click', function (event) {
         $('form', document).submit();
+        $(this).attr('disabled', 'disabled');
         event.preventDefault();
     });
 
@@ -225,6 +231,7 @@ $(document).ready(function () {
                 $("#image").val(dataurl);
                 $("#" + $key + "_img").attr('src', dataurl);
                 $("#button_validate").removeAttr('disabled');
+                changed = true;
                 return false;
             },
             onComplete: (props) => {
@@ -398,6 +405,7 @@ $(document).ready(function () {
      * Fermeture de la fenêtre popup
      */
     $(document).on('click', '.crud-jquery-close', function (event) {
+        if ( changed) window.opener.location.reload();
         window.close();
         event.preventDefault();
     });

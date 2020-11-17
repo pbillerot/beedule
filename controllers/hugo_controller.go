@@ -54,6 +54,7 @@ func (c *HugoController) Prepare() {
 	// Context lié à custom.conf
 	c.Data["DataDir"] = beego.AppConfig.String(appid + "::datadir")
 	c.Data["DataUrl"] = "/crud/data/" + appid
+	c.Data["UrlTest"] = beego.AppConfig.String(appid + "::urltest")
 
 	// Contexte de la session
 	session := types.Session{}

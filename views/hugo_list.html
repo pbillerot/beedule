@@ -128,9 +128,14 @@
               <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message hugo-window-open"
                 {{if eq $search ``}} style="display: none;" {{end}} data-url="{{$record.SRC}}" data-posx="right" target="hugo-view">
                 <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
+              {{ else if (eq $record.Ext ".yaml")}}
+              <!-- YAML -->
+              <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact brown message hugo-window-open"
+              {{if eq $search ``}} style="display: none;" {{end}} data-url="/bee/hugo/document/{{$appid}}/{{$record.Key}}" data-posx="right" target="hugo-view">
+              <i class="file code outline brown large icon"></i>{{$record.Base}}</a>
               {{else}}
               <!-- DOCUMENT -->
-              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message " {{if eq $search ``}}
+              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui {{if $record.Inline }}green{{else}}yellow{{end}} compact message " {{if eq $search ``}}
                 style="display: none;" {{end}}>
                 <i class="file alternate outline green large icon"></i>
                 <a class="ui medium text hugo-window-open" data-url="/bee/hugo/document/{{$appid}}/{{$record.Key}}"
@@ -147,7 +152,15 @@
                 <div class="ui tag brown label"><b>{{$item}}</b></div>
                 {{end}}
                 {{if (eq $record.Draft "1") }}
-                <div class="ui red label"><i class="check square icon"></i>Brouillon</div>
+                <span class="ui red text" title="brouillon"><i class="firstdraft icon"></i></span>
+                {{end}}
+                {{if or $record.DatePublish $record.DateExpiry }}
+                <div class="ui yellow image label">
+                  {{if $record.DatePublish}}<span title="date publication">{{$record.DatePublish}}</span>{{end}}
+                  {{if $record.DateExpiry}}
+                  <div class="detail" title="date expiration">{{$record.DateExpiry}}</div>
+                  {{end}}
+                </div>
                 {{end}}
               </div>
               {{end}}

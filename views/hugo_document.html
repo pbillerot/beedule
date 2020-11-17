@@ -29,7 +29,7 @@
         <div class="item">
           <div class="ui basic buttons">
             <div class="ui icon {{$theme}} button hugo-window-open"
-              data-url="http://localhost:1313/{{$record.HugoPath}}" data-posx="left" data-width="1200"
+              data-url="{{.UrlTest}}{{$record.HugoPath}}" data-posx="left" data-width="1200"
               data-posy="150" target="hugo-test" title="Voir la page sur le site de test">
               <i class="eye icon"></i>
             </div>
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="item">
-          <button id="button_validate" class="ui labeled icon red button crud-jquery-submit" data-from="{{$from}}">
+          <button id="button_validate" class="ui labeled icon red button crud-jquery-submit" disabled="disabled" data-from="{{$from}}">
             <i class="save icon"></i>
             Enregistrer
           </button>

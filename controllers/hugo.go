@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego"
 	"gopkg.in/yaml.v2"
@@ -120,7 +121,12 @@ func (c *HugoController) HugoDocument() {
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
-		err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+		if record.PathReal != "" {
+			err = ioutil.WriteFile(record.PathReal, []byte(document), 0644)
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+		} else {
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+		}
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
 			beego.Error(msg)
@@ -129,11 +135,19 @@ func (c *HugoController) HugoDocument() {
 			ReturnFrom(c.Controller)
 		}
 
-		// Vidage de Hugo pour reconstruction
+		// Vidage de Hugo puis reconstruction
 		hugo = nil
+		hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+		for _, rec := range hugo {
+			if rec.Key == keyid {
+				record = rec
+				break
+			}
+		}
+
 		// Fermeture de la fenêtre
-		c.TplName = "bee_parent.html"
-		return
+		// c.TplName = "bee_parent.html"
+		// return
 
 	}
 
@@ -427,34 +441,40 @@ func (c *HugoController) HugoFileMkdir() {
 
 // Hugodoc table
 type hugodoc struct {
-	ID         int
-	Key        string
-	Root       string
-	Path       string
-	Prefix     string
-	PathAbsolu string
-	Base       string
-	Dir        string
-	Ext        string
-	IsDir      int
-	Level      int
-	Title      string
-	Draft      string
-	Date       string
-	Tags       string
-	Categories string
-	Content    string
-	HugoPath   string // url de la page sur le site
-	URL        string
-	SRC        string
+	ID          int
+	Key         string
+	Root        string
+	Path        string
+	Prefix      string
+	PathAbsolu  string
+	PathReal    string // path réel du fichier Ex. /data/config.yaml
+	Base        string
+	Dir         string
+	Ext         string
+	IsDir       int
+	Level       int
+	Title       string
+	Draft       string
+	Date        string
+	DatePublish string
+	DateExpiry  string
+	Inline      bool
+	Tags        string
+	Categories  string
+	Content     string
+	HugoPath    string // url de la page sur le site
+	URL         string
+	SRC         string
 }
 
 type hugoMeta struct {
-	Title      string   `yaml:"title"`
-	Draft      bool     `yaml:"draft"`
-	Date       string   `yaml:"date"`
-	Tags       []string `yaml:"tags"`
-	Categories []string `yaml:"categories"`
+	Title       string   `yaml:"title"`
+	Draft       bool     `yaml:"draft"`
+	Date        string   `yaml:"date"`
+	DatePublish string   `yaml:"publishDate"`
+	DateExpiry  string   `yaml:"expiryDate"`
+	Tags        []string `yaml:"tags"`
+	Categories  []string `yaml:"categories"`
 }
 
 var hugoLinks = []map[string]string{
@@ -540,6 +560,16 @@ func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, 
 	record.Level = strings.Count(record.Dir, "/")
 	record.Ext = filepath.Ext(path)
 	ext := filepath.Ext(path)
+	if ext == ".yaml" {
+		// lecture du fichier yaml
+		content, err := ioutil.ReadFile(pathAbsolu)
+		if err != nil {
+			beego.Error(err)
+		}
+		record.Content = string(content[:])
+		// le fichier a son clone dans /data
+		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/data/", 1)
+	}
 	if ext == ".md" {
 		// lecture des metadata du fichier markdown
 		content, err := ioutil.ReadFile(pathAbsolu)
@@ -554,8 +584,18 @@ func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, 
 		}
 		record.Title = meta.Title
 		record.Date = meta.Date
+		record.DatePublish = meta.DatePublish
+		record.DateExpiry = meta.DateExpiry
+		record.Inline = true
+		if record.DatePublish != "" && record.DatePublish > time.Now().Format("2006-01-02") {
+			record.Inline = false
+		}
+		if record.DateExpiry != "" && record.DateExpiry <= time.Now().Format("2006-01-02") {
+			record.Inline = false
+		}
 		if meta.Draft {
 			record.Draft = "1"
+			record.Inline = false
 		} else {
 			record.Draft = "0"
 		}
