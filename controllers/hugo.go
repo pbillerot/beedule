@@ -144,6 +144,8 @@ func (c *HugoController) HugoDocument() {
 				break
 			}
 		}
+		// Demande d'actualisation de l'arborescence
+		c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 
 		// Fermeture de la fenêtre
 		// c.TplName = "bee_parent.html"

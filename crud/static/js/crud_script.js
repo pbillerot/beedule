@@ -4,10 +4,10 @@
 $(document).ready(function () {
 
     var isUsed = false;
-    var changed = false
 
     // CLIC IMAGE POPUP
     var $hugo_view = $('#hugo_view').val();
+    var $hugo_refresh = $('#hugo_refresh').val();
     $('.hugo-modal-image').on('click', function (event) {
         var $src = $(this).data('src');
         $('#hugo-image').attr('src', $src)
@@ -37,7 +37,6 @@ $(document).ready(function () {
             }
         );
         myCodeMirror.on("change", function(cm) {
-            changed = true;
             $('#button_validate').removeAttr('disabled');
         })
     }
@@ -231,7 +230,6 @@ $(document).ready(function () {
                 $("#image").val(dataurl);
                 $("#" + $key + "_img").attr('src', dataurl);
                 $("#button_validate").removeAttr('disabled');
-                changed = true;
                 return false;
             },
             onComplete: (props) => {
@@ -339,6 +337,15 @@ $(document).ready(function () {
         }
     }
 
+    // Actualisation de la fenetre parent
+    if ($hugo_refresh && $hugo_refresh.length > 0) {
+        var val = Cookies.get($hugo_refresh)
+        if (val == "true") {
+            window.opener.location.reload();
+            Cookies.remove($hugo_refresh);
+        }
+    } // end hugo_refresh
+
     if ($hugo_view && $hugo_view.length > 0) {
         // Si recherche dans Cookie : aff du input et sélection
         var $search = $('#search').val();
@@ -405,7 +412,6 @@ $(document).ready(function () {
      * Fermeture de la fenêtre popup
      */
     $(document).on('click', '.crud-jquery-close', function (event) {
-        if ( changed) window.opener.location.reload();
         window.close();
         event.preventDefault();
     });
