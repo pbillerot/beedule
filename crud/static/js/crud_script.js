@@ -36,7 +36,7 @@ $(document).ready(function () {
                 viewportMargin: 20
             }
         );
-        myCodeMirror.on("change", function(cm) {
+        myCodeMirror.on("change", function (cm) {
             $('#button_validate').removeAttr('disabled');
         })
     }

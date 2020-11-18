@@ -61,7 +61,7 @@
   </div>
   <!-- MAIN -->
   <main>
-    <div class="ui container crud-searchable">
+    <div class="ui container">
       {{template "_crud_flash.html" .}}
       <!-- Title on Mobile -->
       <div class="crud-mobile-show ui label">
@@ -120,8 +120,7 @@
                 style="display: none;" {{end}} data-url="/bee/hugo/image/{{$appid}}/{{$record.Key}}" data-posx="right"
                 target="hugo-view">
                 <i class="image outline blue large icon"></i>
-                <span >{{$record.Base}}
-                </span>
+                <span>{{$record.Base}}</span>
               </a>
               {{ else if (eq $record.Ext ".pdf")}}
               <!-- PDF -->
@@ -140,7 +139,7 @@
                 <i class="file alternate outline green large icon"></i>
                 <a class="ui medium text hugo-window-open" data-url="/bee/hugo/document/{{$appid}}/{{$record.Key}}"
                   data-posx="right" target="hugo-view">
-                  <b>{{$record.Base}}</b>
+                  <b class="searchable">{{$record.Base}}</b>
                 </a>
                 <span class="ui purple text">[{{$record.Title}}]</span>
                 {{$arr := CrudSplit $record.Tags ","}}
@@ -156,6 +155,7 @@
                 {{end}}
                 {{if or $record.DatePublish $record.DateExpiry }}
                 <div class="ui yellow image label">
+                  <i class="clock outline icon"></i>
                   {{if $record.DatePublish}}<span title="date publication">{{$record.DatePublish}}</span>{{end}}
                   {{if $record.DateExpiry}}
                   <div class="detail" title="date expiration">{{$record.DateExpiry}}</div>
