@@ -29,6 +29,7 @@ func init() {
 
 	// EXPLORATEUR DE FICHIERS : HUGO
 	beego.Router("/bee/hugo/list/:app", &controllers.HugoController{}, "get:HugoList;post:HugoList")
+	beego.Router("/bee/hugo/edit/:app", &controllers.HugoController{}, "get:HugoEditor;post:HugoEditor")
 	beego.Router("/bee/hugo/document/:app/:key", &controllers.HugoController{}, "get:HugoDocument;post:HugoDocument")
 	beego.Router("/bee/hugo/image/:app/:key", &controllers.HugoController{}, "get:HugoImage;post:HugoImage")
 	beego.Router("/bee/hugo/directory/:app/:key", &controllers.HugoController{}, "get:HugoDirectory")

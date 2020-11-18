@@ -40,6 +40,42 @@ func (c *HugoController) HugoList() {
 	c.TplName = "hugo_list.html"
 }
 
+// HugoEditor Visualiser Modifier un document
+func (c *HugoController) HugoEditor() {
+	appid := c.Ctx.Input.Param(":app")
+
+	var pathDocument = c.GetString("path")
+
+	if pathDocument == "" {
+		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "url non reconnue")
+		beego.Error(msg)
+		c.Abort("404")
+	}
+	// Chargement des fichiers en mémoire
+	if len(hugo) == 0 {
+		hugoRacine = c.Data["DataDir"].(string) + "/content"
+		hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+	}
+	// Recherche du record
+	pathDocument = "/" + pathDocument
+	var record hugodoc
+	for _, rec := range hugo {
+		if pathDocument == rec.Path {
+			record = rec
+			break
+		}
+	}
+
+	if record.Key == "" {
+		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "non trouvé")
+		beego.Error(msg)
+		c.Abort("404")
+	}
+
+	c.Ctx.Redirect(302, fmt.Sprintf("/bee/hugo/document/%s/%s", appid, record.Key))
+
+}
+
 // HugoImage Visualiser Modifier une image
 func (c *HugoController) HugoImage() {
 	appid := c.Ctx.Input.Param(":app")
