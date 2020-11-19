@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -17,20 +18,91 @@ import (
 // Liste des répertoires et fichiers du répertoire hugo
 var hugo []hugodoc
 var hugoRacine string
+var metaTag map[string][]int
+var metaCat map[string][]int
 
 // HugoList Liste des fichiers et répertoires
 func (c *HugoController) HugoList() {
 	appid := c.Ctx.Input.Param(":app")
 	dirid := c.Ctx.Input.Param(":dir")
 	baseid := c.Ctx.Input.Param(":base")
+	hugoRacine = c.Data["DataDir"].(string) + "/content"
 
-	// Chargement des répertoires et fichiers
-	if len(hugo) == 0 {
-		hugoRacine = c.Data["DataDir"].(string) + "/content"
-		hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+	// ****************************************************************
+	// RECHERCHE DANS LA VUE
+	search := strings.ToLower(c.GetString("search"))
+	ctxSearch := fmt.Sprintf("hugo-%s-search", appid)
+	if strings.ToLower(c.GetString("searchstop")) != "" {
+		c.DelSession(ctxSearch)
+		search = ""
+	}
+	if search != "" {
+		c.SetSession(ctxSearch, search)
+	} else {
+		if c.GetSession(ctxSearch) != nil {
+			search = c.GetSession(ctxSearch).(string)
+		}
 	}
 
+	if search != "" {
+		// Chargement des répertoires et fichiers
+		if len(hugo) == 0 {
+			hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+		}
+
+		var colName string
+		// var val string
+		// var ope string
+		// re := regexp.MustCompile(`^(.*):(.*)`)
+		// match := re.FindStringSubmatch(search)
+		// if len(match) > 0 {
+		// 	colName = match[1]
+		// 	val = match[2]
+		// 	ope = ":"
+		// }
+		// re = regexp.MustCompile(`^(.*)=(.*)`)
+		// match = re.FindStringSubmatch(search)
+		// if len(match) > 0 {
+		// 	colName = match[1]
+		// 	val = match[2]
+		// 	ope = "="
+		// }
+		// Filtrage des documents
+		var recordFiltered []hugodoc
+		for _, record := range hugo {
+			if colName == "" {
+				// recherche globale
+				if record.IsDir == 0 {
+					var ok = false
+					if strings.Contains(record.Tags, search) {
+						ok = true
+					}
+					if strings.Contains(record.Categories, search) {
+						ok = true
+					}
+					if strings.Contains(record.Title, search) {
+						ok = true
+					}
+					if ok {
+						recordFiltered = append(recordFiltered, record)
+					}
+				} else {
+					// if record.Root == record.Base {
+					// 	recordFiltered = append(recordFiltered, record)
+					// }
+				}
+			}
+		}
+		hugo = recordFiltered
+	} else {
+		if len(hugo) == 0 {
+			hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+		}
+	} // end if search
+
+	// ********************************************************************
 	// Remplissage du contexte pour le template
+	c.Data["Search"] = search
 	c.Data["DirId"] = dirid
 	c.Data["BaseId"] = baseid
 	c.Data["Search"] = ""
@@ -496,11 +568,13 @@ type hugodoc struct {
 	Date        string
 	DatePublish string
 	DateExpiry  string
-	Inline      bool
+	Inline      bool // page en ligne et visible
+	Planified   bool // page qui sera en ligne bientôt
+	Expired     bool // page dont la date a expirée
 	Tags        string
 	Categories  string
 	Content     string
-	HugoPath    string // url de la page sur le site
+	HugoPath    string // path de la page sur le site /exposant/expostants.md -> /exposant/exposant
 	URL         string
 	SRC         string
 }
@@ -524,6 +598,50 @@ var hugoLinks = []map[string]string{
 	},
 }
 
+type pathInfo struct {
+	Path string
+	Info os.FileInfo
+}
+
+func readDir(dirname string, info *[]pathInfo) error {
+	// ouverture du répertoire
+	f, err := os.Open(dirname)
+	if err != nil {
+		return err
+	}
+	// lecture ds fichiers et répertoires du répertoire courant
+	list, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		return err
+	}
+	// tri des fichiers et répertoires sur le nom
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].Name() < list[j].Name()
+	})
+	// Rangement des fichiers au début
+	for _, file := range list {
+		if !file.IsDir() {
+			var pi pathInfo
+			pi.Path = dirname + "/" + file.Name()
+			pi.Info = file
+			*info = append(*info, pi)
+		}
+	}
+	// rangement des répertoires à la fin
+	for _, file := range list {
+		if file.IsDir() {
+			var pi pathInfo
+			pi.Path = dirname + "/" + file.Name()
+			pi.Info = file
+			*info = append(*info, pi)
+			// appel récursif des répertoires
+			readDir(dirname+"/"+file.Name(), info)
+		}
+	}
+	return nil
+}
+
 /**
  * hugoDirectoryRecord:
  * - lecture des répertoires /content et /data de foirexpo
@@ -531,42 +649,40 @@ var hugoLinks = []map[string]string{
  **/
 func hugoDirectoryRecord(c *HugoController, hugoDirectory string) (err error) {
 
+	// raz des meta
+	metaTag = make(map[string][]int)
+	metaCat = make(map[string][]int)
 	// Lecture des répertoires et insertion d'un record par document
 	var id int
-	err = filepath.Walk(hugoDirectory,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			// On ne prend que le répertoire content
-			if strings.Contains(path, hugoRacine) {
-				record := hugoFileRecord(c, hugoDirectory, path, info)
-				id++
-				record.ID = id
-				if record.Level == 0 {
-					return nil
-				}
-				if record.Dir[1:] == record.Base {
-					record.Key = record.Base
-				} else {
-					record.Key = strconv.Itoa(id)
-				}
-				record.URL = fmt.Sprintf("%s/%d", c.Data["DataUrl"].(string), id)
-				record.SRC = fmt.Sprintf("%s/content%s", c.Data["DataUrl"].(string), record.Path)
-				hugo = append(hugo, record)
-				// beego.Info(record.Key, record.Root, record.Path)
-				return nil
-			}
-			return nil
-		})
-	if err != nil {
-		beego.Error(err)
-	}
 
+	var pis []pathInfo
+	err = readDir(hugoDirectory, &pis)
+	if err != nil {
+		return err
+	}
+	for _, pi := range pis {
+		if strings.Contains(pi.Path, hugoRacine) {
+			id++
+			record := hugoFileRecord(hugoDirectory, pi.Path, pi.Info, id)
+			record.ID = id
+			if record.Level == 0 {
+				continue
+			}
+			if record.Dir[1:] == record.Base {
+				record.Key = record.Base
+			} else {
+				record.Key = strconv.Itoa(id)
+			}
+			record.URL = fmt.Sprintf("%s/%d", c.Data["DataUrl"].(string), id)
+			record.SRC = fmt.Sprintf("%s/content%s", c.Data["DataUrl"].(string), record.Path)
+			// ajout dans hugo
+			hugo = append(hugo, record)
+		}
+	}
 	return
 }
 
-func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, info os.FileInfo) (record hugodoc) {
+func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, id int) (record hugodoc) {
 
 	// On elève le chemin absolu du path
 	lenPrefixe := len(hugoDirectory + "/content")
@@ -627,9 +743,11 @@ func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, 
 		record.Inline = true
 		if record.DatePublish != "" && record.DatePublish > time.Now().Format("2006-01-02") {
 			record.Inline = false
+			record.Planified = true
 		}
 		if record.DateExpiry != "" && record.DateExpiry <= time.Now().Format("2006-01-02") {
 			record.Inline = false
+			record.Expired = true
 		}
 		if meta.Draft {
 			record.Draft = "1"
@@ -641,6 +759,14 @@ func hugoFileRecord(c *HugoController, hugoDirectory string, pathAbsolu string, 
 		record.Categories = strings.Join(meta.Categories, ",")
 		record.Content = string(content[:])
 		record.HugoPath = strings.Replace(record.Path, ".md", "", 1)
+		// maj meta
+		for _, v := range meta.Categories {
+			metaCat[v] = append(metaCat[v], id)
+		}
+		for _, v := range meta.Tags {
+			metaTag[v] = append(metaTag[v], id)
+		}
+
 	}
 	return
 }

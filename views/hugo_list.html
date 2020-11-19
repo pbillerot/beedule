@@ -156,9 +156,14 @@
                 {{if or $record.DatePublish $record.DateExpiry }}
                 <div class="ui yellow image label">
                   <i class="clock outline icon"></i>
-                  {{if $record.DatePublish}}<span title="date publication">{{$record.DatePublish}}</span>{{end}}
+                  {{if $record.DatePublish}}<span title="date publication">
+                    {{if $record.Planified }}<span class="ui red text">{{$record.DatePublish}}</span>
+                    {{else}}{{$record.DatePublish}}{{end}}
+                  </span>{{end}}
                   {{if $record.DateExpiry}}
-                  <div class="detail" title="date expiration">{{$record.DateExpiry}}</div>
+                  <div class="detail" title="date expiration">
+                    {{if $record.Expired }}<span class="ui red text">{{$record.DateExpiry}}</span>
+                    {{else}}{{$record.DateExpiry}}{{end}}</div>
                   {{end}}
                 </div>
                 {{end}}
@@ -204,12 +209,10 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form method="POST" action="">
+  <form method="POST" action="/bee/hugo/list/{{$appid}}">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
     <input type="hidden" id="crud-form-searchstop" name="searchstop">
-    <input type="hidden" id="crud-form-sortid" name="sortid">
-    <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
   </form>
   <!-- CONTEXTE -->
   <input type="hidden" id="hugo_view" value="hugo-{{$appid}}">
