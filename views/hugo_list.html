@@ -48,7 +48,7 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url="" value="{{$search}}" placeholder="Recherche...">
+              <input type="text" id="search" name="search" data-url="" value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
             <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
@@ -70,7 +70,15 @@
       <div class="ui large divided list">
         <!-- ITEMS -->
         {{ $currentLevel := 0}}
+        {{ $color := "yellow"}}
+        <!-- BOUCLE Records -->
         {{ range $irecord, $record := .Records }}
+        
+        {{ $color = "green"}}
+        {{ if $record.Inline}}{{$color = "green"}}{{end}}
+        {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
+        {{ if $record.Expired}}{{$color = "warning"}}{{end}}
+        {{ if $record.Archived}}{{$color = "white"}}{{end}}
 
         {{ if lt $record.Level $currentLevel}}
       </div> <!-- /content-->
@@ -106,7 +114,7 @@
         {{ else if gt $record.Level $currentLevel }}
         {{if gt $record.Level 1}}<div class="list" {{if eq $search ``}} style="display: none;" {{end}}>{{end}}
           <div class="item">
-            <i class="folder large grey icon link crud-collapse"></i>
+            <i id="{{$record.Key}}" data-root="{{$record.Root}}" class="folder large grey icon link crud-collapse"></i>
             <div class="content">
               <a {{if eq $record.Key $record.Root}}id="{{$record.ID}}" {{else}}id="{{$record.Key}}" {{end}}
                 data-root="{{$record.Root}}" class="header hugo-window-open"
@@ -134,7 +142,7 @@
               <i class="file code outline brown large icon"></i>{{$record.Base}}</a>
               {{else}}
               <!-- DOCUMENT -->
-              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui {{if $record.Inline }}green{{else}}yellow{{end}} compact message " {{if eq $search ``}}
+              <div id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui {{$color}} compact message " {{if eq $search ``}}
                 style="display: none;" {{end}}>
                 <i class="file alternate outline green large icon"></i>
                 <a class="ui medium text hugo-window-open" data-url="/bee/hugo/document/{{$appid}}/{{$record.Key}}"
@@ -177,6 +185,7 @@
               {{ if ne $currentLevel 1}}
             </div> <!-- /content-->
           </div> <!-- /item-->
+          <!-- / BOUCLE Records -->
         </div> <!-- /list-->
         {{end}}
         {{ $currentLevel = HugoDecrement $currentLevel }}

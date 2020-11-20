@@ -354,7 +354,8 @@ $(document).ready(function () {
         }
         // Positionnement sur la dernière ligne sélectionnée
         if (Cookies.get($hugo_view)) {
-            var $anchor = $('#' + Cookies.get($hugo_view))
+            var $cookie = Cookies.get($hugo_view);
+            var $anchor = $('#' + $cookie)
             if ($anchor.length) {
                 $('html, body').animate({
                     scrollTop: $anchor.offset().top - 100
@@ -373,6 +374,14 @@ $(document).ready(function () {
      * TODO voir si accepter par les browsers
      */
     $(document).on('click', '.hugo-window-open', function (event) {
+        // Mémo du contexte dans un cookie
+        if ($hugo_view && $hugo_view.length > 0) {
+            var $anchor = $(this).closest('.message');
+            Cookies.set($hugo_view, $anchor.attr('id'))
+            $(this).closest('main').find('.crud-list-selected').removeClass('crud-list-selected');
+            $anchor.addClass("crud-list-selected");
+        }
+        // Préparation window.open
         var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';

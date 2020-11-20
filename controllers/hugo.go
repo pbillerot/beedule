@@ -20,6 +20,9 @@ var hugo []hugodoc
 var hugoRacine string
 var metaTag map[string][]int
 var metaCat map[string][]int
+var metaDraft []int
+var metaPlanified []int
+var metaExpired []int
 
 // HugoList Liste des fichiers et répertoires
 func (c *HugoController) HugoList() {
@@ -28,7 +31,6 @@ func (c *HugoController) HugoList() {
 	baseid := c.Ctx.Input.Param(":base")
 	hugoRacine = c.Data["DataDir"].(string) + "/content"
 
-	// ****************************************************************
 	// RECHERCHE DANS LA VUE
 	search := strings.ToLower(c.GetString("search"))
 	ctxSearch := fmt.Sprintf("hugo-%s-search", appid)
@@ -44,56 +46,34 @@ func (c *HugoController) HugoList() {
 		}
 	}
 
+	var recordFiltered []hugodoc
 	if search != "" {
 		// Chargement des répertoires et fichiers
 		if len(hugo) == 0 {
 			hugoDirectoryRecord(c, c.Data["DataDir"].(string))
 		}
 
-		var colName string
-		// var val string
-		// var ope string
-		// re := regexp.MustCompile(`^(.*):(.*)`)
-		// match := re.FindStringSubmatch(search)
-		// if len(match) > 0 {
-		// 	colName = match[1]
-		// 	val = match[2]
-		// 	ope = ":"
-		// }
-		// re = regexp.MustCompile(`^(.*)=(.*)`)
-		// match = re.FindStringSubmatch(search)
-		// if len(match) > 0 {
-		// 	colName = match[1]
-		// 	val = match[2]
-		// 	ope = "="
-		// }
-		// Filtrage des documents
-		var recordFiltered []hugodoc
 		for _, record := range hugo {
-			if colName == "" {
-				// recherche globale
-				if record.IsDir == 0 {
-					var ok = false
-					if strings.Contains(record.Tags, search) {
-						ok = true
-					}
-					if strings.Contains(record.Categories, search) {
-						ok = true
-					}
-					if strings.Contains(record.Title, search) {
-						ok = true
-					}
-					if ok {
-						recordFiltered = append(recordFiltered, record)
-					}
-				} else {
-					// if record.Root == record.Base {
-					// 	recordFiltered = append(recordFiltered, record)
-					// }
+			if strings.Contains(search, "draft") && containsInt(metaDraft, record.ID) {
+				recordFiltered = append(recordFiltered, record)
+			}
+			if strings.Contains(search, "planif") && containsInt(metaPlanified, record.ID) {
+				recordFiltered = append(recordFiltered, record)
+			}
+			if strings.Contains(search, "expir") && containsInt(metaExpired, record.ID) {
+				recordFiltered = append(recordFiltered, record)
+			}
+			if meta, ok := metaTag[search]; ok {
+				if containsInt(meta, record.ID) {
+					recordFiltered = append(recordFiltered, record)
+				}
+			}
+			if meta, ok := metaCat[search]; ok {
+				if containsInt(meta, record.ID) {
+					recordFiltered = append(recordFiltered, record)
 				}
 			}
 		}
-		hugo = recordFiltered
 	} else {
 		if len(hugo) == 0 {
 			hugoDirectoryRecord(c, c.Data["DataDir"].(string))
@@ -102,12 +82,14 @@ func (c *HugoController) HugoList() {
 
 	// ********************************************************************
 	// Remplissage du contexte pour le template
-	c.Data["Search"] = search
 	c.Data["DirId"] = dirid
 	c.Data["BaseId"] = baseid
-	c.Data["Search"] = ""
-	c.Data["Records"] = hugo
-
+	c.Data["Search"] = search
+	if search == "" {
+		c.Data["Records"] = hugo
+	} else {
+		c.Data["Records"] = recordFiltered
+	}
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/list/%s", appid))
 	c.TplName = "hugo_list.html"
 }
@@ -254,11 +236,6 @@ func (c *HugoController) HugoDocument() {
 		}
 		// Demande d'actualisation de l'arborescence
 		c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-
-		// Fermeture de la fenêtre
-		// c.TplName = "bee_parent.html"
-		// return
-
 	}
 
 	// Remplissage du contexte pour le template
@@ -359,11 +336,14 @@ func (c *HugoController) HugoFileMv() {
 	// Le cookie ancrage est déplacé sur le répertoire root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
 
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
+
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
 	// Fermeture de la fenêtre
-	c.TplName = "bee_parent.html"
+	c.TplName = "bee_close.html"
 	return
 
 }
@@ -409,8 +389,10 @@ func (c *HugoController) HugoFileCp() {
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 	// Fermeture de la fenêtre
-	c.TplName = "bee_parent.html"
+	c.TplName = "bee_close.html"
 	return
 }
 
@@ -449,8 +431,10 @@ func (c *HugoController) HugoFileRm() {
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 	// Fermeture de la fenêtre
-	c.TplName = "bee_parent.html"
+	c.TplName = "bee_close.html"
 	return
 }
 
@@ -506,8 +490,10 @@ func (c *HugoController) HugoFileUpload() {
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 	// Fermeture de la fenêtre
-	c.TplName = "bee_parent.html"
+	c.TplName = "bee_close.html"
 	return
 }
 
@@ -544,8 +530,13 @@ func (c *HugoController) HugoFileMkdir() {
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
+	// Le cookie ancrage est déplacé sur le répertoire root
+	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
+
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 	// Fermeture de la fenêtre
-	c.TplName = "bee_parent.html"
+	c.TplName = "bee_close.html"
 	return
 }
 
@@ -571,6 +562,7 @@ type hugodoc struct {
 	Inline      bool // page en ligne et visible
 	Planified   bool // page qui sera en ligne bientôt
 	Expired     bool // page dont la date a expirée
+	Archived    bool // page avec la catégorie archived
 	Tags        string
 	Categories  string
 	Content     string
@@ -615,7 +607,7 @@ func readDir(dirname string, info *[]pathInfo) error {
 	if err != nil {
 		return err
 	}
-	// tri des fichiers et répertoires sur le nom
+	// tri des fichiers sur le nom
 	sort.Slice(list, func(i, j int) bool {
 		return list[i].Name() < list[j].Name()
 	})
@@ -629,6 +621,18 @@ func readDir(dirname string, info *[]pathInfo) error {
 		}
 	}
 	// rangement des répertoires à la fin
+	// tri des répertoires sur le nom inversé si numérique
+	sort.Slice(list, func(i, j int) bool {
+		if _, err := strconv.Atoi(list[i].Name()); err == nil {
+			if _, err := strconv.Atoi(list[j].Name()); err == nil {
+				return list[i].Name() > list[j].Name()
+			} else {
+				return list[i].Name() < list[j].Name()
+			}
+		} else {
+			return list[i].Name() < list[j].Name()
+		}
+	})
 	for _, file := range list {
 		if file.IsDir() {
 			var pi pathInfo
@@ -652,6 +656,9 @@ func hugoDirectoryRecord(c *HugoController, hugoDirectory string) (err error) {
 	// raz des meta
 	metaTag = make(map[string][]int)
 	metaCat = make(map[string][]int)
+	metaDraft = []int{}
+	metaPlanified = []int{}
+	metaExpired = []int{}
 	// Lecture des répertoires et insertion d'un record par document
 	var id int
 
@@ -744,14 +751,17 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 		if record.DatePublish != "" && record.DatePublish > time.Now().Format("2006-01-02") {
 			record.Inline = false
 			record.Planified = true
+			metaPlanified = append(metaPlanified, id)
 		}
 		if record.DateExpiry != "" && record.DateExpiry <= time.Now().Format("2006-01-02") {
 			record.Inline = false
 			record.Expired = true
+			metaExpired = append(metaExpired, id)
 		}
 		if meta.Draft {
 			record.Draft = "1"
 			record.Inline = false
+			metaDraft = append(metaDraft, id)
 		} else {
 			record.Draft = "0"
 		}
@@ -762,6 +772,9 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 		// maj meta
 		for _, v := range meta.Categories {
 			metaCat[v] = append(metaCat[v], id)
+			if strings.Contains(v, "archive") {
+				record.Archived = true
+			}
 		}
 		for _, v := range meta.Tags {
 			metaTag[v] = append(metaTag[v], id)
@@ -769,4 +782,24 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 
 	}
 	return
+}
+
+// int contains in slice
+func containsInt(sl []int, in int) bool {
+	for _, v := range sl {
+		if v == in {
+			return true
+		}
+	}
+	return false
+}
+
+// string contains in slice
+func containsString(sl []string, in string) bool {
+	for _, v := range sl {
+		if v == in {
+			return true
+		}
+	}
+	return false
 }
