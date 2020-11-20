@@ -188,6 +188,34 @@ func (c *HugoController) HugoImage() {
 	c.TplName = "hugo_image.html"
 }
 
+// HugoPdf Visualiser Modifier une image
+func (c *HugoController) HugoPdf() {
+	appid := c.Ctx.Input.Param(":app")
+	keyid := c.Ctx.Input.Param(":key")
+
+	// Recherche du record
+	var record hugodoc
+	for _, rec := range hugo {
+		if rec.Key == keyid {
+			record = rec
+			break
+		}
+	}
+	flash := beego.ReadFromRequest(&c.Controller)
+	if record.Key == "" {
+		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		flash.Error("Fichier non trouvé : %s", keyid)
+		flash.Store(&c.Controller)
+	}
+
+	// Remplissage du contexte pour le template
+	c.Data["Record"] = record
+	c.Data["KeyID"] = keyid
+	c.Ctx.Output.Cookie("hugo-"+appid, keyid)
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/hugo/image/%s", appid))
+	c.TplName = "hugo_pdf.html"
+}
+
 // HugoDocument Visualiser Modifier un document
 func (c *HugoController) HugoDocument() {
 	appid := c.Ctx.Input.Param(":app")
@@ -562,7 +590,6 @@ type hugodoc struct {
 	Inline      bool // page en ligne et visible
 	Planified   bool // page qui sera en ligne bientôt
 	Expired     bool // page dont la date a expirée
-	Archived    bool // page avec la catégorie archived
 	Tags        string
 	Categories  string
 	Content     string
@@ -626,12 +653,10 @@ func readDir(dirname string, info *[]pathInfo) error {
 		if _, err := strconv.Atoi(list[i].Name()); err == nil {
 			if _, err := strconv.Atoi(list[j].Name()); err == nil {
 				return list[i].Name() > list[j].Name()
-			} else {
-				return list[i].Name() < list[j].Name()
 			}
-		} else {
 			return list[i].Name() < list[j].Name()
 		}
+		return list[i].Name() < list[j].Name()
 	})
 	for _, file := range list {
 		if file.IsDir() {
@@ -772,9 +797,6 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 		// maj meta
 		for _, v := range meta.Categories {
 			metaCat[v] = append(metaCat[v], id)
-			if strings.Contains(v, "archive") {
-				record.Archived = true
-			}
 		}
 		for _, v := range meta.Tags {
 			metaTag[v] = append(metaTag[v], id)

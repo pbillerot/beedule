@@ -78,7 +78,6 @@
         {{ if $record.Inline}}{{$color = "green"}}{{end}}
         {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
         {{ if $record.Expired}}{{$color = "warning"}}{{end}}
-        {{ if $record.Archived}}{{$color = "white"}}{{end}}
 
         {{ if lt $record.Level $currentLevel}}
       </div> <!-- /content-->
@@ -133,7 +132,7 @@
               {{ else if (eq $record.Ext ".pdf")}}
               <!-- PDF -->
               <a id="{{$record.Key}}" data-root="{{$record.Root}}" class="ui compact message hugo-window-open"
-                {{if eq $search ``}} style="display: none;" {{end}} data-url="{{$record.SRC}}" data-posx="right" target="hugo-view">
+                {{if eq $search ``}} style="display: none;" {{end}} data-url="/bee/hugo/pdf/{{$appid}}/{{$record.Key}}" data-posx="right" target="hugo-view">
                 <i class="file pdf outline red large icon"></i>{{$record.Base}}</a>
               {{ else if (eq $record.Ext ".yaml")}}
               <!-- YAML -->
