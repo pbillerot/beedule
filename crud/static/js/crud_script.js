@@ -387,9 +387,15 @@ $(document).ready(function () {
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
         var posy = $(this).data("posy") ? $(this).data("posy") : '3';
         var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
-        window.open($(this).data('url')
+        if (window.opener == null) {
+            window.open($(this).data('url')
             , target
             , computeWindow(posx, posy, width, height, false));
+        } else {
+            window.opener.open($(this).data('url')
+            , target
+            , computeWindow(posx, posy, width, height, false));
+        }
         event.preventDefault();
     });
 
