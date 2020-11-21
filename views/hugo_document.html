@@ -37,8 +37,9 @@
               data-url="{{BeeReplace $methodurl `document` `file`}}" title="Gérer le fichier...">
               <i class="folder outline icon"></i>
             </div>
-            <div class="ui icon {{$theme}} button crud-jquery-url"
-              data-url="" title="Aide...">
+            <div class="ui icon {{$theme}} button  hugo-window-open"
+              data-url="{{.UrlTest}}/site/help/{{if eq $record.Ext `.yaml`}}config{{else}}document{{end}}"
+              data-posx="left" data-width="1200" data-posy="5" target="hugo-test" title="Aide...">
               <i class="help icon"></i>
             </div>
           </div>
@@ -95,6 +96,22 @@
   <input type="hidden" id="hugo_refresh" value="hugo-refresh-{{$appid}}">
 
   {{template "_crud_foot.html" .}}
+  <script>
+    $(document).ready(function () {
+      // CTRL+S
+      $(window).bind('keydown', function (event) {
+        if (event.ctrlKey || event.metaKey) {
+          switch (String.fromCharCode(event.which).toLowerCase()) {
+            case 's':
+              event.preventDefault();
+              $("#button_validate").trigger('click');
+              break;
+          }
+        }
+      });
+      $("#codemirror-markdown").focus();
+    });
+  </script>
 </body>
 
 </html>
