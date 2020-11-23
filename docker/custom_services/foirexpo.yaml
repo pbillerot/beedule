@@ -10,4 +10,4 @@
 #     foirexpo:
 #       loadBalancer:
 #         servers:
-#         - url: "https://maixentexpo.github.io/foirexpo"
+#         - url: "http://192.168.1.76:1418/"

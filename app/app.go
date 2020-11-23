@@ -65,15 +65,6 @@ var Applications = map[string]types.Application{
 		Path:   "/foirexpo",
 		Target: "_blank",
 	},
-	"foiredit": {
-		Title: "Admin Foirexpo",
-		Group: "admin",
-		Image: "/bee/static/img/hugoSM.png",
-		AppViews: []types.AppView{
-			{Tableid: "hugodoc", Viewid: "vfolder"},
-			{Tableid: "hugodoc", Viewid: "vall"},
-		},
-	},
 	"asf": {
 		Title: "Administration du site FOIREXPO",
 		Group: "admin",
@@ -94,7 +85,6 @@ var Tables = types.Tables{
 	"quotes":     Quotes,
 	"chains":     Chains,
 	"jobs":       Jobs,
-	"hugodoc":    Hugodoc,
 }
 
 // Portail as
