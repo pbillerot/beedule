@@ -427,7 +427,22 @@ $(document).ready(function () {
      * Fermeture de la fenêtre popup
      */
     $(document).on('click', '.crud-jquery-close', function (event) {
-        window.close();
+        if ($('#button_validate').length >0 
+            && $('#button_validate').attr('disabled') !="disabled") {
+            $('#crud-action').html("Abandonner les modifications ?");
+            $('#crud-modal-confirm')
+                .modal({
+                    closable: false,
+                    onDeny: function () {
+                        return true;
+                    },
+                    onApprove: function () {
+                        window.close();
+                    }
+                }).modal('show');
+        } else {
+            window.close();
+        }
         event.preventDefault();
     });
 
@@ -470,3 +485,12 @@ function computeWindow(posx, posy, pwidth, pheight, full_screen) {
     return 'left=' + left + ',top=' + top + ',height=' + height + ',width=' + width + ',scrolling=yes,scrollbars=yes,resizeable=yes';
 }
 
+/**
+ * Blocage du carriage return dans un champ input par exemple
+ * @param {object event} event 
+ */
+function blockCR(event) {
+    if (event.keyCode == 13 ) {
+        event.preventDefault();
+    }
+}

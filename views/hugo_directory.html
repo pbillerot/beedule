@@ -66,7 +66,7 @@
                 Renommer le répertoire en...
               </button>
               <input class="hugo-action" type="text" name="new_name" id="new_name" placeholder="{{$record.Path}}"
-                value="{{$record.Path}}">
+                value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>
           <div class="field">
@@ -77,7 +77,7 @@
                 Recopier le répertoire dans...
               </button>
               <input class="hugo-action" type="text" name="copy_file" id="copy_file" placeholder="{{$record.Path}}"
-                value="{{$record.Path}}">
+                value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>
           <div class="field">
@@ -88,7 +88,7 @@
                 Supprimer le répertoire...
               </button>
               <input class="hugo-action" disabled="disabled" type="text" name="del_file" id="del_file"
-                placeholder="{{$record.Path}}" value="{{$record.Path}}">
+                placeholder="{{$record.Path}}" value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>
           <div class="field">
@@ -99,7 +99,7 @@
                 Créer le répertoire...
               </button>
               <input class="hugo-action" type="text" name="new_dir" id="new_dir" placeholder="{{$record.Path}}"
-                value="{{$record.Path}}">
+                value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>
           <div class="field">
@@ -110,7 +110,7 @@
                 Charger le fichier sur le serveur...
               </button>
               <input class="hugo-action" type="file" name="new_file" id="new_file" placeholder="{{$record.Path}}"
-                value="{{$record.Path}}">
+                value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>
         </div>
