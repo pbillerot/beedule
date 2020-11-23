@@ -21,7 +21,7 @@ func init() {
 
 // TestBeego is a sample to run an endpoint test
 func TestBeego(t *testing.T) {
-	r, _ := http.NewRequest("GET", "/crud", nil)
+	r, _ := http.NewRequest("GET", "/bee", nil)
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
 

@@ -25,7 +25,7 @@ func ReturnFrom(c beego.Controller) {
 	if c.Ctx.Input.Cookie("from") != "" {
 		c.Ctx.Redirect(302, c.Ctx.Input.Cookie("from"))
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		c.Ctx.Redirect(302, "/bee")
 	}
 	return
 }

@@ -3,7 +3,7 @@ http:
     beedule:
       entryPoints: 
       - websecure
-      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/crud`)"
+      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/bee`)"
       service: beedule
 
   services:

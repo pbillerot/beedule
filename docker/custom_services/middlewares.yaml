@@ -29,7 +29,7 @@ http:
 
     add-crud:
       addPrefix:
-        prefix: "/crud"
+        prefix: "/bee"
 
     crud-auth:
       forwardAuth:
