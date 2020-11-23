@@ -18,24 +18,24 @@ type HugoController struct {
 func (c *HugoController) Prepare() {
 	if c.GetSession("LoggedIn") != nil {
 		if c.GetSession("LoggedIn").(bool) != true {
-			c.Ctx.Redirect(302, "/crud/login")
+			c.Ctx.Redirect(302, "/bee/login")
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud/login")
+		c.Ctx.Redirect(302, "/bee/login")
 	}
 	appid := c.Ctx.Input.Param(":app")
 	// CTRL APPLICATION
 	flash := beego.ReadFromRequest(&c.Controller)
 	if _, ok := app.Applications[appid]; !ok {
 		beego.Error("App not found", c.GetSession("Username").(string), appid)
-		c.Ctx.Redirect(302, "/crud/login")
+		c.Ctx.Redirect(302, "/bee/login")
 		return
 	}
 	if !IsInGroup(c.Controller, app.Applications[appid].Group, "") {
 		beego.Error("Accès non autorisé", c.GetSession("Username").(string), appid)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/login")
+		c.Ctx.Redirect(302, "/bee/login")
 		return
 	}
 
@@ -53,7 +53,7 @@ func (c *HugoController) Prepare() {
 
 	// Context lié à custom.conf
 	c.Data["DataDir"] = beego.AppConfig.String(appid + "::datadir")
-	c.Data["DataUrl"] = "/crud/data/" + appid
+	c.Data["DataUrl"] = "/bee/data/" + appid
 	c.Data["UrlTest"] = beego.AppConfig.String(appid + "::urltest")
 
 	// Contexte de la session

@@ -93,7 +93,7 @@ func (c *CrudActionViewController) Post() {
 		flash.Store(&c.Controller)
 	}
 
-	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 }
 
 // CrudActionFormController as
@@ -162,7 +162,7 @@ func (c *CrudActionFormController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return
 	}
 	if iactionid <= len(form.Actions) {
@@ -191,9 +191,9 @@ func (c *CrudActionFormController) Post() {
 	}
 
 	if withPlugin {
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 	} else {
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 	}
 }
 
@@ -287,7 +287,7 @@ func (c *CrudActionElementController) Post() {
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return
 	}
 	// Calcul des éléments
@@ -340,7 +340,7 @@ func (c *CrudActionElementController) Post() {
 	} else {
 		flash.Error("Action non trouvée")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return
 	}
 
@@ -349,8 +349,8 @@ func (c *CrudActionElementController) Post() {
 		flash.Store(&c.Controller)
 	}
 	if withPlugin {
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 	} else {
-		c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 	}
 }

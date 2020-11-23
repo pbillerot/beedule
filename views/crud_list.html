@@ -37,7 +37,7 @@
           {{$v := index $t.Views $appView.Viewid }}
           {{if (CrudIsInGroup $v.Group $session)}}
           <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -50,9 +50,9 @@
             <i class="user icon"></i>
             {{.Session.Username}}
           </div>
-          <a class="item" href="/crud/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
-          <a class="item" href="/crud/logout">Se déconnecter</a>
-          <a href="/crud/about" class="item">À propos</a>
+          <a class="item" href="/bee/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
         </div>
       </div>
       <div class="header item" id="crud-header">
@@ -74,7 +74,7 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
                 value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
@@ -87,7 +87,7 @@
           <div class="menu">
             {{if $view.FormAdd}}
             <a class="ui icon item crud-jquery-url"
-              data-url="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
               <i class="plus square icon"></i> Ajouter un élément...
             </a>
             {{end}}
@@ -97,7 +97,7 @@
             {{end}}
             {{range $iaction, $action := $view.Actions}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/crud/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
+              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
               {{if $action.Checkbox.GetSQL}}
               <div class="ui toggle checkbox">
                 <input type="checkbox"{{if (eq (CrudSQL $action.Checkbox.GetSQL $action.Checkbox.AliasDB) `1`)}} checked="checked"{{end}}>
@@ -139,9 +139,9 @@
       <a id="{{CrudIndexAnchor $record $tablekey}}"
         class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-card-searchable"
         {{if or $view.FormView $view.Deletable}}
-        data-url="/crud/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
         {{else if and $view.FormEdit}}
-        data-url="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}>
         <i class="mini {{$theme}} {{$view.IconName}} middle aligned icon"></i>
         <div class="content">
@@ -266,7 +266,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form method="POST" action="/crud/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
     <input type="hidden" id="crud-form-searchstop" name="searchstop">

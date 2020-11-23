@@ -112,7 +112,7 @@ var hugoElements = types.Elements{
 		LabelShort: "PDF",
 		Params: types.Params{
 			URL: "{$dataurl}/content{path}",
-			Src: "/crud/static/img/pdf.png",
+			Src: "/bee/static/img/pdf.png",
 		},
 		HideSQL: "select 'hide' where '{ext}' not in ('.pdf')",
 	},

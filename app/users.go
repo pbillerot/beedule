@@ -18,7 +18,7 @@ var usersElements = types.Elements{
 		Type:      "button",
 		LabelLong: "Changer le mot de passe...",
 		Params: types.Params{
-			URL: "/crud/edit/users/users/vall/fpwd/{user_name}",
+			URL: "/bee/edit/users/users/vall/fpwd/{user_name}",
 		},
 	},
 	"user_name": {

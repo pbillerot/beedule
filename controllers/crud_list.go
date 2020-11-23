@@ -255,10 +255,10 @@ func (c *CrudListController) CrudList() {
 	c.Data["Cols"] = cols
 
 	section, _ := beego.AppConfig.GetSection(table.AliasDB)
-	c.Data["DataUrl"] = "/crud/data/" + table.AliasDB
+	c.Data["DataUrl"] = "/bee/data/" + table.AliasDB
 	c.Data["Datadir"] = section["datadir"]
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/crud/list/%s/%s/%s", appid, tableid, viewid))
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
 
 	if view.Type == "image" {
 		c.TplName = "crud_list_image.html"

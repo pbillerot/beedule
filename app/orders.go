@@ -250,7 +250,7 @@ var ordersElements = types.Elements{
 		Group:     "trader",
 		LabelLong: "Vendre cette valeur...",
 		Params: types.Params{
-			URL: "/crud/edit/picsou/orders/vachat/feditsell/{orders_id}?orders_order=sell&orders_sell={orders_quote}",
+			URL: "/bee/edit/picsou/orders/vachat/feditsell/{orders_id}?orders_order=sell&orders_sell={orders_quote}",
 		},
 	},
 	"orders_id": {
@@ -423,7 +423,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Graph du jour",
 		LabelShort: "Graph J",
 		Params: types.Params{
-			URL:      "/crud/data/picsou/png/day/{orders_ptf_id}.png",
+			URL:      "/bee/data/picsou/png/day/{orders_ptf_id}.png",
 			IconName: "emblem-photos",
 		},
 	},
@@ -432,7 +432,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			URL:      "/crud/data/picsou/png/quotes/{orders_ptf_id}.png",
+			URL:      "/bee/data/picsou/png/quotes/{orders_ptf_id}.png",
 			IconName: "emblem-photos",
 		},
 	},
@@ -441,7 +441,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			URL:      "/crud/data/picsou/png/ana/{orders_ptf_id}.gif",
+			URL:      "/bee/data/picsou/png/ana/{orders_ptf_id}.gif",
 			IconName: "emblem-photos",
 		},
 	},

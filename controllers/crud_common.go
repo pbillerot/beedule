@@ -396,7 +396,7 @@ func setContext(c beego.Controller, table string) {
 	// Contexte de la table
 	aliasDB := app.Tables[table].AliasDB
 	section, _ := beego.AppConfig.GetSection(aliasDB)
-	dataurl := "/crud/data/" + aliasDB
+	dataurl := "/bee/data/" + aliasDB
 	if url, ok := section["dataurl"]; ok {
 		dataurl = url
 	}

@@ -50,7 +50,7 @@ func init() {
 				ctx["dataurl"] = dataurl
 				ctx["datadir"] = datadir
 			} else {
-				dataurl = "/crud/data/" + appid
+				dataurl = "/bee/data/" + appid
 				beego.SetStaticPath(dataurl, datadir)
 				beego.Info("Enregistrement url static", dataurl, datadir)
 				ctx["dataurl"] = dataurl

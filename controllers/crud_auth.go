@@ -18,10 +18,10 @@ type loggedRouter struct {
 func (c *loggedRouter) Prepare() {
 	if c.GetSession("LoggedIn") != nil {
 		if c.GetSession("LoggedIn").(bool) != true {
-			c.Ctx.Redirect(302, "/crud/login")
+			c.Ctx.Redirect(302, "/bee/login")
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud/login")
+		c.Ctx.Redirect(302, "/bee/login")
 	}
 	appid := c.Ctx.Input.Param(":app")
 	if appid != "" {
@@ -43,13 +43,13 @@ func (c *adminRouter) Prepare() {
 	// beego.Debug("adminRouter")
 	if c.GetSession("LoggedIn") != nil {
 		if c.GetSession("LoggedIn").(bool) != true {
-			c.Ctx.Redirect(302, "/crud/login")
+			c.Ctx.Redirect(302, "/bee/login")
 		}
 		if c.GetSession("IsAdmin").(bool) != true {
-			c.Ctx.Redirect(302, "/crud/login")
+			c.Ctx.Redirect(302, "/bee/login")
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud/login")
+		c.Ctx.Redirect(302, "/bee/login")
 	}
 	appid := c.Ctx.Input.Param(":app")
 	if appid != "" {
@@ -134,7 +134,7 @@ func (c *LogoutController) Get() {
 	c.DelSession("IsAdmin")
 	c.DelSession("Groups")
 	setContext(c.Controller, "users")
-	c.Ctx.Redirect(302, "/crud/login")
+	c.Ctx.Redirect(302, "/bee/login")
 }
 
 // User as

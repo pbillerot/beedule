@@ -116,7 +116,7 @@ var jobsForms = types.Forms{
 				Type:      "section",
 				LabelLong: "CHAÎNE",
 				Params: types.Params{
-					URL:      "/crud/edit/pendule/chains/vall/fedit/{chain_id}",
+					URL:      "/bee/edit/pendule/chains/vall/fedit/{chain_id}",
 					IconName: "calendar alternate outline",
 				},
 			},

@@ -123,5 +123,5 @@ func (c *CrudDeleteController) Post() {
 		}
 	}
 	c.DelSession(fmt.Sprintf("anch_%s_%s", tableid, viewid))
-	c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 }

@@ -12,7 +12,7 @@
             <!-- LEFT MENU -->
             <div class="ui dropdown item">
                 <div class="ui mini image">
-                    <img src="/crud/static/img/beedule.png">
+                    <img src="/bee/static/img/beedule.png">
                 </div>
                 <div class="menu">
                     <a href="/crud" class="item disabled"><i class="home icon"></i> Page d'accueil</a>
@@ -21,9 +21,9 @@
                         <i class="user icon"></i>
                         {{.Session.Username}}
                     </div>
-                    <a class="item" href="/crud/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
-                    <a class="item" href="/crud/logout">Se déconnecter</a>
-                    <a href="/crud/about" class="item">À propos</a>
+                    <a class="item" href="/bee/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+                    <a class="item" href="/bee/logout">Se déconnecter</a>
+                    <a href="/bee/about" class="item">À propos</a>
                 </div>
             </div>
             <div class="header item">{{.Portail.Title}}</div>
@@ -47,7 +47,7 @@
                     {{else if $app.AppViews}}
                         {{ $appView := index $app.AppViews 0 }}
                         <a class="card raised crud-card-portail"
-                            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+                            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
                             <div class="ui circular image">
                                 <img src="{{$app.Image}}">
                             </div>

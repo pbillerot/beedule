@@ -38,7 +38,7 @@
           {{$t := index $portail.Tables $appView.Tableid }}
           {{$v := index $t.Views $appView.Viewid }}
           <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -49,9 +49,9 @@
             <i class="user icon"></i>
             {{.Session.Username}}
           </div>
-          <a class="item" href="/crud/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
-          <a class="item" href="/crud/logout">Se déconnecter</a>
-          <a href="/crud/about" class="item">À propos</a>
+          <a class="item" href="/bee/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
         </div>
       </div>
       <a href="{{$from}}" class="item" style="padding: 0.5em;">
@@ -83,11 +83,11 @@
       {{if (eq $id "")}}
       <!-- Formulaire d'Ajout ou d'Edition -->
       <form class="ui form attached segment" id="beeForm" method="POST"
-        action="/crud/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}">
+        action="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}">
         {{else}}
 <form class="ui form attached segment" id="beeForm" method="POST"
   enctype="multipart/form-data"
-  action="/crud/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+  action="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
   {{end}}
   {{ .xsrfdata }}
   {{$section := false}}
@@ -110,7 +110,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
       <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
       </button>
     </div>
@@ -123,7 +123,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
       <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
       </button>
     </div>
@@ -131,7 +131,7 @@
   {{else}}
   <div class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
     <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/crud/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
     </button>
   </div>

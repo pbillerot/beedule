@@ -365,7 +365,7 @@ func (c *CrudEditController) Post() {
 	}
 
 	if withPlugin {
-		c.Ctx.Redirect(302, "/crud/list/"+appid+"/"+tableid+"/"+viewid)
+		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 	} else {
 		ReturnFrom(c.Controller)
 	}

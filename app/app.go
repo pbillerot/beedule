@@ -8,7 +8,7 @@ import (
 var Applications = map[string]types.Application{
 	"pendule": {
 		Title: "Pendule",
-		Image: "/crud/static/img/pendule.svg",
+		Image: "/bee/static/img/pendule.svg",
 		Group: "admin",
 		AppViews: []types.AppView{
 			{Tableid: "chains", Viewid: "vall"},
@@ -17,7 +17,7 @@ var Applications = map[string]types.Application{
 	},
 	"admin": {
 		Title: "Gestion du site",
-		Image: "/crud/static/img/tools.png",
+		Image: "/bee/static/img/tools.png",
 		Group: "admin",
 		AppViews: []types.AppView{
 			{Tableid: "users", Viewid: "vall"},
@@ -28,7 +28,7 @@ var Applications = map[string]types.Application{
 	"tasks": {
 		Title: "Mes Tâches",
 		Group: "admin",
-		Image: "/crud/static/img/tasks.svg",
+		Image: "/bee/static/img/tasks.svg",
 		AppViews: []types.AppView{
 			{Tableid: "tasks", Viewid: "vall"},
 		},
@@ -36,7 +36,7 @@ var Applications = map[string]types.Application{
 	"picsou": {
 		Title: "Picsou, pour bricoler sur la bourse",
 		Group: "picsou",
-		Image: "/crud/static/img/picsou.jpg",
+		Image: "/bee/static/img/picsou.jpg",
 		AppViews: []types.AppView{
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},
@@ -49,26 +49,26 @@ var Applications = map[string]types.Application{
 	},
 	"filebrowser": {
 		Title:  "Gestionnaire de fichiers",
-		Image:  "/crud/static/img/filebrowser.svg",
+		Image:  "/bee/static/img/filebrowser.svg",
 		Path:   "/fb",
 		Target: "_blank",
 	},
 	"navidrome": {
 		Title:  "Serveur de streaming de musique",
-		Image:  "/crud/static/img/navidrome.png",
+		Image:  "/bee/static/img/navidrome.png",
 		Path:   "/nv",
 		Target: "_blank",
 	},
 	"foirexpo": {
 		Title:  "Portail foirexpo",
-		Image:  "/crud/static/img/public.png",
+		Image:  "/bee/static/img/public.png",
 		Path:   "/foirexpo",
 		Target: "_blank",
 	},
 	"foiredit": {
 		Title: "Admin Foirexpo",
 		Group: "admin",
-		Image: "/crud/static/img/hugoSM.png",
+		Image: "/bee/static/img/hugoSM.png",
 		AppViews: []types.AppView{
 			{Tableid: "hugodoc", Viewid: "vfolder"},
 			{Tableid: "hugodoc", Viewid: "vall"},
@@ -77,7 +77,7 @@ var Applications = map[string]types.Application{
 	"asf": {
 		Title: "Administration du site FOIREXPO",
 		Group: "admin",
-		Image: "/crud/static/img/edf.svg",
+		Image: "/bee/static/img/edf.svg",
 		Path:  "/bee/hugo/list/asf",
 	},
 }
@@ -101,7 +101,7 @@ var Tables = types.Tables{
 var Portail = types.Portail{
 	Title:        "Beedule",
 	Info:         "Le prototype d'utilisation du framework",
-	IconFile:     "/crud/static/img/beedule.png",
+	IconFile:     "/bee/static/img/beedule.png",
 	Applications: Applications,
 	Tables:       Tables,
 }

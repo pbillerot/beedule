@@ -139,21 +139,21 @@ var quotesElements = types.Elements{
 		Type:      "image",
 		LabelLong: "Graph du jour",
 		Params: types.Params{
-			URL: "/crud/data/picsou/png/day/{id}.png",
+			URL: "/bee/data/picsou/png/day/{id}.png",
 		},
 	},
 	"_image_histo": {
 		Type:      "image",
 		LabelLong: "Historique sur 1 mois",
 		Params: types.Params{
-			URL: "/crud/data/picsou/png/quotes/{id}.png",
+			URL: "/bee/data/picsou/png/quotes/{id}.png",
 		},
 	},
 	"_image_analyse": {
 		Type:      "image",
 		LabelLong: "Analyse sur 7 mois",
 		Params: types.Params{
-			URL: "/crud/data/picsou/png/ana/{id}.gif",
+			URL: "/bee/data/picsou/png/ana/{id}.gif",
 		},
 	},
 }
@@ -255,7 +255,7 @@ var quotesForms = types.Forms{
 				Type:      "section",
 				LabelLong: "Portefeuille",
 				Params: types.Params{
-					URL:      "/crud/edit/picsou/ptf/vall/fedit/{id}",
+					URL:      "/bee/edit/picsou/ptf/vall/fedit/{id}",
 					IconName: "building",
 				},
 			},

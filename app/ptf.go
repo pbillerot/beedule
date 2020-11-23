@@ -213,7 +213,7 @@ var ptfElements = types.Elements{
 		Actions: types.Actions{
 			{
 				Label: "Acheter cette valeur",
-				URL:   "/crud/add/picsou/orders/vachat/feditbuy?orders_order=buy&orders_ptf_id={ptf_id}&orders_quote={ptf_quote}&orders_buy={ptf_quote}",
+				URL:   "/bee/add/picsou/orders/vachat/feditbuy?orders_order=buy&orders_ptf_id={ptf_id}&orders_quote={ptf_quote}&orders_buy={ptf_quote}",
 			},
 		},
 	},
@@ -270,8 +270,8 @@ var ptfElements = types.Elements{
 		LabelLong:  "Graph du jour",
 		LabelShort: "Graph J",
 		Params: types.Params{
-			Path: "/crud/data/picsou/png/day/{ptf_id}.png",
-			URL:  "/crud/view/picsou/ptf/vdiapo/{ptf_id}",
+			Path: "/bee/data/picsou/png/day/{ptf_id}.png",
+			URL:  "/bee/view/picsou/ptf/vdiapo/{ptf_id}",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
@@ -291,7 +291,7 @@ var ptfElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			URL: "/crud/data/picsou/png/quotes/{ptf_id}.png",
+			URL: "/bee/data/picsou/png/quotes/{ptf_id}.png",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
@@ -308,7 +308,7 @@ var ptfElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			URL: "/crud/data/picsou/png/ana/{ptf_id}.gif",
+			URL: "/bee/data/picsou/png/ana/{ptf_id}.gif",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
