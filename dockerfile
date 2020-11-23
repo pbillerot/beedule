@@ -10,6 +10,13 @@ ENV APPNAME beedule
 # Installation de GCC et GIT
 RUN apk add -U --no-cache build-base git
 
+# Install de HUGO
+WORKDIR /src
+RUN git clone https://github.com/gohugoio/hugo.git
+WORKDIR /src/hugo
+RUN pwd
+RUN go install
+
 # Copie des dépendances de notre projet 
 # à partir de go.mod go.sum
 # -> /go/pkg/mod/...
