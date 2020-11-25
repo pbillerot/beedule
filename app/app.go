@@ -62,7 +62,7 @@ var Applications = map[string]types.Application{
 	"foirexpo": {
 		Title:  "Portail foirexpo",
 		Image:  "/bee/static/img/public.png",
-		Path:   "/foirexpo",
+		Path:   "https://pbillerot.freeboxos.fr/foirexpo",
 		Target: "_blank",
 	},
 	"asf": {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -711,6 +712,9 @@ func hugoDirectoryRecord(c *HugoController, hugoDirectory string) (err error) {
 			hugo = append(hugo, record)
 		}
 	}
+	// Update site public Hugo
+	runHugo(c)
+
 	return
 }
 
@@ -824,4 +828,15 @@ func containsString(sl []string, in string) bool {
 		}
 	}
 	return false
+}
+
+// runHugo : Exécution du moteur Hugo pour mettre à jour le site
+func runHugo(c *HugoController) {
+	cmd := exec.Command("hugo")
+	cmd.Dir = c.Data["HugoDir"].(string)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		beego.Error("runHugo", err)
+	}
+	beego.Info("runHugo", string(out))
 }
