@@ -10,6 +10,13 @@ ENV APPNAME beedule
 # Installation de GCC et GIT
 RUN apk add -U --no-cache build-base git
 
+# Copie des sources de notre projet
+WORKDIR /src
+COPY . .
+
+# Fetch dependencies.
+# Using go get.
+RUN go get -d -v
 
 # Installation de Hugo
 WORKDIR /src
@@ -17,17 +24,9 @@ RUN git clone https://github.com/gohugoio/hugo.git
 WORKDIR /src/hugo
 RUN go install 
 
-# Copie des dépendances de notre projet 
-# à partir de go.mod go.sum
-# -> /go/pkg/mod/...
-WORKDIR /src
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copie des sources de notre projet
-COPY . .
 
 # Construction du binaire toujours à partir de /src
+WORKDIR /src
 RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/${APPNAME}
 
 # Pont d'entrée
