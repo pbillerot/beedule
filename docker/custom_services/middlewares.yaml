@@ -31,10 +31,10 @@ http:
       addPrefix:
         prefix: "/bee"
 
-    crud-auth:
-      forwardAuth:
-        address: "https://192.168.1.76:7601/auth"
-        authResponseHeaders:
-          - "X-Auth-User"
-          - "X-My-Header"
-          # - "X-Secret"
+    # crud-auth:
+    #   forwardAuth:
+    #     address: "https://192.168.1.76:7601/auth"
+    #     authResponseHeaders:
+    #       - "X-Auth-User"
+    #       - "X-My-Header"
+    #       # - "X-Secret"

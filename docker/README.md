@@ -16,3 +16,8 @@ Guide de configuration de Mozilla
 
 ## Proxy auth
 https://docs.traefik.io/middlewares/forwardauth/
+
+
+## From Scratch
+- https://enix.io/fr/blog/cherie-j-ai-retreci-docker-part1/
+- https://github.com/jpetazzo/minimage

@@ -22,12 +22,13 @@ RUN git clone https://github.com/gohugoio/hugo.git
 WORKDIR /src/hugo
 RUN go install 
 
-FROM alpine
-copy --from=0 /go/beedule .
-copy --from=0 /go/hugo .
+
+# Construction du binaire toujours à partir de /src
+WORKDIR /src/${APPNAME}
+RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/${APPNAME}
 
 # Pont d'entrée
-ENTRYPOINT [./${APPNAME}]
+ENTRYPOINT /go/bin/${APPNAME}
 
 # Le port sur lequel notre serveur écoute
 EXPOSE 3945
