@@ -1,33 +1,42 @@
 # http://golang.io/fr/tutoriels/deployer-un-serveur-go-avec-docker/
 # https://www.cloudreach.com/en/resources/blog/cts-build-golang-dockerfiles/
 
-# Utilisation de golang comme image de base
+# ETAPE COMPILATION
+# Utilisation de golang pour compiler le projet beedule
 # Le GOPATH par défaut de cette image est /go.
-FROM golang:alpine
-
-ENV APPNAME beedule
+FROM golang:alpine as goalpine
 
 # Installation de GCC et GIT
-RUN apk add -U --no-cache build-base git
+RUN apk add build-base git
 
-# Installation de ${APPNAME}
+# Installation de beedule
 WORKDIR /src
-RUN git clone https://github.com/pbillerot/${APPNAME}.git
-WORKDIR /src/${APPNAME}
-RUN go install 
+RUN git clone https://github.com/pbillerot/beedule.git
+WORKDIR /src/beedule
 
-# Installation de Hugo
-WORKDIR /src
-RUN git clone https://github.com/gohugoio/hugo.git
-WORKDIR /src/hugo
-RUN go install 
+# Désactivation de CGO pour intéger les routines de Go et non pas celles du système
+# pour générer un binaire statique (mis en commentaire car sqlite impose cgo)
+# ENV CGO_ENABLED=0 
+# RUN go build -o /src/beedule/beedule
 
+# Build avec CGO
+RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/beedule/beedule
+
+# ETAPE GENERATION D'UN IMAGE 
+# avec le projet + hugo
 FROM alpine
-copy --from=0 /go/beedule .
-copy --from=0 /go/hugo .
+RUN mkdir -p /src/beedule
+copy --from=goalpine /src/beedule /src/beedule
+# Installation de hugo
+RUN apk add hugo
 
 # Pont d'entrée
-ENTRYPOINT [./${APPNAME}]
+WORKDIR /src/beedule
+ENTRYPOINT ./beedule
+
+# WORKDIR /app
+# CMD ["/bin/bash"]
+# CMD ["/app/beedule"]
 
 # Le port sur lequel notre serveur écoute
 EXPOSE 3945

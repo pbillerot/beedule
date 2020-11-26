@@ -58,7 +58,8 @@ services:
 
   beedule:
     build:
-        context: .
+      context: .
+    image: beedule:latest
     container_name: beedule
     restart: unless-stopped
     ports:

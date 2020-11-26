@@ -7,7 +7,7 @@
 cd ~/Téléchargements
 wget https://golang.org/dl/go1.15.4.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.15.4.linux-amd64.tar.gz
-``
+```
 ## Ajout de modules 
 
 ### BeeGo
@@ -39,4 +39,10 @@ export GOPATH=~/go
 
  - git tag v1.0.0
  - git push --tags origin
+
+### Google Analytics
+https://www.soberkoder.com/google-analytics-hugo/
+
+### Build a REST API in Golang
+https://www.soberkoder.com/go-rest-api-gorilla-mux/
 
