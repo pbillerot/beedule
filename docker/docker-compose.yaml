@@ -4,7 +4,7 @@
 version: "3.3"
 services:
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce
     container_name: portainer
     command: -H unix:///var/run/docker.sock
     ports:
@@ -97,13 +97,32 @@ services:
       - /home/billerot/Abri/foirexpo/content:/srv
       - /mnt/nas/data/filebrowser/database.db:/database.db
       - ./filebrowser.json:/.filebrowser.json    
-      
+
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: 1000:1000 # should be owner of volumes
+    ports:
+      - "4533:4533"
+    restart: unless-stopped
+    environment:
+      # Optional: put your config options customization here. Examples:
+      ND_SCANINTERVAL: 1m
+      ND_LOGLEVEL: info  
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: "/nv"
+    volumes:
+      - "/mnt/sandisk/nas/data/navidrome:/data"
+      - "/mnt/sandisk/nas/Musique:/music"
+
 volumes:
   certs:
 
 networks:
   webgateway:
     driver: bridge
+    # driver_opts:
+    #   com.docker.network.enable_ipv6: "true"
     # external:
     #     name: traefik
 
