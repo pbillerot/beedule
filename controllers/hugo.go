@@ -241,10 +241,9 @@ func (c *HugoController) HugoDocument() {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
 		if record.PathReal != "" {
-			err = ioutil.WriteFile(record.PathReal, []byte(document), 0644)
-			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+			err = ioutil.WriteFile(record.PathReal, []byte(document), 0755)
 		} else {
-			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0755)
 		}
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
