@@ -79,6 +79,8 @@ services:
     restart: unless-stopped
     volumes:
     - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
+    - ./site.conf:/etc/nginx/conf.d/site.conf    
+    - ./favicon.ico:/usr/share/nginx/html/favicon.ico    
     ports:
     - "7603:80"
     environment:
