@@ -24,10 +24,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/letsencrypt
-      # - ./traefik.toml:/etc/traefik/traefik.toml
-      # - ./custom_toml:/etc/traefik/custom_services
       - ./traefik.yaml:/etc/traefik/traefik.yaml
       - ./custom_services:/etc/traefik/custom_services
+      - /mnt/nas/data/beedule:/log
     networks:
       - webgateway
 

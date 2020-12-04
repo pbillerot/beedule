@@ -17,6 +17,8 @@ entryPoints:
     address: :80
     http:
       middlewares:
+      - ip-whitelist@file
+      # - bee-Inflightreq@file
       - httpsRedirect@file
 
   websecure:
@@ -26,10 +28,14 @@ entryPoints:
         certResolver: letsencrypt
         options: intermediate
       middlewares:
+      - ip-whitelist@file
+      # - bee-Inflightreq@file
       - secHeaders@file
       # - crud-auth@file
 
-accessLog: {}
+accessLog:
+  filePath: "/log/access.log"
+  bufferingSize: 100
 
 certificatesResolvers:
   letsencrypt:

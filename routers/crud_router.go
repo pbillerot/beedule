@@ -41,4 +41,8 @@ func init() {
 	beego.Router("/bee/hugo/mkdir/:app/:key", &controllers.HugoController{}, "post:HugoFileMkdir")
 	beego.Router("/bee/hugo/upload/:app/:key", &controllers.HugoController{}, "post:HugoFileUpload")
 
+	// REST API
+	// beego.Router("/bee/api/isc", &controllers.RestController{}, "get:RestIsc")
+	// beego.Router("/bee/api/put/log/:url", &controllers.RestController{}, "get:RestPutLog")
+
 }
