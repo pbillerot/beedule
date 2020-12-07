@@ -14,6 +14,7 @@ require (
 	github.com/prometheus/common v0.15.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/smartystreets/goconvey v1.6.4
+	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
 	golang.org/x/sys v0.0.0-20201112073958-5cba982894dd // indirect

@@ -10,4 +10,4 @@ http:
     navidrome:
       loadBalancer:
         servers:
-        - url: "http://192.168.1.76:4533/"
+        - url: "http://172.17.0.1:4533/"

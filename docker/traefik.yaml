@@ -17,8 +17,7 @@ entryPoints:
     address: :80
     http:
       middlewares:
-      - ip-whitelist@file
-      # - bee-Inflightreq@file
+      # - ip-whitelist@file
       - httpsRedirect@file
 
   websecure:
@@ -29,9 +28,7 @@ entryPoints:
         options: intermediate
       middlewares:
       - ip-whitelist@file
-      # - bee-Inflightreq@file
       - secHeaders@file
-      # - crud-auth@file
 
 accessLog:
   filePath: "/log/access.log"
