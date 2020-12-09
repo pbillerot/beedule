@@ -12,7 +12,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      
+
   traefik:
     image: traefik:latest
     container_name: traefik
@@ -94,6 +94,14 @@ services:
     restart: unless-stopped
     ports:
       - "7602:80"
+    # command:
+    #   - 'filebrowser config set --auth.method=proxy --auth.header=Remote-User'
+      # - 'filebrowser'
+      # - 'config'
+      # - 'set'
+      # - '--auth.method=proxy'
+      # - '--auth.header=Remote-User'
+
     volumes:
       - /home/billerot/Abri/foirexpo/content:/srv
       - /mnt/nas/data/filebrowser/database.db:/database.db

@@ -202,12 +202,15 @@ func (c *AuthController) AuthGet() {
 	c.Ctx.Request.Method = c.Ctx.Request.Header.Get("X-Forwarded-Method")
 	c.Ctx.Request.Host = c.Ctx.Request.Header.Get("X-Forwarded-Host")
 	c.Ctx.Request.URL, _ = url.Parse(c.Ctx.Request.Header.Get("X-Forwarded-Uri"))
-	beego.Notice("GET AUTH", c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
+	ip := c.Ctx.Request.Header.Get("X-Forwarded-For")
+	beego.Notice("AUTH GET", ip, c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
 	if c.GetSession("Username") != nil {
 		c.Ctx.ResponseWriter.Header().Set("Remote-User", c.GetSession("Username").(string))
+		beego.Notice("AUTH user:", c.GetSession("Username").(string))
 	}
 	if c.GetSession("Groups") != nil {
 		c.Ctx.ResponseWriter.Header().Set("Remote-Groups", c.GetSession("Groups").(string))
+		beego.Notice("AUTH groups:", c.GetSession("Groups").(string))
 	}
 	c.Ctx.ResponseWriter.WriteHeader(200)
 }
@@ -217,12 +220,15 @@ func (c *AuthController) AuthHead() {
 	c.Ctx.Request.Method = c.Ctx.Request.Header.Get("X-Forwarded-Method")
 	c.Ctx.Request.Host = c.Ctx.Request.Header.Get("X-Forwarded-Host")
 	c.Ctx.Request.URL, _ = url.Parse(c.Ctx.Request.Header.Get("X-Forwarded-Uri"))
-	beego.Debug("HEAD AUTH", c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
+	ip := c.Ctx.Request.Header.Get("X-Forwarded-For")
+	beego.Notice("AUTH HEAD", ip, c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
 	if c.GetSession("Username") != nil {
 		c.Ctx.ResponseWriter.Header().Set("Remote-User", c.GetSession("Username").(string))
+		beego.Notice("AUTH user:", c.GetSession("Username").(string))
 	}
 	if c.GetSession("Groups") != nil {
 		c.Ctx.ResponseWriter.Header().Set("Remote-Groups", c.GetSession("Groups").(string))
+		beego.Notice("AUTH groups:", c.GetSession("Groups").(string))
 	}
 	c.Ctx.ResponseWriter.WriteHeader(200)
 }
