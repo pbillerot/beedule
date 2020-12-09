@@ -23,18 +23,9 @@ http:
         referrerPolicy: "same-origin"
         featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
 
-    httpsRedirect:
-      scheme: "https"
-      permanent: true
-
-    add-crud:
-      addPrefix:
-        prefix: "/bee"
-
     ip-whitelist:
       ipWhiteList:
         sourceRange:
-          # - "0.0.0.0/0"
           - "127.0.0.1"
           - "192.168.1.254"
         # ipStrategy:
@@ -43,3 +34,24 @@ http:
         #   excludedIPs:
         #     - "110.153.64.45"
         #     - "113.247.4.215"
+
+    bee-auth:
+    # The following request properties are provided to the forward-auth target endpoint as `X-Forwarded-` headers.
+
+    # | Property          | Forward-Request Header |
+    # |-------------------|------------------------|
+    # | HTTP Method       | X-Forwarded-Method     |
+    # | Protocol          | X-Forwarded-Proto      |
+    # | Host              | X-Forwarded-Host       |
+    # | Request URI       | X-Forwarded-Uri        |
+    # | Source IP-Address | X-Forwarded-For        |
+      forwardAuth:
+        # address: "http://192.168.1.76:3945/auth" # ok pour cette url
+        address: "http://192.168.1.76:7601/auth" # ok pour cette url
+        # address: "http://pbillerot.freeboxos.fr/auth"
+        trustForwardHeader: true
+        authResponseHeaders:
+        - "Remote-User"
+        - "Remote-Groups"
+        - "Remote-Name"
+        - "Remote-Email"

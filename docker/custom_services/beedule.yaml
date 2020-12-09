@@ -5,9 +5,16 @@ http:
       - websecure
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/bee`)"
       service: beedule
+    
+    rout-auth:
+      entryPoints: 
+      - web
+      rule: "Host(`192.168.1.76`) && PathPrefix(`/auth`)"
+      service: beedule
 
   services:
     beedule:
       loadBalancer:
         servers:
         - url: "http://172.17.0.1:7601/"
+

@@ -4,6 +4,8 @@ http:
     nginx:
       entryPoints: 
       - websecure
+      # tous les flux vont sur nginx
+      # rule: "Host(`pbillerot.freeboxos.fr`) || Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
       service: nginx
 

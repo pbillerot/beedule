@@ -15,10 +15,11 @@ providers:
 entryPoints:
   web:
     address: :80
-    http:
-      middlewares:
-      # - ip-whitelist@file
-      - httpsRedirect@file
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       to: websecure
+    #       scheme: https
 
   websecure:
     address: :443
@@ -27,6 +28,7 @@ entryPoints:
         certResolver: letsencrypt
         options: intermediate
       middlewares:
+      # - authelia-auth@file
       - ip-whitelist@file
       - secHeaders@file
 

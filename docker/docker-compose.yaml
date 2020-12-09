@@ -12,7 +12,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
+      
   traefik:
     image: traefik:latest
     container_name: traefik
