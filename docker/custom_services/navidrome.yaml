@@ -5,6 +5,8 @@ http:
       - websecure
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/nv`)"
       service: navidrome
+      middlewares:
+      - secHeaders@file
 
   services:
     navidrome:

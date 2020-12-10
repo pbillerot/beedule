@@ -46,5 +46,5 @@ func init() {
 	// beego.Router("/bee/api/put/log/:url", &controllers.RestController{}, "get:RestPutLog")
 
 	// AUTH TRAEFIK
-	beego.Router("/auth", &controllers.AuthController{}, "get:AuthGet;head:AuthHead")
+	beego.Router("/traefik", &controllers.TraefikController{})
 }

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"net/url"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -60,11 +59,6 @@ func (c *adminRouter) Prepare() {
 		c.Data["TabIcon"] = app.Portail.IconFile
 		c.Data["TabTitle"] = app.Portail.Title
 	}
-}
-
-// AuthController as
-type AuthController struct {
-	beego.Controller
 }
 
 // LoginController as
@@ -175,60 +169,4 @@ func GetUser(username string) (User, error) {
 		fmt.Println(user.Username)
 	}
 	return user, err
-}
-
-// The following request properties are provided
-// to the forward-auth target endpoint as `X-Forwarded-` headers.
-// | Property          | Forward-Request Header |
-// |-------------------|------------------------|
-// | HTTP Method       | X-Forwarded-Method     |
-// | Protocol          | X-Forwarded-Proto      |
-// | Host              | X-Forwarded-Host       |
-// | Request URI       | X-Forwarded-Uri        |
-// | Source IP-Address | X-Forwarded-For        |
-// Déclarartion dans traefik middlewares.yaml
-// forwardAuth:
-// 		address: "http://192.168.1.76:3945/auth" # ok pour cette url
-// 		# address: "http://pbillerot.freeboxos.fr/auth"
-// 		trustForwardHeader: true
-// 		authResponseHeaders:
-// 		- "Remote-User"
-// 		- "Remote-Groups"
-// 		- "Remote-Name"
-// 		- "Remote-Email"
-
-// AuthGet of AuthController
-func (c *AuthController) AuthGet() {
-	c.Ctx.Request.Method = c.Ctx.Request.Header.Get("X-Forwarded-Method")
-	c.Ctx.Request.Host = c.Ctx.Request.Header.Get("X-Forwarded-Host")
-	c.Ctx.Request.URL, _ = url.Parse(c.Ctx.Request.Header.Get("X-Forwarded-Uri"))
-	ip := c.Ctx.Request.Header.Get("X-Forwarded-For")
-	beego.Notice("AUTH GET", ip, c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
-	if c.GetSession("Username") != nil {
-		c.Ctx.ResponseWriter.Header().Set("Remote-User", c.GetSession("Username").(string))
-		beego.Notice("AUTH user:", c.GetSession("Username").(string))
-	}
-	if c.GetSession("Groups") != nil {
-		c.Ctx.ResponseWriter.Header().Set("Remote-Groups", c.GetSession("Groups").(string))
-		beego.Notice("AUTH groups:", c.GetSession("Groups").(string))
-	}
-	c.Ctx.ResponseWriter.WriteHeader(200)
-}
-
-// AuthHead of AuthController
-func (c *AuthController) AuthHead() {
-	c.Ctx.Request.Method = c.Ctx.Request.Header.Get("X-Forwarded-Method")
-	c.Ctx.Request.Host = c.Ctx.Request.Header.Get("X-Forwarded-Host")
-	c.Ctx.Request.URL, _ = url.Parse(c.Ctx.Request.Header.Get("X-Forwarded-Uri"))
-	ip := c.Ctx.Request.Header.Get("X-Forwarded-For")
-	beego.Notice("AUTH HEAD", ip, c.Ctx.Request.Method, c.Ctx.Request.Host, c.Ctx.Request.URL)
-	if c.GetSession("Username") != nil {
-		c.Ctx.ResponseWriter.Header().Set("Remote-User", c.GetSession("Username").(string))
-		beego.Notice("AUTH user:", c.GetSession("Username").(string))
-	}
-	if c.GetSession("Groups") != nil {
-		c.Ctx.ResponseWriter.Header().Set("Remote-Groups", c.GetSession("Groups").(string))
-		beego.Notice("AUTH groups:", c.GetSession("Groups").(string))
-	}
-	c.Ctx.ResponseWriter.WriteHeader(200)
 }

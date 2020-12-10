@@ -27,10 +27,6 @@ entryPoints:
       tls:
         certResolver: letsencrypt
         options: intermediate
-      middlewares:
-      # - authelia-auth@file
-      - ip-whitelist@file
-      - secHeaders@file
 
 accessLog:
   filePath: "/log/access.log"

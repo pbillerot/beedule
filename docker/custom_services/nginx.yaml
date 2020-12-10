@@ -8,6 +8,8 @@ http:
       # rule: "Host(`pbillerot.freeboxos.fr`) || Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
       service: nginx
+      middlewares:
+      - bee-secure@file
 
   services:
     nginx:
