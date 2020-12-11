@@ -5,8 +5,6 @@ http:
       - websecure
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/fb`)"
       service: filebrowser
-      middlewares:
-      - secHeaders@file
 
   services:
     filebrowser:

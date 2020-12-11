@@ -66,6 +66,7 @@ services:
     volumes:
       - /mnt/nas/data/beedule/custom.conf:/src/beedule/conf/custom.conf
       - /mnt/nas/data/beedule/beedule.sqlite:/src/beedule/database/beedule.sqlite
+      - ./docker/secure-traefik.yaml:/src/beedule/docker/secure-traefik.yaml
       - /mnt/nas/data/picsou/picsou.sqlite:/src/beedule/database/picsou.sqlite
       - /mnt/nas/data/picsou:/src/beedule/data/picsou
       - /home/billerot/Abri/foirexpo:/src/beedule/data/foirexpo
@@ -77,9 +78,9 @@ services:
     container_name: nginx
     restart: unless-stopped
     volumes:
-    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
     - ./site.conf:/etc/nginx/conf.d/site.conf    
-    - ./favicon.ico:/usr/share/nginx/html/favicon.ico    
+    - ./nginx:/usr/share/nginx/html
+    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
     ports:
     - "7603:80"
     environment:
@@ -148,4 +149,5 @@ networks:
 # docker image prune -a
 
 # Ouvrir une console
-# docker container exec -it beedule /bin/sh
+# docker container exec -it beedule /bin/bash
+# docker container exec -it nginx /bin/bash

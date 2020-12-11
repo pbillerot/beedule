@@ -5,11 +5,12 @@ http:
       entryPoints: 
       - websecure
       # tous les flux vont sur nginx
-      # rule: "Host(`pbillerot.freeboxos.fr`) || Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
-      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
+      rule: "Host(`pbillerot.freeboxos.fr`) || Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
+      # rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/`)"
       service: nginx
-      middlewares:
-      - bee-secure@file
+      priority: 2
+      # middlewares:
+      # - bee-secure@file
 
   services:
     nginx:

@@ -11,6 +11,7 @@ RUN apk add build-base git
 
 # Installation de beedule
 WORKDIR /src
+RUN git clone /mnt/nas/git/beedule.git
 RUN git clone https://github.com/pbillerot/beedule.git
 WORKDIR /src/beedule
 

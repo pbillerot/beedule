@@ -5,9 +5,7 @@ http:
       - websecure
       rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/bee`)"
       service: beedule
-      middlewares:
-      - secHeaders@file
-    
+
     # rout-auth:
     #   entryPoints: 
     #   - web
