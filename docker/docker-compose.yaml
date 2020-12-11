@@ -69,7 +69,7 @@ services:
       # - ./docker/secure-traefik.yaml:/src/beedule/docker/secure-traefik.yaml
       - /mnt/nas/data/picsou/picsou.sqlite:/src/beedule/database/picsou.sqlite
       - /mnt/nas/data/picsou:/src/beedule/data/picsou
-      # - /home/billerot/Abri/foirexpo:/src/beedule/data/foirexpo
+      - /home/billerot/Abri/foirexpo:/src/beedule/data/foirexpo
     networks:
       - webgateway
 
@@ -79,8 +79,11 @@ services:
     restart: unless-stopped
     volumes:
     - ./site.conf:/etc/nginx/conf.d/site.conf    
-    - ./nginx:/usr/share/nginx/html
-    # - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
+    - ./nginx/index.html:/usr/share/nginx/html/index.html
+    - ./nginx/bg.png:/usr/share/nginx/html/bg.png
+    - ./nginx/favicon.ico:/usr/share/nginx/html/favicon.ico
+    - ./nginx/robots.txt:/usr/share/nginx/html/robots.txt
+    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
     ports:
     - "7603:80"
     environment:
