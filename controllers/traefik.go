@@ -59,7 +59,7 @@ var (
 	traefik = secureTraefik{}
 )
 
-func init() {
+func initDisabled() {
 	// Chargement de secureTraefik
 	filename := "./docker/secure-traefik.yaml"
 	buf, err := ioutil.ReadFile(filename)

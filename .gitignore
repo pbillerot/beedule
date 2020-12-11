@@ -16,7 +16,6 @@
 data/
 bin/
 __debug_bin
-beedule
 vendor
 cpu*
 mem*
