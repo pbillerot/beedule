@@ -423,6 +423,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Graph du jour",
 		LabelShort: "Graph J",
 		Params: types.Params{
+			Path:     "/bee/data/picsou/png/day/{orders_ptf_id}.png",
 			URL:      "/bee/data/picsou/png/day/{orders_ptf_id}.png",
 			IconName: "emblem-photos",
 		},
@@ -432,6 +433,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
+			Path:     "/bee/data/picsou/png/quotes/{orders_ptf_id}.png",
 			URL:      "/bee/data/picsou/png/quotes/{orders_ptf_id}.png",
 			IconName: "emblem-photos",
 		},
@@ -441,6 +443,7 @@ var ordersElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
+			Path:     "/bee/data/picsou/png/ana/{orders_ptf_id}.gif",
 			URL:      "/bee/data/picsou/png/ana/{orders_ptf_id}.gif",
 			IconName: "emblem-photos",
 		},
