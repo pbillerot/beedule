@@ -47,4 +47,6 @@ func init() {
 
 	// AUTH TRAEFIK
 	beego.Router("/traefik", &controllers.TraefikController{})
+	// CHARTJS
+	beego.Router("/bee/chart/:app", &controllers.ChartController{})
 }

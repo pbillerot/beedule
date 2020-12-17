@@ -1,0 +1,357 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$dataset := .Dataset}}
+{{$id := .ID}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+          <!-- end range appViewq-->
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/bee/edit/users/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
+        </div>
+      </div>
+      <div class="header item" id="crud-header">
+        <span class="crud-mobile-hide">
+          {{.TabTitle}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{.TabTitle}}
+      </div>
+      <!-- BOUCLE Records -->
+      <!-- {{ range $irecord, $record := .Records }}
+        {{end }} -->
+      <div>
+        <canvas id="quotes" style="background-color: white"
+        data-quotes="{{$dataset.Quotes}}" 
+        data-quotep="{{$dataset.Quotep}}" 
+        data-min="{{$dataset.Min}}" 
+        data-max="{{$dataset.Max}}" 
+        data-minp="{{$dataset.Minp}}" 
+        data-maxp="{{$dataset.Maxp}}" 
+        data-seuilv="{{$dataset.SeuilV}}" 
+        data-seuilr="{{$dataset.SeuilR}}" 
+        data-labels="{{$dataset.Labels}}"></canvas>
+        <br/>
+        <canvas id="myChart" style="background-color: aliceblue"></canvas>
+      </div>
+    </div> <!-- end container-->
+  </main>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="hugo_view" value="hugo-{{$appid}}">
+
+  {{template "_crud_foot.html" .}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.0-beta.7/chart.js"></script>
+  <script>
+    // QUOTES
+    var quotes = document.getElementById('quotes');
+    var min = quotes.dataset.minp.split(',');
+    var max = quotes.dataset.maxp.split(',');
+    var fseuilr = parseFloat(quotes.dataset.seuilr)
+    var fseuilv = parseFloat(quotes.dataset.seuilv)
+    var minmax = new Array(min.length);
+    var zerop = new Array(min.length);
+    var seuilr = new Array(min.length);
+    var seuilv = new Array(min.length);
+    for (i=0; i<min.length; i++){
+      var mm = new Array(2);
+      mm[0]=min[i];
+      mm[1]=max[i];
+      minmax[i] = mm;
+      seuilr[i] = fseuilr;
+      seuilv[i] = fseuilv;
+      zerop[i]=0
+    }
+
+    var myChart = new Chart(quotes, {
+      type: 'bar',
+      data: {
+        labels: quotes.dataset.labels.split(','),
+        datasets: [
+          {
+            type: 'line',
+            label: 'Cotation',
+            borderColor: 'purple',
+            borderWidth: 3,
+            fill: false,
+            data: quotes.dataset.quotes.split(','),
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Seuil Vente',
+            borderColor: 'purple',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            data: seuilv,
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Seuil Rentabilité',
+            borderColor: 'purple',
+            borderWidth: 3,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            data: seuilr,
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Cote %',
+            borderColor: 'grey',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            fill: false,
+            data: quotes.dataset.quotep.split(','),
+            yAxisID: 'pourcentage'
+          },
+          {
+            type: 'line',
+            label: 'Zéro %',
+            borderColor: 'blue',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            fill: false,
+            data: zerop,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            yAxisID: 'pourcentage'
+          },
+          {
+            label: 'Min-Max %',
+            // stack: 'minmax',
+            data: minmax,
+            backgroundColor: '#e8e8e8',
+            yAxisID: 'pourcentage'
+          },
+          ]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Cours de CREDIT AGRICOLE - ACA.PA',
+            font: {
+              style: 'bold',
+              size: 14
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          }
+        },
+        scales: {
+          cotation: {
+            display: true,
+            min: parseFloat(quotes.dataset.min),
+            max: parseFloat(quotes.dataset.max),
+            scaleLabel: {
+              display: true,
+              labelString: 'Cotation en €',
+              font: {
+                style: 'bold',
+              }
+            },
+            gridLines: {
+              display: false,
+            },
+            display: true,
+            position: 'left'
+          },
+          pourcentage: {
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Évolution en %',
+              font: {
+                style: 'bold'
+              }
+            },
+            display: true,
+            position: 'right'
+          },
+          x: {
+            // stacked: true,
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Jour de cotation',
+              font: {
+                style: 'bold'
+              }
+            },
+          }
+        }
+      }
+    });
+    // MYCHART
+    var color = Chart.helpers.color;
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['01-12 Matin', 'Soir', '02-12 Matin', 'Soir', '03-12 Matin', 'Soir'],
+        datasets: [
+          {
+            type: 'line',
+            label: 'Cotation',
+            borderColor: 'darkred',
+            borderWidth: 3,
+            fill: false,
+            data: [120, 160, 140, 145, 130, 125],
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Seuil Vente',
+            borderColor: 'darkgreen',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            data: [180, 180, 180, 180, 180, 180],
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Seuil Rentabilité',
+            borderColor: 'darkgreen',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false,
+            data: [160, 160, 160, 160, 160, 160],
+            yAxisID: 'cotation'
+          },
+          {
+            type: 'line',
+            label: 'Pourcentage',
+            borderColor: 'grey',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            fill: false,
+            data: [2, 6, -4, -1, -1, 4],
+            yAxisID: 'pourcentage'
+          },
+          // {
+          //   label: 'Min',
+          //   stack: 'minmax',
+          //   data: [1, 1, -5, -5, -1, -1],
+          //   backgroundColor: 'thistle',
+          //   yAxisID: 'pourcentage'
+          // },
+          // {
+          //   label: 'Max',
+          //   stack: 'minmax',
+          //   data: [8, 8, 4, 4, 7, 7],
+          //   backgroundColor: 'powderblue',
+          //   yAxisID: 'pourcentage'
+          // },
+          {
+            label: 'Max',
+            stack: 'minmax',
+            data: [[8,1], [8,1], [4,-5], [4,-5], [7,-1], [7,-1]],
+            backgroundColor: 'powderblue',
+            yAxisID: 'pourcentage'
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'CHART.JS DEMO',
+            font: {
+              style: 'bold',
+              size: 14
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          }
+        },
+        scales: {
+          cotation: {
+            display: true,
+            Min: 110,
+            Max: 190,
+            scaleLabel: {
+              display: true,
+              labelString: 'Cotation en €',
+              font: {
+                style: 'bold',
+              }
+            },
+            display: true,
+            position: 'right'
+          },
+          pourcentage: {
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Pourcentage évolution',
+              font: {
+                style: 'bold'
+              }
+            },
+            gridLines: {
+							borderDash: [5, 5],
+						},
+            display: true,
+            position: 'left'
+          },
+          x: {
+            stacked: true,
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Jour de cotation',
+              font: {
+                style: 'bold'
+              }
+            },
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

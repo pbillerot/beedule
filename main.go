@@ -10,6 +10,7 @@ import (
 	"github.com/pbillerot/beedule/app"
 	_ "github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/batch"
+	"github.com/pbillerot/beedule/controllers"
 	_ "github.com/pbillerot/beedule/routers"
 	"github.com/pbillerot/beedule/types"
 )
@@ -67,7 +68,13 @@ func init() {
 	}
 
 	// Enregistrement des Modèles de table gérés par le module orm
-	orm.RegisterModel(new(types.Parameters), new(batch.Chain), new(batch.Job), new(batch.Hugodoc))
+	orm.RegisterModel(new(types.Parameters),
+		new(batch.Chain),
+		new(batch.Job),
+		new(batch.Hugodoc),
+		new(controllers.Quotes),
+		new(controllers.Orders),
+	)
 
 	// Chargement des Parameters dans app.Params (préfixé par __)
 	o := orm.NewOrm()

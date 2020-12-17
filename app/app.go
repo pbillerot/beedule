@@ -71,6 +71,12 @@ var Applications = map[string]types.Application{
 		Image: "/bee/static/img/edf.svg",
 		Path:  "/bee/hugo/list/asf",
 	},
+	"chart": {
+		Title: "CHART.JS",
+		Group: "admin",
+		Image: "/bee/static/img/chartjs-logo.svg",
+		Path:  "/bee/chart/chart",
+	},
 }
 
 // Tables Liens vers les tables
