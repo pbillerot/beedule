@@ -53,6 +53,7 @@ type Element struct {
 	ClassSQL      string   // SQL pour alimenter Class error warning info green blue
 	ColAlign      string   //
 	ColWith       int      // TODO largeur de la colonne
+	Dataset       Dataset  // Dataset pour un Chartjs
 	Default       string   // Valeur par défaut (macro possible)
 	DefaultSQL    string   // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string   // contiendra "error" si le champ est en erreur de saisie
@@ -249,3 +250,5 @@ type Parameters struct {
 func (u *Parameters) TableName() string {
 	return "parameters"
 }
+
+type Dataset map[string]string

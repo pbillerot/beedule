@@ -457,4 +457,20 @@ var ordersElements = types.Elements{
 			IconName: "applications-internet",
 		},
 	},
+	"_chart_quotes": {
+		Type:       "chart",
+		LabelLong:  "Cotation",
+		LabelShort: "Cotation",
+		Dataset: types.Dataset{
+			"Quotes": "select open, close from quotes where id = '{orders_ptf_id}' order by date",
+			"Quotep": "",
+			"Labels": "select printf('%s-%s',substr(date,9,2),substr(date,6,2)) as 'date', '-' as 'soir' from quotes where id = '{orders_ptf_id}' order by date",
+			"Minp":   "",
+			"Maxp":   "",
+			"Min":    "select min(close) as min from quotes where id = '{orders_ptf_id}'",
+			"Max":    "select max(close) as max from quotes where id = '{orders_ptf_id}'",
+			"SeuilV": "",
+			"SeuilR": "",
+		},
+	},
 }

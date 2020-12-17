@@ -118,8 +118,8 @@ func (c *ChartController) Prepare() {
 	c.Data["Composter"] = time.Now().Unix()
 }
 
-// Get of ChartController
-func (c *ChartController) Get() {
+// Demo of ChartController
+func (c *ChartController) Demo() {
 
 	o := orm.NewOrm()
 	o.Using("picsou")

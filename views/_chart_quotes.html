@@ -1,0 +1,159 @@
+<canvas id="quotes" style="background-color: white" 
+    data-quotes="{{.Dataset.Quotes}}" 
+    data-quotep="{{.Dataset.Quotep}}"
+    data-min="{{.Dataset.Min}}" 
+    data-max="{{.Dataset.Max}}" 
+    data-minp="{{.Dataset.Minp}}" 
+    data-maxp="{{.Dataset.Maxp}}"
+    data-seuilv="{{.Dataset.SeuilV}}" 
+    data-seuilr="{{.Dataset.SeuilR}}" 
+    data-labels="{{.Dataset.Labels}}">
+    <script>
+        // QUOTES
+        var canvas = document.getElementById('quotes');
+        var min = canvas.dataset.minp.split(',');
+        var max = canvas.dataset.maxp.split(',');
+        var fseuilr = parseFloat(canvas.dataset.seuilr)
+        var fseuilv = parseFloat(canvas.dataset.seuilv)
+        var minmax = new Array(min.length);
+        var zerop = new Array(min.length);
+        var seuilr = new Array(min.length);
+        var seuilv = new Array(min.length);
+        for (i = 0; i < min.length; i++) {
+            var mm = new Array(2);
+            mm[0] = min[i];
+            mm[1] = max[i];
+            minmax[i] = mm;
+            seuilr[i] = fseuilr;
+            seuilv[i] = fseuilv;
+            zerop[i] = 0
+        }
+        var myChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: canvas.dataset.labels.split(','),
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Cotation',
+                        borderColor: 'purple',
+                        borderWidth: 3,
+                        fill: false,
+                        data: canvas.dataset.quotes.split(','),
+                        yAxisID: 'cotation'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Seuil Vente',
+                        borderColor: 'purple',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        fill: false,
+                        data: seuilv,
+                        yAxisID: 'cotation'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Seuil Rentabilité',
+                        borderColor: 'purple',
+                        borderWidth: 3,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        fill: false,
+                        data: seuilr,
+                        yAxisID: 'cotation'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Cote %',
+                        borderColor: 'grey',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        data: canvas.dataset.quotep.split(','),
+                        yAxisID: 'pourcentage'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Zéro %',
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        data: zerop,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        yAxisID: 'pourcentage'
+                    },
+                    {
+                        label: 'Min-Max %',
+                        // stack: 'minmax',
+                        data: minmax,
+                        backgroundColor: '#e8e8e8',
+                        yAxisID: 'pourcentage'
+                    },
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Cours de CREDIT AGRICOLE - ACA.PA',
+                        font: {
+                            style: 'bold',
+                            size: 14
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    }
+                },
+                scales: {
+                    cotation: {
+                        display: true,
+                        min: parseFloat(canvas.dataset.min),
+                        max: parseFloat(canvas.dataset.max),
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Cotation en €',
+                            font: {
+                                style: 'bold',
+                            }
+                        },
+                        gridLines: {
+                            display: false,
+                        },
+                        display: true,
+                        position: 'left'
+                    },
+                    pourcentage: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Évolution en %',
+                            font: {
+                                style: 'bold'
+                            }
+                        },
+                        display: true,
+                        position: 'right'
+                    },
+                    x: {
+                        // stacked: true,
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Jour de cotation',
+                            font: {
+                                style: 'bold'
+                            }
+                        },
+                    }
+                }
+            }
+        });
+    </script>
+</canvas>
