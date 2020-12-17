@@ -271,7 +271,7 @@ var ptfElements = types.Elements{
 		LabelShort: "Graph J",
 		Params: types.Params{
 			Path: "/bee/data/picsou/png/day/{ptf_id}.png",
-			URL:  "/bee/view/picsou/ptf/vdiapo/{ptf_id}",
+			URL:  "/bee/data/picsou/png/day/{ptf_id}.png",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
@@ -291,7 +291,8 @@ var ptfElements = types.Elements{
 		LabelLong:  "Historique sur 1 mois",
 		LabelShort: "Histo",
 		Params: types.Params{
-			URL: "/bee/data/picsou/png/quotes/{ptf_id}.png",
+			Path: "/bee/data/picsou/png/quotes/{ptf_id}.png",
+			URL:  "/bee/data/picsou/png/quotes/{ptf_id}.png",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",
@@ -308,7 +309,8 @@ var ptfElements = types.Elements{
 		LabelLong:  "Analyse sur 7 mois",
 		LabelShort: "Analyse",
 		Params: types.Params{
-			URL: "/bee/data/picsou/png/ana/{ptf_id}.gif",
+			Path: "/bee/data/picsou/png/ana/{ptf_id}.gif",
+			URL:  "/bee/data/picsou/png/ana/{ptf_id}.gif",
 			Header: []string{
 				"ptf_name",
 				"ptf_id",

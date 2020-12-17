@@ -189,7 +189,7 @@
             </div> <!-- end card -->
             <div class="card raised crud-card-view {{$element.Class}}" >
               <a class="ui link image {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$element.Params.URL}}?{{$composter}}">
-                <img src="{{if $element.Params.Src}}{{$element.Params.Src}}{{else}}{{$element.Params.URL}}{{end}}?{{$composter}}">
+                <img src="{{$element.Params.Path}}?{{$composter}}">
               </a>
               <div class="content">
                 {{if $element.LabelLong }}

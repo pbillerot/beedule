@@ -119,10 +119,10 @@ $(document).ready(function () {
 
     // CLIC URL
     $('.crud-jquery-url').on('click', function (event) {
-        // if (isUsed) {
-        //     event.preventDefault();
-        //     return
-        // }
+        if (isUsed) {
+            event.preventDefault();
+            return
+        }
         if (event.target.nodeName == "BUTTON") {
             // pour laisser la main à crud-jquery-button
             // Cas d'un button dans une card
