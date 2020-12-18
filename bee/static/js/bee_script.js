@@ -205,6 +205,33 @@ $(document).ready(function () {
             }).modal('show');
         event.preventDefault();
     });
+    // CLIC IMAGE POPUP
+    $('.crud-popup-chart').on('click', function (event) {
+        isUsed = true;
+        // Mémo du contexte dans un cookie
+        if ($crud_view && $crud_view.length > 0) {
+            var $anchor = $(this).closest('.card');
+            Cookies.set($crud_view, $anchor.attr('id'))
+            $(this).closest('.cards').find('.crud-list-selected').removeClass('crud-list-selected');
+            $anchor.addClass("crud-list-selected");
+        }
+
+        var $html = $(this).html();
+        var canvasParent = $('#crud-chart')
+        canvasParent.html($html)
+        $('#crud-modal-chart')
+            .modal({
+                closable: true,
+                onHide: function () {
+                    isUsed = false;
+                    return true;
+                },
+                onVisible: function () {
+                    drawChart(canvasParent.children("canvas"));
+                }
+            }).modal('show');
+        event.preventDefault();
+    });
 
     // CLIC IMAGE EDITOR POPUP
     $('.hugo-popup-image-editor').on('click', function (event) {

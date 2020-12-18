@@ -29,6 +29,7 @@ type Quotes struct {
 // Orders table ORDERS
 type Orders struct {
 	OrdersID        string  `orm:"pk;column(orders_id)"`
+	OrdersName      string  `orm:"column(orders_name)"`
 	OrdersPtfID     string  `orm:"column(orders_ptf_id)"`
 	OrdersBuy       float64 `orm:"column(orders_buy)"`
 	OrdersCostPrice float64 `orm:"column(orders_cost_price)"`
@@ -141,15 +142,17 @@ func (c *ChartController) Demo() {
 	// Remplissage du contexte pour le template
 	// Dataset as
 	type Dataset struct {
-		Quotes string  // cotation
-		Quotep string  // cotation en %
-		Labels string  // axe des dates
-		Minp   string  // dataset min en %
-		Maxp   string  // dataset max en %
-		Min    float64 // Quote max dans le graphique
-		Max    float64 // Quote min dans le graphique
-		SeuilV float64 // Seuil vente
-		SeuilR float64 // Seuil rentabilité
+		ClassJquery string  // class jquery
+		Title       string  // Titre
+		Quotes      string  // cotation
+		Quotep      string  // cotation en %
+		Labels      string  // axe des dates
+		Minp        string  // dataset min en %
+		Maxp        string  // dataset max en %
+		Min         float64 // Quote max dans le graphique
+		Max         float64 // Quote min dans le graphique
+		SeuilV      float64 // Seuil vente
+		SeuilR      float64 // Seuil rentabilité
 	}
 	var dataset Dataset
 	start := true
@@ -202,8 +205,10 @@ func (c *ChartController) Demo() {
 		dataset.Max = max + max*0.01
 	}
 	dataset.Min = min
+	dataset.Title = fmt.Sprintf("Cours de %s", orders.OrdersPtfID)
+	dataset.ClassJquery = "bee-chart-quotes"
 	c.Data["Dataset"] = dataset
-	c.Data["ID"] = "ACA.PA"
+	c.Data["ID"] = orders.OrdersID
 	c.TplName = "chart.html"
 
 }

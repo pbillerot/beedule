@@ -50,5 +50,4 @@ func init() {
 
 	// CHARTJS
 	beego.Router("/bee/chart/:app", &controllers.ChartController{}, "get:Demo")
-	// beego.Router("/bee/chart/:app/:chart/:id", &controllers.ChartController{}, "get:HugoPdf")
 }

@@ -239,6 +239,28 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		if element.Params.Path != "" {
 			element.Params.Path = macro(c, element.Params.Path, record)
 		}
+		if element.Params.Path != "" {
+			element.Params.Path = macro(c, element.Params.Path, record)
+		}
+		if element.Dataset != nil {
+			for key, value := range element.Dataset {
+				sql := macro(c, value, record)
+				recs, err := models.CrudSQL(sql, table.AliasDB)
+				if err != nil {
+					beego.Error(err)
+				}
+				val := ""
+				for _, cols := range recs {
+					for _, v := range cols {
+						if val != "" {
+							val += ","
+						}
+						val += v.(string)
+					}
+				}
+				element.Dataset[key] = val
+			}
+		}
 
 		if computeValue {
 			val := ""

@@ -139,21 +139,24 @@ var quotesElements = types.Elements{
 		Type:      "image",
 		LabelLong: "Graph du jour",
 		Params: types.Params{
-			URL: "/bee/data/picsou/png/day/{id}.png",
+			Path: "/bee/data/picsou/png/day/{id}.png",
+			URL:  "/bee/data/picsou/png/day/{id}.png",
 		},
 	},
 	"_image_histo": {
 		Type:      "image",
 		LabelLong: "Historique sur 1 mois",
 		Params: types.Params{
-			URL: "/bee/data/picsou/png/quotes/{id}.png",
+			Path: "/bee/data/picsou/png/quotes/{id}.png",
+			URL:  "/bee/data/picsou/png/quotes/{id}.png",
 		},
 	},
 	"_image_analyse": {
 		Type:      "image",
 		LabelLong: "Analyse sur 7 mois",
 		Params: types.Params{
-			URL: "/bee/data/picsou/png/ana/{id}.gif",
+			Path: "/bee/data/picsou/png/ana/{id}.gif",
+			URL:  "/bee/data/picsou/png/ana/{id}.gif",
 		},
 	},
 }
