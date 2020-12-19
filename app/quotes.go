@@ -159,6 +159,24 @@ var quotesElements = types.Elements{
 			URL:  "/bee/data/picsou/png/ana/{id}.gif",
 		},
 	},
+	"_chart_quotes": {
+		Type:       "image",
+		LabelLong:  "Cotation sur 1 mois",
+		LabelShort: "Cotation",
+		Dataset: types.Dataset{
+			"ClassJquery": "select 'bee-chart-quotes'",
+			"Title":       "select 'Cours de {id}'",
+			"Quotes":      "select open, close from quotes where id = '{id}' order by date",
+			"Quotep":      "select (open-close1)*100/close1 as matin, (close-close1)*100/close1 as soir from quotes where id = '{id}' order by date",
+			"Labels":      "select printf('%s-%s',substr(date,9,2),substr(date,6,2)) as 'matin', '-' as 'soir' from quotes where id = '{id}' order by date",
+			"Minp":        "select (low-close1)*100/close1 as matin, (low-close1)*100/close1 as soir from quotes where id = '{id}' order by date",
+			"Maxp":        "select (high-close1)*100/close1 as matin, (high-close1)*100/close1 as soir from quotes where id = '{id}' order by date",
+			"Min":         "select min(low) as min from quotes where id = '{id}'",
+			"Max":         "select max(high) as max from quotes where id = '{id}'",
+			"SeuilV":      "select orders_optimum from orders where orders_ptf_id = '{id}' and orders_order = 'buy'",
+			"SeuilR":      "select orders_cost_price from orders where orders_ptf_id = '{id}' and orders_order = 'buy",
+		},
+	},
 }
 
 var quotesViews = types.Views{
@@ -262,11 +280,12 @@ var quotesForms = types.Forms{
 					IconName: "building",
 				},
 			},
-			"ptf_top":        {Order: 110},
-			"ptf_rem":        {Order: 120},
-			"_image_day":     {Order: 200},
-			"_image_histo":   {Order: 300},
+			"ptf_top": {Order: 110},
+			"ptf_rem": {Order: 120},
+			// "_image_day":     {Order: 200},
+			// "_image_histo":   {Order: 300},
 			"_image_analyse": {Order: 400},
+			"_chart_quotes":  {Order: 410},
 		},
 	},
 }

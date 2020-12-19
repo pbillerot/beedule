@@ -187,7 +187,9 @@
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
-            <div class="card raised crud-card-view {{$element.Class}}" >
+          </div> <!-- end cards -->
+          <div class="ui cards">
+            <div class="card raised crud-card-view crud-card-view2 {{$element.Class}}" >
               {{if $element.Dataset}}
               <a class="crud-popup-chart">
               <canvas class="ui link {{$element.Dataset.ClassJquery}}" style="background-color: white" 
@@ -302,7 +304,6 @@
       <div class="ui cancel button">Fermer</div>
     </div>
     <div class="image content" id="crud-chart">
-      
     </div>
   </div> <!-- end modal image -->
 

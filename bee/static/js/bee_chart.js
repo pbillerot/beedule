@@ -43,20 +43,31 @@ function drawChart(canvas) {
     var zerop = new Array(minp.length);
     var seuilr = new Array(minp.length);
     var seuilv = new Array(minp.length);
+    var barMin = 200.0
+    var barMax = -200.0
     for (i = 0; i < minp.length; i++) {
+        if (parseFloat(minp[i]) < barMin) {
+            barMin = parseFloat(minp[i])
+        }
+        if (parseFloat(maxp[i]) > barMax) {
+            barMax = parseFloat(maxp[i])
+        }
         var bHigh = new Array(2);
         var bLow = new Array(2);
-        if (minp[i] < 0 && maxp[i] < 0) {
+        if (minp[i] <= 0 && maxp[i] <= 0) {
+            // rouge seul
             bLow[0] = minp[i]
             bLow[1] = maxp[i]
             bHigh[0] = null
             bHigh[1] = null
         } else if (minp[i] < 0 && maxp[i] > 0) {
+            // rouge et vert
             bLow[0] = minp[i]
             bLow[1] = 0
             bHigh[0] = 0
             bHigh[1] = maxp[i]
         } else {
+            // vert seul
             bLow[0] = null
             bLow[1] = null
             bHigh[0] = minp[i]
@@ -160,7 +171,7 @@ function drawChart(canvas) {
             scales: {
                 cotation: {
                     display: true,
-                    min: min,
+                    min: min - min * 0.01,
                     max: max + max * 0.01,
                     scaleLabel: {
                         display: true,
@@ -172,11 +183,12 @@ function drawChart(canvas) {
                     gridLines: {
                         display: false,
                     },
-                    display: true,
                     position: 'left'
                 },
                 pourcentage: {
                     display: true,
+                    min: barMin + barMin * 0.1,
+                    max: barMax + barMax * 0.1,
                     scaleLabel: {
                         display: true,
                         labelString: 'Évolution en %',
@@ -184,7 +196,6 @@ function drawChart(canvas) {
                             style: 'bold'
                         }
                     },
-                    display: true,
                     position: 'right'
                 },
                 x: {

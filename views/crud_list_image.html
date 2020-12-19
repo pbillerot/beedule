@@ -138,9 +138,17 @@
           class="link raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable crud-jquery-url"
           data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
           class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable" {{end}}>
+          {{if $element.Dataset}}
+          <a class="crud-popup-chart">
+          <canvas class="ui link {{$element.Dataset.ClassJquery}}" style="background-color: white" 
+          {{ range $key, $value := $element.Dataset }} data-{{$key}}="{{$value}}"{{end}}>
+          </canvas>
+          </a>
+          {{else}}
           <div class="ui image">
             <img src="{{$path}}?{{$composter}}" class="crud-popup-image" data-url="{{$url}}?{{$composter}}">
           </div>
+          {{end}}
           <div class="content">
             <div class="center aligned description">
               {{$element.LabelLong}}
@@ -274,6 +282,14 @@
       <img id="crud-image" class="image center aligned" src="">
     </div>
   </div> <!-- end modal image -->
+  <!-- Affichage d'un chart en popup-->
+  <div id="crud-modal-chart" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content" id="crud-chart">
+    </div>
+  </div> <!-- end modal image -->  
   <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
