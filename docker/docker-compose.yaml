@@ -128,6 +128,25 @@ services:
       - "/mnt/sandisk/nas/data/navidrome:/data"
       - "/mnt/sandisk/nas/Musique:/music"
 
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      # - ROOT_URL=https://pbillerot.freeboxos.fr/gitea
+      - DISABLE_SSH=true
+      # - DISABLE_REGISTRATION: true
+    volumes:
+      - ./gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "7677:3000"
+    restart: unless-stopped
+    networks:
+      - webgateway
+
 volumes:
   certs:
 

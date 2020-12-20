@@ -1,0 +1,16 @@
+http:
+  routers:
+    gitea:
+      entryPoints: 
+      - websecure
+      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/gitea`)"
+      service: gitea
+      middlewares:
+      - strip-gitea@file
+
+  services:
+    gitea:
+      loadBalancer:
+        servers:
+        - url: "http://172.17.0.1:7677/"
+

@@ -58,3 +58,8 @@ http:
         - "Remote-Groups"
         - "Remote-Name"
         - "Remote-Email"
+
+    strip-gitea:
+      stripPrefix:
+        prefixes:
+          - "/gitea"
