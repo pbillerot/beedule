@@ -29,7 +29,7 @@ func init() {
 
 	// EXPLORATEUR DE FICHIERS : HUGO
 	beego.Router("/bee/hugo/list/:app", &controllers.HugoController{}, "get:HugoList;post:HugoList")
-	beego.Router("/bee/hugo/edit/:app", &controllers.HugoController{}, "get:HugoEditor;post:HugoEditor")
+	// beego.Router("/bee/hugo/edit/:app", &controllers.HugoController{}, "get:HugoEditor;post:HugoEditor")
 	beego.Router("/bee/hugo/document/:app/:key", &controllers.HugoController{}, "get:HugoDocument;post:HugoDocument")
 	beego.Router("/bee/hugo/image/:app/:key", &controllers.HugoController{}, "get:HugoImage;post:HugoImage")
 	beego.Router("/bee/hugo/pdf/:app/:key", &controllers.HugoController{}, "get:HugoPdf")
@@ -40,7 +40,7 @@ func init() {
 	beego.Router("/bee/hugo/rm/:app/:key", &controllers.HugoController{}, "post:HugoFileRm")
 	beego.Router("/bee/hugo/mkdir/:app/:key", &controllers.HugoController{}, "post:HugoFileMkdir")
 	beego.Router("/bee/hugo/upload/:app/:key", &controllers.HugoController{}, "post:HugoFileUpload")
-	beego.Router("/bee/hugo/prod/:app", &controllers.HugoController{}, "post:HugoProd")
+	beego.Router("/bee/hugo/action/:app/:action", &controllers.HugoController{}, "post:HugoAction")
 
 	// REST API
 	// beego.Router("/bee/api/isc", &controllers.RestController{}, "get:RestIsc")

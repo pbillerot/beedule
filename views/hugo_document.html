@@ -75,6 +75,17 @@
               <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
             </div>
           </section>
+          {{ if $record.Action }}
+          <div class="field">
+            <div class="ui action input">
+              <button class="ui red button hugo-jquery-action" data-confirm="true"
+                data-url="/bee/hugo/action/{{$appid}}/{{$record.Action}}">
+                <i class="play circle outline icon"></i>
+                {{$record.Action}}
+              </button>
+            </div>
+          </div>
+          {{end}}
         </div>
       </form>
     </div>

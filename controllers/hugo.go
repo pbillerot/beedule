@@ -96,40 +96,40 @@ func (c *HugoController) HugoList() {
 }
 
 // HugoEditor Visualiser Modifier un document
-func (c *HugoController) HugoEditor() {
-	appid := c.Ctx.Input.Param(":app")
+// func (c *HugoController) HugoEditor() {
+// 	appid := c.Ctx.Input.Param(":app")
 
-	var pathDocument = c.GetString("path")
+// 	var pathDocument = c.GetString("path")
 
-	if pathDocument == "" {
-		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "url non reconnue")
-		beego.Error(msg)
-		c.Abort("404")
-	}
-	// Chargement des fichiers en mémoire
-	if len(hugo) == 0 {
-		hugoRacine = c.Data["DataDir"].(string) + "/content"
-		hugoDirectoryRecord(c, c.Data["DataDir"].(string))
-	}
-	// Recherche du record
-	pathDocument = "/" + pathDocument
-	var record hugodoc
-	for _, rec := range hugo {
-		if pathDocument == rec.Path {
-			record = rec
-			break
-		}
-	}
+// 	if pathDocument == "" {
+// 		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "url non reconnue")
+// 		beego.Error(msg)
+// 		c.Abort("404")
+// 	}
+// 	// Chargement des fichiers en mémoire
+// 	if len(hugo) == 0 {
+// 		hugoRacine = c.Data["DataDir"].(string) + "/content"
+// 		hugoDirectoryRecord(c, c.Data["DataDir"].(string))
+// 	}
+// 	// Recherche du record
+// 	pathDocument = "/" + pathDocument
+// 	var record hugodoc
+// 	for _, rec := range hugo {
+// 		if pathDocument == rec.Path {
+// 			record = rec
+// 			break
+// 		}
+// 	}
 
-	if record.Key == "" {
-		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "non trouvé")
-		beego.Error(msg)
-		c.Abort("404")
-	}
+// 	if record.Key == "" {
+// 		msg := fmt.Sprintf("HugoEditor %s : %s", pathDocument, "non trouvé")
+// 		beego.Error(msg)
+// 		c.Abort("404")
+// 	}
 
-	c.Ctx.Redirect(302, fmt.Sprintf("/bee/hugo/document/%s/%s", appid, record.Key))
+// 	c.Ctx.Redirect(302, fmt.Sprintf("/bee/hugo/document/%s/%s", appid, record.Key))
 
-}
+// }
 
 // HugoImage Visualiser Modifier une image
 func (c *HugoController) HugoImage() {
@@ -569,13 +569,19 @@ func (c *HugoController) HugoFileMkdir() {
 	return
 }
 
-// HugoProd Visualiser Modifier une image
-func (c *HugoController) HugoProd() {
+// HugoAction Action
+func (c *HugoController) HugoAction() {
 	appid := c.Ctx.Input.Param(":app")
+	action := c.Ctx.Input.Param(":action")
 
-	runHugoProd(c)
+	switch action {
+	case "publishDev":
+		publishDev(c)
+	case "pushProd":
+		pushProd(c)
+	}
 
-	c.Ctx.Redirect(302, "/bee/hugo/prod/"+appid)
+	c.Ctx.Redirect(302, "/bee/hugo/action/"+appid+"/"+action)
 }
 
 // Hugodoc table
@@ -595,6 +601,7 @@ type hugodoc struct {
 	Title       string
 	Draft       string
 	Date        string
+	Action      string
 	DatePublish string
 	DateExpiry  string
 	Inline      bool // page en ligne et visible
@@ -612,6 +619,7 @@ type hugoMeta struct {
 	Title       string   `yaml:"title"`
 	Draft       bool     `yaml:"draft"`
 	Date        string   `yaml:"date"`
+	Action      string   `yaml:"action"`
 	DatePublish string   `yaml:"publishDate"`
 	DateExpiry  string   `yaml:"expiryDate"`
 	Tags        []string `yaml:"tags"`
@@ -722,7 +730,7 @@ func hugoDirectoryRecord(c *HugoController, hugoDirectory string) (err error) {
 		}
 	}
 	// Update site public Hugo
-	runHugoDev(c)
+	publishDev(c)
 
 	return
 }
@@ -782,6 +790,7 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 		}
 		record.Title = meta.Title
 		record.Date = meta.Date
+		record.Action = meta.Action
 		record.DatePublish = meta.DatePublish
 		record.DateExpiry = meta.DateExpiry
 		record.Inline = true
@@ -838,8 +847,8 @@ func containsString(sl []string, in string) bool {
 	return false
 }
 
-// runHugoDev : Exécution du moteur Hugo pour mettre à jour le site de développement
-func runHugoDev(c *HugoController) {
+// publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
+func publishDev(c *HugoController) {
 	cmd := exec.Command("hugo")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
@@ -852,7 +861,7 @@ func runHugoDev(c *HugoController) {
 	beego.Info("runHugo", string(out))
 }
 
-// runHugoProd : Exécution du moteur Hugo pour mettre à jour le site de développement
+// pushProd : Exécution du moteur Hugo pour mettre à jour le site de développement
 func pushProd(c *HugoController) {
 	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
 	cmd.Dir = c.Data["HugoDir"].(string)
