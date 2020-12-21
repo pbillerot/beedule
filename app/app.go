@@ -53,23 +53,35 @@ var Applications = map[string]types.Application{
 		Path:   "/fb",
 		Target: "_blank",
 	},
+	"gitea": {
+		Title:  "Gitea",
+		Image:  "/bee/static/img/gitea.svg",
+		Path:   "/gitea",
+		Target: "_blank",
+	},
 	"navidrome": {
 		Title:  "Serveur de streaming de musique",
 		Image:  "/bee/static/img/navidrome.png",
 		Path:   "/nv",
 		Target: "_blank",
 	},
-	"foirexpo": {
-		Title:  "Portail foirexpo",
+	"qualexpo": {
+		Title:  "Foirexpo Qualification",
 		Image:  "/bee/static/img/public.png",
+		Path:   "https://pbillerot.freeboxos.fr/edexpo",
+		Target: "_blank",
+	},
+	"foirexpo": {
+		Title:  "Portail Foirexpo",
+		Image:  "/bee/static/img/foirexpo.svg",
 		Path:   "https://pbillerot.freeboxos.fr/foirexpo",
 		Target: "_blank",
 	},
-	"asf": {
+	"edexpo": {
 		Title: "Administration du site FOIREXPO",
 		Group: "admin",
 		Image: "/bee/static/img/edf.svg",
-		Path:  "/bee/hugo/list/asf",
+		Path:  "/bee/hugo/list/edexpo",
 	},
 	"chart": {
 		Title: "CHART.JS",

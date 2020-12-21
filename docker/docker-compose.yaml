@@ -83,7 +83,8 @@ services:
     - ./nginx/bg.png:/usr/share/nginx/html/bg.png
     - ./nginx/favicon.ico:/usr/share/nginx/html/favicon.ico
     - ./nginx/robots.txt:/usr/share/nginx/html/robots.txt
-    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/foirexpo
+    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/edexpo
+    - /home/billerot/Abri/foirexpo/prod:/usr/share/nginx/html/foirexpo
     ports:
     - "7603:80"
     environment:

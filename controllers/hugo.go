@@ -568,6 +568,15 @@ func (c *HugoController) HugoFileMkdir() {
 	return
 }
 
+// HugoProd Visualiser Modifier une image
+func (c *HugoController) HugoProd() {
+	appid := c.Ctx.Input.Param(":app")
+
+	runHugoProd(c)
+
+	c.Ctx.Redirect(302, "/bee/hugo/prod/"+appid)
+}
+
 // Hugodoc table
 type hugodoc struct {
 	ID          int
@@ -712,7 +721,7 @@ func hugoDirectoryRecord(c *HugoController, hugoDirectory string) (err error) {
 		}
 	}
 	// Update site public Hugo
-	runHugo(c)
+	runHugoDev(c)
 
 	return
 }
@@ -829,13 +838,31 @@ func containsString(sl []string, in string) bool {
 	return false
 }
 
-// runHugo : Exécution du moteur Hugo pour mettre à jour le site
-func runHugo(c *HugoController) {
+// runHugoDev : Exécution du moteur Hugo pour mettre à jour le site de développement
+func runHugoDev(c *HugoController) {
 	cmd := exec.Command("hugo")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		flash := beego.ReadFromRequest(&c.Controller)
 		beego.Error("runHugo", err)
+		flash.Error("ERREURG Génération des pages : %v", err)
+		flash.Store(&c.Controller)
 	}
+	beego.Info("runHugo", string(out))
+}
+
+// runHugoProd : Exécution du moteur Hugo pour mettre à jour le site de développement
+func runHugoProd(c *HugoController) {
+	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
+	cmd.Dir = c.Data["HugoDir"].(string)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		flash := beego.ReadFromRequest(&c.Controller)
+		beego.Error("runHugoProd", err)
+		flash.Error("ERREUR: Mise en production des pages : %v", err)
+		flash.Store(&c.Controller)
+	}
+
 	beego.Info("runHugo", string(out))
 }
