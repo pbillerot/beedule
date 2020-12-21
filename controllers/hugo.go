@@ -165,7 +165,8 @@ func (c *HugoController) HugoImage() {
 			ReturnFrom(c.Controller)
 		}
 
-		outputFile, err := os.Create(record.PathAbsolu)
+		err = ioutil.WriteFile(record.PathReal, unbased, 0666)
+		// outputFile, err := os.Create(record.PathAbsolu)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
 			beego.Error(msg)
@@ -173,9 +174,9 @@ func (c *HugoController) HugoImage() {
 			flash.Store(&c.Controller)
 			ReturnFrom(c.Controller)
 		}
-		defer outputFile.Close()
+		// defer outputFile.Close()
 
-		outputFile.Write(unbased)
+		// outputFile.Write(unbased)
 		// Fermeture de la fenêtre
 		c.TplName = "bee_close.html"
 		return
@@ -241,12 +242,12 @@ func (c *HugoController) HugoDocument() {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
 		if record.PathReal != "" {
-			err = ioutil.WriteFile(record.PathReal, []byte(document), 0755)
+			err = ioutil.WriteFile(record.PathReal, []byte(document), 0666)
 		} else {
-			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0755)
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0666)
 		}
 		if err != nil {
-			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
+			msg := fmt.Sprintf("HugoDocument %s : %s", record.PathAbsolu, err)
 			beego.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -758,17 +759,16 @@ func hugoFileRecord(hugoDirectory string, pathAbsolu string, info os.FileInfo, i
 	record.Level = strings.Count(record.Dir, "/")
 	record.Ext = filepath.Ext(path)
 	ext := filepath.Ext(path)
-	if ext == ".yaml" {
+	if record.Base == "config.yaml" {
+		// le fichier a son clone dans /data
 		// lecture du fichier yaml
 		content, err := ioutil.ReadFile(pathAbsolu)
 		if err != nil {
 			beego.Error(err)
 		}
 		record.Content = string(content[:])
-		// le fichier a son clone dans /data
 		record.PathReal = strings.Replace(record.PathAbsolu, "/content/site/", "/data/", 1)
-	}
-	if ext == ".md" {
+	} else if ext == ".md" || ext == ".yaml" {
 		// lecture des metadata du fichier markdown
 		content, err := ioutil.ReadFile(pathAbsolu)
 		if err != nil {
@@ -853,7 +853,7 @@ func runHugoDev(c *HugoController) {
 }
 
 // runHugoProd : Exécution du moteur Hugo pour mettre à jour le site de développement
-func runHugoProd(c *HugoController) {
+func pushProd(c *HugoController) {
 	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
