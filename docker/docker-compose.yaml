@@ -139,7 +139,7 @@ services:
       - DISABLE_SSH=true
       # - DISABLE_REGISTRATION: true
     volumes:
-      - ./gitea:/data
+      - /mnt/sandisk/nas/data/gitea:/data/gitea/conf
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:

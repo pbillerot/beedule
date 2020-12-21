@@ -72,8 +72,13 @@ pre {
 .CodeMirror {
     border: 1px solid #eee;
     height: auto;
-  }
+}
   
+.ui.navbar.bee-bar-light {
+    background:white;
+    border-bottom: 1px solid #dedede;
+}
+
 /* Mobile */
 @media only screen and (max-width: 767px) {
     .crud-mobile-hide {
