@@ -30,30 +30,30 @@ services:
     networks:
       - webgateway
 
-  mysql:
-    image: mariadb:latest
-    container_name: mariadb
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: sme3-Aprt
-      MYSQL_DATABASE: beedule
-      MYSQL_USER: beedule
-      MYSQL_PASSWORD: beedule
-    volumes:
-      - /mnt/nas/data/mariadb:/var/lib/mysql
-    ports:
-      - 3306:3306
-    networks:
-      - webgateway
+  # mysql:
+  #   image: mariadb:latest
+  #   container_name: mariadb
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: sme3-Aprt
+  #     MYSQL_DATABASE: beedule
+  #     MYSQL_USER: beedule
+  #     MYSQL_PASSWORD: beedule
+  #   volumes:
+  #     - /mnt/nas/data/mariadb:/var/lib/mysql
+  #   ports:
+  #     - 3306:3306
+  #   networks:
+  #     - webgateway
 
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: unless-stopped
-    ports:
-      - 9070:8080
-    networks:
-      - webgateway
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: unless-stopped
+  #   ports:
+  #     - 9070:8080
+  #   networks:
+  #     - webgateway
 
   beedule:
     build:
