@@ -53,12 +53,12 @@ var Applications = map[string]types.Application{
 		Path:   "/fb",
 		Target: "_blank",
 	},
-	"gitea": {
-		Title:  "Gitea",
-		Image:  "/bee/static/img/gitea.svg",
-		Path:   "/gitea",
-		Target: "_blank",
-	},
+	// "gitea": {
+	// 	Title:  "Gitea",
+	// 	Image:  "/bee/static/img/gitea.svg",
+	// 	Path:   "/gitea",
+	// 	Target: "_blank",
+	// },
 	"navidrome": {
 		Title:  "Serveur de streaming de musique",
 		Image:  "/bee/static/img/navidrome.png",
