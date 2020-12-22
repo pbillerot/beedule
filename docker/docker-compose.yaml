@@ -148,6 +148,21 @@ services:
     networks:
       - webgateway
 
+  # cadvisor:
+  #   image: google/cadvisor
+  #   container_name: cadvisor
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   expose:
+  #     - 7680
+  #   ports:
+  #     - "8005:8080"
+  #   networks:
+  #     - webgateway
+
 volumes:
   certs:
 
