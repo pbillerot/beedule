@@ -148,21 +148,6 @@ services:
     networks:
       - webgateway
 
-  # cadvisor:
-  #   image: google/cadvisor
-  #   container_name: cadvisor
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:rw
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-  #   expose:
-  #     - 7680
-  #   ports:
-  #     - "8005:8080"
-  #   networks:
-  #     - webgateway
-
 volumes:
   certs:
 
@@ -189,3 +174,6 @@ networks:
 # Ouvrir une console
 # docker container exec -it beedule /bin/bash
 # docker container exec -it nginx /bin/bash
+
+# Metrologie de Docker
+# docker run --rm -ti --name=ctop --volume /var/run/docker.sock:/var/run/docker.sock:ro quay.io/vektorlab/ctop:latest

@@ -25,14 +25,14 @@ var Applications = map[string]types.Application{
 			{Tableid: "parameters", Viewid: "vall"},
 		},
 	},
-	"tasks": {
-		Title: "Mes Tâches",
-		Group: "admin",
-		Image: "/bee/static/img/tasks.svg",
-		AppViews: []types.AppView{
-			{Tableid: "tasks", Viewid: "vall"},
-		},
-	},
+	// "tasks": {
+	// 	Title: "Mes Tâches",
+	// 	Group: "admin",
+	// 	Image: "/bee/static/img/tasks.svg",
+	// 	AppViews: []types.AppView{
+	// 		{Tableid: "tasks", Viewid: "vall"},
+	// 	},
+	// },
 	"picsou": {
 		Title: "Picsou, pour bricoler sur la bourse",
 		Group: "picsou",
