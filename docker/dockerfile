@@ -9,17 +9,16 @@ FROM golang:alpine as goalpine
 # Installation de GCC et GIT
 RUN apk add build-base git
 
+# Installation de foirexpo
+# WORKDIR /src
+# RUN git clone https://github.com/MaixentExpo/foirexpo.git
+
 # Installation de beedule
 WORKDIR /src
 RUN git clone https://github.com/pbillerot/beedule.git
 # RUN git clone git@pbillerot.freeboxos.fr:pbillerot/beedule.git
 # RUN git clone https://pbillerot.freeboxos.fr/gitea/pbillerot/beedule.git
 WORKDIR /src/beedule
-
-# Désactivation de CGO pour intéger les routines de Go et non pas celles du système
-# pour générer un binaire statique (mis en commentaire car sqlite impose cgo)
-# ENV CGO_ENABLED=0 
-# RUN go build -o /src/beedule/beedule
 
 # Build avec CGO
 RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/beedule/beedule
