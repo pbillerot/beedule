@@ -173,8 +173,8 @@ var quotesElements = types.Elements{
 			"Maxp":        "select (high-close1)*100/close1 as matin, (high-close1)*100/close1 as soir from quotes where id = '{id}' order by date",
 			"Min":         "select min(low) as min from quotes where id = '{id}'",
 			"Max":         "select max(high) as max from quotes where id = '{id}'",
-			"SeuilV":      "select orders_optimum from orders where orders_ptf_id = '{id}' and orders_order = 'buy'",
-			"SeuilR":      "select orders_cost_price from orders where orders_ptf_id = '{id}' and orders_order = 'buy",
+			"SeuilV":      "select orders_cost_price + orders_cost_price * {__optimum} from orders where orders_ptf_id = '{id}' and orders_order = 'buy'",
+			"SeuilR":      "select orders_cost_price from orders where orders_ptf_id = '{id}' and orders_order = 'buy'",
 		},
 	},
 }

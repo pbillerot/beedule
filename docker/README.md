@@ -1,6 +1,4 @@
-# TRAEFIK 
-
-Mon proxy inverse
+# CONTAINERS
 
 ## LIENS UTILES
 
@@ -11,7 +9,7 @@ Mon proxy inverse
 - https://www.ssllabs.com/
 - https://www.ssllabs.com/ssltest/analyze.html?d=pbillerot.freeboxos.fr&latest
 
-Guide de configuration de Mozilla
+## Guide de configuration de Mozilla
 - https://ssl-config.mozilla.org/#server=traefik&version=2.1.2&config=intermediate&guideline=5.4
 
 ## Proxy auth

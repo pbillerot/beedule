@@ -59,12 +59,12 @@ var Applications = map[string]types.Application{
 	// 	Path:   "/gitea",
 	// 	Target: "_blank",
 	// },
-	"navidrome": {
-		Title:  "Serveur de streaming de musique",
-		Image:  "/bee/static/img/navidrome.png",
-		Path:   "/nv",
-		Target: "_blank",
-	},
+	// "navidrome": {
+	// 	Title:  "Serveur de streaming de musique",
+	// 	Image:  "/bee/static/img/navidrome.png",
+	// 	Path:   "/nv",
+	// 	Target: "_blank",
+	// },
 	"qualexpo": {
 		Title:  "Foirexpo Qualification",
 		Image:  "/bee/static/img/public.png",

@@ -34,7 +34,7 @@ entryPoints:
       - secHeaders@file
 
 accessLog:
-  filePath: "/log/access.log"
+  filePath: "/volshare/trafefik/access.log"
   bufferingSize: 100
 
 certificatesResolvers:

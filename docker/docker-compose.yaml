@@ -26,34 +26,9 @@ services:
       - certs:/letsencrypt
       - ./traefik.yaml:/etc/traefik/traefik.yaml
       - ./custom_services:/etc/traefik/custom_services
-      - /mnt/nas/data/beedule:/log
+      - /volshare:/volshare
     networks:
       - webgateway
-
-  # mysql:
-  #   image: mariadb:latest
-  #   container_name: mariadb
-  #   restart: unless-stopped
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: sme3-Aprt
-  #     MYSQL_DATABASE: beedule
-  #     MYSQL_USER: beedule
-  #     MYSQL_PASSWORD: beedule
-  #   volumes:
-  #     - /mnt/nas/data/mariadb:/var/lib/mysql
-  #   ports:
-  #     - 3306:3306
-  #   networks:
-  #     - webgateway
-
-  # adminer:
-  #   image: adminer
-  #   container_name: adminer
-  #   restart: unless-stopped
-  #   ports:
-  #     - 9070:8080
-  #   networks:
-  #     - webgateway
 
   beedule:
     build:
@@ -64,12 +39,7 @@ services:
     ports:
       - "7601:3945"
     volumes:
-      - /mnt/nas/data/beedule/custom.conf:/src/beedule/conf/custom.conf
-      - /mnt/nas/data/beedule/beedule.sqlite:/src/beedule/database/beedule.sqlite
-      # - ./docker/secure-traefik.yaml:/src/beedule/docker/secure-traefik.yaml
-      - /mnt/nas/data/picsou/picsou.sqlite:/src/beedule/database/picsou.sqlite
-      - /mnt/nas/data/picsou:/src/beedule/data/picsou
-      - /home/billerot/Abri/foirexpo:/src/beedule/data/foirexpo
+      - /volshare:/volshare
     networks:
       - webgateway
 
@@ -83,8 +53,8 @@ services:
     - ./nginx/bg.png:/usr/share/nginx/html/bg.png
     - ./nginx/favicon.ico:/usr/share/nginx/html/favicon.ico
     - ./nginx/robots.txt:/usr/share/nginx/html/robots.txt
-    - /home/billerot/Abri/foirexpo/public:/usr/share/nginx/html/edexpo
-    - /home/billerot/Abri/foirexpo/prod:/usr/share/nginx/html/foirexpo
+    - /volshare/foirexpo/public:/usr/share/nginx/html/edexpo
+    - /volshare/foirexpo/prod:/usr/share/nginx/html/foirexpo
     ports:
     - "7603:80"
     environment:
@@ -108,45 +78,70 @@ services:
       # - '--auth.header=Remote-User'
 
     volumes:
-      - /home/billerot/Abri/foirexpo/content:/srv
-      - /mnt/nas/data/filebrowser/database.db:/database.db
+      - /volshare/foirexpo/content:/srv
+      # - /mnt/sandisk/nas/data/filebrowser/database.db:/database.db
       - ./filebrowser.json:/.filebrowser.json    
 
-  navidrome:
-    image: deluan/navidrome:latest
-    container_name: navidrome
-    user: 1000:1000 # should be owner of volumes
-    ports:
-      - "4533:4533"
-    restart: unless-stopped
-    environment:
-      # Optional: put your config options customization here. Examples:
-      ND_SCANINTERVAL: 1m
-      ND_LOGLEVEL: info  
-      ND_SESSIONTIMEOUT: 24h
-      ND_BASEURL: "/nv"
-    volumes:
-      - "/mnt/sandisk/nas/data/navidrome:/data"
-      - "/mnt/sandisk/nas/Musique:/music"
+  # mysql:
+  #   image: mariadb:latest
+  #   container_name: mariadb
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: sme3-Aprt
+  #     MYSQL_DATABASE: beedule
+  #     MYSQL_USER: beedule
+  #     MYSQL_PASSWORD: beedule
+  #   volumes:
+  #     - /mnt/sandisk/nas/data/mariadb:/var/lib/mysql
+  #   ports:
+  #     - 3306:3306
+  #   networks:
+  #     - webgateway
 
-  gitea:
-    image: gitea/gitea:latest
-    container_name: gitea
-    environment:
-      - USER_UID=1000
-      - USER_GID=1000
-      # - ROOT_URL=https://pbillerot.freeboxos.fr/gitea
-      - DISABLE_SSH=true
-      # - DISABLE_REGISTRATION: true
-    volumes:
-      - /mnt/sandisk/nas/data/gitea:/data/gitea/conf
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "7677:3000"
-    restart: unless-stopped
-    networks:
-      - webgateway
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: unless-stopped
+  #   ports:
+  #     - 9070:8080
+  #   networks:
+  #     - webgateway
+
+  # navidrome:
+  #   image: deluan/navidrome:latest
+  #   container_name: navidrome
+  #   user: 1000:1000 # should be owner of volumes
+  #   ports:
+  #     - "4533:4533"
+  #   restart: unless-stopped
+  #   environment:
+  #     # Optional: put your config options customization here. Examples:
+  #     ND_SCANINTERVAL: 1m
+  #     ND_LOGLEVEL: info  
+  #     ND_SESSIONTIMEOUT: 24h
+  #     ND_BASEURL: "/nv"
+  #   volumes:
+  #     - "/mnt/sandisk/nas/data/navidrome:/data"
+  #     - "/mnt/sandisk/nas/Musique:/music"
+
+  # gitea:
+  #   image: gitea/gitea:latest
+  #   container_name: gitea
+  #   environment:
+  #     - USER_UID=1000
+  #     - USER_GID=1000
+  #     # - ROOT_URL=https://pbillerot.freeboxos.fr/gitea
+  #     - DISABLE_SSH=true
+  #     # - DISABLE_REGISTRATION: true
+  #   volumes:
+  #     - /mnt/sandisk/nas/data/gitea:/data/gitea/conf
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - /etc/localtime:/etc/localtime:ro
+  #   ports:
+  #     - "7677:3000"
+  #   restart: unless-stopped
+  #   networks:
+  #     - webgateway
 
 volumes:
   certs:
