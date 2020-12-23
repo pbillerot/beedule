@@ -166,7 +166,7 @@ var quotesElements = types.Elements{
 		Dataset: types.Dataset{
 			"ClassJquery": "select 'bee-chart-quotes'",
 			"Title":       "select 'Cours de {id}'",
-			"Quotes":      "select open, close from quotes where id = '{id}' order by date",
+			"Quotes":      "select open as matin, close as soir from quotes where id = '{id}' order by date",
 			"Quotep":      "select (open-close1)*100/close1 as matin, (close-close1)*100/close1 as soir from quotes where id = '{id}' order by date",
 			"Labels":      "select printf('%s-%s',substr(date,9,2),substr(date,6,2)) as 'matin', '-' as 'soir' from quotes where id = '{id}' order by date",
 			"Minp":        "select (low-close1)*100/close1 as matin, (low-close1)*100/close1 as soir from quotes where id = '{id}' order by date",

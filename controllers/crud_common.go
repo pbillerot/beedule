@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -250,12 +251,22 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 					beego.Error(err)
 				}
 				val := ""
+				bstart := true
 				for _, cols := range recs {
-					for _, v := range cols {
-						if val != "" {
+					// tri des keys
+					keys := make([]string, 0, len(cols))
+					for k := range cols {
+						keys = append(keys, k)
+					}
+					sort.Strings(keys)
+					for _, k := range keys {
+						if bstart {
+							bstart = false
+						} else {
 							val += ","
 						}
-						val += v.(string)
+						val += cols[k].(string)
+
 					}
 				}
 				element.Dataset[key] = val
