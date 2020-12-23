@@ -65,16 +65,16 @@ var Applications = map[string]types.Application{
 	// 	Path:   "/nv",
 	// 	Target: "_blank",
 	// },
-	"qualexpo": {
+	"foired": {
 		Title:  "Foirexpo Qualification",
 		Image:  "/bee/static/img/public.png",
-		Path:   "https://pbillerot.freeboxos.fr/edexpo",
+		Path:   "https://pbillerot.freeboxos.fr/foired",
 		Target: "_blank",
 	},
-	"foirexpo": {
+	"foirep": {
 		Title:  "Portail Foirexpo",
 		Image:  "/bee/static/img/foirexpo.svg",
-		Path:   "https://pbillerot.freeboxos.fr/foirexpo",
+		Path:   "https://pbillerot.freeboxos.fr/foirep",
 		Target: "_blank",
 	},
 	"edexpo": {

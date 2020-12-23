@@ -1,0 +1,4 @@
+FROM alpine
+LABEL maintainer="Philippe Billerot <philippe.billerot@gmail.com>"
+RUN apk --update --no-cache add bash git nano 
+WORKDIR /src

@@ -571,7 +571,6 @@ func (c *HugoController) HugoFileMkdir() {
 
 // HugoAction Action
 func (c *HugoController) HugoAction() {
-	appid := c.Ctx.Input.Param(":app")
 	action := c.Ctx.Input.Param(":action")
 
 	switch action {
@@ -580,8 +579,9 @@ func (c *HugoController) HugoAction() {
 	case "pushProd":
 		pushProd(c)
 	}
-
-	c.Ctx.Redirect(302, "/bee/hugo/action/"+appid+"/"+action)
+	// Fermeture de la fenêtre
+	c.TplName = "bee_close.html"
+	return
 }
 
 // Hugodoc table
@@ -849,20 +849,22 @@ func containsString(sl []string, in string) bool {
 
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *HugoController) {
-	cmd := exec.Command("hugo")
+	beego.Info("publishDev", c.Data["HugoDev"].(string))
+	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string))
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		flash := beego.ReadFromRequest(&c.Controller)
-		beego.Error("runHugo", err)
+		beego.Error("publishDev", err)
 		flash.Error("ERREURG Génération des pages : %v", err)
 		flash.Store(&c.Controller)
 	}
-	beego.Info("runHugo", string(out))
+	beego.Info("publishDev", string(out))
 }
 
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de développement
 func pushProd(c *HugoController) {
+	beego.Info("pushProd", c.Data["HugoProd"].(string))
 	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
@@ -872,6 +874,5 @@ func pushProd(c *HugoController) {
 		flash.Error("ERREUR: Mise en production des pages : %v", err)
 		flash.Store(&c.Controller)
 	}
-
-	beego.Info("runHugo", string(out))
+	beego.Info("pushProd", string(out))
 }

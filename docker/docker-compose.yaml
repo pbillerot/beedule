@@ -53,8 +53,8 @@ services:
     - ./nginx/bg.png:/usr/share/nginx/html/bg.png
     - ./nginx/favicon.ico:/usr/share/nginx/html/favicon.ico
     - ./nginx/robots.txt:/usr/share/nginx/html/robots.txt
-    - /volshare/foirexpo/public:/usr/share/nginx/html/edexpo
-    - /volshare/foirexpo/prod:/usr/share/nginx/html/foirexpo
+    - /volshare/foired:/usr/share/nginx/html/foired
+    - /volshare/foirep:/usr/share/nginx/html/foirep
     ports:
     - "7603:80"
     environment:
@@ -81,6 +81,16 @@ services:
       - /volshare/foirexpo/content:/srv
       # - /mnt/sandisk/nas/data/filebrowser/database.db:/database.db
       - ./filebrowser.json:/.filebrowser.json    
+
+  haddock:
+    image: haddock
+    container_name: haddock
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - /volshare:/volshare
+    networks:
+      - webgateway
 
   # mysql:
   #   image: mariadb:latest

@@ -56,6 +56,7 @@ func (c *HugoController) Prepare() {
 	c.Data["DataUrl"] = "/bee/data/" + appid
 	c.Data["HugoUrl"] = beego.AppConfig.String(appid + "::hugourl")
 	c.Data["HugoDir"] = beego.AppConfig.String(appid + "::hugodir")
+	c.Data["HugoDev"] = beego.AppConfig.String(appid + "::hugodev")
 	c.Data["HugoProd"] = beego.AppConfig.String(appid + "::hugoprod")
 
 	// Contexte de la session

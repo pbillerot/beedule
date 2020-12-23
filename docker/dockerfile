@@ -24,18 +24,12 @@ RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/beedule/beedu
 FROM alpine
 RUN mkdir -p /src/beedule
 copy --from=goalpine /src/beedule /src/beedule
-# Installation de hugo
-RUN apk add hugo
-# Installation de git
-RUN apk add git
+# Installation de hugo...
+RUN apk add --update hugo git nano curl
 
 # Pont d'entrée
 WORKDIR /src/beedule
 ENTRYPOINT ./beedule
-
-# WORKDIR /app
-# CMD ["/bin/bash"]
-# CMD ["/app/beedule"]
 
 # Le port sur lequel notre serveur écoute
 EXPOSE 3945
