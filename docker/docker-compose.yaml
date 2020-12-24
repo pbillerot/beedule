@@ -93,6 +93,8 @@ services:
       - webgateway
     ports:
     - "7622:22"
+    # Voir aussi
+    # https://github.com/danielguerra69/alpine-sshd
 
   # mysql:
   #   image: mariadb:latest

@@ -1,5 +1,6 @@
 FROM alpine
 LABEL maintainer="Philippe Billerot <philippe.billerot@gmail.com>"
+# RUN apk --update --no-cache add bash git mc nano openssh
 RUN apk --update --no-cache add bash git nano openssh \
   && sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
   && echo "root:root" | chpasswd \
@@ -13,11 +14,9 @@ RUN sed -ir 's/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/HostKey \/etc\/ssh\/ssh
 RUN /usr/bin/ssh-keygen -A
 RUN ssh-keygen -t rsa -b 4096 -f  /etc/ssh/ssh_host_key
 
-COPY /home/billerot/.ssh/id_ed25519.pub /root/.ssh/authorized_keys
-
 EXPOSE 22
 
-WORKDIR /src
+# WORKDIR /src
 CMD ["/usr/sbin/sshd","-D"]  
 
 # docker build -t haddock .
