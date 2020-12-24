@@ -284,8 +284,8 @@ var quotesForms = types.Forms{
 			"ptf_rem": {Order: 120},
 			// "_image_day":     {Order: 200},
 			// "_image_histo":   {Order: 300},
-			"_image_analyse": {Order: 400},
 			"_chart_quotes":  {Order: 410},
+			"_image_analyse": {Order: 420},
 		},
 	},
 }

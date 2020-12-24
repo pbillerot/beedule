@@ -24,6 +24,7 @@ recopier
 
 ```bash
 /volshare/traefik/access.log {
+  su root root
   daily
   rotate 7
   nocompress

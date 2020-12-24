@@ -91,6 +91,8 @@ services:
       - /volshare:/volshare
     networks:
       - webgateway
+    ports:
+    - "7622:22"
 
   # mysql:
   #   image: mariadb:latest
@@ -177,7 +179,7 @@ networks:
 # docker image prune -a
 
 # Ouvrir une console
-# docker container exec -it beedule /bin/bash
+# docker container exec -it beedule /bin/sh
 # docker container exec -it nginx /bin/bash
 
 # Metrologie de Docker

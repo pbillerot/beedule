@@ -127,8 +127,8 @@ var ordersForms = types.Forms{
 			"orders_rem":        {Order: 170},
 			"_action_sell":      {Order: 270},
 			// Images
+			"_chart_quotes":  {Order: 310},
 			"_image_analyse": {Order: 320},
-			"_chart_quotes":  {Order: 330},
 		},
 	},
 	"fviewsell": {

@@ -169,8 +169,8 @@ var ptfForms = types.Forms{
 			"ptf_quote":      {Order: 70},
 			"ptf_gain":       {Order: 80},
 			"_action_buy":    {Order: 90},
+			"_chart_quotes":  {Order: 110},
 			"_image_analyse": {Order: 120},
-			"_chart_quotes":  {Order: 130},
 		},
 	},
 	"fadd": {

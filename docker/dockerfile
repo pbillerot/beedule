@@ -25,7 +25,7 @@ FROM alpine
 RUN mkdir -p /src/beedule
 copy --from=goalpine /src/beedule /src/beedule
 # Installation de hugo...
-RUN apk add --update hugo git nano curl
+RUN apk add --update curl git hugo nano tree
 
 # Pont d'entrée
 WORKDIR /src/beedule
