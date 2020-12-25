@@ -165,7 +165,7 @@ func (c *HugoController) HugoImage() {
 			ReturnFrom(c.Controller)
 		}
 
-		err = ioutil.WriteFile(record.PathReal, unbased, 0666)
+		err = ioutil.WriteFile(record.PathAbsolu, unbased, 0777)
 		// outputFile, err := os.Create(record.PathAbsolu)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
@@ -242,9 +242,9 @@ func (c *HugoController) HugoDocument() {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
 		if record.PathReal != "" {
-			err = ioutil.WriteFile(record.PathReal, []byte(document), 0666)
+			err = ioutil.WriteFile(record.PathReal, []byte(document), 0777)
 		} else {
-			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0666)
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0777)
 		}
 		if err != nil {
 			msg := fmt.Sprintf("HugoDocument %s : %s", record.PathAbsolu, err)
@@ -406,7 +406,7 @@ func (c *HugoController) HugoFileCp() {
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
 	}
-	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0755)
+	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0777)
 	if err != nil {
 		msg := fmt.Sprintf("HugoImage %s : %s", newFile, err)
 		beego.Error(msg)
@@ -504,7 +504,7 @@ func (c *HugoController) HugoFileUpload() {
 		ReturnFrom(c.Controller)
 	}
 	filepath := fmt.Sprintf("%s/%s", record.PathAbsolu, handler.Filename)
-	err = ioutil.WriteFile(filepath, fileBytes, 0755)
+	err = ioutil.WriteFile(filepath, fileBytes, 0777)
 	if err != nil {
 		msg := fmt.Sprintf("HugoDirectory %s : %s", handler.Filename, err)
 		beego.Error(msg)
@@ -547,7 +547,7 @@ func (c *HugoController) HugoFileMkdir() {
 	}
 
 	newDir := c.GetString("new_dir")
-	err = os.MkdirAll(hugoRacine+"/"+newDir, 0755)
+	err = os.MkdirAll(hugoRacine+"/"+newDir, 0777)
 	if err != nil {
 		msg := fmt.Sprintf("HugoImage %s : %s", newDir, err)
 		beego.Error(msg)
@@ -850,7 +850,7 @@ func containsString(sl []string, in string) bool {
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *HugoController) {
 	beego.Info("publishDev", c.Data["HugoDev"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string))
+	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string), "--noChmod")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -865,7 +865,7 @@ func publishDev(c *HugoController) {
 // pushProd : Exécution du moteur Hugo pour mettre à jour le site de développement
 func pushProd(c *HugoController) {
 	beego.Info("pushProd", c.Data["HugoProd"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
+	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string), "--noChmod")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -875,4 +875,10 @@ func pushProd(c *HugoController) {
 		flash.Store(&c.Controller)
 	}
 	beego.Info("pushProd", string(out))
+}
+
+// refreshHugo : Exécution du moteur Hugo pour mettre à jour le site de développement
+func refreshHugo(c *HugoController) {
+	beego.Info("refreshHugo")
+	hugo = nil
 }
