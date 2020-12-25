@@ -201,6 +201,12 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 	tableid := c.Ctx.Input.Param(":table")
 	table := app.Tables[tableid]
 
+	fromList := false
+	id := c.Ctx.Input.Param(":id")
+	if id == "" {
+		fromList = true
+	}
+
 	elements := make(types.Elements, len(viewOrFormElements))
 
 	for key, element := range viewOrFormElements {
@@ -235,13 +241,14 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			}
 		}
 		if element.Params.URL != "" {
-			element.Params.URL = macro(c, element.Params.URL, record)
+			if !fromList {
+				element.Params.URL = macro(c, element.Params.URL, record)
+			}
 		}
 		if element.Params.Path != "" {
-			element.Params.Path = macro(c, element.Params.Path, record)
-		}
-		if element.Params.Path != "" {
-			element.Params.Path = macro(c, element.Params.Path, record)
+			if !fromList {
+				element.Params.Path = macro(c, element.Params.Path, record)
+			}
 		}
 		if element.Dataset != nil {
 			for key, value := range element.Dataset {
