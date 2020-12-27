@@ -867,7 +867,7 @@ func containsString(sl []string, in string) bool {
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *HugoController) {
 	beego.Info("publishDev", c.Data["HugoDev"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string))
+	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string), "--environment", "DEV")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)
