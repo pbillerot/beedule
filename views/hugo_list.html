@@ -90,8 +90,9 @@
 
         {{ $color = "green"}}
         {{ if $record.Inline}}{{$color = "green"}}{{end}}
-        {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
+        {{ if $record.Planified}}{{$color = "blue"}}{{end}}
         {{ if $record.Expired}}{{$color = "warning"}}{{end}}
+        {{ if eq $record.Draft "1"}}{{$color = "error"}}{{end}}
 
         {{ if lt $record.Level $currentLevel}}
       </div> <!-- /content-->
@@ -168,11 +169,11 @@
                 <span class="ui purple text">[{{$record.Title}}]</span>
                 {{$arr := CrudSplit $record.Tags ","}}
                 {{range $i, $item := $arr}}
-                <div class="ui green label"><b>#{{$item}}</b></div>
+                <div class="ui grey basic label"><b>#{{$item}}</b></div>
                 {{end}}
                 {{$arr := CrudSplit $record.Categories ","}}
                 {{range $i, $item := $arr}}
-                <div class="ui tag brown label"><b>{{$item}}</b></div>
+                <div class="ui tag grey basic label"><b>{{$item}}</b></div>
                 {{end}}
                 {{if (eq $record.Draft "1") }}
                 <span class="ui red text" title="brouillon"><i class="firstdraft icon"></i></span>

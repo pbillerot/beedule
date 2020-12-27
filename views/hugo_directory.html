@@ -62,10 +62,21 @@
             <div class="ui action input">
               <button class="ui red button hugo-jquery-action" data-confirm="true"
                 data-url="/bee/hugo/mv/{{$appid}}/{{$keyid}}">
-                <i class="dolly icon"></i>
+                <i class="file icon"></i>
                 Renommer le répertoire en...
               </button>
               <input class="hugo-action" type="text" name="new_name" id="new_name" placeholder="{{$record.Path}}"
+                value="{{$record.Path}}" onkeydown="blockCR(event)">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui action input">
+              <button class="ui red button hugo-jquery-action" data-confirm="true"
+                data-url="/bee/hugo/new/{{$appid}}/{{$keyid}}">
+                <i class="dolly outline icon"></i>
+                Créer un nouveau document...
+              </button>
+              <input class="hugo-action" type="text" name="new_file" id="new_file" placeholder="{{$record.Path}}"
                 value="{{$record.Path}}" onkeydown="blockCR(event)">
             </div>
           </div>

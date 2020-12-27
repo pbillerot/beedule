@@ -36,6 +36,7 @@ func init() {
 	beego.Router("/bee/hugo/directory/:app/:key", &controllers.HugoController{}, "get:HugoDirectory")
 	beego.Router("/bee/hugo/file/:app/:key", &controllers.HugoController{}, "get:HugoFile")
 	beego.Router("/bee/hugo/mv/:app/:key", &controllers.HugoController{}, "post:HugoFileMv")
+	beego.Router("/bee/hugo/new/:app/:key", &controllers.HugoController{}, "post:HugoFileNew")
 	beego.Router("/bee/hugo/cp/:app/:key", &controllers.HugoController{}, "post:HugoFileCp")
 	beego.Router("/bee/hugo/rm/:app/:key", &controllers.HugoController{}, "post:HugoFileRm")
 	beego.Router("/bee/hugo/mkdir/:app/:key", &controllers.HugoController{}, "post:HugoFileMkdir")
