@@ -28,8 +28,7 @@ copy --from=goalpine /src/beedule /src/beedule
 RUN apk add --update curl git hugo nano tree
 
 # Ajout du user 1000
-RUN adduser billerot
-USER billerot
+USER 1000:1000
 # Pont d'entrée
 WORKDIR /src/beedule
 ENTRYPOINT ./beedule

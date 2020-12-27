@@ -583,14 +583,19 @@ func (c *HugoController) HugoFileMkdir() {
 
 // HugoAction Action
 func (c *HugoController) HugoAction() {
+	appid := c.Ctx.Input.Param(":app")
 	action := c.Ctx.Input.Param(":action")
 
 	switch action {
+	case "refreshHugo":
+		refreshHugo(c)
 	case "publishDev":
 		publishDev(c)
 	case "pushProd":
 		pushProd(c)
 	}
+	// Demande d'actualisation de l'arborescence
+	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
 	// Fermeture de la fenêtre
 	c.TplName = "bee_close.html"
 	return
