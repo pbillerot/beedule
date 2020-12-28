@@ -94,7 +94,7 @@ func (c *LoginController) Get() {
 func (c *LoginController) Post() {
 	c.Data["username"] = c.GetString("username")
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	user, err := GetUser(c.GetString("username"))
 	if err != nil {

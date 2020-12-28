@@ -126,7 +126,7 @@ func (c *CrudAddController) Post() {
 		return
 	}
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	table := app.Tables[tableid]
 	view := app.Tables[tableid].Views[viewid]

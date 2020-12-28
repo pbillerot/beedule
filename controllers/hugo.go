@@ -110,7 +110,7 @@ func (c *HugoController) HugoImage() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -127,9 +127,10 @@ func (c *HugoController) HugoImage() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			ReturnFrom(c.Controller)
+			return
 		}
 
-		err = ioutil.WriteFile(record.PathAbsolu, unbased, 0777)
+		err = ioutil.WriteFile(record.PathAbsolu, unbased, 0644)
 		// outputFile, err := os.Create(record.PathAbsolu)
 		if err != nil {
 			msg := fmt.Sprintf("HugoImage %s : %s", record.PathAbsolu, err)
@@ -137,6 +138,7 @@ func (c *HugoController) HugoImage() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			ReturnFrom(c.Controller)
+			return
 		}
 		// defer outputFile.Close()
 
@@ -169,7 +171,7 @@ func (c *HugoController) HugoPdf() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -197,7 +199,7 @@ func (c *HugoController) HugoDocument() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -206,9 +208,18 @@ func (c *HugoController) HugoDocument() {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
 		if record.PathReal != "" {
-			err = ioutil.WriteFile(record.PathReal, []byte(document), 0777)
+			err = ioutil.WriteFile(record.PathReal, []byte(document), 0644)
+			if err != nil {
+				msg := fmt.Sprintf("HugoDocument %s : %s", record.PathReal, err)
+				beego.Error(msg)
+				flash.Error(msg)
+				flash.Store(&c.Controller)
+				ReturnFrom(c.Controller)
+				return
+			}
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
 		} else {
-			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0777)
+			err = ioutil.WriteFile(record.PathAbsolu, []byte(document), 0644)
 		}
 		if err != nil {
 			msg := fmt.Sprintf("HugoDocument %s : %s", record.PathAbsolu, err)
@@ -216,6 +227,7 @@ func (c *HugoController) HugoDocument() {
 			flash.Error(msg)
 			flash.Store(&c.Controller)
 			ReturnFrom(c.Controller)
+			return
 		}
 
 		// Vidage de Hugo puis reconstruction
@@ -254,7 +266,7 @@ func (c *HugoController) HugoFile() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -282,7 +294,7 @@ func (c *HugoController) HugoDirectory() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -310,28 +322,60 @@ func (c *HugoController) HugoFileMv() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	newFile := c.GetString("new_name")
-	err = os.Rename(record.PathAbsolu, hugoRacine+"/"+newFile)
-	if err != nil {
-		msg := fmt.Sprintf("HugoImage %s : %s", newFile, err)
-		beego.Error(msg)
-		flash.Error(msg)
-		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+	if record.IsDir == 1 {
+		err = os.Rename(record.PathAbsolu, hugoRacine+newFile)
+		if err != nil {
+			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+			return
+		}
+	} else {
+		// Copie du fichier sur la cible
+		data, err := ioutil.ReadFile(record.PathAbsolu)
+		if err != nil {
+			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+			return
+		}
+		err = ioutil.WriteFile(hugoRacine+newFile, data, 0644)
+		if err != nil {
+			msg := fmt.Sprintf("HugoFileCp %s : %s", newFile, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+			return
+		}
+		// Suppression du fichier source
+		err = os.RemoveAll(record.PathAbsolu)
+		if err != nil {
+			msg := fmt.Sprintf("HugoFileMv %s : %s", record.Path, err)
+			beego.Error(msg)
+			flash.Error(msg)
+			flash.Store(&c.Controller)
+			ReturnFrom(c.Controller)
+			return
+		}
 	}
 
 	// Le cookie ancrage est déplacé sur le répertoire root
 	c.Ctx.Output.Cookie("hugo-"+appid, record.Root)
-
 	// Demande d'actualisation de l'arborescence
 	c.Ctx.Output.Cookie("hugo-refresh-"+appid, "true")
-
 	// Vidage de Hugo pour reconstruction
 	hugo = nil
 
@@ -356,7 +400,7 @@ func (c *HugoController) HugoFileCp() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -369,14 +413,16 @@ func (c *HugoController) HugoFileCp() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
-	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0777)
+	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("HugoFileCp %s : %s", newFile, err)
 		beego.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Vidage de Hugo pour reconstruction
@@ -404,7 +450,7 @@ func (c *HugoController) HugoFileNew() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -417,14 +463,16 @@ func (c *HugoController) HugoFileNew() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
-	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0777)
+	err = ioutil.WriteFile(hugoRacine+"/"+newFile, data, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("HugoFileNew %s : %s", newFile, err)
 		beego.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Vidage de Hugo pour reconstruction
@@ -452,7 +500,7 @@ func (c *HugoController) HugoFileRm() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -464,6 +512,7 @@ func (c *HugoController) HugoFileRm() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Le cookie ancrage est déplacé sur le répertoire root
@@ -494,7 +543,7 @@ func (c *HugoController) HugoFileUpload() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
@@ -506,6 +555,7 @@ func (c *HugoController) HugoFileUpload() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -514,15 +564,17 @@ func (c *HugoController) HugoFileUpload() {
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 	filepath := fmt.Sprintf("%s/%s", record.PathAbsolu, handler.Filename)
-	err = ioutil.WriteFile(filepath, fileBytes, 0777)
+	err = ioutil.WriteFile(filepath, fileBytes, 0644)
 	if err != nil {
 		msg := fmt.Sprintf("HugoDirectory %s : %s", handler.Filename, err)
 		beego.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Le cookie ancrage est déplacé sur le répertoire root
@@ -553,19 +605,20 @@ func (c *HugoController) HugoFileMkdir() {
 	}
 	flash := beego.ReadFromRequest(&c.Controller)
 	if record.Key == "" {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		beego.Error("Fichier non trouvé", c.GetSession("Username").(string), appid)
 		flash.Error("Fichier non trouvé : %s", keyid)
 		flash.Store(&c.Controller)
 	}
 
 	newDir := c.GetString("new_dir")
-	err = os.MkdirAll(hugoRacine+"/"+newDir, 0777)
+	err = os.MkdirAll(hugoRacine+"/"+newDir, 0744)
 	if err != nil {
 		msg := fmt.Sprintf("HugoFileMkdir %s : %s", newDir, err)
 		beego.Error(msg)
 		flash.Error(msg)
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)
+		return
 	}
 
 	// Vidage de Hugo pour reconstruction
@@ -867,7 +920,8 @@ func containsString(sl []string, in string) bool {
 // publishDev : Exécution du moteur Hugo pour mettre à jour le site de développement
 func publishDev(c *HugoController) {
 	beego.Info("publishDev", c.Data["HugoDev"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string), "--environment", "DEV")
+	cmd := exec.Command("hugo", "-d", c.Data["HugoDev"].(string),
+		"--environment", "DEV", "--cleanDestinationDir")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	flash := beego.ReadFromRequest(&c.Controller)
@@ -876,23 +930,6 @@ func publishDev(c *HugoController) {
 		flash.Error("ERREURG Génération des pages : %v", err)
 		flash.Store(&c.Controller)
 	}
-	// user, err := user.Current()
-	// if err != nil {
-	// 	beego.Error("runHugoProd", err)
-	// 	flash.Error("ERREUR: %v", err)
-	// 	flash.Store(&c.Controller)
-	// }
-	// if user.Username == "root" {
-	// 	beego.Info("publishDev", "chmod 777")
-	// 	cmd = exec.Command("chmod", "-R", "777", c.Data["HugoDev"].(string))
-	// 	out, err = cmd.CombinedOutput()
-	// 	if err != nil {
-	// 		beego.Error("publishDev", err)
-	// 		flash.Error("ERREUR: chmod : %v", err)
-	// 		flash.Store(&c.Controller)
-	// 	}
-	// }
-
 	beego.Info("publishDev", string(out))
 }
 
@@ -900,7 +937,9 @@ func publishDev(c *HugoController) {
 func pushProd(c *HugoController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 	beego.Info("pushProd", c.Data["HugoProd"].(string))
-	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string))
+
+	// Publication Hugo
+	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string), "--cleanDestinationDir")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -908,25 +947,20 @@ func pushProd(c *HugoController) {
 		flash.Error("ERREUR: Mise en production des pages : %v", err)
 		flash.Store(&c.Controller)
 	}
-
-	// user, err := user.Current()
-	// if err != nil {
-	// 	beego.Error("runHugoProd", err)
-	// 	flash.Error("ERREUR: %v", err)
-	// 	flash.Store(&c.Controller)
-	// }
-	// if user.Username == "root" {
-	// 	beego.Info("pushProd", "chmod 777")
-	// 	cmd = exec.Command("chmod", "-R", "777", c.Data["HugoProd"].(string))
-	// 	out, err = cmd.CombinedOutput()
-	// 	if err != nil {
-	// 		beego.Error("runHugoProd", err)
-	// 		flash.Error("ERREUR: Mise en production des pages : %v", err)
-	// 		flash.Store(&c.Controller)
-	// 	}
-	// }
-
 	beego.Info("pushProd", string(out))
+
+	if err == nil {
+		// Git push
+		cmd := exec.Command("sh", "-c", "./project/git-push.sh")
+		cmd.Dir = c.Data["HugoDir"].(string)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			beego.Error("pushProd git push", err)
+			flash.Error("ERREUR: pushProd git push : %v", err)
+			flash.Store(&c.Controller)
+		}
+		beego.Info("pushProd", string(out))
+	}
 }
 
 // refreshHugo : Exécution du moteur Hugo pour mettre à jour le site de développement

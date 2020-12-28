@@ -131,7 +131,7 @@ func (c *CrudEditController) Post() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl tableid et viewid
 	if val, ok := app.Tables[tableid]; ok {

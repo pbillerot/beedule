@@ -26,7 +26,7 @@ func (c *CrudActionViewController) Post() {
 	viewid := c.Ctx.Input.Param(":view")
 	actionid := c.Ctx.Input.Param(":action")
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
@@ -110,7 +110,7 @@ func (c *CrudActionFormController) Post() {
 	id := c.Ctx.Input.Param(":id")
 	actionid := c.Ctx.Input.Param(":action")
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
@@ -211,7 +211,7 @@ func (c *CrudActionElementController) Post() {
 	id := c.Ctx.Input.Param(":id")
 	actionid := c.Ctx.Input.Param(":action") // l'id de l'élément
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {

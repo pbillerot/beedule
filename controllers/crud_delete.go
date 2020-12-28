@@ -22,7 +22,7 @@ func (c *CrudDeleteController) Post() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
-	flash := beego.NewFlash()
+	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
