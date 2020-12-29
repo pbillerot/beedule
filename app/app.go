@@ -53,6 +53,7 @@ var Applications = map[string]types.Application{
 		Path:   "/fb",
 		Target: "_blank",
 	},
+
 	// "gitea": {
 	// 	Title:  "Gitea",
 	// 	Image:  "/bee/static/img/gitea.svg",
