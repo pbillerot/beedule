@@ -938,29 +938,16 @@ func pushProd(c *HugoController) {
 	flash := beego.ReadFromRequest(&c.Controller)
 	beego.Info("pushProd", c.Data["HugoProd"].(string))
 
-	// Publication Hugo
-	cmd := exec.Command("hugo", "-d", c.Data["HugoProd"].(string), "--cleanDestinationDir")
+	// Hugo Git push
+	cmd := exec.Command("sh", "-c", "./project/git-push.sh")
 	cmd.Dir = c.Data["HugoDir"].(string)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		beego.Error("runHugoProd", err)
-		flash.Error("ERREUR: Mise en production des pages : %v", err)
+		beego.Error("pushProd", err)
+		flash.Error("ERREUR: pushProd : %v", err)
 		flash.Store(&c.Controller)
 	}
 	beego.Info("pushProd", string(out))
-
-	if err == nil {
-		// Git push
-		cmd := exec.Command("sh", "-c", "./project/git-push.sh")
-		cmd.Dir = c.Data["HugoDir"].(string)
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			beego.Error("pushProd git push", err)
-			flash.Error("ERREUR: pushProd git push : %v", err)
-			flash.Store(&c.Controller)
-		}
-		beego.Info("pushProd", string(out))
-	}
 }
 
 // refreshHugo : Exécution du moteur Hugo pour mettre à jour le site de développement
