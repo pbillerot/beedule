@@ -48,9 +48,15 @@ var Applications = map[string]types.Application{
 		},
 	},
 	"filebrowser": {
-		Title:  "Gestionnaire de fichiers",
+		Title:  "VolShare",
 		Image:  "/bee/static/img/filebrowser.svg",
 		Path:   "/fb",
+		Target: "_blank",
+	},
+	"intrafoire": {
+		Title:  "Intranet",
+		Image:  "/bee/static/img/filebrowser.svg",
+		Path:   "/intrafoire",
 		Target: "_blank",
 	},
 

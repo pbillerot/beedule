@@ -69,6 +69,10 @@ services:
     restart: unless-stopped
     ports:
       - "7602:80"
+    volumes:
+      - /volshare:/srv
+      - /volshare/filebrowser/database.db:/database.db
+      - ./filebrowser.json:/.filebrowser.json    
     # command:
     #   - 'filebrowser config set --auth.method=proxy --auth.header=Remote-User'
       # - 'filebrowser'
@@ -76,11 +80,16 @@ services:
       # - 'set'
       # - '--auth.method=proxy'
       # - '--auth.header=Remote-User'
-
+  intrafoire:
+    image: filebrowser/filebrowser:latest
+    container_name: intrafoire
+    restart: unless-stopped
+    ports:
+      - "7604:81"
     volumes:
-      - /volshare:/srv
-      # - /mnt/sandisk/nas/data/filebrowser/database.db:/database.db
-      - ./filebrowser.json:/.filebrowser.json    
+      - /volshare/intrafoire:/srv
+      - /volshare/filebrowser/intrafoire.db:/database.db
+      - ./intrafoire.json:/.filebrowser.json    
 
 
   haddock:

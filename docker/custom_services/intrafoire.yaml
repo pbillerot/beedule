@@ -1,0 +1,13 @@
+http:
+  routers:
+    intrafoire:
+      entryPoints: 
+      - websecure
+      rule: "Host(`pbillerot.freeboxos.fr`) && PathPrefix(`/intrafoire`)"
+      service: intrafoire
+
+  services:
+    intrafoire:
+      loadBalancer:
+        servers:
+        - url: "http://172.17.0.1:7604/"
