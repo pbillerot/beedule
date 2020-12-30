@@ -63,3 +63,8 @@ http:
       stripPrefix:
         prefixes:
           - "/gitea"
+
+    strip-intrafoire:
+      stripPrefix:
+        prefixes:
+          - "/intrafoire"

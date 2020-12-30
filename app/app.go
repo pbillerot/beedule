@@ -4,6 +4,9 @@ import (
 	"github.com/pbillerot/beedule/types"
 )
 
+// BeeConfig de bee.yaml
+var BeeConfig types.BeeConfig
+
 // Applications présentées sur le portail
 var Applications = map[string]types.Application{
 	"pendule": {
@@ -54,8 +57,8 @@ var Applications = map[string]types.Application{
 		Target: "_blank",
 	},
 	"intrafoire": {
-		Title:  "Intranet",
-		Image:  "/bee/static/img/filebrowser.svg",
+		Title:  "Intrafoire",
+		Image:  "/bee/static/img/drive.png",
 		Path:   "/intrafoire",
 		Target: "_blank",
 	},
