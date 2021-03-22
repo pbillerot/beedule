@@ -4,9 +4,6 @@ import (
 	"github.com/pbillerot/beedule/types"
 )
 
-// BeeConfig de bee.yaml
-var BeeConfig types.BeeConfig
-
 // Applications présentées sur le portail
 var Applications = map[string]types.Application{
 	"pendule": {
@@ -49,49 +46,6 @@ var Applications = map[string]types.Application{
 			{Tableid: "ptf", Viewid: "vntop"},
 			{Tableid: "quotes", Viewid: "vlast"},
 		},
-	},
-	"filebrowser": {
-		Title:  "VolShare",
-		Image:  "/bee/static/img/filebrowser.svg",
-		Path:   "/fb",
-		Target: "_blank",
-	},
-	"intrafoire": {
-		Title:  "Intrafoire",
-		Image:  "/bee/static/img/drive.png",
-		Path:   "/intrafoire",
-		Target: "_blank",
-	},
-
-	// "gitea": {
-	// 	Title:  "Gitea",
-	// 	Image:  "/bee/static/img/gitea.svg",
-	// 	Path:   "/gitea",
-	// 	Target: "_blank",
-	// },
-	// "navidrome": {
-	// 	Title:  "Serveur de streaming de musique",
-	// 	Image:  "/bee/static/img/navidrome.png",
-	// 	Path:   "/nv",
-	// 	Target: "_blank",
-	// },
-	"foired": {
-		Title:  "Foirexpo Qualification",
-		Image:  "/bee/static/img/public.png",
-		Path:   "/foired",
-		Target: "_blank",
-	},
-	"foirep": {
-		Title:  "Portail Foirexpo",
-		Image:  "/bee/static/img/foirexpo.svg",
-		Path:   "/foirep",
-		Target: "_blank",
-	},
-	"edexpo": {
-		Title: "Administration du site FOIREXPO",
-		Group: "admin",
-		Image: "/bee/static/img/edf.svg",
-		Path:  "/bee/hugo/list/edexpo",
 	},
 	"chart": {
 		Title: "CHART.JS",

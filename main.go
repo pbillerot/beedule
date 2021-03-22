@@ -1,9 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
 	"strconv"
-	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -15,22 +13,9 @@ import (
 	"github.com/pbillerot/beedule/controllers"
 	_ "github.com/pbillerot/beedule/routers"
 	"github.com/pbillerot/beedule/types"
-	"gopkg.in/yaml.v2"
 )
 
 func init() {
-
-	// Chargement du fichier de configuration (même répertoire que le main)
-	filename := "./bee.yaml"
-	buf, err := ioutil.ReadFile(filename)
-	if err != nil {
-		beego.Error(err)
-	}
-	err = yaml.Unmarshal(buf, &app.BeeConfig)
-	if err != nil {
-		beego.Error(err)
-	}
-	beego.Info("BeeConfig", app.BeeConfig)
 
 	// Enregistrement des drivers des base de données
 	// l'alias : Tables[alias]string
@@ -41,8 +26,7 @@ func init() {
 
 	// boucle sur les applications pour charger les connecteurs aux base de données
 	// et les répertoires statiques du serveur
-	// for appid := range app.Applications {
-	for _, appid := range app.BeeConfig.Applications {
+	for appid := range app.Applications {
 		section, err := beego.AppConfig.GetSection(appid)
 		if err != nil {
 			beego.Error("GetSection", appid, err)
@@ -56,8 +40,7 @@ func init() {
 		}
 	}
 	ctx := make(map[string]string)
-	// for appid := range app.Applications {
-	for _, appid := range app.BeeConfig.Applications {
+	for appid := range app.Applications {
 		section, err := beego.AppConfig.GetSection(appid)
 		if err != nil {
 			beego.Error("GetSection", appid, err)
@@ -94,14 +77,6 @@ func init() {
 		new(controllers.Orders),
 	)
 
-	// Purge des applications non utilisées (en mémoire)
-	strBeeConfig := strings.Join(app.BeeConfig.Applications, ",")
-	for appid := range app.Applications {
-		if !strings.Contains(strBeeConfig, appid) {
-			delete(app.Applications, appid)
-			beego.Info("Delete not used", appid)
-		}
-	}
 	// Chargement des Parameters dans app.Params (préfixé par __)
 	o := orm.NewOrm()
 	o.Using(app.Parameters.AliasDB)
