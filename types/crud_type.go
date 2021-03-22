@@ -5,11 +5,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// BeeConfig dans bee.yaml
-type BeeConfig struct {
-	Applications []string
-}
-
 // Portail du serveur Beedule
 type Portail struct {
 	Title        string
