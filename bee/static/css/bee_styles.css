@@ -20,7 +20,7 @@ main {
 .ui.cards>.crud-card-view {
     width: 360px;
 }
-.ui.cards>.crud-card-view.crud-card-view2 {
+.ui.cards>.crud-card-view2 {
     width: 100%;
 }
 .crud-cell-nowrap {

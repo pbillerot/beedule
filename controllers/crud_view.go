@@ -111,7 +111,7 @@ func (c *CrudViewController) Get() {
 		flash.Store(&c.Controller)
 	}
 	// Calcul des éléments
-	elements = computeElements(c.Controller, false, elements, records[0])
+	elements = computeElements(c.Controller, true, elements, records[0])
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)

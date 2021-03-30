@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -39,6 +40,7 @@ func init() {
 	beego.AddFuncMap("HugoIncrement", HugoIncrement)
 	beego.AddFuncMap("HugoDecrement", HugoDecrement)
 	beego.AddFuncMap("BeeReplace", BeeReplace)
+	beego.AddFuncMap("CrudComputeDataset", CrudComputeDataset)
 }
 
 // BeeReplace as
@@ -316,4 +318,37 @@ func CrudClassSQL(element types.Element, record orm.Params, session types.Sessio
 	}
 	// }
 	return
+}
+
+// CrudComputeDataset retourne le dataset valorisé
+func CrudComputeDataset(dataset types.Dataset, record orm.Params, session types.Session, aliasDB string) types.Dataset {
+	out := make(types.Dataset, len(dataset))
+	for key, value := range dataset {
+		sql := CrudMacro(value, record, session)
+		recs, err := models.CrudSQL(sql, aliasDB)
+		if err != nil {
+			beego.Error(err)
+		}
+		val := ""
+		bstart := true
+		for _, cols := range recs {
+			// tri des keys
+			keys := make([]string, 0, len(cols))
+			for k := range cols {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				if bstart {
+					bstart = false
+				} else {
+					val += ","
+				}
+				val += cols[k].(string)
+
+			}
+		}
+		out[key] = val
+	}
+	return out
 }

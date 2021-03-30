@@ -14,6 +14,32 @@ var Orders = types.Table{
 }
 
 var ordersViews = types.Views{
+	"vgraph": {
+		Title:     "Achats en graphique",
+		Type:      "image",
+		IconName:  "shopping cart",
+		FormEdit:  "feditbuy",
+		FormView:  "fviewbuy",
+		Deletable: false,
+		Hide:      false,
+		Where:     "orders_order = 'buy'",
+		ClassSQL:  "select case when {orders_cost_price} + {orders_cost_price} * {__optimum} < {orders_quote} then 'positive' when {orders_cost_price} < {orders_quote} then 'blue' else 'negative' end || ' crud-card-view2'",
+		PreUpdateSQL: []string{
+			"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",
+			"update orders set orders_gain = orders_quote * orders_quantity - orders_buy * orders_quantity - orders_buy * orders_quantity * {__cost} - orders_quote * orders_quantity * {__cost}",
+			"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
+			"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
+		},
+		Elements: types.Elements{
+			"orders_id":         {Order: 1, Hide: true},
+			"orders_ptf_id":     {Order: 10, Hide: true},
+			"orders_order":      {Order: 20, Hide: true},
+			"orders_cost_price": {Order: 30, Hide: true},
+			"orders_optimum":    {Order: 40, Hide: true},
+			"orders_quote":      {Order: 40, Hide: true},
+			"_chart_quotes":     {Order: 100},
+		},
+	},
 	"vachat": {
 		Title:     "Achat",
 		IconName:  "shopping cart",

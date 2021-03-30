@@ -250,35 +250,6 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 				element.Params.Path = macro(c, element.Params.Path, record)
 			}
 		}
-		if element.Dataset != nil {
-			for key, value := range element.Dataset {
-				sql := macro(c, value, record)
-				recs, err := models.CrudSQL(sql, table.AliasDB)
-				if err != nil {
-					beego.Error(err)
-				}
-				val := ""
-				bstart := true
-				for _, cols := range recs {
-					// tri des keys
-					keys := make([]string, 0, len(cols))
-					for k := range cols {
-						keys = append(keys, k)
-					}
-					sort.Strings(keys)
-					for _, k := range keys {
-						if bstart {
-							bstart = false
-						} else {
-							val += ","
-						}
-						val += cols[k].(string)
-
-					}
-				}
-				element.Dataset[key] = val
-			}
-		}
 
 		if computeValue {
 			val := ""
@@ -315,12 +286,71 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 					val = "0"
 				}
 			case "number":
+				if element.Dataset != nil {
+					for key, value := range element.Dataset {
+						sql := macro(c, value, record)
+						recs, err := models.CrudSQL(sql, table.AliasDB)
+						if err != nil {
+							beego.Error(err)
+						}
+						val := ""
+						bstart := true
+						for _, cols := range recs {
+							// tri des keys
+							keys := make([]string, 0, len(cols))
+							for k := range cols {
+								keys = append(keys, k)
+							}
+							sort.Strings(keys)
+							for _, k := range keys {
+								if bstart {
+									bstart = false
+								} else {
+									val += ","
+								}
+								val += cols[k].(string)
+
+							}
+						}
+						element.Dataset[key] = val
+					}
+				}
+
 				if val == "" {
 					val = "0"
 				}
 			case "percent":
 				if val == "" {
 					val = "0"
+				}
+			}
+			if element.Dataset != nil {
+				for key, value := range element.Dataset {
+					sql := macro(c, value, record)
+					recs, err := models.CrudSQL(sql, table.AliasDB)
+					if err != nil {
+						beego.Error(err)
+					}
+					val := ""
+					bstart := true
+					for _, cols := range recs {
+						// tri des keys
+						keys := make([]string, 0, len(cols))
+						for k := range cols {
+							keys = append(keys, k)
+						}
+						sort.Strings(keys)
+						for _, k := range keys {
+							if bstart {
+								bstart = false
+							} else {
+								val += ","
+							}
+							val += cols[k].(string)
+
+						}
+					}
+					element.Dataset[key] = val
 				}
 			}
 			// Update record avec valeur calculée

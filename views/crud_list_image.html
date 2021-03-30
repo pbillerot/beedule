@@ -1,5 +1,6 @@
 <!-- vusers.html -->
 {{$session := .Session}}
+{{$aliasDB := .AliasDB}}
 {{$appid := .AppId}}
 {{$portail := .Portail}}
 {{$app := .Application}}
@@ -135,13 +136,14 @@
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$path := CrudMacro $element.Params.Path $record $session}}
         <div id="{{CrudIndexAnchor $record $tablekey}}" {{if $view.FormView}}
-          class="link raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable crud-jquery-url"
+          class="link raised card crud-card-view {{CrudMacroSQL $view.ClassSQL $record $session}} crud-card-searchable crud-jquery-url"
           data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
           class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable" {{end}}>
           {{if $element.Dataset}}
+          {{ $dataset := CrudComputeDataset $element.Dataset $record $session $aliasDB}}
           <a class="crud-popup-chart">
-          <canvas class="ui link {{$element.Dataset.ClassJquery}}" style="background-color: white" 
-          {{ range $key, $value := $element.Dataset }} data-{{$key}}="{{$value}}"{{end}}>
+          <canvas class="ui link {{$dataset.ClassJquery}}" style="background-color: white" 
+          {{ range $key, $value := $dataset }} data-{{$key}}="{{$value}}"{{end}}>
           </canvas>
           </a>
           {{else}}
