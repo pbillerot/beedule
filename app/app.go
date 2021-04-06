@@ -38,9 +38,9 @@ var Applications = map[string]types.Application{
 		Group: "picsou",
 		Image: "/bee/static/img/picsou.jpg",
 		AppViews: []types.AppView{
-			{Tableid: "orders", Viewid: "vgraph"},
 			{Tableid: "orders", Viewid: "vachat"},
 			{Tableid: "orders", Viewid: "vvente"},
+			{Tableid: "orders", Viewid: "vgraph"},
 			{Tableid: "ptf", Viewid: "vall"},
 			{Tableid: "ptf", Viewid: "vdiapo"},
 			{Tableid: "ptf", Viewid: "vtop"},

@@ -67,6 +67,8 @@ var ordersViews = types.Views{
 				"orders_rem",
 			},
 			Extra: []string{
+				"ptf_quote",
+				"ptf_gain",
 				"orders_gain",
 				"orders_gainp",
 			},
@@ -80,7 +82,10 @@ var ordersViews = types.Views{
 			"orders_optimum":    {Order: 100, HideOnMobile: true},
 			"orders_quote":      {Order: 110, HideOnMobile: true},
 			"orders_gain":       {Order: 120},
-			"orders_rem":        {Order: 140, HideOnMobile: true},
+			"orders_gainp":      {Order: 130},
+			"ptf_quote":         {Order: 140},
+			"ptf_gain":          {Order: 150},
+			"orders_rem":        {Order: 160, HideOnMobile: true},
 		},
 	},
 	"vvente": {
@@ -258,6 +263,25 @@ var ordersForms = types.Forms{
 }
 
 var ordersElements = types.Elements{
+	"ptf_quote": {
+		Type:       "amount",
+		LabelLong:  "Quote",
+		LabelShort: "Quote",
+		Jointure: types.Jointure{
+			Join:   "left outer join ptf on ptf_id = orders_ptf_id",
+			Column: "ptf.ptf_quote",
+		},
+	},
+	"ptf_gain": {
+		Type:       "percent",
+		LabelLong:  "Gain du jour",
+		LabelShort: "Gain du jour",
+		Jointure: types.Jointure{
+			// Join:   "left outer join ptf on ptf_id = orders_ptf_id",
+			Column: "ptf.ptf_gain",
+		},
+		ClassSQL: "select case when {ptf_gain} > 0 then 'green' when {ptf_gain} < 0 then 'red' end",
+	},
 	"_refresh_buy": {
 		Type:      "action",
 		LabelLong: "Mettre à jour avec le cours du jour",
