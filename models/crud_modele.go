@@ -8,8 +8,8 @@ import (
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/types"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 var err error
@@ -82,8 +82,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 		orderby = " ORDER BY " + sorter.id + " " + sorter.direcion
 	}
 
-	o := orm.NewOrm()
-	o.Using(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	var maps []orm.Params
 	sql := "SELECT " + skey +
 		" FROM " + tableid +
@@ -119,8 +118,7 @@ func CrudRead(filter string, tableid string, id string, elements types.Elements)
 	}
 	skey := strings.Join(keys, ", ")
 
-	o := orm.NewOrm()
-	o.Using(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	var maps []orm.Params
 	sql := "SELECT " + skey +
 		" FROM " + tableid +
@@ -129,8 +127,7 @@ func CrudRead(filter string, tableid string, id string, elements types.Elements)
 	if filter != "" {
 		sql += " AND " + filter
 	}
-	num, err := o.Raw(sql, id).
-		Values(&maps)
+	num, err := o.Raw(sql, id).Values(&maps)
 	if err != nil {
 		beego.Error(err)
 	} else if num == 0 {
@@ -171,8 +168,7 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 	sql += " WHERE " + app.Tables[tableid].Key + " = ?"
 	args = append(args, id)
 
-	o := orm.NewOrm()
-	o.Using(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
 		beego.Error(app.Tables[tableid].AliasDB, sql)
@@ -207,8 +203,7 @@ func CrudInsert(tableid string, elements types.Elements) error {
 	}
 	sql := "INSERT INTO " + tableid + " (" + sqlcol + ") VALUES (" + sqlval + ")"
 
-	o := orm.NewOrm()
-	o.Using(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
 		beego.Error(app.Tables[tableid].AliasDB, sql)
@@ -220,8 +215,7 @@ func CrudInsert(tableid string, elements types.Elements) error {
 // CrudDelete as
 func CrudDelete(tableid string, id string) error {
 
-	o := orm.NewOrm()
-	o.Using(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	_, err := o.Raw("DELETE FROM "+tableid+
 		" WHERE "+app.Tables[tableid].Key+" = ?", id).Exec()
 	if err != nil {
@@ -232,8 +226,7 @@ func CrudDelete(tableid string, id string) error {
 
 // CrudSQL as
 func CrudSQL(sql string, aliasDB string) ([]orm.Params, error) {
-	o := orm.NewOrm()
-	o.Using(aliasDB)
+	o := orm.NewOrmUsingDB(aliasDB)
 	var maps []orm.Params
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
@@ -245,9 +238,7 @@ func CrudSQL(sql string, aliasDB string) ([]orm.Params, error) {
 
 // CrudExec as
 func CrudExec(sql string, aliasDB string) error {
-
-	o := orm.NewOrm()
-	o.Using(aliasDB)
+	o := orm.NewOrmUsingDB(aliasDB)
 	_, err := o.Raw(sql).Exec()
 	if err != nil {
 		beego.Error(aliasDB, sql)

@@ -3,8 +3,8 @@ package main
 import (
 	"strconv"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pbillerot/beedule/app"
@@ -72,14 +72,12 @@ func init() {
 	orm.RegisterModel(new(types.Parameters),
 		new(batch.Chain),
 		new(batch.Job),
-		new(batch.Hugodoc),
 		new(controllers.Quotes),
 		new(controllers.Orders),
 	)
 
 	// Chargement des Parameters dans app.Params (préfixé par __)
-	o := orm.NewOrm()
-	o.Using(app.Parameters.AliasDB)
+	o := orm.NewOrmUsingDB(app.Parameters.AliasDB)
 	var parameters []types.Parameters
 	num, err := o.QueryTable("parameters").All(&parameters)
 	if err != nil {

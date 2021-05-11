@@ -8,7 +8,7 @@ import (
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
 
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
 )
 
 // CrudViewController as

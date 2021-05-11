@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/pbillerot/beedule/app"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -105,13 +105,15 @@ func (c *LoginController) Post() {
 		return
 	}
 	// Comparaison mot de passe
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(c.GetString("password")))
-	if err != nil {
-		flash.Error("Compte ou mot de passe erroné")
-		flash.Store(&c.Controller)
-		setContext(c.Controller, "users")
-		c.TplName = "crud_login.html"
-		return
+	if user.Password != "" {
+		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(c.GetString("password")))
+		if err != nil {
+			flash.Error("Compte ou mot de passe erroné")
+			flash.Store(&c.Controller)
+			setContext(c.Controller, "users")
+			c.TplName = "crud_login.html"
+			return
+		}
 	}
 	// C'est OK enregistrement du compte dans la session
 	c.SetSession("LoggedIn", true)
@@ -156,8 +158,7 @@ func init() {
 
 // GetUser fournit le user
 func GetUser(username string) (User, error) {
-	o := orm.NewOrm()
-	o.Using(app.Tables["users"].AliasDB)
+	o := orm.NewOrmUsingDB(app.Tables["users"].AliasDB)
 	user := User{Username: username}
 	err := o.Read(&user, "Username")
 

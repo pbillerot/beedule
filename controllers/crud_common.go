@@ -14,8 +14,8 @@ import (
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/imdario/mergo"
 )
 

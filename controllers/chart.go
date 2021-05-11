@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/types"
 )
@@ -122,8 +122,7 @@ func (c *ChartController) Prepare() {
 // Demo of ChartController
 func (c *ChartController) Demo() {
 
-	o := orm.NewOrm()
-	o.Using("picsou")
+	o := orm.NewOrmUsingDB("picsou")
 	var records []Quotes
 	num, err := o.QueryTable("quotes").Filter("ID", "ACA.PA").All(&records)
 	if err == orm.ErrNoRows {

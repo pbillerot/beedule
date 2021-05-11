@@ -11,7 +11,7 @@ sudo tar -C /usr/local -xzf go1.15.4.linux-amd64.tar.gz
 ## Ajout de modules 
 
 ### BeeGo
-- go get -u github.com/astaxie/beego
+- go get -u github.com/beego/beego
 - go get -u github.com/beego/bee
 
 ### markdown

@@ -32,8 +32,8 @@ import (
 	"time"
 
 	"github.com/MichaelS11/go-scheduler"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 )
@@ -81,16 +81,14 @@ func (u *Job) TableName() string {
 }
 
 func updateChain(chain *Chain) {
-	o := orm.NewOrm()
-	o.Using(app.Chains.AliasDB)
+	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	_, err := o.Update(chain, "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
 		beego.Error("batch", chain.Label, err)
 	}
 }
 func updateJob(job *Job) {
-	o := orm.NewOrm()
-	o.Using(app.Jobs.AliasDB)
+	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	_, err := o.Update(job, "result", "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
 		beego.Error("batch", job.Label, err)
@@ -100,9 +98,7 @@ func updateJob(job *Job) {
 // StartBatch démarrage des chaîne batch
 func StartBatch() {
 	// Connexion bd
-	o := orm.NewOrm()
-	o.Using(app.Chains.AliasDB)
-
+	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	var chains []Chain
 	num, err := o.QueryTable("chains").Filter("active", "1").All(&chains)
 	if err != nil {
@@ -143,8 +139,7 @@ func StopBatch() {
 func startChain(dataInterface interface{}) {
 	chain := dataInterface.(Chain)
 	beego.Info("batch", chain.Label, "Start")
-	o := orm.NewOrm()
-	o.Using(app.Jobs.AliasDB)
+	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 
 	t1 := time.Now()
 	chain.HeureDebut = t1.Format("2006-01-02 15:04:05")
@@ -241,8 +236,7 @@ func runSQL(job *Job, chain *Chain) (err error) {
 		aliasDB = match[1]
 	}
 
-	o := orm.NewOrm()
-	o.Using(aliasDB)
+	o := orm.NewOrmUsingDB(aliasDB)
 
 	// Suppression ligne connect ..;
 	re = regexp.MustCompile(`connect .*;`)
@@ -263,8 +257,7 @@ func runSQL(job *Job, chain *Chain) (err error) {
 
 // TestJob Test unitaire d'un job
 func TestJob(idjob int) {
-	o := orm.NewOrm()
-	o.Using(app.Jobs.AliasDB)
+	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	job := Job{ID: idjob}
 	err := o.Read(&job)
 	if err != nil {
@@ -324,8 +317,6 @@ func RunPlugin(command string) (string, error) {
 				err = errors.New(er.Error())
 			}
 		}
-	} else if strings.Contains(command, "hugoDirectoryToSQL") {
-		err = hugoDirectoryToSQL(command)
 	} else if strings.Contains(command, "contentSQLToFile") {
 		err = contentSQLToFile(command)
 	} else if strings.Contains(command, "deleteFile") {

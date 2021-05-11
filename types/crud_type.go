@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
 	"golang.org/x/crypto/bcrypt"
 )
 

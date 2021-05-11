@@ -6,7 +6,7 @@ import (
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
 )
 
 // CrudDeleteController as
