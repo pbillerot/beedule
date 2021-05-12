@@ -3,8 +3,6 @@ package test
 import (
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
-	"runtime"
 	"testing"
 
 	_ "github.com/pbillerot/beedule/routers"
@@ -14,9 +12,9 @@ import (
 )
 
 func init() {
-	_, file, _, _ := runtime.Caller(0)
-	apppath, _ := filepath.Abs(filepath.Dir(filepath.Join(file, ".."+string(filepath.Separator))))
-	beego.TestBeegoInit(apppath)
+	// _, file, _, _ := runtime.Caller(0)
+	// apppath, _ := filepath.Abs(filepath.Dir(filepath.Join(file, ".."+string(filepath.Separator))))
+	// beego.TestBeegoInit(apppath)
 }
 
 // TestBeego is a sample to run an endpoint test
