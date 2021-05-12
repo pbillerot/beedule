@@ -2,9 +2,10 @@ module github.com/pbillerot/beedule
 
 go 1.15
 
+require github.com/beego/beego/v2 v2.0.1
+
 require (
 	github.com/MichaelS11/go-scheduler v0.1.0
-	github.com/beego/beego/v2 v2.0.1
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20210503212227-fb464eba2686 // indirect
