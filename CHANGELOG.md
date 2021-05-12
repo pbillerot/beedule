@@ -6,6 +6,10 @@ Historique des modifications
 - suppression gestion répertoire Hugo
 - voir si dictionnaire possible dans yaml
 
+1.7.3 du 12 mai 2021
+----------------------
+- `changed` go mod initand tidy
+
 1.7.2 du 12 mai 2021
 ----------------------
 - `changed` logs v2 - dataset non redéfini
