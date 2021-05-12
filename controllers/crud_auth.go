@@ -5,6 +5,7 @@ import (
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -124,7 +125,7 @@ func (c *LoginController) Post() {
 	} else {
 		c.SetSession("IsAdmin", false)
 	}
-	beego.Info(fmt.Sprintf("CONNEXION de [%s] groupe:[%s]", user.Username, user.Groupes))
+	logs.Info(fmt.Sprintf("CONNEXION de [%s] groupe:[%s]", user.Username, user.Groupes))
 	c.Ctx.Redirect(302, "/bee")
 }
 

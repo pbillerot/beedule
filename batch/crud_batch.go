@@ -32,8 +32,8 @@ import (
 	"time"
 
 	"github.com/MichaelS11/go-scheduler"
-	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 )
@@ -84,14 +84,14 @@ func updateChain(chain *Chain) {
 	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	_, err := o.Update(chain, "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
-		beego.Error("batch", chain.Label, err)
+		logs.Error("batch", chain.Label, err)
 	}
 }
 func updateJob(job *Job) {
 	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 	_, err := o.Update(job, "result", "etat", "heuredebut", "heurefin", "dureemn")
 	if err != nil {
-		beego.Error("batch", job.Label, err)
+		logs.Error("batch", job.Label, err)
 	}
 }
 
@@ -102,11 +102,11 @@ func StartBatch() {
 	var chains []Chain
 	num, err := o.QueryTable("chains").Filter("active", "1").All(&chains)
 	if err != nil {
-		beego.Error("batch", app.Chains.AliasDB, err)
+		logs.Error("batch", app.Chains.AliasDB, err)
 		return
 	}
 	if num == 0 {
-		beego.Error("batch", "aucune chaîne trouvée")
+		logs.Error("batch", "aucune chaîne trouvée")
 		return
 	}
 
@@ -116,10 +116,10 @@ func StartBatch() {
 		if chain.Planif != "" {
 			err = BatchScheduler.Make(chain.Label, chain.Planif, startChain, chain)
 			if err != nil {
-				beego.Error("batch", chain.Label, chain.Planif, err)
+				logs.Error("batch", chain.Label, chain.Planif, err)
 				return
 			}
-			beego.Info("batch", "planification", chain.Label, chain.Planif)
+			logs.Info("batch", "planification", chain.Label, chain.Planif)
 			BatchScheduler.Start(chain.Label)
 		}
 	}
@@ -129,16 +129,16 @@ func StartBatch() {
 // StopBatch as
 func StopBatch() {
 	if BatchScheduler != nil && len(BatchScheduler.Jobs()) > 0 {
-		beego.Info("batch", "stopping...", BatchScheduler.Jobs())
+		logs.Info("batch", "stopping...", BatchScheduler.Jobs())
 		BatchScheduler.StopAllWait(time.Second)
 		time.Sleep(time.Duration(2) * time.Second)
-		beego.Info("batch", "stopped", BatchScheduler.Jobs())
+		logs.Info("batch", "stopped", BatchScheduler.Jobs())
 	}
 }
 
 func startChain(dataInterface interface{}) {
 	chain := dataInterface.(Chain)
-	beego.Info("batch", chain.Label, "Start")
+	logs.Info("batch", chain.Label, "Start")
 	o := orm.NewOrmUsingDB(app.Chains.AliasDB)
 
 	t1 := time.Now()
@@ -152,11 +152,11 @@ func startChain(dataInterface interface{}) {
 	var jobs []Job
 	num, err := o.QueryTable("jobs").Filter("chain_id", chain.ID).OrderBy("sequence").All(&jobs)
 	if err != nil {
-		beego.Error("batch", app.Chains.AliasDB, err)
+		logs.Error("batch", app.Chains.AliasDB, err)
 		return
 	}
 	if num == 0 {
-		beego.Info("batch", chain.Label, "aucun job trouvé")
+		logs.Info("batch", chain.Label, "aucun job trouvé")
 		return
 	}
 
@@ -188,11 +188,11 @@ func startChain(dataInterface interface{}) {
 		chain.Etat = "OK"
 	}
 	updateChain(&chain)
-	beego.Info("batch", chain.Label, "End")
+	logs.Info("batch", chain.Label, "End")
 }
 
 func startJob(job *Job, chain *Chain) {
-	beego.Info("batch", chain.Label, job.Label, "Start")
+	logs.Info("batch", chain.Label, job.Label, "Start")
 
 	var err error
 
@@ -221,7 +221,7 @@ func startJob(job *Job, chain *Chain) {
 		job.Etat = "OK"
 	}
 	updateJob(job)
-	beego.Info("batch", chain.Label, job.Label, "End")
+	logs.Info("batch", chain.Label, job.Label, "End")
 
 	return
 }
@@ -244,12 +244,12 @@ func runSQL(job *Job, chain *Chain) (err error) {
 	// Exécution de la requête
 	res, err := o.Raw(sql).Exec()
 	if err != nil {
-		beego.Error("batch", chain.Label, job.Label, err)
+		logs.Error("batch", chain.Label, job.Label, err)
 		job.Result = err.Error()
 	} else {
 		num, _ := res.RowsAffected()
 		res := fmt.Sprintf("%d rows affected", num)
-		beego.Info("batch", chain.Label, job.Label, res)
+		logs.Info("batch", chain.Label, job.Label, res)
 		job.Result = res
 	}
 	return
@@ -261,13 +261,13 @@ func TestJob(idjob int) {
 	job := Job{ID: idjob}
 	err := o.Read(&job)
 	if err != nil {
-		beego.Error("batch", "read job", idjob, err)
+		logs.Error("batch", "read job", idjob, err)
 		return
 	}
 	chain := Chain{ID: job.ChainID}
 	err = o.Read(&chain)
 	if err != nil {
-		beego.Error("batch", "read chain", job.ChainID, err)
+		logs.Error("batch", "read chain", job.ChainID, err)
 		return
 	}
 	startJob(&job, &chain)
@@ -277,7 +277,7 @@ func TestJob(idjob int) {
 func RunPlugin(command string) (string, error) {
 	var out string
 	var err error
-	beego.Info(command)
+	logs.Info(command)
 	if strings.Contains(command, "StartStopPendule()") {
 		// Pas de paramètre
 		// Le pendule est-il démarré ?
@@ -355,7 +355,7 @@ func contentSQLToFile(command string) (err error) {
 	sql := fmt.Sprintf("select %s from %s where %s = '%s'", columnName, tableName, keyID, keyValue)
 	recs, err := models.CrudSQL(sql, aliasDB)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	var content string
 	for _, rec := range recs {

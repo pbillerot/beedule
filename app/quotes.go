@@ -163,7 +163,7 @@ var quotesElements = types.Elements{
 		Type:       "image",
 		LabelLong:  "Cotation sur 1 mois",
 		LabelShort: "Cotation",
-		Dataset: types.Dataset{
+		Dataset: map[string]string{
 			"ClassJquery": "select 'bee-chart-quotes'",
 			"Title":       "select 'Cours de {id}'",
 			"Quotes":      "select open as matin, close as soir from quotes where id = '{id}' order by date",

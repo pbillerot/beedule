@@ -322,7 +322,7 @@ var ptfElements = types.Elements{
 		Type:       "image",
 		LabelLong:  "Cotation sur 1 mois",
 		LabelShort: "Cotation",
-		Dataset: types.Dataset{
+		Dataset: map[string]string{
 			"ClassJquery": "select 'bee-chart-quotes'",
 			"Title":       "select 'Cours de {ptf_id}'",
 			"Quotes":      "select open as matin, close as soir from quotes where id = '{ptf_id}' order by date",

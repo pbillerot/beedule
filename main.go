@@ -5,6 +5,7 @@ import (
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pbillerot/beedule/app"
@@ -29,32 +30,32 @@ func init() {
 	for appid := range app.Applications {
 		section, err := beego.AppConfig.GetSection(appid)
 		if err != nil {
-			beego.Error("GetSection", appid, err)
+			logs.Error("GetSection", appid, err)
 		}
 		if datasource, ok := section["datasource"]; ok {
 			drivertype, _ := strconv.Atoi(section["drivertype"])
 			drivername := section["drivername"]
 			orm.RegisterDriver(drivername, orm.DriverType(drivertype))
 			orm.RegisterDataBase(appid, drivername, datasource)
-			beego.Info("Enregistrement connecteur", appid, drivertype, drivername, datasource)
+			logs.Info("Enregistrement connecteur", appid, drivertype, drivername, datasource)
 		}
 	}
 	ctx := make(map[string]string)
 	for appid := range app.Applications {
 		section, err := beego.AppConfig.GetSection(appid)
 		if err != nil {
-			beego.Error("GetSection", appid, err)
+			logs.Error("GetSection", appid, err)
 		}
 		if datadir, ok := section["datadir"]; ok {
 			if dataurl, ok := section["dataurl"]; ok {
 				beego.SetStaticPath(dataurl, datadir)
-				beego.Info("Enregistrement url static", dataurl, datadir)
+				logs.Info("Enregistrement url static", dataurl, datadir)
 				ctx["dataurl"] = dataurl
 				ctx["datadir"] = datadir
 			} else {
 				dataurl = "/bee/data/" + appid
 				beego.SetStaticPath(dataurl, datadir)
-				beego.Info("Enregistrement url static", dataurl, datadir)
+				logs.Info("Enregistrement url static", dataurl, datadir)
 				ctx["dataurl"] = dataurl
 				ctx["datadir"] = datadir
 			}
@@ -81,7 +82,7 @@ func init() {
 	var parameters []types.Parameters
 	num, err := o.QueryTable("parameters").All(&parameters)
 	if err != nil {
-		beego.Error("parameters", err)
+		logs.Error("parameters", err)
 		return
 	}
 	if num > 0 {
@@ -89,7 +90,7 @@ func init() {
 			app.Params["__"+parameter.ID] = parameter.Value
 		}
 	}
-	beego.Info("Params", app.Params)
+	logs.Info("Params", app.Params)
 	// if param, ok := app.Params["__batch_etat"]; ok {
 	// 	if param == "1" {
 	// 		batch.StartBatch()

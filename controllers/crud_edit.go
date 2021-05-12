@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/batch"
 	"github.com/pbillerot/beedule/models"
@@ -33,7 +34,7 @@ func (c *CrudEditController) Get() {
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
@@ -41,17 +42,17 @@ func (c *CrudEditController) Get() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				beego.Error("Form not found", c.GetSession("Username").(string), formid)
+				logs.Error("Form not found", c.GetSession("Username").(string), formid)
 				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
-			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			logs.Error("View not found", c.GetSession("Username").(string), viewid)
 			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
-		beego.Error("table not found", c.GetSession("Username").(string), tableid)
+		logs.Error("table not found", c.GetSession("Username").(string), tableid)
 		ReturnFrom(c.Controller)
 		return
 	}
@@ -67,7 +68,7 @@ func (c *CrudEditController) Get() {
 		form.Group = app.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, form.Group, id) {
-		beego.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
+		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
 		ReturnFrom(c.Controller)

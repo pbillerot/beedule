@@ -8,6 +8,7 @@ import (
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/types"
 )
@@ -53,12 +54,12 @@ func (c *ChartController) Prepare() {
 	// CTRL APPLICATION
 	flash := beego.ReadFromRequest(&c.Controller)
 	if _, ok := app.Applications[appid]; !ok {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		c.Ctx.Redirect(302, "/bee/login")
 		return
 	}
 	if !IsInGroup(c.Controller, app.Applications[appid].Group, "") {
-		beego.Error("Accès non autorisé", c.GetSession("Username").(string), appid)
+		logs.Error("Accès non autorisé", c.GetSession("Username").(string), appid)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/bee/login")
@@ -126,17 +127,17 @@ func (c *ChartController) Demo() {
 	var records []Quotes
 	num, err := o.QueryTable("quotes").Filter("ID", "ACA.PA").All(&records)
 	if err == orm.ErrNoRows {
-		beego.Error("No result found.")
+		logs.Error("No result found.")
 	} else if err == orm.ErrMissPK {
-		beego.Error("No primary key found.")
+		logs.Error("No primary key found.")
 	} else {
-		beego.Info(num, "records founds")
+		logs.Info(num, "records founds")
 	}
 
 	var orders Orders
 	err = o.QueryTable("orders").Filter("orders_ptf_id", "ACA.PA").One(&orders)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	// Remplissage du contexte pour le template
 	// Dataset as

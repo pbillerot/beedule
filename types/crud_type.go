@@ -1,7 +1,7 @@
 package types
 
 import (
-	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -49,45 +49,45 @@ type Elements map[string]Element
 type Element struct {
 	Actions       Actions // bouton d'actions - utilise Params
 	Args          Args
-	Class         string   // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL      string   // SQL pour alimenter Class error warning info green blue
-	ColAlign      string   //
-	ColWith       int      // TODO largeur de la colonne
-	Dataset       Dataset  // Dataset pour un Chartjs
-	Default       string   // Valeur par défaut (macro possible)
-	DefaultSQL    string   // Ordre SQL qui retournera la colonne pour alimenter Default
-	Error         string   // contiendra "error" si le champ est en erreur de saisie
-	Format        string   // "%3.2f %%" "%3.2f €" date datetime time
-	ComputeSQL    string   // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
-	Grid          string   // Class pour donner la largeur du champ dans le formulaire "four wide field" 16 colonnes
-	Group         string   // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
-	Height        int      // TODO hauteur de la colonne
-	Help          string   // TODO aide sur la rubrique
-	HelpSQL       string   // TODO aide sql sur la rubrique
-	Hide          bool     // élémnt caché dans la vue ou formulaire
-	HideSQL       string   // TODO cachée si condition
-	HideOnMobile  bool     // La colonne dans une vue sera cachée sur Mobile
-	Items         []Item   // slice d'item
-	ItemsSQL      string   // Ordre SQL qui retournera la colonne pour alimenter Items
-	Jointure      Jointure // élément issu d'une jointure SQL (lecture seule)
-	LabelLong     string   // Label dans un formulaire
-	LabelShort    string   // Label dans une vue
-	Max           int      // TODO valeur max
-	MaxLength     int      // TODO longeur max
-	Min           int      // TODO valeur min
-	MinLength     int      // TODO longueur min
-	Order         int      // Ordre de l'élément dans une vue ou formulaire
-	Params        Params   // paramètres optionnels
-	Pattern       string   // Pattern de l'input HTML
-	PlaceHolder   string   // Label dans le champ en saisie si vide
-	PostAction    Actions  // actions sql ou plugin à exécuter après la mise à jour
-	Protected     bool     // Est en misa à jour mais protégé en saisie
-	ReadOnly      bool     // Lecteur seule
-	Refresh       bool     // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
-	Required      bool     // obligatoire
-	SortDirection string   // "", ascending, ou descending pour demander un tri à la requête sql
-	SQLout        string   // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string   // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
+	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
+	ClassSQL      string            // SQL pour alimenter Class error warning info green blue
+	ColAlign      string            //
+	ColWith       int               // TODO largeur de la colonne
+	Dataset       map[string]string // Dataset pour un Chartjs
+	Default       string            // Valeur par défaut (macro possible)
+	DefaultSQL    string            // Ordre SQL qui retournera la colonne pour alimenter Default
+	Error         string            // contiendra "error" si le champ est en erreur de saisie
+	Format        string            // "%3.2f %%" "%3.2f €" date datetime time
+	ComputeSQL    string            // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	Grid          string            // Class pour donner la largeur du champ dans le formulaire "four wide field" 16 colonnes
+	Group         string            // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
+	Height        int               // TODO hauteur de la colonne
+	Help          string            // TODO aide sur la rubrique
+	HelpSQL       string            // TODO aide sql sur la rubrique
+	Hide          bool              // élémnt caché dans la vue ou formulaire
+	HideSQL       string            // TODO cachée si condition
+	HideOnMobile  bool              // La colonne dans une vue sera cachée sur Mobile
+	Items         []Item            // slice d'item
+	ItemsSQL      string            // Ordre SQL qui retournera la colonne pour alimenter Items
+	Jointure      Jointure          // élément issu d'une jointure SQL (lecture seule)
+	LabelLong     string            // Label dans un formulaire
+	LabelShort    string            // Label dans une vue
+	Max           int               // TODO valeur max
+	MaxLength     int               // TODO longeur max
+	Min           int               // TODO valeur min
+	MinLength     int               // TODO longueur min
+	Order         int               // Ordre de l'élément dans une vue ou formulaire
+	Params        Params            // paramètres optionnels
+	Pattern       string            // Pattern de l'input HTML
+	PlaceHolder   string            // Label dans le champ en saisie si vide
+	PostAction    Actions           // actions sql ou plugin à exécuter après la mise à jour
+	Protected     bool              // Est en misa à jour mais protégé en saisie
+	ReadOnly      bool              // Lecteur seule
+	Refresh       bool              // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
+	Required      bool              // obligatoire
+	SortDirection string            // "", ascending, ou descending pour demander un tri à la requête sql
+	SQLout        string            // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
+	Type          string            // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
 }
 
 // Table Table de l'application
@@ -234,7 +234,7 @@ type Session struct {
 func (element *Element) HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	return string(bytes)
 }
@@ -250,5 +250,3 @@ type Parameters struct {
 func (u *Parameters) TableName() string {
 	return "parameters"
 }
-
-type Dataset map[string]string

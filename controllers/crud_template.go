@@ -11,6 +11,7 @@ import (
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
@@ -164,7 +165,7 @@ func CrudFormat(in string, value string) (out string) {
 			recs, err = models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
 		}
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			for _, rec := range recs {
 				for _, val := range rec {
@@ -229,7 +230,7 @@ func CrudMacro(in string, record orm.Params, session types.Session) (out string)
 						out = strings.ReplaceAll(out, "{"+key+"}", p)
 					} else {
 						labelError := fmt.Sprintf("Rubrique [%s] non trouvée", key)
-						beego.Error(labelError)
+						logs.Error(labelError)
 						err = errors.New(labelError)
 						break
 					}
@@ -243,13 +244,13 @@ func CrudMacro(in string, record orm.Params, session types.Session) (out string)
 					}
 				} else {
 					labelError := fmt.Sprintf("Rubrique [%s] non trouvée", key)
-					beego.Error(labelError)
+					logs.Error(labelError)
 					err = errors.New(labelError)
 					break
 				}
 			} else {
 				labelError := fmt.Sprintf("Syntaxe incorrecte [%s]", out)
-				beego.Error(labelError)
+				logs.Error(labelError)
 				err = errors.New(labelError)
 				break
 			}
@@ -266,7 +267,7 @@ func CrudMacroSQL(in string, record orm.Params, session types.Session) (out stri
 	if sql != "" {
 		recs, err := models.CrudSQL(sql, "default")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, rec := range recs {
 			for _, val := range rec {
@@ -285,7 +286,7 @@ func CrudSQL(sql string, aliasDB string) (out string) {
 	if sql != "" {
 		recs, err := models.CrudSQL(sql, aliasDB)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, rec := range recs {
 			for _, val := range rec {
@@ -306,7 +307,7 @@ func CrudClassSQL(element types.Element, record orm.Params, session types.Sessio
 	if sql != "" {
 		recs, err := models.CrudSQL(sql, "default")
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		for _, rec := range recs {
 			for _, val := range rec {
@@ -321,13 +322,13 @@ func CrudClassSQL(element types.Element, record orm.Params, session types.Sessio
 }
 
 // CrudComputeDataset retourne le dataset valorisé
-func CrudComputeDataset(dataset types.Dataset, record orm.Params, session types.Session, aliasDB string) types.Dataset {
-	out := make(types.Dataset, len(dataset))
+func CrudComputeDataset(dataset map[string]string, record orm.Params, session types.Session, aliasDB string) map[string]string {
+	out := make(map[string]string, len(dataset))
 	for key, value := range dataset {
 		sql := CrudMacro(value, record, session)
 		recs, err := models.CrudSQL(sql, aliasDB)
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		}
 		val := ""
 		bstart := true

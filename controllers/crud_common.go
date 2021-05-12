@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
@@ -96,7 +97,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 	for key, element := range viewOrFormElements {
 		err := mergo.Merge(&element, app.Tables[tableid].Elements[key])
 		if err != nil {
-			beego.Error(err)
+			logs.Error(err)
 		} else {
 			if element.Order == 0 {
 				element.Order = order
@@ -223,7 +224,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 			sql := macro(c, element.ItemsSQL, record)
 			recs, err := models.CrudSQL(sql, table.AliasDB)
 			if err != nil {
-				beego.Error(err)
+				logs.Error(err)
 			}
 			var list []types.Item
 			for _, rec := range recs {
@@ -291,7 +292,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 						sql := macro(c, value, record)
 						recs, err := models.CrudSQL(sql, table.AliasDB)
 						if err != nil {
-							beego.Error(err)
+							logs.Error(err)
 						}
 						val := ""
 						bstart := true
@@ -329,7 +330,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 					sql := macro(c, value, record)
 					recs, err := models.CrudSQL(sql, table.AliasDB)
 					if err != nil {
-						beego.Error(err)
+						logs.Error(err)
 					}
 					val := ""
 					bstart := true
@@ -555,7 +556,7 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 					out = strings.ReplaceAll(out, "{"+key+"}", val.(string))
 					// beego.Debug("apres", out)
 				} else {
-					beego.Error("Colonne NULL", key)
+					logs.Error("Colonne NULL", key)
 					out = ""
 				}
 			} else {
@@ -563,7 +564,7 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 					// Le champ est un paramètre global
 					out = strings.ReplaceAll(out, "{"+key+"}", app.Params[key])
 				} else {
-					beego.Error("Rubrique non trouvée", key)
+					logs.Error("Rubrique non trouvée", key)
 					out = ""
 				}
 			}
@@ -580,14 +581,14 @@ func macroSQL(c beego.Controller, in string, record orm.Params) (out string) {
 	if sql != "" {
 		ress, err := models.CrudSQL(sql, "default")
 		if err != nil {
-			beego.Error(err, in)
+			logs.Error(err, in)
 		}
 		for _, record := range ress {
 			for _, val := range record {
 				if reflect.ValueOf(val).IsValid() {
 					out = val.(string)
 				} else {
-					beego.Error(sql)
+					logs.Error(sql)
 					out = ""
 				}
 			}
@@ -602,14 +603,14 @@ func requeteSQL(c beego.Controller, in string, record orm.Params, aliasDB string
 	sql := macro(c, in, record)
 	ress, err := models.CrudSQL(sql, aliasDB)
 	if err != nil {
-		beego.Error(err, in)
+		logs.Error(err, in)
 	}
 	for _, record := range ress {
 		for _, val := range record {
 			if reflect.ValueOf(val).IsValid() {
 				out = val.(string)
 			} else {
-				beego.Error(in)
+				logs.Error(in)
 				out = ""
 			}
 		}

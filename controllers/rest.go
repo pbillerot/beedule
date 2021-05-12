@@ -2,6 +2,7 @@ package controllers
 
 import (
 	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 // RestController implements global settings for all other routers.
@@ -30,7 +31,7 @@ func (c *RestController) RestIsc() {
 // RestPutLog Log
 func (c *RestController) RestPutLog() {
 	url := c.Ctx.Input.Param(":url")
-	beego.Info(url)
+	logs.Info(url)
 	c.Data["json"] = map[string]interface{}{"url": url}
 	c.ServeJSON()
 }

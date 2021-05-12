@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/types"
 
-	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 )
 
@@ -92,7 +92,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 		limit
 	_, err = o.Raw(sql).Values(&maps)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	return maps, err
 }
@@ -129,9 +129,9 @@ func CrudRead(filter string, tableid string, id string, elements types.Elements)
 	}
 	num, err := o.Raw(sql, id).Values(&maps)
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	} else if num == 0 {
-		beego.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(app.Tables[tableid].AliasDB, sql)
 		err = errors.New("Enregistrement non trouvé")
 	}
 	return maps, err
@@ -171,8 +171,8 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
-		beego.Error(app.Tables[tableid].AliasDB, sql)
-		beego.Error(err)
+		logs.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(err)
 	}
 	return err
 }
@@ -206,8 +206,8 @@ func CrudInsert(tableid string, elements types.Elements) error {
 	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
-		beego.Error(app.Tables[tableid].AliasDB, sql)
-		beego.Error(err)
+		logs.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(err)
 	}
 	return err
 }
@@ -219,7 +219,7 @@ func CrudDelete(tableid string, id string) error {
 	_, err := o.Raw("DELETE FROM "+tableid+
 		" WHERE "+app.Tables[tableid].Key+" = ?", id).Exec()
 	if err != nil {
-		beego.Error(err)
+		logs.Error(err)
 	}
 	return err
 }
@@ -230,8 +230,8 @@ func CrudSQL(sql string, aliasDB string) ([]orm.Params, error) {
 	var maps []orm.Params
 	_, err := o.Raw(sql).Values(&maps)
 	if err != nil {
-		beego.Error(aliasDB, sql)
-		beego.Error(err)
+		logs.Error(aliasDB, sql)
+		logs.Error(err)
 	}
 	return maps, err
 }
@@ -241,8 +241,8 @@ func CrudExec(sql string, aliasDB string) error {
 	o := orm.NewOrmUsingDB(aliasDB)
 	_, err := o.Raw(sql).Exec()
 	if err != nil {
-		beego.Error(aliasDB, sql)
-		beego.Error(err)
+		logs.Error(aliasDB, sql)
+		logs.Error(err)
 	}
 	return err
 }

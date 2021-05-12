@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/models"
 
@@ -24,7 +25,7 @@ func (c *CrudAddController) Get() {
 	flash := beego.ReadFromRequest(&c.Controller)
 	// Ctrl appid tableid viewid formid
 	if _, ok := app.Applications[appid]; !ok {
-		beego.Error("App not found", c.GetSession("Username").(string), appid)
+		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
@@ -32,17 +33,17 @@ func (c *CrudAddController) Get() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				beego.Error("Form not found", c.GetSession("Username").(string), formid)
+				logs.Error("Form not found", c.GetSession("Username").(string), formid)
 				ReturnFrom(c.Controller)
 				return
 			}
 		} else {
-			beego.Error("View not found", c.GetSession("Username").(string), viewid)
+			logs.Error("View not found", c.GetSession("Username").(string), viewid)
 			ReturnFrom(c.Controller)
 			return
 		}
 	} else {
-		beego.Error("Table not found", c.GetSession("Username").(string), tableid)
+		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
 		ReturnFrom(c.Controller)
 		return
 	}
@@ -201,7 +202,7 @@ func (c *CrudAddController) Post() {
 				flash.Store(&c.Controller)
 			}
 		} else {
-			beego.Error("Ordre sql incorrect ", postsql)
+			logs.Error("Ordre sql incorrect ", postsql)
 			flash.Error("Ordre sql incorrect ", postsql)
 			flash.Store(&c.Controller)
 			ReturnFrom(c.Controller)
