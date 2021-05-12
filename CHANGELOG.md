@@ -6,6 +6,10 @@ Historique des modifications
 - suppression gestion répertoire Hugo
 - voir si dictionnaire possible dans yaml
 
+1.7.1 du 12 mai 2021
+----------------------
+- `changed` go mod tidy
+
 1.7.0 du 11 mai 2021
 ----------------------
 - `changed` passer en beego v2
