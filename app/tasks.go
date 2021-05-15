@@ -15,7 +15,7 @@ var Tasks = types.Table{
 	Forms:      tasksForms,
 }
 
-var tasksElements = types.Elements{
+var tasksElements = map[string]types.Element{
 	"task_id": {
 		Type:       "counter",
 		Order:      1,
@@ -73,14 +73,14 @@ var tasksViews = types.Views{
 				"task_status",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"task_id":     {Order: 10, HideOnMobile: true},
 			"task_user":   {Order: 20},
 			"task_name":   {Order: 30},
 			"task_status": {Order: 40},
 			"task_note":   {Order: 50, HideOnMobile: true},
 		},
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				// on ne supprime que ses propres tâches
 				Label: "Supprimer les tâches terminées...",
@@ -96,7 +96,7 @@ var tasksViews = types.Views{
 var tasksForms = types.Forms{
 	"fadd": {
 		Title: "Fiche Compte",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"task_id":     {Order: 10},
 			"task_user":   {Order: 20, Protected: true},
 			"task_name":   {Order: 30},
@@ -106,7 +106,7 @@ var tasksForms = types.Forms{
 	},
 	"fview": {
 		Title: "Fiche Compte",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"task_id":     {Order: 10},
 			"task_name":   {Order: 30},
 			"task_status": {Order: 40},
@@ -115,7 +115,7 @@ var tasksForms = types.Forms{
 	},
 	"fedit": {
 		Title: "Fiche Compte",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"task_id":     {Order: 10},
 			"task_user":   {Order: 20, Protected: true},
 			"task_name":   {Order: 30},

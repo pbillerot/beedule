@@ -264,7 +264,7 @@ func (c *CrudActionElementController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
-	var elementsVF types.Elements
+	var elementsVF map[string]types.Element
 	elementsVF = form.Elements
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, _ := mergeElements(c.Controller, tableid, elementsVF, id)

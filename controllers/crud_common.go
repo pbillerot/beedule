@@ -76,7 +76,7 @@ func IsOwner(c beego.Controller, key string) (out bool) {
 
 // mergeElements fusionne les attributs des éléments de la table avec ceux de la vue ou formulaire
 // cols contiendra les keys ordonnés comme présentées dans le dictionnaire
-func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.Elements, id string) (types.Elements, map[int]string) {
+func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[string]types.Element, id string) (map[string]types.Element, map[int]string) {
 	table := app.Tables[tableid]
 
 	// Gestion du TRI dans la session
@@ -89,7 +89,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 		sortDirection = v.(string)
 	}
 
-	elements := make(types.Elements, len(viewOrFormElements))
+	elements := make(map[string]types.Element, len(viewOrFormElements))
 
 	cols := make(map[int]string, len(elements))
 
@@ -198,7 +198,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements types.
 
 // computeElements calcule les éléments de l'UI
 // si computeValue, valorise à 0 les champ numériques dans record
-func computeElements(c beego.Controller, computeValue bool, viewOrFormElements types.Elements, record orm.Params) types.Elements {
+func computeElements(c beego.Controller, computeValue bool, viewOrFormElements map[string]types.Element, record orm.Params) map[string]types.Element {
 	tableid := c.Ctx.Input.Param(":table")
 	table := app.Tables[tableid]
 
@@ -208,7 +208,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements t
 		fromList = true
 	}
 
-	elements := make(types.Elements, len(viewOrFormElements))
+	elements := make(map[string]types.Element, len(viewOrFormElements))
 
 	for key, element := range viewOrFormElements {
 		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL

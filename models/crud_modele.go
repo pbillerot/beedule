@@ -25,7 +25,7 @@ func IfNotEmpty(chaine string, valTrue string, valFalse string) string {
 // https://beego.me/docs/mvc/model/querybuilder.md
 
 // CrudList as
-func CrudList(tableid string, viewid string, view *types.View, elements types.Elements) ([]orm.Params, error) {
+func CrudList(tableid string, viewid string, view *types.View, elements map[string]types.Element) ([]orm.Params, error) {
 
 	// Rédaction de la requête
 	var keys []string
@@ -98,7 +98,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements types.El
 }
 
 // CrudRead as
-func CrudRead(filter string, tableid string, id string, elements types.Elements) ([]orm.Params, error) {
+func CrudRead(filter string, tableid string, id string, elements map[string]types.Element) ([]orm.Params, error) {
 
 	// Rédaction de la requête
 	var keys []string
@@ -138,7 +138,7 @@ func CrudRead(filter string, tableid string, id string, elements types.Elements)
 }
 
 // CrudUpdate avec element.SQLout
-func CrudUpdate(tableid string, id string, elements types.Elements) error {
+func CrudUpdate(tableid string, id string, elements map[string]types.Element) error {
 
 	// Remplissage de la map des valeurs
 	sql := ""
@@ -178,7 +178,7 @@ func CrudUpdate(tableid string, id string, elements types.Elements) error {
 }
 
 // CrudInsert avec element.SQLout
-func CrudInsert(tableid string, elements types.Elements) error {
+func CrudInsert(tableid string, elements map[string]types.Element) error {
 
 	// Construction de l'ordre sql
 	sqlcol := ""

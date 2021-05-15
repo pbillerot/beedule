@@ -30,7 +30,7 @@ var ordersViews = types.Views{
 			"update orders set orders_gainp = (orders_gain / (orders_buy * orders_quantity)) * 100",
 			"update orders set orders_debit = orders_buy * orders_quantity + orders_buy * orders_quantity * {__cost}",
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":         {Order: 1, Hide: true},
 			"orders_ptf_id":     {Order: 10, Hide: true},
 			"orders_order":      {Order: 20, Hide: true},
@@ -73,7 +73,7 @@ var ordersViews = types.Views{
 				"orders_gainp",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":         {Order: 1, HideOnMobile: true},
 			"orders_ptf_id":     {Order: 10},
 			"orders_time":       {Order: 30, HideOnMobile: true},
@@ -111,7 +111,7 @@ var ordersViews = types.Views{
 				"orders_sell_gainp",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":         {Order: 1, HideOnMobile: true},
 			"orders_ptf_id":     {Order: 10},
 			"orders_time":       {Order: 30, HideOnMobile: true},
@@ -129,7 +129,7 @@ var ordersViews = types.Views{
 var ordersForms = types.Forms{
 	"fviewbuy": {
 		Title: "Ordre d'achat",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			// Achat
 			"orders_id":       {Order: 1},
 			"orders_ptf_id":   {Order: 10},
@@ -164,7 +164,7 @@ var ordersForms = types.Forms{
 	},
 	"fviewsell": {
 		Title: "Ordre de vente",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			// Achat
 			"_section_achat": {
 				Order:     10,
@@ -210,7 +210,7 @@ var ordersForms = types.Forms{
 	"feditbuy": {
 		Title: "Ordre d'achat",
 		Group: "trader",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":       {Order: 1},
 			"orders_ptf_id":   {Order: 10, Required: true},
 			"orders_order":    {Order: 20, Default: "buy"},
@@ -232,7 +232,7 @@ var ordersForms = types.Forms{
 	"feditsell": {
 		Title: "Ordre de vente",
 		Group: "trader",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":         {Order: 1},
 			"orders_ptf_id":     {Order: 10},
 			"orders_order":      {Order: 20},
@@ -254,7 +254,7 @@ var ordersForms = types.Forms{
 	"frem": {
 		Title: "Remarques",
 		Group: "trader",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"orders_id":     {Order: 1},
 			"orders_ptf_id": {Order: 10},
 			"orders_rem":    {Order: 20},
@@ -262,7 +262,7 @@ var ordersForms = types.Forms{
 	},
 }
 
-var ordersElements = types.Elements{
+var ordersElements = map[string]types.Element{
 	"ptf_quote": {
 		Type:       "amount",
 		LabelLong:  "Quote",
@@ -285,7 +285,7 @@ var ordersElements = types.Elements{
 	"_refresh_buy": {
 		Type:      "action",
 		LabelLong: "Mettre à jour avec le cours du jour",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				SQL: []string{
 					"update orders set orders_quote = (select close from quotes where id = orders_ptf_id and date = (select max(date) from quotes where id = orders_ptf_id))",

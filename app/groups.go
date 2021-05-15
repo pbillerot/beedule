@@ -15,7 +15,7 @@ var Groups = types.Table{
 	Forms:      groupsForms,
 }
 
-var groupsElements = types.Elements{
+var groupsElements = map[string]types.Element{
 	"group_id": {
 		Type:       "text",
 		Order:      1,
@@ -49,7 +49,7 @@ var groupsViews = types.Views{
 			},
 			Extra: []string{},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"group_id":   {},
 			"group_note": {},
 		},
@@ -60,7 +60,7 @@ var groupsForms = types.Forms{
 	"fadd": {
 		Title: "Fiche Groupe",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"group_id":   {},
 			"group_note": {},
 		},
@@ -68,7 +68,7 @@ var groupsForms = types.Forms{
 	"fedit": {
 		Title: "Fiche Groupe",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"group_id":   {},
 			"group_note": {},
 		},

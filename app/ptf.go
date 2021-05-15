@@ -39,7 +39,7 @@ var ptfViews = types.Views{
 				"ptf_gain",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":      {},
 			"ptf_name":    {},
 			"ptf_enabled": {},
@@ -50,7 +50,7 @@ var ptfViews = types.Views{
 		},
 		// Where:   "ptf_enabled = '1' and ptf_top = '1'",
 		OrderBy: "ptf_name",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Effacer les remarques...",
 				SQL: []string{
@@ -68,7 +68,7 @@ var ptfViews = types.Views{
 		IconName: "photo video",
 		Type:     "image",
 		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
 			"ptf_top":        {Order: 25},
@@ -81,7 +81,7 @@ var ptfViews = types.Views{
 		},
 		OrderBy: "ptf_name",
 		Where:   "ptf_enabled = '1'",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Effacer les remarques...",
 				SQL: []string{
@@ -99,7 +99,7 @@ var ptfViews = types.Views{
 		IconName: "photo video",
 		Type:     "image",
 		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
 			"ptf_top":        {Order: 25},
@@ -112,7 +112,7 @@ var ptfViews = types.Views{
 		},
 		OrderBy: "ptf_name",
 		Where:   "ptf_enabled = '1' and ptf_top = '1'",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Effacer les remarques...",
 				SQL: []string{
@@ -130,7 +130,7 @@ var ptfViews = types.Views{
 		IconName: "photo video",
 		Type:     "image",
 		ClassSQL: "select case when '{ptf_note}' like '%achat%' then 'crud-gondole' else '' end",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
 			"ptf_top":        {Order: 25},
@@ -143,7 +143,7 @@ var ptfViews = types.Views{
 		},
 		OrderBy: "ptf_name",
 		Where:   "ptf_enabled = '1' and ptf_top <> '1'",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Effacer les remarques...",
 				SQL: []string{
@@ -159,7 +159,7 @@ var ptfForms = types.Forms{
 	"fview": {
 		Title: "Fiche Valeur",
 		Group: "picsou",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":         {Order: 10},
 			"ptf_name":       {Order: 20},
 			"ptf_enabled":    {Order: 30},
@@ -176,7 +176,7 @@ var ptfForms = types.Forms{
 	"fadd": {
 		Title: "Ajout d'une valeur",
 		Group: "picsou",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":   {Order: 10},
 			"ptf_name": {Order: 20},
 			"ptf_isin": {Order: 30},
@@ -185,7 +185,7 @@ var ptfForms = types.Forms{
 	"fedit": {
 		Title: "Fiche Valeur",
 		Group: "picsou",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"ptf_id":      {Order: 10},
 			"ptf_name":    {Order: 20},
 			"ptf_isin":    {Order: 30},
@@ -201,12 +201,12 @@ var ptfForms = types.Forms{
 	},
 }
 
-var ptfElements = types.Elements{
+var ptfElements = map[string]types.Element{
 	"_action_buy": {
 		Type:      "action",
 		LabelLong: "Acheter la valeur...",
 		Group:     "trader",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Acheter cette valeur",
 				URL:   "/bee/add/picsou/orders/vachat/feditbuy?orders_order=buy&orders_ptf_id={ptf_id}&orders_quote={ptf_quote}&orders_buy={ptf_quote}",

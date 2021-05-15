@@ -86,7 +86,7 @@ func (c *CrudViewController) Get() {
 
 	setContext(c.Controller, tableid)
 
-	var elementsVF types.Elements
+	var elementsVF map[string]types.Element
 	if formviewid == "" {
 		elementsVF = app.Tables[tableid].Views[viewid].Elements
 	} else {

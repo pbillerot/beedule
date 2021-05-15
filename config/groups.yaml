@@ -1,0 +1,48 @@
+
+settings:
+  alias-db: admin
+  key: group_id
+  col-display: group_id
+  icon-name: "users"
+
+elements:
+  group_id:
+    type: text
+    label-long: "Groupes"
+    label-short: "Groupes"
+    order: 10
+  group_note:
+    type: textarea
+    label-long: "Note"
+    label-short: "Note"
+    order: 20
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: true
+    group: admin
+    title: "Groupes"
+    icon-name: users
+    order-by: group_id
+    masks:
+      header:
+        - group_id
+      meta:
+      description:
+        - group_note
+      extra:
+    elements:
+      group_id:
+      group_note:
+
+forms:
+  fedit:
+    title: "Fiche Groupe"
+    groupe: admin
+    elements:
+      group_id:
+        order: 10
+      group_note:
+        order: 20

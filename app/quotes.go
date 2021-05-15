@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS "quotes" (
 	"volume"	INTEGER
 );
 */
-var quotesElements = types.Elements{
+var quotesElements = map[string]types.Element{
 	"keyid": {
 		Type:       "text",
 		LabelLong:  "Clé",
@@ -190,7 +190,7 @@ var quotesViews = types.Views{
 		Where:    "date = (select max(date) from quotes)",
 		Type:     "table",
 		ClassSQL: "select case when '{order_buy}' = 'buy' then 'violet' else '' end",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"keyid": {
 				Order: 1,
 				Hide:  true,
@@ -247,7 +247,7 @@ var quotesViews = types.Views{
 				Order: 310,
 			},
 		},
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label: "Effacer les remarques...",
 				SQL: []string{
@@ -263,7 +263,7 @@ var quotesForms = types.Forms{
 	"fview": {
 		Title: "Cotation",
 		Group: "picsou",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"keyid":   {Order: 1},
 			"name":    {Order: 10},
 			"id":      {Order: 20},

@@ -45,7 +45,7 @@ var chainsViews = types.Views{
 				"dureemn",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"chain_id":   {},
 			"label":      {},
 			"planif":     {},
@@ -57,7 +57,7 @@ var chainsViews = types.Views{
 			"heurefin":   {},
 			"dureemn":    {},
 		},
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				Label:  "Démarrer / Arrêter le pendule",
 				Plugin: "StartStopPendule()",
@@ -75,7 +75,7 @@ var chainsForms = types.Forms{
 		Title:    "Pendule Job",
 		Group:    "admin",
 		IconName: "calendar alternate outline",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"chain_id": {Order: 01},
 			"label":    {Order: 10},
 			"planif":   {Order: 20},
@@ -103,7 +103,7 @@ var chainsForms = types.Forms{
 		Title:    "Ajout d'une Chaîne",
 		Group:    "admin",
 		IconName: "calendar alternate outline",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"chain_id": {Order: 01},
 			"label":    {Order: 10},
 			"email":    {Order: 20},
@@ -115,7 +115,7 @@ var chainsForms = types.Forms{
 		Title:    "Chaîne",
 		Group:    "admin",
 		IconName: "calendar alternate outline",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"chain_id": {Order: 01},
 			"label":    {Order: 10},
 			"email":    {Order: 20},
@@ -125,7 +125,7 @@ var chainsForms = types.Forms{
 	},
 }
 
-var chainsElements = types.Elements{
+var chainsElements = map[string]types.Element{
 	"chain_id": { // n° du job
 		Type:       "counter",
 		LabelLong:  "n°",

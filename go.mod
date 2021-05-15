@@ -11,4 +11,5 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/smartystreets/goconvey v1.6.4
 	golang.org/x/crypto v0.0.0-20210506145944-38f3c27a63bf
+	gopkg.in/yaml.v2 v2.3.0
 )

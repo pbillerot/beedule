@@ -13,7 +13,7 @@ var Users = types.Table{
 	Forms:      usersForms,
 }
 
-var usersElements = types.Elements{
+var usersElements = map[string]types.Element{
 	"_pwd_change": {
 		Type:      "button",
 		LabelLong: "Changer le mot de passe...",
@@ -104,7 +104,7 @@ var usersViews = types.Views{
 				"user_groupes",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":     {Order: 10},
 			"user_email":    {Order: 20, HideOnMobile: true},
 			"user_is_admin": {Order: 30, HideOnMobile: true},
@@ -117,7 +117,7 @@ var usersForms = types.Forms{
 	"fadd": {
 		Title: "Fiche Compte",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":  {Order: 10},
 			"user_email": {Order: 20},
 		},
@@ -125,7 +125,7 @@ var usersForms = types.Forms{
 	"fview": {
 		Title: "Fiche Compte",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":     {Order: 10},
 			"user_email":    {Order: 20},
 			"_SECTION_MDP":  {Order: 30},
@@ -137,7 +137,7 @@ var usersForms = types.Forms{
 	"fprofil": {
 		Title: "Mon Profil",
 		Group: "owner",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":    {Order: 10},
 			"user_email":   {Order: 20},
 			"user_groupes": {Order: 60, Protected: true},
@@ -147,7 +147,7 @@ var usersForms = types.Forms{
 	"fpwd": {
 		Title: "Changer le mot de passe",
 		Group: "owner",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":         {Order: 10, ReadOnly: true},
 			"_new_password":     {Order: 50},
 			"_confirm_password": {Order: 60},
@@ -162,7 +162,7 @@ var usersForms = types.Forms{
 	"fmdp": {
 		Title: "Sécurité",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":     {Order: 10, ReadOnly: true},
 			"user_password": {Order: 50},
 			"user_is_admin": {Order: 60},
@@ -172,7 +172,7 @@ var usersForms = types.Forms{
 	"fedit": {
 		Title: "Fiche Compte",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"user_name":  {Order: 10},
 			"user_email": {Order: 20},
 		},

@@ -12,6 +12,7 @@ import (
 	_ "github.com/pbillerot/beedule/app"
 	"github.com/pbillerot/beedule/batch"
 	"github.com/pbillerot/beedule/controllers"
+	"github.com/pbillerot/beedule/dico"
 	_ "github.com/pbillerot/beedule/routers"
 	"github.com/pbillerot/beedule/types"
 )
@@ -91,11 +92,15 @@ func init() {
 		}
 	}
 	logs.Info("Params", app.Params)
+
 	// if param, ok := app.Params["__batch_etat"]; ok {
 	// 	if param == "1" {
 	// 		batch.StartBatch()
 	// 	}
 	// }
+
+	// Chargement du dictionnaire
+	dico.Ctx.Load()
 }
 func main() {
 	beego.Run()

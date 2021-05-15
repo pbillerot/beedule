@@ -3,12 +3,18 @@
 Historique des modifications
 
 ### À venir :
-- suppression gestion répertoire Hugo
 - voir si dictionnaire possible dans yaml
+- éditeur des fichiers de /config en ligne
+
+1.7.4 du 15 mai 2021
+----------------------
+- `changed` fin version 1
+- `changed` début déclaration dico dans fichier.yaml
 
 1.7.3 du 12 mai 2021
 ----------------------
 - `changed` go mod initand tidy
+- `changed` set runmode="production" si docker
 
 1.7.2 du 12 mai 2021
 ----------------------

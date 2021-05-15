@@ -42,13 +42,10 @@ type Views map[string]View
 // Forms map de Form
 type Forms map[string]Form
 
-// Elements map de Element
-type Elements map[string]Element
-
 // Element is ... Rubrique de l'application
 type Element struct {
-	Actions       Actions // bouton d'actions - utilise Params
-	Args          Args
+	Actions       []Action // bouton d'actions - utilise Params
+	Args          map[string]string
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL      string            // SQL pour alimenter Class error warning info green blue
 	ColAlign      string            //
@@ -80,7 +77,7 @@ type Element struct {
 	Params        Params            // paramètres optionnels
 	Pattern       string            // Pattern de l'input HTML
 	PlaceHolder   string            // Label dans le champ en saisie si vide
-	PostAction    Actions           // actions sql ou plugin à exécuter après la mise à jour
+	PostAction    []Action          // actions sql ou plugin à exécuter après la mise à jour
 	Protected     bool              // Est en misa à jour mais protégé en saisie
 	ReadOnly      bool              // Lecteur seule
 	Refresh       bool              // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
@@ -96,7 +93,7 @@ type Table struct {
 	Key        string // clé de la table
 	ColDisplay string // la colonne qui identifie l'enregistrement
 	IconName   string
-	Elements   Elements
+	Elements   map[string]Element
 	Views      Views
 	Forms      Forms
 	Variables  map[string]string
@@ -104,26 +101,26 @@ type Table struct {
 
 // View Vue d'une table
 type View struct {
-	Actions      Actions  // Action sur la vue (ordres sql)
-	ClassSQL     string   // couleur theme de la ligne
-	Deletable    bool     // Suppression fiche autorisée
-	FormAdd      string   // Formulaire d'ajout
-	FormEdit     string   // Formulaire d'édition
-	FormView     string   // Masque de visualisation d'un enregistreement
-	FooterSQL    string   // requête sur la table courante
-	Hide         bool     // Vue cachée dans le menu
-	HideOnMobile bool     // Vue cachée dur mobile
-	IconName     string   // nom de l'icone
-	Limit        int      // pour limiter le nbre de ligne dans la vue
-	Group        string   // groupe qui peut accéder à la vue
-	OrderBy      string   // Tri des données SQL
-	Where        string   // Condition SQL
-	Type         string   // type de vue : card(default),image,table
-	Title        string   // Titre de la vue
-	Elements     Elements // Eléments à récupérer de la base de données
-	Mask         MaskList // Masque html d'une ligne dans la vue
-	PreUpdateSQL []string // requêtes SQL avant l'affichage
-	Search       string   // Chaîne de recherche dans toutes les colonnes de la vue
+	Actions      []Action           // Action sur la vue (ordres sql)
+	ClassSQL     string             // couleur theme de la ligne
+	Deletable    bool               // Suppression fiche autorisée
+	FormAdd      string             // Formulaire d'ajout
+	FormEdit     string             // Formulaire d'édition
+	FormView     string             // Masque de visualisation d'un enregistreement
+	FooterSQL    string             // requête sur la table courante
+	Hide         bool               // Vue cachée dans le menu
+	HideOnMobile bool               // Vue cachée dur mobile
+	IconName     string             // nom de l'icone
+	Limit        int                // pour limiter le nbre de ligne dans la vue
+	Group        string             // groupe qui peut accéder à la vue
+	OrderBy      string             // Tri des données SQL
+	Where        string             // Condition SQL
+	Type         string             // type de vue : card(default),image,table
+	Title        string             // Titre de la vue
+	Elements     map[string]Element // Eléments à récupérer de la base de données
+	Mask         MaskList           // Masque html d'une ligne dans la vue
+	PreUpdateSQL []string           // requêtes SQL avant l'affichage
+	Search       string             // Chaîne de recherche dans toutes les colonnes de la vue
 }
 
 // MaskList Content d'une card https://fomantic-ui.com/views/card.html
@@ -136,14 +133,14 @@ type MaskList struct {
 
 // Form formulaire
 type Form struct {
-	Actions    Actions  // Action appel d'un formulaire ou exécution d'une requête SQL
-	Title      string   // Titre du formulaire
-	Group      string   // groupe qui peut accéder au formulaire
-	HideSubmit bool     // pour caher le bouton valider
-	IconName   string   // nom de l'icone
-	Elements   Elements // Eléments à récupérer de la base de données
-	CheckSQL   []string // retourne le libellé des erreurs lors du contrôle des rubriques
-	PostSQL    []string // Ordre exécutée après la validation si contrôle OK
+	Actions    []Action           // Action appel d'un formulaire ou exécution d'une requête SQL
+	Title      string             // Titre du formulaire
+	Group      string             // groupe qui peut accéder au formulaire
+	HideSubmit bool               // pour caher le bouton valider
+	IconName   string             // nom de l'icone
+	Elements   map[string]Element // Eléments à récupérer de la base de données
+	CheckSQL   []string           // retourne le libellé des erreurs lors du contrôle des rubriques
+	PostSQL    []string           // Ordre exécutée après la validation si contrôle OK
 }
 
 // DBAlias alias des connections aux bases de données
@@ -177,9 +174,6 @@ type Params struct {
 	WithImageEditor bool
 }
 
-// Actions as
-type Actions []Action
-
 // Action dans le menu d'une vue ou formulaire
 type Action struct {
 	Group       string   // Groupe autorisée à lancer l'action
@@ -199,9 +193,6 @@ type Setters struct {
 	SetSQL  string // requête pour mettre à jour la données
 	AliasDB string // Connecteur base de données
 }
-
-// Args paramètres à transmettre lors de l'appel
-type Args map[string]string
 
 // Item pour définir un combobox
 type Item struct {

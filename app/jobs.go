@@ -48,7 +48,7 @@ var jobsViews = types.Views{
 				"dureemn",
 			},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"job_id":      {},
 			"label":       {},
 			"chain_label": {},
@@ -73,7 +73,7 @@ var jobsForms = types.Forms{
 	"fview": {
 		Title: "Pendule Job",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"job_id": {Order: 01, Hide: true},
 			"_SECTION_JOB": {
 				Order:     300,
@@ -107,7 +107,7 @@ var jobsForms = types.Forms{
 				Order:     550,
 				Type:      "action",
 				LabelLong: "Démarrer ce job",
-				Actions: types.Actions{
+				Actions: []types.Action{
 					{Plugin: "StartJob({job_id})"},
 				},
 			},
@@ -132,7 +132,7 @@ var jobsForms = types.Forms{
 	"fadd": {
 		Title: "Pendule ajout d'un job",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"job_id":    {Order: 01, Hide: true},
 			"active":    {Order: 10},
 			"chain_id":  {Order: 20},
@@ -147,7 +147,7 @@ var jobsForms = types.Forms{
 		Title:    "Job",
 		Group:    "admin",
 		IconName: "cog",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"job_id":    {Order: 01, Hide: true},
 			"active":    {Order: 10},
 			"chain_id":  {Order: 20},
@@ -160,7 +160,7 @@ var jobsForms = types.Forms{
 	},
 }
 
-var jobsElements = types.Elements{
+var jobsElements = map[string]types.Element{
 	"job_id": { // n° du job
 		Type:       "counter",
 		LabelLong:  "n°",

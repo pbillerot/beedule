@@ -13,7 +13,7 @@ var Parameters = types.Table{
 	Forms:      parametersForms,
 }
 
-var parametersElements = types.Elements{
+var parametersElements = map[string]types.Element{
 	"id": {
 		Type:       "text",
 		Order:      1,
@@ -37,7 +37,7 @@ var parametersElements = types.Elements{
 		Order:      40,
 		LabelLong:  "Démarrer/Arrêter le pendule",
 		LabelShort: "Démarrer/Arrêter le pendule",
-		Actions: types.Actions{
+		Actions: []types.Action{
 			{
 				SQL: []string{
 					"update parameters set value = case when value = '1' then '0' else '1' end where id = 'batch_etat'",
@@ -71,7 +71,7 @@ var parametersViews = types.Views{
 			},
 			Extra: []string{},
 		},
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"id":    {},
 			"value": {},
 			"label": {},
@@ -83,7 +83,7 @@ var parametersForms = types.Forms{
 	"fedit": {
 		Title: "Paramètre",
 		Group: "admin",
-		Elements: types.Elements{
+		Elements: map[string]types.Element{
 			"id":     {},
 			"value":  {},
 			"label":  {},
