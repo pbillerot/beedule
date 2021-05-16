@@ -8,13 +8,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/pbillerot/beedule/app"
-	_ "github.com/pbillerot/beedule/app"
-	"github.com/pbillerot/beedule/batch"
-	"github.com/pbillerot/beedule/controllers"
 	"github.com/pbillerot/beedule/dico"
 	_ "github.com/pbillerot/beedule/routers"
-	"github.com/pbillerot/beedule/types"
 )
 
 func init() {
@@ -26,81 +21,44 @@ func init() {
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "./database/beedule.sqlite")
 
-	// boucle sur les applications pour charger les connecteurs aux base de données
-	// et les répertoires statiques du serveur
-	for appid := range app.Applications {
-		section, err := beego.AppConfig.GetSection(appid)
-		if err != nil {
-			logs.Error("GetSection", appid, err)
-		}
-		if datasource, ok := section["datasource"]; ok {
-			drivertype, _ := strconv.Atoi(section["drivertype"])
-			drivername := section["drivername"]
-			orm.RegisterDriver(drivername, orm.DriverType(drivertype))
-			orm.RegisterDataBase(appid, drivername, datasource)
-			logs.Info("Enregistrement connecteur", appid, drivertype, drivername, datasource)
-		}
-	}
-	ctx := make(map[string]string)
-	for appid := range app.Applications {
-		section, err := beego.AppConfig.GetSection(appid)
-		if err != nil {
-			logs.Error("GetSection", appid, err)
-		}
-		if datadir, ok := section["datadir"]; ok {
-			if dataurl, ok := section["dataurl"]; ok {
-				beego.SetStaticPath(dataurl, datadir)
-				logs.Info("Enregistrement url static", dataurl, datadir)
-				ctx["dataurl"] = dataurl
-				ctx["datadir"] = datadir
-			} else {
-				dataurl = "/bee/data/" + appid
-				beego.SetStaticPath(dataurl, datadir)
-				logs.Info("Enregistrement url static", dataurl, datadir)
-				ctx["dataurl"] = dataurl
-				ctx["datadir"] = datadir
-			}
-			// app.Applications[appid].Ctx = &ctx
-		}
-	}
-
 	if ok, _ := beego.AppConfig.Bool("debug"); ok {
 		orm.Debug = true
 	} else {
 		orm.Debug = false
 	}
 
-	// Enregistrement des Modèles de table gérés par le module orm
-	orm.RegisterModel(new(types.Parameters),
-		new(batch.Chain),
-		new(batch.Job),
-		new(controllers.Quotes),
-		new(controllers.Orders),
-	)
-
-	// Chargement des Parameters dans app.Params (préfixé par __)
-	o := orm.NewOrmUsingDB(app.Parameters.AliasDB)
-	var parameters []types.Parameters
-	num, err := o.QueryTable("parameters").All(&parameters)
-	if err != nil {
-		logs.Error("parameters", err)
-		return
-	}
-	if num > 0 {
-		for _, parameter := range parameters {
-			app.Params["__"+parameter.ID] = parameter.Value
-		}
-	}
-	logs.Info("Params", app.Params)
-
-	// if param, ok := app.Params["__batch_etat"]; ok {
-	// 	if param == "1" {
-	// 		batch.StartBatch()
-	// 	}
-	// }
-
 	// Chargement du dictionnaire
 	dico.Ctx.Load()
+
+	// boucle sur les tables pour charger les connecteurs aux bases de données
+	// et les répertoires statiques du serveur
+	for tableName, table := range dico.Ctx.Tables {
+		// lecture dans les sections de app.conf pour enregistre les connecteurs aux bases de données
+		section, err := beego.AppConfig.GetSection(table.Setting.AliasDB)
+		if err == nil {
+			_, err := orm.GetDB(table.Setting.AliasDB)
+			if err != nil {
+				// Cet alias n'a pas encore été déclaré
+				if datasource, ok := section["datasource"]; ok {
+					// la section correspondante a été trouvée
+					drivertype, _ := strconv.Atoi(section["drivertype"])
+					drivername := section["drivername"]
+					logs.Info("...Enregistrement connecteur", table.Setting.AliasDB, drivertype, drivername, datasource)
+					orm.RegisterDriver(drivername, orm.DriverType(drivertype))
+					orm.RegisterDataBase(table.Setting.AliasDB, drivername, datasource)
+				} else {
+					// ERR l'alias n'pas été déclaré dans app.conf
+					logs.Error("ERREUR aliasDB non déclaré dans app.conf", table.Setting.AliasDB)
+				}
+			}
+		}
+		// Déclaration éventuelle d'un répertoire statique pour la table
+		if table.Setting.DataDir != "" {
+			logs.Info("...Enregistrement statique", "/bee/data/"+tableName, table.Setting.DataDir)
+			beego.SetStaticPath("/bee/data/"+tableName, table.Setting.DataDir)
+		}
+	}
+
 }
 func main() {
 	beego.Run()

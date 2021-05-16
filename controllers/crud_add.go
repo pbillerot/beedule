@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -24,12 +24,12 @@ func (c *CrudAddController) Get() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
@@ -49,14 +49,14 @@ func (c *CrudAddController) Get() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 	if form.Group == "" {
 		form.Group = view.Group
 	}
 	if form.Group == "" {
-		form.Group = app.Applications[appid].Group
+		form.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, form.Group, id) {
 		flash.Error("Accès non autorisé")
@@ -68,7 +68,7 @@ func (c *CrudAddController) Get() {
 	setContext(c.Controller, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
+	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
 
 	// Création d'un record fictif vide ""
 	record := orm.Params{}
@@ -86,8 +86,8 @@ func (c *CrudAddController) Get() {
 	elements = computeElements(c.Controller, true, elements, records[0])
 
 	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
-	c.Data["ColDisplay"] = records[0][table.ColDisplay]
+	c.Data["Application"] = dico.Ctx.Applications[appid]
+	c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay]
 	c.Data["Id"] = id
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
@@ -111,7 +111,7 @@ func (c *CrudAddController) Post() {
 	var id = ""
 
 	// Ctrl tableid et viewid
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
@@ -129,13 +129,13 @@ func (c *CrudAddController) Post() {
 
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 	setContext(c.Controller, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
+	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
 
 	// Création d'un record fictif vide ""
 	record := orm.Params{}
@@ -167,8 +167,8 @@ func (c *CrudAddController) Post() {
 		elements = computeElements(c.Controller, true, elements, records[0])
 
 		c.Data["AppId"] = appid
-		c.Data["Application"] = app.Applications[appid]
-		c.Data["ColDisplay"] = records[0][table.ColDisplay]
+		c.Data["Application"] = dico.Ctx.Applications[appid]
+		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay]
 		c.Data["Id"] = id
 		c.Data["TableId"] = tableid
 		c.Data["ViewId"] = viewid
@@ -196,7 +196,7 @@ func (c *CrudAddController) Post() {
 	for _, postsql := range form.PostSQL {
 		sql := macro(c.Controller, postsql, records[0])
 		if sql != "" {
-			err = models.CrudExec(sql, table.AliasDB)
+			err = models.CrudExec(sql, table.Setting.AliasDB)
 			if err != nil {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)

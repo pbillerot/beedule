@@ -7,8 +7,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
-	"github.com/pbillerot/beedule/batch"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -33,12 +32,12 @@ func (c *CrudEditController) Get() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
@@ -58,14 +57,14 @@ func (c *CrudEditController) Get() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 	if form.Group == "" {
 		form.Group = view.Group
 	}
 	if form.Group == "" {
-		form.Group = app.Applications[appid].Group
+		form.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, form.Group, id) {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
@@ -77,7 +76,7 @@ func (c *CrudEditController) Get() {
 	setContext(c.Controller, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
+	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
 
 	// Filtrage si élément owner
 	filter := ""
@@ -108,8 +107,8 @@ func (c *CrudEditController) Get() {
 
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
-	c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
+	c.Data["Application"] = dico.Ctx.Applications[appid]
+	c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)
 	c.Data["Id"] = id
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
@@ -135,7 +134,7 @@ func (c *CrudEditController) Post() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl tableid et viewid
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
@@ -156,15 +155,15 @@ func (c *CrudEditController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 
 	setContext(c.Controller, tableid)
 	var withPlugin bool
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
+	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
 
 	// Filtrage si élément owner
 	filter := ""
@@ -218,10 +217,10 @@ func (c *CrudEditController) Post() {
 	if berr { // ERREUR: on va reproposer le formulaire pour rectification
 		flash.Store(&c.Controller)
 		c.Data["AppId"] = appid
-		c.Data["Application"] = app.Applications[appid]
-		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
+		c.Data["Application"] = dico.Ctx.Applications[appid]
+		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)
 		c.Data["Id"] = id
-		c.Data["App"] = app.Portail
+		c.Data["App"] = dico.Ctx
 		c.Data["TableId"] = tableid
 		c.Data["ViewId"] = viewid
 		c.Data["FormId"] = formid
@@ -319,23 +318,12 @@ func (c *CrudEditController) Post() {
 				for _, actionsql := range action.SQL {
 					sql := macro(c.Controller, actionsql, record)
 					if sql != "" {
-						err = models.CrudExec(sql, table.AliasDB)
+						err = models.CrudExec(sql, table.Setting.AliasDB)
 						if err != nil {
 							flash.Error(err.Error())
 							flash.Store(&c.Controller)
 							berr = true
 						}
-					}
-				}
-				// Traitement Plugin
-				if action.Plugin != "" {
-					withPlugin = true
-					plugin := macro(c.Controller, action.Plugin, record)
-					_, err := batch.RunPlugin(macro(c.Controller, plugin, record))
-					if err != nil {
-						flash.Error(err.Error())
-						flash.Store(&c.Controller)
-						berr = true
 					}
 				}
 			}
@@ -351,7 +339,7 @@ func (c *CrudEditController) Post() {
 		}
 		sql := macro(c.Controller, postsql, record)
 		if sql != "" {
-			err = models.CrudExec(sql, table.AliasDB)
+			err = models.CrudExec(sql, table.Setting.AliasDB)
 			if err != nil {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)

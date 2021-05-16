@@ -5,9 +5,9 @@
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
 {{$tableid := .TableId}}
-{{$viewid := .ViewId}}
+{{$viewName := .ViewId}}
 {{$table := .Table}}
-{{$tablekey := .Table.Key}}
+{{$tablekey := .Table.Setting.Key}}
 {{$view := .View}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
@@ -31,15 +31,15 @@
         </div>
         <div class="menu">
           <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
-          {{if $app.AppViews}}
+          {{if $app.TablesViews}}
           <div class="divider"></div>
           {{end}}
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
+          {{ range $iv, $tableView := $app.TablesViews }}
+          {{$t := index $portail.Tables $tableView.TableName }}
+          {{$v := index $t.Views $tableView.ViewName }}
           {{if (CrudIsInGroup $v.Group $session)}}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+          <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -76,7 +76,7 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}"
                 value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
@@ -89,7 +89,7 @@
           <div class="menu">
           {{if $view.FormAdd}}
             <a class="ui icon item crud-jquery-url"
-              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormAdd}}">
               <i class="plus square icon"></i> Ajouter un élément...
             </a>
           {{end}}
@@ -99,7 +99,7 @@
             {{end}}
             {{range $iaction, $action := $view.Actions}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
+              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$iaction}}">
               {{if $action.Checkbox.GetSQL}}
               <div class="ui toggle checkbox">
                 <input type="checkbox" {{if (eq (CrudSQL $action.Checkbox.GetSQL $action.Checkbox.AliasDB) `1`)}}
@@ -185,9 +185,9 @@
       <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
         <div class="content">
           <a class="header crud-jquery-url" {{if or $view.FormView $view.Deletable}}
-          data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+          data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
           {{else if and $view.FormEdit}}
-          data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+          data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
           {{end}}>{{$base}}</a>
   {{ else if gt $level $currentLevel }}
             {{if gt $level `1`}}<div class="list"{{if eq $search ``}} style="display: none;"{{end}}>{{end}}
@@ -195,9 +195,9 @@
                 <i class="folder outline large {{$theme}} icon link crud-collapse {{if eq $level `1`}}{{$anchor}}{{end}}"></i>
                 <div class="content">
                   <a class="header crud-jquery-url" {{if or $view.FormView $view.Deletable}}
-                  data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+                  data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
                   {{else if and $view.FormEdit}}
-                  data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+                  data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
                   {{end}}>{{$base}}</a>
   {{ end }}
 {{ else }}
@@ -205,25 +205,25 @@
     {{ if or (eq $ext ".png") (eq $ext ".jpg") (eq $ext ".svg")}}
     <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
     {{if or $view.FormView $view.Deletable}}
-        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
         {{else if and $view.FormEdit}}
-        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}
         ><i class="image outline blue large icon"></i>{{$base}}</a>
     {{ else if (eq $ext ".pdf")}}
     <a class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
     {{if or $view.FormView $view.Deletable}}
-        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
         {{else if and $view.FormEdit}}
-        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}>
         <i class="file pdf outline red large icon"></i>{{$base}}</a>
     {{else}}
       <a id="{{$anchor}}" class="ui compact message crud-jquery-url"{{if eq $search ``}} style="display: none;"{{end}}
       {{if or $view.FormView $view.Deletable}}
-        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+        data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
         {{else if and $view.FormEdit}}
-        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+        data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}
       >
         <i class="file alternate outline green large icon"></i>
@@ -280,7 +280,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
     <input type="hidden" id="crud-form-searchstop" name="searchstop">
@@ -288,7 +288,7 @@
     <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
   </form>
   <!-- CONTEXTE -->
-  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewName}}">
 
   {{template "_crud_foot.html" .}}
 </body>

@@ -5,14 +5,14 @@
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
 {{$tableid := .TableId}}
-{{$viewid := .ViewId}}
+{{$viewName := .ViewId}}
 {{$formid := .FormId}}
 {{$table := .Table}}
 {{$view := .View}}
 {{$form := .FormView}}
 {{$formviewid := .FormViewId}}
 {{$id := .Id}}
-{{$tablekey := .Table.Key}}
+{{$tablekey := .Table.Setting.Key}}
 {{$coldisplay := .ColDisplay}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
@@ -33,14 +33,14 @@
         </div>
         <div class="menu">
           <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
-          {{if $app.AppViews}}
+          {{if $app.TablesViews}}
           <div class="divider"></div>
           {{end}}
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+          {{ range $iv, $tableView := $app.TablesViews }}
+          {{$t := index $portail.Tables $tableView.TableName }}
+          {{$v := index $t.Views $tableView.ViewName }}
+          <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -56,7 +56,7 @@
           <a href="/bee/about" class="item">À propos</a>
         </div>
       </div>
-      <a href="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}" class="item" style="padding: 0.5em;">
+      <a href="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
       <div class="header item">{{$form.Title}}</div>
@@ -75,7 +75,7 @@
             {{range $iaction, $action := $form.Actions}}
             {{if not $action.Hide}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
+              data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
             {{end}}
             {{end}}
             <!-- end range actions-->
@@ -113,7 +113,7 @@
         {{if and $isStart (ne $element.Type "section")}}
         {{if $view.FormEdit}}
         <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-          data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+          data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}">
           {{else}}
           <div class="card raised crud-card-view {{$element.Class}}">
             {{end}}
@@ -137,7 +137,7 @@
           {{ $isStart = false}}
           {{if $element.Params.Form}}
           <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-            data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+            data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$element.Params.Form}}/{{$id}}">
           {{else if $element.Params.URL}}
           <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
             data-url="{{$element.Params.URL}}">
@@ -155,7 +155,7 @@
                 <!-- DEBUT type -->
                 {{else if (eq $element.Type "action")}}
                 <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-                  data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
+                  data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formviewid}}/{{$id}}/{{$key}}">
                   {{$element.LabelLong}}
                 </button>
                 {{else if (eq $element.Type "button")}}
@@ -208,7 +208,7 @@
                 {{if $element.Params.Form}}
               </div>
                 <div class="ui bottom attached button crud-jquery-url"
-                data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+                data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$element.Params.Form}}/{{$id}}">
                   <i class="edit icon"></i>
                   Mofifier l'image
                 {{end}}
@@ -307,7 +307,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form action="/bee/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}" method="POST">
+  <form action="/bee/delete/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formviewid}}/{{$id}}" method="POST">
     {{ .xsrfdata }}
   </form>
   {{template "_crud_foot.html" .}}

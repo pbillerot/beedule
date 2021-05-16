@@ -5,13 +5,13 @@
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
 {{$tableid := .TableId}}
-{{$viewid := .ViewId}}
+{{$viewName := .ViewId}}
 {{$formid := .FormId}}
 {{$id := .Id}}
 {{$table := .Table}}
 {{$view := .View}}
 {{$form := .Form}}
-{{$tablekey := .Table.Key}}
+{{$tablekey := .Table.Setting.Key}}
 {{$coldisplay := .ColDisplay}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
@@ -31,14 +31,14 @@
         </div>
         <div class="menu">
           <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
-          {{if $app.AppViews}}
+          {{if $app.TablesViews}}
           <div class="divider"></div>
           {{end}}
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}"
-            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+          {{ range $iv, $tableView := $app.TablesViews }}
+          {{$t := index $portail.Tables $tableView.TableName }}
+          {{$v := index $t.Views $tableView.ViewName }}
+          <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -83,11 +83,11 @@
       {{if (eq $id "")}}
       <!-- Formulaire d'Ajout ou d'Edition -->
       <form class="ui form attached segment" id="beeForm" method="POST"
-        action="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}">
+        action="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}">
         {{else}}
 <form class="ui form attached segment" id="beeForm" method="POST"
   enctype="multipart/form-data"
-  action="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+  action="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}">
   {{end}}
   {{ .xsrfdata }}
   {{$section := false}}
@@ -110,7 +110,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
       <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
       </button>
     </div>
@@ -123,7 +123,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
       <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
       </button>
     </div>
@@ -131,7 +131,7 @@
   {{else}}
   <div class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} {{$element.Grid}} field {{$element.Error}}">
     <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}/{{$key}}">
       {{$element.LabelLong}}
     </button>
   </div>

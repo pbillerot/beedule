@@ -31,6 +31,4 @@ func init() {
 	// beego.Router("/bee/api/isc", &controllers.RestController{}, "get:RestIsc")
 	// beego.Router("/bee/api/put/log/:url", &controllers.RestController{}, "get:RestPutLog")
 
-	// CHARTJS
-	beego.Router("/bee/chart/:app", &controllers.ChartController{}, "get:Demo")
 }

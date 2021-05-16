@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/beego/beego/v2/core/logs"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v2"
 )
 
@@ -12,12 +13,12 @@ var Ctx Portail
 
 // Portail as portail.yaml
 type Portail struct {
-	Title      string
-	Info       string
-	IconFile   string `yaml:"icon-file"`
-	Apps       map[string]Application
-	Tables     map[string]Table // chargé par portail.Load
-	Parameters map[string]string
+	Title        string
+	Info         string
+	IconFile     string `yaml:"icon-file"`
+	Applications map[string]Application
+	Tables       map[string]*Table // chargé par portail.Load
+	Parameters   map[string]string
 }
 
 // Application as
@@ -41,19 +42,20 @@ type TableView struct {
 
 // Table as <table>.yaml
 type Table struct {
-	Settings  Settings
+	Setting   Setting
 	Elements  map[string]Element
 	Views     map[string]View
 	Forms     map[string]Form
 	Variables map[string]string
 }
 
-// Settings as
-type Settings struct {
+// Setting as
+type Setting struct {
 	AliasDB    string `yaml:"alias-db"`
 	Key        string // clé de la table
 	ColDisplay string `yaml:"col-display"` // la colonne qui identifie l'enregistrement
-	IconName   string `yaml:"icon-name"`
+	IconName   string `yaml:"icon-name"`   // Icône https://semantic-ui.com/elements/icon.html
+	DataDir    string `yaml:"data-dir"`    // répertoire statique des fichiers liés à la table
 }
 
 // Element as
@@ -99,6 +101,15 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	Type          string            // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
+}
+
+// HashPassword hashage de Value
+func (element *Element) HashPassword(password string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		logs.Error(err)
+	}
+	return string(bytes)
 }
 
 // View Vue d'une table
@@ -216,17 +227,16 @@ func (c *Portail) Load() error {
 		return err
 	}
 	// Chargement des structures Table
-	tables := map[string]Table{}
-	for _, app := range c.Apps {
-		for _, appview := range app.TablesViews {
-			if _, ok := c.Tables[appview.TableName]; !ok {
+	c.Tables = map[string]*Table{}
+	for _, app := range c.Applications {
+		for _, tableview := range app.TablesViews {
+			if _, ok := c.Tables[tableview.TableName]; !ok {
 				var table Table
-				table.Load(appview.TableName)
-				tables[appview.TableName] = table
+				table.Load(tableview.TableName)
+				c.Tables[tableview.TableName] = &table
 			}
 		}
 	}
-	c.Tables = tables
 	return err
 }
 

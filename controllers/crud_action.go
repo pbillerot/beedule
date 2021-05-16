@@ -1,15 +1,11 @@
 package controllers
 
 import (
-	"fmt"
-	"io/ioutil"
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
-	"github.com/pbillerot/beedule/batch"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
-	"github.com/pbillerot/beedule/types"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
@@ -30,12 +26,12 @@ func (c *CrudActionViewController) Post() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
@@ -49,10 +45,10 @@ func (c *CrudActionViewController) Post() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
 	if view.Group == "" {
-		view.Group = app.Applications[appid].Group
+		view.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, view.Group, actionid) {
 		flash.Error("Accès non autorisé")
@@ -75,18 +71,11 @@ func (c *CrudActionViewController) Post() {
 		for _, action := range view.Actions[iactionid].SQL {
 			sql := macro(c.Controller, action, orm.Params{})
 			if sql != "" {
-				err = models.CrudExec(sql, table.AliasDB)
+				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
-			}
-		}
-		// Appel duPlugin
-		if err == nil {
-			if view.Actions[iactionid].Plugin != "" {
-				action := macro(c.Controller, view.Actions[iactionid].Plugin, orm.Params{})
-				batch.RunPlugin(action)
 			}
 		}
 	} else {
@@ -114,12 +103,12 @@ func (c *CrudActionFormController) Post() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
@@ -139,14 +128,14 @@ func (c *CrudActionFormController) Post() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 	if form.Group == "" {
 		form.Group = view.Group
 	}
 	if form.Group == "" {
-		form.Group = app.Applications[appid].Group
+		form.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, form.Group, actionid) {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
@@ -171,19 +160,11 @@ func (c *CrudActionFormController) Post() {
 		for _, action := range form.Actions[iactionid].SQL {
 			sql := macro(c.Controller, action, orm.Params{})
 			if sql != "" {
-				err = models.CrudExec(sql, table.AliasDB)
+				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
-			}
-		}
-		// Appel du Plugin
-		if err == nil {
-			if form.Actions[iactionid].Plugin != "" {
-				withPlugin = true
-				action := macro(c.Controller, form.Actions[iactionid].Plugin, orm.Params{})
-				batch.RunPlugin(action)
 			}
 		}
 	} else {
@@ -215,12 +196,12 @@ func (c *CrudActionElementController) Post() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
@@ -234,10 +215,10 @@ func (c *CrudActionElementController) Post() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
 	if view.Group == "" {
-		view.Group = app.Applications[appid].Group
+		view.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, view.Group, actionid) {
 		flash.Error("Accès non autorisé")
@@ -250,12 +231,12 @@ func (c *CrudActionElementController) Post() {
 	var withPlugin bool
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
-	form := app.Tables[tableid].Forms[formid]
+	form := dico.Ctx.Tables[tableid].Forms[formid]
 	if form.Group == "" {
 		form.Group = view.Group
 	}
 	if form.Group == "" {
-		form.Group = app.Applications[appid].Group
+		form.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, form.Group, id) {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
@@ -264,7 +245,7 @@ func (c *CrudActionElementController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
-	var elementsVF map[string]types.Element
+	var elementsVF map[string]dico.Element
 	elementsVF = form.Elements
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, _ := mergeElements(c.Controller, tableid, elementsVF, id)
@@ -301,40 +282,12 @@ func (c *CrudActionElementController) Post() {
 				for _, actionSQL := range action.SQL {
 					sql := macro(c.Controller, actionSQL, records[0])
 					if sql != "" {
-						err = models.CrudExec(sql, table.AliasDB)
+						err = models.CrudExec(sql, table.Setting.AliasDB)
 						if err != nil {
 							flash.Error(err.Error())
 							flash.Store(&c.Controller)
 						}
 					}
-				}
-			}
-			// Appel Plugin
-			if err == nil {
-				if action.Plugin != "" {
-					withPlugin = true
-					if element.Params.WithInputFile {
-						file, handler, err := c.Ctx.Request.FormFile(actionid)
-						if err != nil {
-							logs.Error(err)
-						} else {
-							fileBytes, err := ioutil.ReadAll(file)
-							if err != nil {
-								logs.Error(err)
-							} else {
-								filepath := fmt.Sprintf("%s/%s", element.Params.Path, handler.Filename)
-								logs.Info("ajout", filepath)
-								err := ioutil.WriteFile(
-									filepath,
-									fileBytes, 0755)
-								if err != nil {
-									logs.Error(err)
-								}
-							}
-						}
-					}
-					command := macro(c.Controller, action.Plugin, records[0])
-					_, err = batch.RunPlugin(command)
 				}
 			}
 		}

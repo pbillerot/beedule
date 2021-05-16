@@ -12,7 +12,7 @@ import (
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
 )
@@ -38,8 +38,6 @@ func init() {
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
 	beego.AddFuncMap("CrudDebug", CrudDebug)
-	beego.AddFuncMap("HugoIncrement", HugoIncrement)
-	beego.AddFuncMap("HugoDecrement", HugoDecrement)
 	beego.AddFuncMap("BeeReplace", BeeReplace)
 	beego.AddFuncMap("CrudComputeDataset", CrudComputeDataset)
 }
@@ -53,20 +51,6 @@ func BeeReplace(in string, old string, new string) (out string) {
 // CrudDebug as
 func CrudDebug(msg string) (out string) {
 	beego.Debug(msg)
-	return
-}
-
-// HugoIncrement as
-func HugoIncrement(in int) (out int) {
-	in++
-	out = in
-	return
-}
-
-// HugoDecrement as
-func HugoDecrement(in int) (out int) {
-	in--
-	out = in
 	return
 }
 
@@ -126,7 +110,7 @@ func CrudIndex(record orm.Params, key string) (out string) {
 }
 
 // CrudIndexSQL équivalent de index mais avec computeSQL en +
-func CrudIndexSQL(record orm.Params, key string, element types.Element, session types.Session) (out string) {
+func CrudIndexSQL(record orm.Params, key string, element dico.Element, session types.Session) (out string) {
 	out = ""
 	// if element.ComputeSQL != "" {
 	// 	out = CrudMacroSQL(element.ComputeSQL, record, session)
@@ -203,7 +187,7 @@ func CrudContains(list string, in string) (out bool) {
 }
 
 // CrudItem as
-func CrudItem(items []types.Item, in string) (out string) {
+func CrudItem(items []dico.Item, in string) (out string) {
 	for _, item := range items {
 		if item.Key == in {
 			out = item.Label
@@ -226,7 +210,7 @@ func CrudMacro(in string, record orm.Params, session types.Session) (out string)
 				key := match[1]
 				if strings.Contains(key, "__") {
 					// Le champ est un paramètre global
-					if p, ok := app.Params[key]; ok {
+					if p, ok := dico.Ctx.Parameters[key]; ok {
 						out = strings.ReplaceAll(out, "{"+key+"}", p)
 					} else {
 						labelError := fmt.Sprintf("Rubrique [%s] non trouvée", key)
@@ -300,7 +284,7 @@ func CrudSQL(sql string, aliasDB string) (out string) {
 }
 
 // CrudClassSQL retourne le résulat de la requête avec macro
-func CrudClassSQL(element types.Element, record orm.Params, session types.Session) (out string) {
+func CrudClassSQL(element dico.Element, record orm.Params, session types.Session) (out string) {
 	// out = CrudMacro(element.Class, record, session)
 	// if out == "" {
 	sql := CrudMacro(element.ClassSQL, record, session)

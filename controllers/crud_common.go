@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
 
@@ -76,8 +76,8 @@ func IsOwner(c beego.Controller, key string) (out bool) {
 
 // mergeElements fusionne les attributs des éléments de la table avec ceux de la vue ou formulaire
 // cols contiendra les keys ordonnés comme présentées dans le dictionnaire
-func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[string]types.Element, id string) (map[string]types.Element, map[int]string) {
-	table := app.Tables[tableid]
+func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[string]dico.Element, id string) (map[string]dico.Element, map[int]string) {
+	table := dico.Ctx.Tables[tableid]
 
 	// Gestion du TRI dans la session
 	sortID := ""
@@ -89,13 +89,13 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 		sortDirection = v.(string)
 	}
 
-	elements := make(map[string]types.Element, len(viewOrFormElements))
+	elements := make(map[string]dico.Element, len(viewOrFormElements))
 
 	cols := make(map[int]string, len(elements))
 
 	order := 1 // pour ordrer les colonnes
 	for key, element := range viewOrFormElements {
-		err := mergo.Merge(&element, app.Tables[tableid].Elements[key])
+		err := mergo.Merge(&element, dico.Ctx.Tables[tableid].Elements[key])
 		if err != nil {
 			logs.Error(err)
 		} else {
@@ -104,7 +104,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 			}
 			order = element.Order
 			cols[order] = key
-			if app.Tables[tableid].Key == key && id != "" {
+			if dico.Ctx.Tables[tableid].Setting.Key == key && id != "" {
 				element.ReadOnly = true
 			}
 			if element.ComputeSQL != "" {
@@ -198,9 +198,9 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 
 // computeElements calcule les éléments de l'UI
 // si computeValue, valorise à 0 les champ numériques dans record
-func computeElements(c beego.Controller, computeValue bool, viewOrFormElements map[string]types.Element, record orm.Params) map[string]types.Element {
+func computeElements(c beego.Controller, computeValue bool, viewOrFormElements map[string]dico.Element, record orm.Params) map[string]dico.Element {
 	tableid := c.Ctx.Input.Param(":table")
-	table := app.Tables[tableid]
+	table := dico.Ctx.Tables[tableid]
 
 	fromList := false
 	id := c.Ctx.Input.Param(":id")
@@ -208,7 +208,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 		fromList = true
 	}
 
-	elements := make(map[string]types.Element, len(viewOrFormElements))
+	elements := make(map[string]dico.Element, len(viewOrFormElements))
 
 	for key, element := range viewOrFormElements {
 		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL
@@ -222,13 +222,13 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 		}
 		if element.ItemsSQL != "" {
 			sql := macro(c, element.ItemsSQL, record)
-			recs, err := models.CrudSQL(sql, table.AliasDB)
+			recs, err := models.CrudSQL(sql, table.Setting.AliasDB)
 			if err != nil {
 				logs.Error(err)
 			}
-			var list []types.Item
+			var list []dico.Item
 			for _, rec := range recs {
-				item := types.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
+				item := dico.Item{Key: rec["key"].(string), Label: rec["label"].(string)}
 				list = append(list, item)
 			}
 			element.Items = list
@@ -290,7 +290,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 				if element.Dataset != nil {
 					for key, value := range element.Dataset {
 						sql := macro(c, value, record)
-						recs, err := models.CrudSQL(sql, table.AliasDB)
+						recs, err := models.CrudSQL(sql, table.Setting.AliasDB)
 						if err != nil {
 							logs.Error(err)
 						}
@@ -328,7 +328,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 			if element.Dataset != nil {
 				for key, value := range element.Dataset {
 					sql := macro(c, value, record)
-					recs, err := models.CrudSQL(sql, table.AliasDB)
+					recs, err := models.CrudSQL(sql, table.Setting.AliasDB)
 					if err != nil {
 						logs.Error(err)
 					}
@@ -377,7 +377,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 // - recup de la saisie dans val
 // - contrôle de la saisie
 // - valorisation de element.SQLout pour l'enregistrement dans la bdd
-func checkElement(c *beego.Controller, key string, element *types.Element, record orm.Params) error {
+func checkElement(c *beego.Controller, key string, element *dico.Element, record orm.Params) error {
 	labelError := ""
 	val := ""
 
@@ -465,7 +465,7 @@ func checkElement(c *beego.Controller, key string, element *types.Element, recor
 // setContext remplissage du controller.Data
 func setContext(c beego.Controller, table string) {
 	// Contexte de la table
-	aliasDB := app.Tables[table].AliasDB
+	aliasDB := dico.Ctx.Tables[table].Setting.AliasDB
 	section, _ := beego.AppConfig.GetSection(aliasDB)
 	dataurl := "/bee/data/" + aliasDB
 	if url, ok := section["dataurl"]; ok {
@@ -479,7 +479,7 @@ func setContext(c beego.Controller, table string) {
 	c.Data["Datadir"] = datadir
 	c.Data["TableID"] = table
 	c.Data["AliasDB"] = aliasDB
-	c.Data["KeyID"] = app.Tables[table].Key
+	c.Data["KeyID"] = dico.Ctx.Tables[table].Setting.Key
 
 	// Contexte de la session
 	session := types.Session{}
@@ -513,7 +513,7 @@ func setContext(c beego.Controller, table string) {
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Title
 	c.Data["Title"] = config.Appname
-	c.Data["Portail"] = &app.Portail
+	c.Data["Portail"] = &dico.Ctx
 	// Contexte crud
 	c.Data["From"] = c.Ctx.Input.Cookie("from")
 	c.Data["Composter"] = time.Now().Unix()
@@ -562,7 +562,7 @@ func macro(c beego.Controller, in string, record orm.Params) (out string) {
 			} else {
 				if strings.Contains(key, "__") {
 					// Le champ est un paramètre global
-					out = strings.ReplaceAll(out, "{"+key+"}", app.Params[key])
+					out = strings.ReplaceAll(out, "{"+key+"}", dico.Ctx.Parameters[key])
 				} else {
 					logs.Error("Rubrique non trouvée", key)
 					out = ""

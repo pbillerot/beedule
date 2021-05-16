@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -27,12 +27,12 @@ func (c *CrudListController) CrudList() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
@@ -46,10 +46,10 @@ func (c *CrudListController) CrudList() {
 	}
 
 	// Contrôle d'accès à la vue
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
 	if view.Group == "" {
-		view.Group = app.Applications[appid].Group
+		view.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, view.Group, "") {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
@@ -92,14 +92,14 @@ func (c *CrudListController) CrudList() {
 	c.Data["SortDirection"] = sortDirection
 
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Views[viewid].Elements, "")
+	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Views[viewid].Elements, "")
 
 	// Calcul des champs SQL de la vue
 	if view.OrderBy != "" {
 		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
 	}
 	if view.FooterSQL != "" {
-		view.FooterSQL = requeteSQL(c.Controller, view.FooterSQL, orm.Params{}, app.Tables[tableid].AliasDB)
+		view.FooterSQL = requeteSQL(c.Controller, view.FooterSQL, orm.Params{}, dico.Ctx.Tables[tableid].Setting.AliasDB)
 	}
 	if len(view.PreUpdateSQL) > 0 {
 		for _, presql := range view.PreUpdateSQL {
@@ -107,7 +107,7 @@ func (c *CrudListController) CrudList() {
 			record := orm.Params{}
 			sql := macro(c.Controller, presql, record)
 			if sql != "" {
-				err = models.CrudExec(sql, table.AliasDB)
+				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
@@ -245,7 +245,7 @@ func (c *CrudListController) CrudList() {
 	// Remplissage du contexte pour le template
 	c.Data["Title"] = view.Title
 	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
+	c.Data["Application"] = dico.Ctx.Applications[appid]
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
 	c.Data["Table"] = &table
@@ -255,8 +255,8 @@ func (c *CrudListController) CrudList() {
 	c.Data["Qrecords"] = len(records)
 	c.Data["Cols"] = cols
 
-	section, _ := beego.AppConfig.GetSection(table.AliasDB)
-	c.Data["DataUrl"] = "/bee/data/" + table.AliasDB
+	section, _ := beego.AppConfig.GetSection(table.Setting.AliasDB)
+	c.Data["DataUrl"] = "/bee/data/" + table.Setting.AliasDB
 	c.Data["Datadir"] = section["datadir"]
 
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))

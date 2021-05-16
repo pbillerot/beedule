@@ -6,7 +6,7 @@ import (
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,11 +26,11 @@ func (c *loggedRouter) Prepare() {
 	}
 	appid := c.Ctx.Input.Param(":app")
 	if appid != "" {
-		c.Data["TabIcon"] = app.Applications[appid].Image
-		c.Data["TabTitle"] = app.Applications[appid].Title
+		c.Data["TabIcon"] = dico.Ctx.Applications[appid].Image
+		c.Data["TabTitle"] = dico.Ctx.Applications[appid].Title
 	} else {
-		c.Data["TabIcon"] = app.Portail.IconFile
-		c.Data["TabTitle"] = app.Portail.Title
+		c.Data["TabIcon"] = dico.Ctx.IconFile
+		c.Data["TabTitle"] = dico.Ctx.Title
 	}
 }
 
@@ -54,11 +54,11 @@ func (c *adminRouter) Prepare() {
 	}
 	appid := c.Ctx.Input.Param(":app")
 	if appid != "" {
-		c.Data["TabIcon"] = app.Applications[appid].Image
-		c.Data["TabTitle"] = app.Applications[appid].Title
+		c.Data["TabIcon"] = dico.Ctx.Applications[appid].Image
+		c.Data["TabTitle"] = dico.Ctx.Applications[appid].Title
 	} else {
-		c.Data["TabIcon"] = app.Portail.IconFile
-		c.Data["TabTitle"] = app.Portail.Title
+		c.Data["TabIcon"] = dico.Ctx.IconFile
+		c.Data["TabTitle"] = dico.Ctx.Title
 	}
 }
 
@@ -159,7 +159,7 @@ func init() {
 
 // GetUser fournit le user
 func GetUser(username string) (User, error) {
-	o := orm.NewOrmUsingDB(app.Tables["users"].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables["users"].Setting.AliasDB)
 	user := User{Username: username}
 	err := o.Read(&user, "Username")
 

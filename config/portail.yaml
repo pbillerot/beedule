@@ -9,7 +9,7 @@ parameters:
   __optimum: 0.03 # seuil en % minimum pour vente
 
 # Liste des applications gérées
-apps:
+applications:
   admin:
     name: "admin"
     title: "Gestion du site"

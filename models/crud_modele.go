@@ -6,8 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
-	"github.com/pbillerot/beedule/types"
+	"github.com/pbillerot/beedule/dico"
 
 	"github.com/beego/beego/v2/client/orm"
 )
@@ -25,7 +24,7 @@ func IfNotEmpty(chaine string, valTrue string, valFalse string) string {
 // https://beego.me/docs/mvc/model/querybuilder.md
 
 // CrudList as
-func CrudList(tableid string, viewid string, view *types.View, elements map[string]types.Element) ([]orm.Params, error) {
+func CrudList(tableid string, viewid string, view *dico.View, elements map[string]dico.Element) ([]orm.Params, error) {
 
 	// Rédaction de la requête
 	var keys []string
@@ -82,7 +81,7 @@ func CrudList(tableid string, viewid string, view *types.View, elements map[stri
 		orderby = " ORDER BY " + sorter.id + " " + sorter.direcion
 	}
 
-	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables[tableid].Setting.AliasDB)
 	var maps []orm.Params
 	sql := "SELECT " + skey +
 		" FROM " + tableid +
@@ -94,11 +93,12 @@ func CrudList(tableid string, viewid string, view *types.View, elements map[stri
 	if err != nil {
 		logs.Error(err)
 	}
+	// logs.Debug(fmt.Sprintf("#%v", maps))
 	return maps, err
 }
 
 // CrudRead as
-func CrudRead(filter string, tableid string, id string, elements map[string]types.Element) ([]orm.Params, error) {
+func CrudRead(filter string, tableid string, id string, elements map[string]dico.Element) ([]orm.Params, error) {
 
 	// Rédaction de la requête
 	var keys []string
@@ -118,12 +118,12 @@ func CrudRead(filter string, tableid string, id string, elements map[string]type
 	}
 	skey := strings.Join(keys, ", ")
 
-	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables[tableid].Setting.AliasDB)
 	var maps []orm.Params
 	sql := "SELECT " + skey +
 		" FROM " + tableid +
 		" " + strings.Join(joins, " ") +
-		" WHERE " + app.Tables[tableid].Key + " = ?"
+		" WHERE " + dico.Ctx.Tables[tableid].Setting.Key + " = ?"
 	if filter != "" {
 		sql += " AND " + filter
 	}
@@ -131,14 +131,14 @@ func CrudRead(filter string, tableid string, id string, elements map[string]type
 	if err != nil {
 		logs.Error(err)
 	} else if num == 0 {
-		logs.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(dico.Ctx.Tables[tableid].Setting.AliasDB, sql)
 		err = errors.New("Enregistrement non trouvé")
 	}
 	return maps, err
 }
 
 // CrudUpdate avec element.SQLout
-func CrudUpdate(tableid string, id string, elements map[string]types.Element) error {
+func CrudUpdate(tableid string, id string, elements map[string]dico.Element) error {
 
 	// Remplissage de la map des valeurs
 	sql := ""
@@ -147,7 +147,7 @@ func CrudUpdate(tableid string, id string, elements map[string]types.Element) er
 		if strings.HasPrefix(k, "_") {
 			continue
 		}
-		if k == app.Tables[tableid].Key {
+		if k == dico.Ctx.Tables[tableid].Setting.Key {
 			continue
 		}
 		if element.Type == "counter" {
@@ -165,20 +165,20 @@ func CrudUpdate(tableid string, id string, elements map[string]types.Element) er
 		// Pas de champ à mettre à jour
 		return nil
 	}
-	sql += " WHERE " + app.Tables[tableid].Key + " = ?"
+	sql += " WHERE " + dico.Ctx.Tables[tableid].Setting.Key + " = ?"
 	args = append(args, id)
 
-	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables[tableid].Setting.AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
-		logs.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(dico.Ctx.Tables[tableid].Setting.AliasDB, sql)
 		logs.Error(err)
 	}
 	return err
 }
 
 // CrudInsert avec element.SQLout
-func CrudInsert(tableid string, elements map[string]types.Element) error {
+func CrudInsert(tableid string, elements map[string]dico.Element) error {
 
 	// Construction de l'ordre sql
 	sqlcol := ""
@@ -203,10 +203,10 @@ func CrudInsert(tableid string, elements map[string]types.Element) error {
 	}
 	sql := "INSERT INTO " + tableid + " (" + sqlcol + ") VALUES (" + sqlval + ")"
 
-	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables[tableid].Setting.AliasDB)
 	_, err := o.Raw(sql, args).Exec()
 	if err != nil {
-		logs.Error(app.Tables[tableid].AliasDB, sql)
+		logs.Error(dico.Ctx.Tables[tableid].Setting.AliasDB, sql)
 		logs.Error(err)
 	}
 	return err
@@ -215,9 +215,9 @@ func CrudInsert(tableid string, elements map[string]types.Element) error {
 // CrudDelete as
 func CrudDelete(tableid string, id string) error {
 
-	o := orm.NewOrmUsingDB(app.Tables[tableid].AliasDB)
+	o := orm.NewOrmUsingDB(dico.Ctx.Tables[tableid].Setting.AliasDB)
 	_, err := o.Raw("DELETE FROM "+tableid+
-		" WHERE "+app.Tables[tableid].Key+" = ?", id).Exec()
+		" WHERE "+dico.Ctx.Tables[tableid].Setting.Key+" = ?", id).Exec()
 	if err != nil {
 		logs.Error(err)
 	}

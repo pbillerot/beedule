@@ -3,8 +3,15 @@
 Historique des modifications
 
 ### À venir :
-- voir si dictionnaire possible dans yaml
 - éditeur des fichiers de /config en ligne
+- bug retour modif email dans form profil - la vue retour est non autorisé -> /bee
+
+2.0.0 du 15 mai 2021
+----------------------
+- `changed` dictionnaire dans fichier Yaml sous /config
+- `removed` suppression de la gestion de batch
+- `removed` suppression de la gestion de tâches
+- `removed` suppression de la gestion de paramètres en base - maintenant dans config/portail.yaml
 
 1.7.4 du 15 mai 2021
 ----------------------

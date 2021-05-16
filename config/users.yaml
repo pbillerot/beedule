@@ -1,5 +1,5 @@
 
-settings:
+setting:
   alias-db: admin
   key: user_name
   col-display: user_name
@@ -15,7 +15,7 @@ views:
     title: "Comptes"
     icon-name: user
     order-by: user_name
-    masks:
+    mask:
       header:
         - user_name
       meta:
@@ -26,15 +26,11 @@ views:
         - user_groupes
     elements:
       user_name:
-        order: 10
       user_email:
-        order: 20
         hide-on-mobile: true
       user_is_admin:
-        order: 30
         hide-on-mobile: true
       user_groupes:
-        order: 40
 
 elements:
   user_name:
@@ -65,7 +61,7 @@ elements:
     label-long: "Groupes"
     label-short: "Groupes"
     col-align: center
-    item-sql: "select group_id as key, group_id as label from groups order by group_id"
+    items-sql: "select group_id as key, group_id as label from groups order by group_id"
   _pwd_change:
     type: button
     label-long: "Changer le mot de passe..."
@@ -115,7 +111,7 @@ forms:
         order: 40
       user_is_admin:
         order: 50
-      user_goupes:
+      user_groupes:
         order: 60
   fprofil:
     title: "Mon profil"
@@ -125,7 +121,7 @@ forms:
         order: 10
       user_email:
         order: 20
-      user_goupes:
+      user_groupes:
         order: 60
         protected: true
       _pwd_change:

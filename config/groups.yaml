@@ -1,5 +1,5 @@
 
-settings:
+setting:
   alias-db: admin
   key: group_id
   col-display: group_id
@@ -26,7 +26,7 @@ views:
     title: "Groupes"
     icon-name: users
     order-by: group_id
-    masks:
+    mask:
       header:
         - group_id
       meta:

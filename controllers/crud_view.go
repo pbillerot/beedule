@@ -5,9 +5,8 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/pbillerot/beedule/app"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
-	"github.com/pbillerot/beedule/types"
 
 	beego "github.com/beego/beego/v2/adapter"
 )
@@ -27,12 +26,12 @@ func (c *CrudViewController) Get() {
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
-	if _, ok := app.Applications[appid]; !ok {
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
 		ReturnFrom(c.Controller)
 		return
 	}
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
@@ -46,10 +45,10 @@ func (c *CrudViewController) Get() {
 	}
 
 	// Contrôle d'accès
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
+	table := dico.Ctx.Tables[tableid]
+	view := dico.Ctx.Tables[tableid].Views[viewid]
 	if view.Group == "" {
-		view.Group = app.Applications[appid].Group
+		view.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, view.Group, id) {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
@@ -60,11 +59,11 @@ func (c *CrudViewController) Get() {
 	}
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
-	formviewid := app.Tables[tableid].Views[viewid].FormView
-	formview := app.Tables[tableid].Views[formviewid]
+	formviewid := dico.Ctx.Tables[tableid].Views[viewid].FormView
+	formview := dico.Ctx.Tables[tableid].Views[formviewid]
 	// Ctrl accès à formviewid
 	if formview.Group == "" {
-		formview.Group = app.Applications[appid].Group
+		formview.Group = dico.Ctx.Applications[appid].Group
 	}
 	if !IsInGroup(c.Controller, formview.Group, id) {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, formview.Group)
@@ -86,11 +85,11 @@ func (c *CrudViewController) Get() {
 
 	setContext(c.Controller, tableid)
 
-	var elementsVF map[string]types.Element
+	var elementsVF map[string]dico.Element
 	if formviewid == "" {
-		elementsVF = app.Tables[tableid].Views[viewid].Elements
+		elementsVF = dico.Ctx.Tables[tableid].Views[viewid].Elements
 	} else {
-		elementsVF = app.Tables[tableid].Forms[formviewid].Elements
+		elementsVF = dico.Ctx.Tables[tableid].Forms[formviewid].Elements
 	}
 	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
 	elements, cols := mergeElements(c.Controller, tableid, elementsVF, id)
@@ -124,18 +123,18 @@ func (c *CrudViewController) Get() {
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 
 	if err == nil {
-		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
+		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)
 	} else {
 		c.Data["ColDisplay"] = "Enregistrement non trouvé"
 	}
 	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
+	c.Data["Application"] = dico.Ctx.Applications[appid]
 	c.Data["Id"] = id
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
-	c.Data["FormView"] = app.Tables[tableid].Forms[formviewid]
+	c.Data["FormView"] = dico.Ctx.Tables[tableid].Forms[formviewid]
 	c.Data["FormViewId"] = formviewid
-	c.Data["FormId"] = app.Tables[tableid].Views[viewid].FormEdit
+	c.Data["FormId"] = dico.Ctx.Tables[tableid].Views[viewid].FormEdit
 	c.Data["Table"] = &table
 	c.Data["View"] = &view
 	c.Data["Elements"] = &elements

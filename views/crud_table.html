@@ -5,9 +5,9 @@
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
 {{$tableid := .TableId}}
-{{$viewid := .ViewId}}
+{{$viewName := .ViewId}}
 {{$table := .Table}}
-{{$tablekey := .Table.Key}}
+{{$tablekey := .Table.Setting.Key}}
 {{$view := .View}}
 {{$elements := .Elements}}
 {{$cols := .Cols}}
@@ -31,15 +31,15 @@
         </div>
         <div class="menu">
           <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
-          {{if $app.AppViews}}
+          {{if $app.TablesViews}}
           <div class="divider"></div>
           {{end}}
-          {{ range $iv, $appView := $app.AppViews }}
-          {{$t := index $portail.Tables $appView.Tableid }}
-          {{$v := index $t.Views $appView.Viewid }}
+          {{ range $iv, $tableView := $app.TablesViews }}
+          {{$t := index $portail.Tables $tableView.TableName }}
+          {{$v := index $t.Views $tableView.ViewName }}
           {{if (CrudIsInGroup $v.Group $session)}}
-          <a class="item{{if and (eq $appView.Tableid $tableid) (eq $appView.Viewid $viewid)}} {{$theme}} active{{end}}{{if $v.HideOnMobile}} crud-mobile-hide{{end}}"
-            href="/bee/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
+          <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}{{if $v.HideOnMobile}} crud-mobile-hide{{end}}"
+            href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
             <i class="{{$v.IconName}} icon"></i>
             {{$v.Title}}
           </a>
@@ -76,7 +76,7 @@
           <!-- Recherche -->
           <div style="display: none" id="crud-search">
             <div class="ui icon input">
-              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}"
+              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}"
                 value="{{$search}}" placeholder="Recherche...">
               <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
             </div>
@@ -89,7 +89,7 @@
           <div class="menu">
             {{if $view.FormAdd}}
             <a class="ui icon item crud-jquery-url"
-              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormAdd}}">
               <i class="plus square icon"></i> Ajouter un élément...
             </a>
             {{end}}
@@ -99,7 +99,7 @@
             {{end}}
             {{range $iaction, $action := $view.Actions}}
             <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
+              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$iaction}}">{{str2html $action.Label}}</a>
             {{end}}
             <!-- end range actions-->
             {{end}}
@@ -139,7 +139,7 @@
             {{if (ne $element.Hide true)}}
             <th id="col_{{$key}}"
               class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}{{if (eq $sortid $key)}} sorted {{$sortdirection}}{{end}} crud-ajax-sort"
-              data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}" title="{{$key}}">
+              data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}" title="{{$key}}">
               {{$element.LabelShort}}
             </th>
             {{end}}
@@ -153,7 +153,7 @@
           {{ range $irecord, $record := .Records }}
           <tr id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.FormView}}
             class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
-            data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" {{else}}
+            data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" {{else}}
             class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
@@ -218,7 +218,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewid}}">
+  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}">
     {{ .xsrfdata }}
     <input type="hidden" id="crud-form-search" name="search">
     <input type="hidden" id="crud-form-searchstop" name="searchstop">
@@ -226,7 +226,7 @@
     <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
   </form>
   <!-- CONTEXTE -->
-  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewName}}">
   {{template "_crud_foot.html" .}}
 </body>
 
