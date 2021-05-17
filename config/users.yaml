@@ -125,8 +125,6 @@ forms:
         order: 10
       user_email:
         order: 20
-      user_groupes:
-        order: 60
   fview:
     title: "Fiche Compte"
     group: admin

@@ -1,4 +1,4 @@
-
+# Table groups
 setting:
   alias-db: admin
   key: group_id
@@ -10,12 +10,10 @@ elements:
     type: text
     label-long: "Groupes"
     label-short: "Groupes"
-    order: 10
   group_note:
     type: textarea
     label-long: "Note"
     label-short: "Note"
-    order: 20
 
 views:
   vall:

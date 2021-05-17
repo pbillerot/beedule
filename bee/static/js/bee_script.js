@@ -6,22 +6,8 @@ $(document).ready(function () {
     var isUsed = false;
 
     // CLIC IMAGE POPUP
-    var $hugo_view = $('#hugo_view').val();
-    var $hugo_refresh = $('#hugo_refresh').val();
-    $('.hugo-modal-image').on('click', function (event) {
-        var $src = $(this).data('src');
-        $('#hugo-image').attr('src', $src)
-        $('#hugo-modal-image')
-            .modal({
-                closable: true,
-                onHide: function () {
-                    isUsed = false;
-                    return true;
-                }
-            }).modal('show');
-
-        event.preventDefault();
-    });
+    var $eddy_view = $('#eddy_view').val();
+    var $eddy_refresh = $('#eddy_refresh').val();
 
     // Coloriage syntaxique
     if ($("#codemirror-markdown").length != 0) {
@@ -30,7 +16,7 @@ $(document).ready(function () {
             , {
                 lineNumbers: false,
                 lineWrapping: true,
-                mode: 'yaml-frontmatter',
+                mode: 'yaml',
                 readOnly: false,
                 theme: 'eclipse',
                 viewportMargin: 20
@@ -233,41 +219,6 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-    // CLIC IMAGE EDITOR POPUP
-    $('.hugo-popup-image-editor').on('click', function (event) {
-        var $url = $(this).data('src');
-        var $key = $(this).data('key');
-        const config = {
-            language: 'fr',
-            tools: ['adjust', 'effects', 'filters', 'rotate', 'crop', 'resize', 'text'],
-            translations: {
-                fr: {
-                    'toolbar.download': 'Valider'
-                },
-            }
-        };
-        var mime = $url.endsWith('.png') ? 'image/png' : 'image/jpeg';
-        // https://github.com/scaleflex/filerobot-image-editor
-        const ImageEditor = new FilerobotImageEditor(config, {
-            onBeforeComplete: (props) => {
-                console.log("onBeforeComplete", props);
-                console.log("canvas-id", props.canvas.id);
-                var canvas = document.getElementById(props.canvas.id);
-                var dataurl = canvas.toDataURL(mime, 1);
-                $("#image").val(dataurl);
-                $("#" + $key + "_img").attr('src', dataurl);
-                $("#button_validate").removeAttr('disabled');
-                return false;
-            },
-            onComplete: (props) => {
-                console.log("onComplete", props);
-                return true;
-            }
-        });
-        ImageEditor.open($url);
-        event.preventDefault();
-    });
-
     // SUPPRESSION D'UN ENREGISTREMENT
     $('.crud-jquery-delete').on('click', function (event) {
         $('#crud-modal-confirm')
@@ -365,23 +316,23 @@ $(document).ready(function () {
     }
 
     // Actualisation de la fenetre parent
-    if ($hugo_refresh && $hugo_refresh.length > 0) {
-        var val = Cookies.get($hugo_refresh)
+    if ($eddy_refresh && $eddy_refresh.length > 0) {
+        var val = Cookies.get($eddy_refresh)
         if (val == "true") {
             window.opener.location.reload();
-            Cookies.remove($hugo_refresh);
+            Cookies.remove($eddy_refresh);
         }
-    } // end hugo_refresh
+    } // end eddy_refresh
 
-    if ($hugo_view && $hugo_view.length > 0) {
+    if ($eddy_view && $eddy_view.length > 0) {
         // Si recherche dans Cookie : aff du input et sélection
         var $search = $('#search').val();
         if ($search != "") {
             $('#crud-search-active').trigger('click');
         }
         // Positionnement sur la dernière ligne sélectionnée
-        if (Cookies.get($hugo_view)) {
-            var $cookie = Cookies.get($hugo_view);
+        if (Cookies.get($eddy_view)) {
+            var $cookie = Cookies.get($eddy_view);
             var $anchor = $('#' + $cookie)
             if ($anchor.length) {
                 $('html, body').animate({
@@ -398,22 +349,15 @@ $(document).ready(function () {
 
     /**
      * Ouverture d'une fenêtre en popup
-     * TODO voir si accepter par les browsers
+     * TODO voir si accepter par tout les browsers
      */
-    $(document).on('click', '.hugo-window-open', function (event) {
-        // Mémo du contexte dans un cookie
-        if ($hugo_view && $hugo_view.length > 0) {
-            var $anchor = $(this).closest('.message');
-            Cookies.set($hugo_view, $anchor.attr('id'))
-            $(this).closest('main').find('.crud-list-selected').removeClass('crud-list-selected');
-            $anchor.addClass("crud-list-selected");
-        }
+    $(document).on('click', '.eddy-window-open', function (event) {
         // Préparation window.open
         var height = $(this).data("height") ? $(this).data("height") : 'max';
         var width = $(this).data("width") ? $(this).data("width") : 'large';
         var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
         var posy = $(this).data("posy") ? $(this).data("posy") : '3';
-        var target = $(this).attr("target") ? $(this).attr("target") : 'hugo-win';
+        var target = $(this).attr("target") ? $(this).attr("target") : 'eddy-win';
         if (window.opener == null) {
             window.open($(this).data('url')
             , target
@@ -422,30 +366,6 @@ $(document).ready(function () {
             window.opener.open($(this).data('url')
             , target
             , computeWindow(posx, posy, width, height, false));
-        }
-        event.preventDefault();
-    });
-
-    // ACTION DEMANDE CONFIRMATION
-    $('.hugo-jquery-action').on('click', function (event) {
-        var $url = $(this).data('url');
-        if ($(this).data('confirm') == true) {
-            $('#crud-action').html($(this).html());
-            $('#crud-modal-confirm')
-                .modal({
-                    closable: false,
-                    onDeny: function () {
-                        return true;
-                    },
-                    onApprove: function () {
-                        $('form').attr('action', $url);
-                        $('form', document).submit();
-                    }
-                }).modal('show');
-        } else {
-            // Sans demande de confirmation
-            $('form').attr('action', $url);
-            $('form', document).submit()
         }
         event.preventDefault();
     });

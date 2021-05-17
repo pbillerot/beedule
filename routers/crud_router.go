@@ -28,7 +28,10 @@ func init() {
 	beego.Router("/bee/actione/:app/:table/:view/:form/:id/:action", &controllers.CrudActionElementController{})
 
 	// REST API
-	// beego.Router("/bee/api/isc", &controllers.RestController{}, "get:RestIsc")
-	// beego.Router("/bee/api/put/log/:url", &controllers.RestController{}, "get:RestPutLog")
+	beego.Router("/bee/api/refresh", &controllers.RestController{}, "get:RestRefreshDico")
+	beego.Router("/bee/api/isc", &controllers.RestController{}, "get:RestIsc")
+
+	// EXPLORATEUR DE FICHIERS : EDDI
+	beego.Router("/bee/eddy/document/:key", &controllers.EddyController{}, "get:EddyDocument;post:EddyDocument")
 
 }

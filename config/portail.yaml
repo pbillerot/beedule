@@ -1,4 +1,3 @@
-
 title: "Beedule"
 info: "Framework de développement WEB en langage Go"
 icon-file: "/bee/static/img/beedule.png"
@@ -11,7 +10,7 @@ parameters:
 # Liste des applications gérées
 applications:
   admin:
-    title: "Gestion du site"
+    title: "Gestion des Utilisateurs"
     image: "/bee/static/img/tools.png"
     group: admin
     tables-views:

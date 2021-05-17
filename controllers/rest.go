@@ -3,6 +3,7 @@ package controllers
 import (
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/pbillerot/beedule/dico"
 )
 
 // RestController implements global settings for all other routers.
@@ -28,10 +29,10 @@ func (c *RestController) RestIsc() {
 	c.ServeJSON()
 }
 
-// RestPutLog Log
-func (c *RestController) RestPutLog() {
-	url := c.Ctx.Input.Param(":url")
-	logs.Info(url)
-	c.Data["json"] = map[string]interface{}{"url": url}
+// RestRefreshDico as
+func (c *RestController) RestRefreshDico() {
+	logs.Info("...RestRefreshDico")
+	dico.Ctx.Load()
+	c.Data["json"] = map[string]interface{}{"response": "ok"}
 	c.ServeJSON()
 }

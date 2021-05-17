@@ -1,6 +1,7 @@
 <!-- home.html -->
 {{$theme := .Config.Theme}}
 {{$session := .Session}}
+{{$portail := .Portail}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -16,6 +17,14 @@
                 </div>
                 <div class="menu">
                     <a href="/bee" class="item disabled"><i class="home icon"></i> Page d'accueil</a>
+                    {{if (CrudIsInGroup "dev" $session)}}
+                    {{$eddy := index $portail.Applications "eddy" }}
+                    <div class="divider"></div>
+                    <a class="item eddy-window-open"
+                            data-url="/bee/eddy/document/portail.yaml" data-posx="right" target="portail"
+                            title="Editer le dictionnaire...">
+                            <i class="file code brown icon"></i> portail.yaml</a>
+                    {{end}}
                     <div class="divider"></div>
                     <div class="header">
                         <i class="user icon"></i>
@@ -44,7 +53,7 @@
                             <div class="center aligned description"><b>{{$app.Title}}</b></div>
                         </div>
                     </a>
-                    {{else if $app.TablesViews}}
+                  {{else if $app.TablesViews}}
                         {{ $tableView := index $app.TablesViews 0 }}
                         <a class="card raised crud-card-portail"
                             href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">

@@ -3,7 +3,11 @@
 Historique des modifications
 
 ### À venir :
-- éditeur des fichiers de /config en ligne
+- ajout touches fonctions mise en commentaire
+
+2.0.2 du 17 mai 2021
+----------------------
+- `added` eddy : éditeur des fichiers de /config en ligne
 
 2.0.1 du 17 mai 2021
 ----------------------

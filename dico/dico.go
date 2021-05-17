@@ -23,12 +23,12 @@ type Portail struct {
 
 // Application as
 type Application struct {
-	Name        string
 	Title       string
 	Image       string
 	IconFile    string `yaml:"icon-file"`
-	IconName    string `yaml:"icon-name"`
+	IconName    string `yaml:"icon-name"` // Icône https://semantic-ui.com/elements/icon.html
 	Group       string
+	DataDir     string      `yaml:"data-dir"` // répertoire des données de l'application
 	Path        string      // Path ou URL de l'application externe
 	Target      string      // _blank pour ouvrir l'application dans un nouvel onglet
 	TablesViews []TableView `yaml:"tables-views"` // Vues des tables liées à l'application
@@ -229,6 +229,7 @@ func (c *Portail) Load() error {
 	// Chargement des structures Table
 	c.Tables = map[string]*Table{}
 	for _, app := range c.Applications {
+		logs.Info("...load application:", app.Title)
 		for _, tableview := range app.TablesViews {
 			if _, ok := c.Tables[tableview.TableName]; !ok {
 				var table Table

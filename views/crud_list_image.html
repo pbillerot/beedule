@@ -47,6 +47,14 @@
           <!-- end if isingroup -->
           {{end}}
           <!-- end range tablesViews-->
+          {{if (CrudIsInGroup "dev" $session)}}
+          {{$eddy := index $portail.Applications "eddy" }}
+          <div class="divider"></div>
+          <a class="item eddy-window-open"
+                  data-url="/bee/eddy/document/{{$tableid}}.yaml" data-posx="right" target="{{$tableid}}"
+                  title="Editer le dictionnaire...">
+                  <i class="file code large brown icon"></i> {{$tableid}}.yaml</a>
+          {{end}}
           <div class="divider"></div>
           <div class="header">
             <i class="user icon"></i>

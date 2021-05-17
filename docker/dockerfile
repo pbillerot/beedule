@@ -20,12 +20,11 @@ WORKDIR /src/beedule
 RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/beedule/beedule
 
 # ETAPE GENERATION D'UN IMAGE 
-# avec le projet + hugo
+# avec le projet
 FROM alpine
 RUN mkdir -p /src/beedule
 copy --from=goalpine /src/beedule /src/beedule
-# Installation de hugo...
-RUN apk add --update curl git hugo nano tree
+RUN apk add --update curl nano
 
 # Ajout du user 1000
 USER 1000:1000

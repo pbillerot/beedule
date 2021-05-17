@@ -1,0 +1,91 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$record := .Record}}
+{{$keyid := .KeyID}}
+{{$methodurl := .URL}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui large fixed secondary menu navbar bee-bar-light">
+      <div class="item">
+        <button class="ui labeled icon {{$theme}} button crud-jquery-close">
+          <i class="left arrow icon"></i>
+          Fermer
+        </button>
+      </div>
+      <div class="header item"><i class="file code outline brown large icon"></i> {{$record.Path}}</div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="item">
+          <button id="button_validate" class="ui icon red button crud-jquery-submit" disabled="disabled"
+            title="Enregistrer">
+            <i class="save icon"></i>
+          </button>
+        </div>
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- Formulaire d'Edition -->
+      <form class="ui form attached segment" id="beeForm" method="POST" action="{{$methodurl}}">
+        {{ .xsrfdata }}
+        <div class="ui form">
+          <section>
+            <div class="field">
+              <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
+            </div>
+          </section>
+        </div>
+      </form>
+    </div>
+    </div> <!-- /container -->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+
+  <!-- CONTEXTE -->
+  <input type="hidden" id="eddy_refresh" value="eddy-refresh">
+
+  {{template "_crud_foot.html" .}}
+  <script>
+    $(document).ready(function () {
+      // CTRL+S
+      $(window).bind('keydown', function (event) {
+        if (event.ctrlKey || event.metaKey) {
+          switch (String.fromCharCode(event.which).toLowerCase()) {
+            case 's':
+              event.preventDefault();
+              $("#button_validate").trigger('click');
+              break;
+          }
+        }
+      });
+      $("#codemirror-markdown").focus();
+    });
+  </script>
+</body>
+
+</html>

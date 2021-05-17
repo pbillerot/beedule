@@ -1,14 +1,4 @@
-# BEEDULE
 
-Framework de développement d'application WEB en Yaml
-
-- Utilisation du framework MVC https://beego.me/
-- Utilisation du CSS https://fomantic-ui.com/
-
-Beedule est un CRUD dont les spécifications sont décrites dans un fichier Yaml
-
-```yaml
-# Table groups
 setting:
   alias-db: admin
   key: group_id
@@ -20,10 +10,12 @@ elements:
     type: text
     label-long: "Groupes"
     label-short: "Groupes"
+    order: 10
   group_note:
     type: textarea
     label-long: "Note"
     label-short: "Note"
+    order: 20
 
 views:
   vall:
@@ -54,4 +46,3 @@ forms:
         order: 10
       group_note:
         order: 20
-```
