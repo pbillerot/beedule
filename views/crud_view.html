@@ -39,26 +39,31 @@
           {{ range $iv, $tableView := $app.TablesViews }}
           {{$t := index $portail.Tables $tableView.TableName }}
           {{$v := index $t.Views $tableView.ViewName }}
+          {{if (CrudIsInGroup $v.Group $session)}}
           <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}"
             href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
-            <i class="{{$v.IconName}} icon"></i>
+            <i class="{{$v.IconName}} {{$theme}} icon"></i>
             {{$v.Title}}
           </a>
           {{end}}
-          <!-- end range appViewq-->
+          <!-- end if isingroup -->
+          {{end}}
+          <!-- end range tablesViews-->
           <div class="divider"></div>
           <div class="header">
             <i class="user icon"></i>
             {{.Session.Username}}
           </div>
-          <a class="item" href="/bee/edit/admin/users/vall/fprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
           <a class="item" href="/bee/logout">Se déconnecter</a>
           <a href="/bee/about" class="item">À propos</a>
         </div>
       </div>
+      {{ if not (eq $viewName "vprofil")}}
       <a href="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
+      {{ end }}
       <div class="header item">{{$form.Title}}</div>
       <!-- RIGHT MENU -->
       <div class="right menu">
@@ -159,9 +164,10 @@
                   {{$element.LabelLong}}
                 </button>
                 {{else if (eq $element.Type "button")}}
-                <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}">
-                  {{$element.LabelLong}}
-                </button>
+                <div class="ui divider"></div>
+                  <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}">
+                    {{$element.LabelLong}}
+                  </button>
                 {{else if (eq $element.Type "combobox")}}
                 <div class="description">
                   <div class="meta">

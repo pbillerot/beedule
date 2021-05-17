@@ -54,13 +54,14 @@ func (c *CrudViewController) Get() {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		// ReturnFrom(c.Controller)
+		c.Ctx.Redirect(302, "/bee")
 		return
 	}
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
 	formviewid := dico.Ctx.Tables[tableid].Views[viewid].FormView
-	formview := dico.Ctx.Tables[tableid].Views[formviewid]
+	formview := dico.Ctx.Tables[tableid].Forms[formviewid]
 	// Ctrl accès à formviewid
 	if formview.Group == "" {
 		formview.Group = dico.Ctx.Applications[appid].Group
@@ -69,7 +70,8 @@ func (c *CrudViewController) Get() {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formviewid, formview.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		// ReturnFrom(c.Controller)
+		c.Ctx.Redirect(302, "/bee")
 		return
 	}
 	// Ctrl d'accès FormAdd FormView FormEdit

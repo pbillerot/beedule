@@ -5,33 +5,6 @@ setting:
   col-display: user_name
   icon-name: "user"
 
-views:
-  vall:
-    form-view: fview
-    form-add: fadd
-    form-edit: fedit
-    group: admin
-    deletable: true
-    title: "Comptes"
-    icon-name: user
-    order-by: user_name
-    mask:
-      header:
-        - user_name
-      meta:
-        - user_email
-      description:
-      extra:
-        - user_is_admin
-        - user_groupes
-    elements:
-      user_name:
-      user_email:
-        hide-on-mobile: true
-      user_is_admin:
-        hide-on-mobile: true
-      user_groupes:
-
 elements:
   user_name:
     type: text
@@ -79,6 +52,61 @@ elements:
     pattern: "[a-zA-Z0-9_-]+"
     required: true
     min-length: 3
+  _confirm_password:
+    type: password
+    label-long: "Confirmer le mot de passe"
+    pattern: "[a-zA-Z0-9_-]+"
+    required: true
+    min-length: 3
+
+views:
+  vall:
+    form-view: fview
+    form-add: fadd
+    form-edit: fedit
+    group: admin
+    deletable: true
+    title: "Comptes"
+    icon-name: user
+    order-by: user_name
+    mask:
+      header:
+        - user_name
+      meta:
+        - user_email
+      description:
+      extra:
+        - user_is_admin
+        - user_groupes
+    elements:
+      user_name:
+      user_email:
+        hide-on-mobile: true
+      user_is_admin:
+        hide-on-mobile: true
+      user_groupes:
+
+  vprofil:
+    form-view: fprofil
+    form-edit: fedit_owner
+    group: owner
+    title: "Mon profil"
+    icon-name: user
+    order-by: user_name
+    mask:
+      header:
+        - user_name
+      meta:
+        - user_email
+      description:
+      extra:
+        - user_is_admin
+        - user_groupes
+    elements:
+      user_name:
+      user_email:
+      user_is_admin:
+      user_groupes:
 
 forms:
   fadd:
@@ -97,6 +125,8 @@ forms:
         order: 10
       user_email:
         order: 20
+      user_groupes:
+        order: 60
   fview:
     title: "Fiche Compte"
     group: admin
@@ -107,12 +137,12 @@ forms:
         order: 20
       _SECTION_MDP:
         order: 30
-      user_password:
-        order: 40
       user_is_admin:
         order: 50
       user_groupes:
         order: 60
+      _pwd_change:
+        order: 70
   fprofil:
     title: "Mon profil"
     group: owner
@@ -121,11 +151,23 @@ forms:
         order: 10
       user_email:
         order: 20
+      _SECTION_MDP:
+        order: 30
+      user_is_admin:
+        order: 50
       user_groupes:
         order: 60
-        protected: true
       _pwd_change:
         order: 70
+  fedit_owner:
+    title: "Fiche compte"
+    group: owner
+    elements:
+      user_name:
+        order: 10
+        read-only: true
+      user_email:
+        order: 20
   fpwd:
     title: "Changer le mot de passe"
     group: owner
@@ -137,9 +179,7 @@ forms:
         order: 20
       _confirm_password:
         order: 30
-        protected: true
-      _pwd_change:
-        order: 70
+        # protected: true
     check-sql:
       - "select 'les mots de passe ne sont pas identiques' where '{_new_password}' <> '{_confirm_password}' "
     post-sql:
@@ -151,8 +191,6 @@ forms:
       user_name:
         order: 10
         read-only: true
-      user_password:
-        order: 20
       user_is_admin:
         order: 30
       user_groupes:

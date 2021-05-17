@@ -1,0 +1,204 @@
+# Quotes table des cotations
+setting:
+  alias-db: "picsou"
+  key: "keyid"
+  col-display: "id"
+  icon-name: "atom"
+
+elements:
+  keyid:
+    type: "text"
+    label-long: "Clé"
+    label-short: "clé"
+    jointure:
+      join: ""
+      column: "date || '-' || id"
+  id:
+    type: "text"
+    label-long: "Valeur"
+    label-short: "Valeur"
+  name:
+    type: "text"
+    label-long: "Nom"
+    label-short: "Nom"
+  date:
+    type: "date"
+    label-long: "Date"
+    label-short: "Date"
+  close1:
+    type: "amount"
+    label-long: "Close j-1"
+    label-short: "Close j-1"
+  open:
+    type: "amount"
+    label-long: "Open"
+    label-short: "Open"
+  high:
+    type: "amount"
+    label-long: "High"
+    label-short: "High"
+  low:
+    type: "amount"
+    label-long: "Low"
+    label-short: "Low"
+  close:
+    type: "amount"
+    label-long: "Quote"
+    label-short: "Quote"
+  adjclose:
+    type: "amount"
+    label-long: "Close adj"
+    label-short: "Close adj"
+  volume:
+    type: "number"
+    label-long: "Volume"
+    label-short: "Volume"
+
+  percent:
+    type: "percent"
+    label-long: "Gain"
+    label-short: "Gain"
+    jointure:
+      join: ""
+      column: "((adjclose-close1)/close1)*100"
+    class-sql: "select case when {percent} > 0 then 'green' when {percent} < 0 then 'red' end"
+  ptf_top:
+    type: "checkbox"
+    label-long: "TOP"
+    label-short: "TOP"
+    jointure:
+      join: "left outer join ptf on ptf_id = id"
+      column: "ptf.ptf_top"
+  ptf_rem:
+    type: "textarea"
+    label-long: "Rem."
+    label-short: "Rem."
+    jointure:
+      # join:   "left outer join ptf on ptf_id = id"
+      column: "ptf.ptf_rem"
+  ptf_note:
+    type: "textarea"
+    label-long: "Note"
+    label-short: "Note"
+    jointure:
+      # join:   "left outer join ptf on ptf_id = id"
+      column: "ptf.ptf_note"
+  order_buy:
+    type: "text"
+    label-long: "Achat en cours"
+    label-short: "Achat"
+    jointure:
+      join: "left outer join orders on orders_ptf_id = id and orders_order = 'buy'"
+      column: "orders_order"
+  _image_day:
+    type: "image"
+    label-long: "Graph du jour"
+    params:
+      path: "/bee/data/picsou/png/day/{id}.png"
+      url: "/bee/data/picsou/png/day/{id}.png"
+  _image_histo:
+    type: "image"
+    label-long: "Historique sur 1 mois"
+    params:
+      path: "/bee/data/picsou/png/quotes/{id}.png"
+      url: "/bee/data/picsou/png/quotes/{id}.png"
+  _image_analyse:
+    type: "image"
+    label-long: "Analyse sur 7 mois"
+    params:
+      path: "/bee/data/picsou/png/ana/{id}.gif"
+      url: "/bee/data/picsou/png/ana/{id}.gif"
+  _chart_quotes:
+    type: "image"
+    label-long: "Cotation sur 1 mois"
+    label-short: "Cotation"
+    dataset:
+      "ClassJquery": "select 'bee-chart-quotes'"
+      "title": "select 'Cours deid}'"
+      "Quotes": "select open as matin, close as soir from quotes where id = '{id}' order by date"
+      "Quotep": "select (open-close1)*100/close1 as matin, (close-close1)*100/close1 as soir from quotes where id = '{id}' order by date"
+      "labels": "select printf('%s-%s',substr(date,9,2),substr(date,6,2)) as 'matin', '-' as 'soir' from quotes where id = '{id}' order by date"
+      "Minp": "select (low-close1)*100/close1 as matin, (low-close1)*100/close1 as soir from quotes where id = '{id}' order by date"
+      "Maxp": "select (high-close1)*100/close1 as matin, (high-close1)*100/close1 as soir from quotes where id = '{id}' order by date"
+      "Min": "select min(low) as min from quotes where id = '{id}'"
+      "Max": "select max(high) as max from quotes where id = '{id}'"
+      "SeuilV": "select orders_cost_price + orders_cost_price *__optimum} from orders where orders_ptf_id = '{id}' and orders_order = 'buy'"
+      "SeuilR": "select orders_cost_price from orders where orders_ptf_id = '{id}' and orders_order = 'buy'"
+
+views:
+  vlast:
+    title: "Cotations du jour"
+    form-view: "fview"
+    icon-name: "atom"
+    order-by: "id,date"
+    group: "picsou"
+    limit: 50
+    where: "date = (select max(date) from quotes)"
+    type: "table"
+    class-sql: "select case when '{order_buy}' = 'buy' then 'violet' else '' end"
+    elements:
+      keyid:
+        order: 1
+        hide: true
+      id:
+        order: 10
+      name:
+        order: 20
+        hide-on-mobile: true
+      date:
+        order: 30
+        hide-on-mobile: true
+      close:
+        order: 100
+      volume:
+        order: 110
+        hide-on-mobile: true
+      percent:
+        order: 200
+      order_buy:
+        order: 250
+        hide: true
+      ptf_top:
+        order: 300
+      ptf_rem:
+        order: 310
+    actions:
+      - label: "Effacer les remarques..."
+        sql: 
+          - "update ptf set ptf_rem = ''"
+        with-confirm: false
+
+forms:
+  fview:
+    title: "Cotation"
+    group: "picsou"
+    elements:
+      keyid:
+        order: 1
+      name:
+        order: 10
+      id:
+        order: 20
+      close1:
+        order: 30
+      close:
+        order: 40
+      percent:
+        order: 50
+      volume:
+        order: 60
+      _ptf:
+        order: 100
+        type: "section"
+        label-long: "Portefeuille"
+        params:
+          url: "/bee/edit/picsou/ptf/vall/fedit/{id}"
+          icon-name: "building"
+      ptf_top:
+        order: 110
+      ptf_rem:
+        order: 120
+      _chart_quotes:
+        order: 410
+      _image_analyse:
+        order: 420

@@ -63,7 +63,7 @@ type Element struct {
 	Actions       []Action // bouton d'actions - utilise Params
 	Args          Args
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL      string            `yaml:"class-sqm"` // SQL pour alimenter Class error warning info green blue
+	ClassSQL      string            `yaml:"class-sql"` // SQL pour alimenter Class error warning info green blue
 	ColAlign      string            `yaml:"col-align"` //
 	ColWith       int               `yaml:"col-with"`  // TODO largeur de la colonne
 	Dataset       map[string]string `yaml:"data-set"`  // Dataset pour un Chartjs

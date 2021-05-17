@@ -4,7 +4,12 @@ Historique des modifications
 
 ### À venir :
 - éditeur des fichiers de /config en ligne
-- bug retour modif email dans form profil - la vue retour est non autorisé -> /bee
+
+2.0.1 du 17 mai 2021
+----------------------
+- `fixed` retour profil sur view non autorisée
+- `changed` icônes des view en bleu  dans le menu
+- `fixed` bouton retour enlevé sur view vprofil
 
 2.0.0 du 15 mai 2021
 ----------------------
