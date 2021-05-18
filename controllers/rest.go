@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strings"
+
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/dico"
@@ -33,6 +35,12 @@ func (c *RestController) RestIsc() {
 func (c *RestController) RestRefreshDico() {
 	logs.Info("...RestRefreshDico")
 	dico.Ctx.Load()
-	c.Data["json"] = map[string]interface{}{"response": "ok"}
+	msg, err := dico.Ctx.Load()
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{"response": strings.Join(msg[:], ",")}
+	} else {
+		c.Data["json"] = map[string]interface{}{"response": "ok"}
+	}
+
 	c.ServeJSON()
 }

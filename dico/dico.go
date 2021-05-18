@@ -1,6 +1,7 @@
 package dico
 
 import (
+	"fmt"
 	"io/ioutil"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -94,7 +95,7 @@ type Element struct {
 	Pattern       string            // Pattern de l'input HTML
 	PlaceHolder   string            `yaml:"place-holder"` // Label dans le champ en saisie si vide
 	PostAction    []Action          `yaml:"post-action"`  // actions sql ou plugin à exécuter après la mise à jour
-	Protected     bool              // Est en misa à jour mais protégé en saisie
+	Protected     bool              // Est en mise à jour mais protégé en saisie
 	ReadOnly      bool              `yaml:"read-only"` // Lecteur seule
 	Refresh       bool              // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
 	Required      bool              // obligatoire
@@ -210,21 +211,29 @@ type Jointure struct {
 	Column string // colonne retournée par la jointure
 }
 
+// CHARGEMENT DU DICTIONNAIRE
+
+var dicoError []string
+
 // Load as
-func (c *Portail) Load() error {
+func (c *Portail) Load() ([]string, error) {
+	// Raz error
+	dicoError = []string{}
 	// Read file
 	yf := "config/portail.yaml"
 	logs.Info("...load", yf)
 	yamlFile, err := ioutil.ReadFile(yf)
 	if err != nil {
 		logs.Error("yamlFile.Get err", err)
-		return err
+		return dicoError, err
 	}
 	// chargement de la structure Portail
 	err = yaml.Unmarshal(yamlFile, c)
 	if err != nil {
-		logs.Error("Unmarshal", err)
-		return err
+		msg := fmt.Sprintf("portail.yaml : [%v]", err)
+		dicoError = append(dicoError, msg)
+		logs.Error("Unmarshal", msg)
+		return dicoError, err
 	}
 	// Chargement des structures Table
 	c.Tables = map[string]*Table{}
@@ -238,24 +247,26 @@ func (c *Portail) Load() error {
 			}
 		}
 	}
-	return err
+	return dicoError, err
 }
 
 // Load as
-func (c *Table) Load(table string) error {
+func (c *Table) Load(table string) ([]string, error) {
 	yf := "config/" + table + ".yaml"
 	logs.Info("...load", yf)
 	// Read file
 	yamlFile, err := ioutil.ReadFile(yf)
 	if err != nil {
-		logs.Error("yamlFile.Get err", table, err)
-		return err
+		msg := fmt.Sprintf("%s.yaml : [%v]", table, err)
+		dicoError = append(dicoError, msg)
+		logs.Error("Unmarshal", msg)
+		return dicoError, err
 	}
 	// chargement de la structure Table
 	err = yaml.Unmarshal(yamlFile, c)
 	if err != nil {
 		logs.Error("Unmarshal", err)
-		return err
+		return dicoError, err
 	}
-	return err
+	return dicoError, err
 }

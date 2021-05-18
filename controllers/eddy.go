@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/pbillerot/beedule/dico"
@@ -35,7 +36,11 @@ func (c *EddyController) EddyDocument() {
 			flash.Store(&c.Controller)
 		}
 		// Demande d'actualisation de l'arborescence
-		dico.Ctx.Load()
+		msg, err := dico.Ctx.Load()
+		if err != nil {
+			flash.Error(strings.Join(msg[:], ","))
+			flash.Store(&c.Controller)
+		}
 		c.Ctx.Output.Cookie("eddy-refresh", "true")
 	}
 

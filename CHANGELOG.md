@@ -4,6 +4,12 @@ Historique des modifications
 
 ### À venir :
 - ajout touches fonctions mise en commentaire
+- récupérer résultat et erreurs rechargement du dictionnaire
+
+2.0.3 du 18 mai 2021
+----------------------
+- `added` eddy : éditeur des fichiers de /config en ligne
+- `added` eddy : auto-complétion ctrl+space dans eddy.js
 
 2.0.2 du 17 mai 2021
 ----------------------

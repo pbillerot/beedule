@@ -1,4 +1,3 @@
-
 setting:
   alias-db: admin
   key: user_name
@@ -15,7 +14,6 @@ elements:
   user_password:
     type: password
     label-long: "Mot de passe"
-    label-short: "Mot de passe"
     pattern: "[a-zA-Z0-9_-]+"
     required: true
     min-length: 3
