@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/core/logs"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v2"
@@ -219,7 +220,7 @@ func (c *Portail) Load() ([]string, error) {
 	// Raz error
 	dicoError = []string{}
 	// Read file
-	yf := "config/portail.yaml"
+	yf := beego.AppConfig.String("dicodir") + "/portail.yaml"
 	logs.Info("...load", yf)
 	yamlFile, err := ioutil.ReadFile(yf)
 	if err != nil {
@@ -251,7 +252,7 @@ func (c *Portail) Load() ([]string, error) {
 
 // Load as
 func (c *Table) Load(table string) ([]string, error) {
-	yf := "config/" + table + ".yaml"
+	yf := beego.AppConfig.String("dicodir") + "/" + table + ".yaml"
 	logs.Info("...load", yf)
 	// Read file
 	yamlFile, err := ioutil.ReadFile(yf)

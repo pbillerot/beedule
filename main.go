@@ -14,10 +14,14 @@ import (
 
 func init() {
 
+	// Répertoire du dictionnaire
+	// beego.AppConfig.String("dicodir")
+
 	// Enregistrement des drivers des base de données
 	// l'alias : Tables[alias]string
 	// La déclaration dans conf/custom.conf [alias] drivertype= datasource= drivername=
-	// default
+
+	// default est utilisé pour exécuter les ordres de calcul sql par le moteur
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "./database/beedule.sqlite")
 

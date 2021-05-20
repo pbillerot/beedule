@@ -6,6 +6,12 @@ Historique des modifications
 - revoir gestion erreur compilation dictionnaire car si erreur fin du fichier perdu
   garder la version-1
 - ambiguité params: url et path ?
+- déployer dans docker
+
+2.0.6 du 20 mai 2021
+----------------------
+- `changed` répertoire du dictionnaire extérieure à la webapp
+- `changed` répertoire du dictionnaire défini dans custom.conf
 
 2.0.5 du 20 mai 2021
 ----------------------

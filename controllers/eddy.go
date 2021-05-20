@@ -33,9 +33,9 @@ func (c *EddyController) EddyDocument() {
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
 		document := c.GetString("document")
-		err = ioutil.WriteFile("./config/"+keyid, []byte(document), 0644)
+		err = ioutil.WriteFile(beego.AppConfig.String("dicodir")+"/"+keyid, []byte(document), 0644)
 		if err != nil {
-			msg := fmt.Sprintf("EddyDocument %s : %s", "./config/"+keyid, err)
+			msg := fmt.Sprintf("EddyDocument %s : %s", beego.AppConfig.String("dicodir")+"/"+keyid, err)
 			beego.Error(msg)
 			flash.Error(msg)
 			flash.Store(&c.Controller)
@@ -51,7 +51,7 @@ func (c *EddyController) EddyDocument() {
 
 	// Lecture du fichier
 	var record eddyFile
-	content, err := ioutil.ReadFile("./config/" + keyid)
+	content, err := ioutil.ReadFile(beego.AppConfig.String("dicodir") + "/" + keyid)
 	if err != nil {
 		msg := fmt.Sprintf("EddyDocument %s : %s", keyid, err)
 		beego.Error(msg)
