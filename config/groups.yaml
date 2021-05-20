@@ -1,4 +1,4 @@
-# Table groups
+# Table des Groupes Utilisateur
 setting:
   alias-db: admin
   key: group_id
@@ -8,8 +8,8 @@ setting:
 elements:
   group_id:
     type: text
-    label-long: "Groupes"
-    label-short: "Groupes"
+    label-long: "Groupe"
+    label-short: "Groupe"
   group_note:
     type: textarea
     label-long: "Note"
@@ -21,7 +21,7 @@ views:
     form-edit: fedit
     deletable: true
     group: admin
-    title: "Groupes"
+    title: "Liste des Groupes"
     icon-name: users
     order-by: group_id
     mask:

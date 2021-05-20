@@ -15,14 +15,14 @@
 <body>
   <!-- NAVBAR -->
   <div class="ui container">
-    <div class="ui large fixed secondary menu navbar bee-bar-light">
+    <div class="ui large fixed secondary grey inverted menu navbar bee-bar-light">
       <div class="item">
         <button class="ui labeled icon {{$theme}} button crud-jquery-close">
           <i class="left arrow icon"></i>
           Fermer
         </button>
       </div>
-      <div class="header item"><i class="file code outline brown large icon"></i> {{$record.Path}}</div>
+      <h3 class="header item"><i class="file code large icon"></i> {{$record.Path}}</h3>
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
@@ -43,6 +43,8 @@
       <!-- Formulaire d'Edition -->
       <form class="ui form attached segment" id="beeForm" method="POST" action="{{$methodurl}}">
         {{ .xsrfdata }}
+        <input type="hidden" id="cursor_ch" name="cursor_ch" value="{{.CursorCh}}">
+        <input type="hidden" id="cursor_line" name="cursor_line" value="{{.CursorLine}}">
         <div class="ui form">
           <section>
             <div class="field">
@@ -68,23 +70,8 @@
 
   <!-- CONTEXTE -->
   <input type="hidden" id="eddy_refresh" value="eddy-refresh">
-
+  <input type="hidden" id="eddy_rubriques" value="{{.Rubriques}}">
   {{template "_crud_foot.html" .}}
-  <script>
-    $(document).ready(function () {
-      // CTRL+S
-      $(window).bind('keydown', function (event) {
-        if (event.ctrlKey || event.metaKey) {
-          switch (String.fromCharCode(event.which).toLowerCase()) {
-            case 's':
-              event.preventDefault();
-              $("#button_validate").trigger('click');
-              break;
-          }
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>

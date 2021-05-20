@@ -5,15 +5,28 @@ $(document).ready(function () {
   var isUsed = false;
 
   // CLIC IMAGE POPUP
-  var $eddy_view = $('#eddy_view').val();
   var $eddy_refresh = $('#eddy_refresh').val();
+  var $eddy_rubriques = $('#eddy_rubriques').val();
 
-  // Coloriage syntaxique
-  CodeMirror.commands.autocomplete = function (cm) {
-    CodeMirror.showHint(cm, CodeMirror.hint.eddy);
+  // CODEMIRROR : coloration syntaxique et auto-complétion
+  // https://codemirror.net/
+  // ajout de la liste des rubriques dans $eddy_dico
+  // et dans $keyword pour le coloriage syntaxique
+  // https://github.com/erosman/CodeMirror-plus
+  var $keyword = {}
+  if ($eddy_rubriques) {
+    rubriques = $eddy_rubriques.split(',');
+    for (id in rubriques) {
+      $eddy_dico.push({ text: rubriques[id], displayText: 'r_' + rubriques[id] });
+      $keyword[rubriques[id]] = 'keyword';
+    }
   }
-  CodeMirror.hint.eddy = function (cm) {
-    var list = $eddy_dico || [];
+  // déclaration de la foncion autocomplete
+  CodeMirror.commands.autocomplete = function (cm) {
+    CodeMirror.showHint(cm, CodeMirror.hint.eddy, { list: $eddy_dico });
+  }
+  CodeMirror.hint.eddy = function (cm, options) {
+    var list = options.list || [];
     var cursor = cm.getCursor();
     var currentLine = cm.getLine(cursor.line);
     var start = cursor.ch;
@@ -35,7 +48,7 @@ $(document).ready(function () {
     };
     return result;
   };
-
+  // Activation de CODEMIRROR
   if ($("#codemirror-markdown").length != 0) {
     var myCodeMirror = CodeMirror.fromTextArea(
       document.getElementById('codemirror-markdown')
@@ -47,20 +60,32 @@ $(document).ready(function () {
         theme: 'eclipse',
         tabSize: 2,
         autofocus: true,
-        viewportMargin: 20
+        viewportMargin: 20,
+        keyword: $keyword
       }
     );
+    myCodeMirror.focus();
+    myCodeMirror.setCursor({ line: $('#cursor_line').val(), ch: $('#cursor_ch').val() });
     myCodeMirror.setOption("extraKeys", {
       Tab: function (cm) {
         var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
         cm.replaceSelection(spaces);
       },
-      "Ctrl-/": function (cm) {
-        cm.toggleComment();
+      "Ctrl-S": function (cm) {
+        var cursor = cm.getCursor();
+        $('#cursor_ch').val(cursor.ch);
+        $('#cursor_line').val(cursor.line);
+        $("#button_validate").trigger('click');
       },
       "Ctrl-Space": "autocomplete",
+      "Ctrl-/": function (cm) {
+        cm.toggleComment();
+      }
     });
     myCodeMirror.on("change", function (cm) {
+      var cursor = cm.getCursor();
+      $('#cursor_ch').val(cursor.ch);
+      $('#cursor_line').val(cursor.line);
       $('#button_validate').removeAttr('disabled');
     })
   }
@@ -361,29 +386,6 @@ $(document).ready(function () {
       Cookies.remove($eddy_refresh);
     }
   } // end eddy_refresh
-
-  if ($eddy_view && $eddy_view.length > 0) {
-    // Si recherche dans Cookie : aff du input et sélection
-    var $search = $('#search').val();
-    if ($search != "") {
-      $('#crud-search-active').trigger('click');
-    }
-    // Positionnement sur la dernière ligne sélectionnée
-    if (Cookies.get($eddy_view)) {
-      var $cookie = Cookies.get($eddy_view);
-      var $anchor = $('#' + $cookie)
-      if ($anchor.length) {
-        $('html, body').animate({
-          scrollTop: $anchor.offset().top - 100
-        }, 1000)
-        $anchor.addClass("crud-list-selected");
-        // Collpase du folder
-        var $folderid = $anchor.data("root");
-        var $folder = $('#' + $folderid);
-        $folder.trigger("click");
-      }
-    }
-  }
 
   /**
    * Ouverture d'une fenêtre en popup

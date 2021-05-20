@@ -1,11 +1,11 @@
-title: "Beedule"
-info: "Framework de développement WEB en langage Go"
+title: "Beedule le machin"
+info: "Framework de développement WEB en Yaml"
 icon-file: "/bee/static/img/beedule.png"
 # Paramètres globaux
 parameters:
   __amount_min: 1200 # mise minimum
   __cost: 0.0047 # coût en % d'une transaction
-  __optimum: 0.03 # seuil en % minimum pour vente
+  __optimum: 0.03 # seuil minimum à atteindre en % pour vendre
 
 # Liste des applications gérées
 applications:

@@ -20,7 +20,6 @@ func (c *CrudDeleteController) Post() {
 	appid := c.Ctx.Input.Param(":app")
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
-	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
 	flash := beego.ReadFromRequest(&c.Controller)
@@ -33,12 +32,6 @@ func (c *CrudDeleteController) Post() {
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
-			if _, ok := val.Forms[formid]; ok {
-			} else {
-				logs.Error("Form not found", c.GetSession("Username").(string), formid)
-				ReturnFrom(c.Controller)
-				return
-			}
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
 			ReturnFrom(c.Controller)
@@ -52,7 +45,6 @@ func (c *CrudDeleteController) Post() {
 	// Contrôle d'accès
 	table := dico.Ctx.Tables[tableid]
 	view := dico.Ctx.Tables[tableid].Views[viewid]
-	form := dico.Ctx.Tables[tableid].Forms[formid]
 	if view.Group == "" {
 		view.Group = dico.Ctx.Applications[appid].Group
 	}
@@ -62,22 +54,9 @@ func (c *CrudDeleteController) Post() {
 		ReturnFrom(c.Controller)
 		return
 	}
-	if form.Group == "" {
-		form.Group = view.Group
-	}
-	if form.Group == "" {
-		form.Group = dico.Ctx.Applications[appid].Group
-	}
-	if !IsInGroup(c.Controller, form.Group, id) {
-		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
-		flash.Error("Accès non autorisé")
-		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
-		return
-	}
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, _ := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
+	elements, _ := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Views[viewid].Elements, id)
 
 	// Filtrage si élément owner
 	filter := ""
@@ -112,7 +91,7 @@ func (c *CrudDeleteController) Post() {
 		flash.Store(&c.Controller)
 	} else {
 		// PostSQL
-		for _, postsql := range form.PostSQL {
+		for _, postsql := range view.PostSQL {
 			sql := macro(c.Controller, postsql, records[0])
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)

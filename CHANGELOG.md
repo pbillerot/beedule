@@ -3,13 +3,23 @@
 Historique des modifications
 
 ### À venir :
-- ajout touches fonctions mise en commentaire
-- récupérer résultat et erreurs rechargement du dictionnaire
+- essayer image portail sous data
+- ajouter ptf
+- ajouter orders
+
+2.0.4 du 19 mai 2021
+----------------------
+- `changed` eddy : taille titre en h3 sur fond inversé en gris
+- `added` eddy: la position du curseur sur le ctrl+s est mémorisée
+- `added` eddy: ajout de la liste des rubriques _r dans l'auto-compléteur
+- `added` eddy: coloriage des rubriques
+- `fixed` correction suppression d'un article
 
 2.0.3 du 18 mai 2021
 ----------------------
 - `added` eddy : éditeur des fichiers de /config en ligne
 - `added` eddy : auto-complétion ctrl+space dans eddy.js
+- `added` eddy : erreurs rechargement du dictionnaire affichées dans la fenêtre
 
 2.0.2 du 17 mai 2021
 ----------------------

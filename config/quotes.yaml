@@ -53,7 +53,6 @@ elements:
     type: "number"
     label-long: "Volume"
     label-short: "Volume"
-
   percent:
     type: "percent"
     label-long: "Gain"

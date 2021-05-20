@@ -321,7 +321,7 @@
     </div>
   </div> <!-- end modal image -->
 
-  <form action="/bee/delete/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formviewid}}/{{$id}}" method="POST">
+  <form action="/bee/delete/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$id}}" method="POST">
     {{ .xsrfdata }}
   </form>
   {{template "_crud_foot.html" .}}

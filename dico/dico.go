@@ -133,6 +133,7 @@ type View struct {
 	Title        string             // Titre de la vue
 	Elements     map[string]Element // Eléments à récupérer de la base de données
 	Mask         MaskList           // Masque html d'une ligne dans la vue
+	PostSQL      []string           `yaml:"post-sql"`       // Ordre exécutée après la suppression si OK
 	PreUpdateSQL []string           `yaml:"pre-update-sql"` // requêtes SQL avant l'affichage
 	Search       string             // Chaîne de recherche dans toutes les colonnes de la vue
 }

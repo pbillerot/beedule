@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"io/ioutil"
+	"path"
 	"strings"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -23,7 +24,11 @@ type EddyController struct {
 // EddyDocument Visualiser Modifier un document
 func (c *EddyController) EddyDocument() {
 	flash := beego.ReadFromRequest(&c.Controller)
+	// keyid = nom du fichier
 	keyid := c.Ctx.Input.Param(":key")
+	// Mémorisation de la position du curseur
+	cursorCh := c.GetString("cursor_ch")
+	cursorLine := c.GetString("cursor_line")
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
@@ -60,5 +65,17 @@ func (c *EddyController) EddyDocument() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Data["TabTitle"] = keyid
+	c.Data["CursorCh"] = cursorCh
+	c.Data["CursorLine"] = cursorLine
+	// load liste des rubriques
+	tableid := strings.TrimSuffix(keyid, path.Ext(keyid))
+	var rubriques string
+	for k := range dico.Ctx.Tables[tableid].Elements {
+		if len(rubriques) != 0 {
+			rubriques += ","
+		}
+		rubriques += k
+	}
+	c.Data["Rubriques"] = rubriques
 	c.TplName = "eddy.html"
 }
