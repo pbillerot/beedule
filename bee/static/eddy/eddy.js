@@ -4,7 +4,7 @@
 
 var $eddy_dico = [
   // Actions
-  { text: 'check-box:\n  get-sql: "select..."\n  set-sql: "update..."\n  alias-db: "mydb"', displayText: 'a_check-box' },
+  { text: 'checkbox:\n  get-sql: "select..."\n  set-sql: "update..."\n  alias-db: "mydb"', displayText: 'a_checkbox' },
   { text: 'group: ""', displayText: 'a_group' },
   { text: 'hide-sql: ""', displayText: 'a_hide-sql' },
   { text: 'hide: ""', displayText: 'a_hide' },
@@ -20,7 +20,7 @@ var $eddy_dico = [
   { text: 'col-align: left center right', displayText: 'e_col-align' },
   { text: 'col-width: 30px', displayText: 'e_col-width' },
   { text: 'compute-sql: "select..."', displayText: 'e_compute-sql' },
-  { text: 'data-set:\n  arg: "value"', displayText: 'e_data-set' },
+  { text: 'dataset:\n  arg: "value"', displayText: 'e_dataset' },
   { text: 'default-sql: "select..."', displayText: 'e_default-sql' },
   { text: 'default: "value"', displayText: 'e_default' },
   { text: 'format: "%3.2f %%" "%3.2f €"', displayText: 'e_format' },

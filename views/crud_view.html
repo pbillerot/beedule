@@ -167,6 +167,7 @@
                 <!-- ***************** SECTION -->
                 <!-- DEBUT type -->
                 {{else if (eq $element.Type "action")}}
+                <div class="ui divider"></div>
                 <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
                   data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formviewid}}/{{$id}}/{{$key}}">
                   {{$element.LabelLong}}
@@ -206,7 +207,7 @@
             <div class="card raised crud-card-view crud-card-view2 {{$element.Class}}" >
               {{if $element.Dataset}}
               <a class="crud-popup-chart">
-              <canvas class="ui link {{$element.Dataset.ClassJquery}}" style="background-color: white" 
+              <canvas class="ui link {{$element.Dataset.classjquery}}" style="background-color: white" 
               {{ range $key, $value := $element.Dataset }} data-{{$key}}="{{$value}}"{{end}}>
               </canvas>
               </a>

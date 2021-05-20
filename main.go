@@ -32,7 +32,7 @@ func init() {
 
 	// boucle sur les tables pour charger les connecteurs aux bases de données
 	// et les répertoires statiques du serveur
-	for tableName, table := range dico.Ctx.Tables {
+	for _, table := range dico.Ctx.Tables {
 		// lecture dans les sections de app.conf pour enregistre les connecteurs aux bases de données
 		section, err := beego.AppConfig.GetSection(table.Setting.AliasDB)
 		if err == nil {
@@ -46,16 +46,16 @@ func init() {
 					logs.Info("...Enregistrement connecteur", table.Setting.AliasDB, drivertype, drivername, datasource)
 					orm.RegisterDriver(drivername, orm.DriverType(drivertype))
 					orm.RegisterDataBase(table.Setting.AliasDB, drivername, datasource)
+					// Déclaration éventuelle du répertoire statique des applications
+					if datadir, ok := section["datadir"]; ok {
+						logs.Info("...Enregistrement statique", "/bee/data/"+table.Setting.AliasDB, datadir)
+						beego.SetStaticPath("/bee/data/"+table.Setting.AliasDB, datadir)
+					}
 				} else {
 					// ERR l'alias n'pas été déclaré dans app.conf
 					logs.Error("ERREUR aliasDB non déclaré dans app.conf", table.Setting.AliasDB)
 				}
 			}
-		}
-		// Déclaration éventuelle d'un répertoire statique pour la table
-		if table.Setting.DataDir != "" {
-			logs.Info("...Enregistrement statique", "/bee/data/"+tableName, table.Setting.DataDir)
-			beego.SetStaticPath("/bee/data/"+tableName, table.Setting.DataDir)
 		}
 	}
 

@@ -21,22 +21,22 @@ applications:
   picsou:
     title: "Picsou, pour bricoler sur la bourse"
     group: picsou
-    image: "/bee/static/img/picsou.jpg"
+    image: "/bee/data/picsou/picsou.jpg"
     tables-views: 
-    # - table-name: orders
-    #   view-name: vachat
-    # - table-name: orders
-    #   view-name: vvente
-    # - table-name: orders
-    #   view-name: vgraph
-    # - table-name: ptf
-    #   view-name: vall
-    # - table-name: ptf
-    #   view-name: vdiapo
-    # - table-name: ptf
-    #   view-name: vtop
-    # - table-name: ptf
-    #   view-name: vntop
+    - table-name: orders
+      view-name: vachat
+    - table-name: orders
+      view-name: vvente
+    - table-name: orders
+      view-name: vgraph
+    - table-name: ptf
+      view-name: vall
+    - table-name: ptf
+      view-name: vdiapo
+    - table-name: ptf
+      view-name: vtop
+    - table-name: ptf
+      view-name: vntop
     - table-name: quotes
       view-name: vlast
 

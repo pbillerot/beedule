@@ -153,7 +153,7 @@
           {{if $element.Dataset}}
           {{ $dataset := CrudComputeDataset $element.Dataset $record $session $aliasDB}}
           <a class="crud-popup-chart">
-          <canvas class="ui link {{$dataset.ClassJquery}}" style="background-color: white" 
+          <canvas class="ui link {{$dataset.classjquery}}" style="background-color: white" 
           {{ range $key, $value := $dataset }} data-{{$key}}="{{$value}}"{{end}}>
           </canvas>
           </a>

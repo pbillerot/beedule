@@ -255,10 +255,6 @@ func (c *CrudListController) CrudList() {
 	c.Data["Qrecords"] = len(records)
 	c.Data["Cols"] = cols
 
-	section, _ := beego.AppConfig.GetSection(table.Setting.AliasDB)
-	c.Data["DataUrl"] = "/bee/data/" + table.Setting.AliasDB
-	c.Data["Datadir"] = section["datadir"]
-
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
 
 	if view.Type == "image" {

@@ -112,7 +112,7 @@ elements:
     label-long: "Cotation sur 1 mois"
     label-short: "Cotation"
     dataset:
-      "ClassJquery": "select 'bee-chart-quotes'"
+      "classjquery": "select 'bee-chart-quotes'"
       "title": "select 'Cours deid}'"
       "Quotes": "select open as matin, close as soir from quotes where id = '{id}' order by date"
       "Quotep": "select (open-close1)*100/close1 as matin, (close-close1)*100/close1 as soir from quotes where id = '{id}' order by date"

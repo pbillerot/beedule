@@ -3,9 +3,16 @@
 Historique des modifications
 
 ### À venir :
-- essayer image portail sous data
-- ajouter ptf
-- ajouter orders
+- revoir gestion erreur compilation dictionnaire car si erreur fin du fichier perdu
+  garder la version-1
+- ambiguité params: url et path ?
+
+2.0.5 du 20 mai 2021
+----------------------
+- `changed` répertoire statique "datadir" défini dans custom.conf avec path: /bee/data/aliasdb
+- `changed` ok url image sous /bee/data/aliasdb
+- `added` dico: ajout gestion ptf
+- `added` dico: ajout gestion orders
 
 2.0.4 du 19 mai 2021
 ----------------------

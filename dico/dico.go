@@ -29,7 +29,6 @@ type Application struct {
 	IconFile    string `yaml:"icon-file"`
 	IconName    string `yaml:"icon-name"` // Icône https://semantic-ui.com/elements/icon.html
 	Group       string
-	DataDir     string      `yaml:"data-dir"` // répertoire des données de l'application
 	Path        string      // Path ou URL de l'application externe
 	Target      string      // _blank pour ouvrir l'application dans un nouvel onglet
 	TablesViews []TableView `yaml:"tables-views"` // Vues des tables liées à l'application
@@ -56,7 +55,6 @@ type Setting struct {
 	Key        string // clé de la table
 	ColDisplay string `yaml:"col-display"` // la colonne qui identifie l'enregistrement
 	IconName   string `yaml:"icon-name"`   // Icône https://semantic-ui.com/elements/icon.html
-	DataDir    string `yaml:"data-dir"`    // répertoire statique des fichiers liés à la table
 }
 
 // Element as
@@ -67,7 +65,7 @@ type Element struct {
 	ClassSQL      string            `yaml:"class-sql"` // SQL pour alimenter Class error warning info green blue
 	ColAlign      string            `yaml:"col-align"` //
 	ColWith       int               `yaml:"col-with"`  // TODO largeur de la colonne
-	Dataset       map[string]string `yaml:"data-set"`  // Dataset pour un Chartjs
+	Dataset       map[string]string `yaml:"dataset"`   // Dataset pour un Chartjs
 	Default       string            // Valeur par défaut (macro possible)
 	DefaultSQL    string            `yaml:"default-sql"` // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string            // contiendra "error" si le champ est en erreur de saisie
@@ -159,23 +157,23 @@ type Params struct {
 	Description     []string
 	Meta            []string
 	Extra           []string
-	URL             string
+	URL             string `yaml:"url"`
 	Path            string
 	Src             string
-	SQL             []string
-	WithConfirm     bool `yaml:"with-confirm"`
-	WithInput       bool `yaml:"witn-input"`
-	WithInputFile   bool `yaml:"with-input-file"`
-	WithImageEditor bool `yaml:"with-image-editor"`
+	SQL             []string `yaml:"sql"`
+	WithConfirm     bool     `yaml:"with-confirm"`
+	WithInput       bool     `yaml:"witn-input"`
+	WithInputFile   bool     `yaml:"with-input-file"`
+	WithImageEditor bool     `yaml:"with-image-editor"`
 }
 
 // Action dans le menu d'une vue ou formulaire
 type Action struct {
 	Group       string   // Groupe autorisée à lancer l'action
 	Label       string   // label de l'action
-	Checkbox    Setters  `yaml:"check-box"` // checkbox pour mettre à jour la donnée
-	URL         string   // URL d'appel du formulaire
-	SQL         []string // les ordres SQL seront exécutées avant l'appel du formulaire
+	Checkbox    Setters  `yaml:"checkbox"`     // checkbox pour mettre à jour la donnée
+	URL         string   `yaml:"url"`          // URL d'appel du formulaire
+	SQL         []string `yaml:"sql"`          // les ordres SQL seront exécutées avant l'appel du formulaire
 	WithConfirm bool     `yaml:"with-confirm"` // demande de  confirmation
 	Hide        bool     // Action non visible
 	HideSQL     string   `yaml:"hide-sql"` // requête pour cachée l'action
