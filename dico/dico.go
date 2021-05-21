@@ -153,14 +153,13 @@ type Form struct {
 type Params struct {
 	Action          string
 	Form            string
-	IconName        string `yaml:"icon-name"`
-	Header          []string
-	Description     []string
-	Meta            []string
-	Extra           []string
-	URL             string `yaml:"url"`
-	Path            string
-	Src             string
+	IconName        string   `yaml:"icon-name"`
+	Header          []string // card pour image
+	Description     []string // card pour image
+	Meta            []string // card pour image
+	Extra           []string // card pour image
+	URL             string   `yaml:"url"`
+	Src             string   // src de l'image
 	SQL             []string `yaml:"sql"`
 	WithConfirm     bool     `yaml:"with-confirm"`
 	WithInput       bool     `yaml:"witn-input"`

@@ -246,9 +246,9 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 				element.Params.URL = macro(c, element.Params.URL, record)
 			}
 		}
-		if element.Params.Path != "" {
+		if element.Params.Src != "" {
 			if !fromList {
-				element.Params.Path = macro(c, element.Params.Path, record)
+				element.Params.Src = macro(c, element.Params.Src, record)
 			}
 		}
 

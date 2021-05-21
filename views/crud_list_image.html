@@ -145,7 +145,7 @@
         <!-- On ne prend que les element image-->
         {{if (eq $element.Type "image")}}
         {{$url := CrudMacro $element.Params.URL $record $session}}
-        {{$path := CrudMacro $element.Params.Path $record $session}}
+        {{$src := CrudMacro $element.Params.Src $record $session}}
         <div id="{{CrudIndexAnchor $record $tablekey}}" {{if $view.FormView}}
           class="link raised card crud-card-view {{CrudMacroSQL $view.ClassSQL $record $session}} crud-card-searchable crud-jquery-url"
           data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" {{else}}
@@ -159,7 +159,7 @@
           </a>
           {{else}}
           <div class="ui image">
-            <img src="{{$path}}?{{$composter}}" class="crud-popup-image" data-url="{{$url}}?{{$composter}}">
+            <img src="{{$src}}?{{$composter}}" class="crud-popup-image" data-url="{{$url}}?{{$composter}}">
           </div>
           {{end}}
           <div class="content">

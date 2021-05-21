@@ -3,11 +3,11 @@
 Historique des modifications
 
 ### À venir :
-- revoir gestion erreur compilation dictionnaire car si erreur fin du fichier perdu
-  garder la version-1
-- ambiguité params: url et path ?
-- déployer dans docker
-- ajouter mots-clés setting elements views forms avec style ligne 
+- 
+
+2.0.8 du 21 mai 2021
+----------------------
+- `removed` dico : params.path supprimé car en doublon avec params.src
 
 2.0.7 du 21 mai 2021
 ----------------------

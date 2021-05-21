@@ -264,7 +264,7 @@ func (c *CrudEditController) Post() {
 				break
 			}
 
-			outputFile, err := os.Create(element.Params.Path)
+			outputFile, err := os.Create(element.Params.Src)
 			if err != nil {
 				flash.Error(err.Error())
 				flash.Store(&c.Controller)
@@ -276,7 +276,7 @@ func (c *CrudEditController) Post() {
 			outputFile.Write(unbased)
 
 			// r := bytes.NewReader(unbased)
-			// ext := filepath.Ext(element.Params.Path)
+			// ext := filepath.Ext(element.params.Src)
 			// if ext == ".png" {
 			// 	im, err := png.Decode(r)
 			// 	if err != nil {

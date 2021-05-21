@@ -198,7 +198,7 @@
                   </h4>
                 </div>
                 {{else if or (eq $element.Type "image") (eq $element.Type "pdf")}}
-                {{$url := CrudMacro $element.Params.Path $record $session}}
+                {{$url := CrudMacro $element.Params.URL $record $session}}
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
@@ -213,7 +213,7 @@
               </a>
               {{else}}
               <a class="ui link image {{if eq $element.Type `pdf`}}crud-jquery-url{{else}}crud-popup-image{{end}}" data-url="{{$element.Params.URL}}?{{$composter}}">
-                <img src="{{$element.Params.Path}}?{{$composter}}">
+                <img src="{{$element.Params.Src}}?{{$composter}}">
               </a>
               {{end}}
               <div class="content">
