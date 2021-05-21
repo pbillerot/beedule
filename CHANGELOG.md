@@ -7,6 +7,11 @@ Historique des modifications
   garder la version-1
 - ambiguité params: url et path ?
 - déployer dans docker
+- ajouter mots-clés setting elements views forms avec style ligne 
+
+2.0.7 du 21 mai 2021
+----------------------
+- `removed` suppression de config car externe à la webapp
 
 2.0.6 du 20 mai 2021
 ----------------------
