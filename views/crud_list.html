@@ -148,7 +148,7 @@
         class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-card-searchable"
         {{if or $view.FormView $view.Deletable}}
         data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}"
-        {{else if and $view.FormEdit}}
+        {{else if $view.FormEdit}}
         data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
         {{end}}>
         <i class="mini {{$theme}} {{$view.IconName}} middle aligned icon"></i>

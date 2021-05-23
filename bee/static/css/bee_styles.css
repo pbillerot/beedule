@@ -29,8 +29,11 @@ main {
     white-space: nowrap;
 }
 
+.crud-jquery-url {
+  cursor: pointer;
+}
 .ui.link.message {
-    cursor: pointer;
+  cursor: pointer;
 }
 .ui.cards>.link {
     cursor: pointer;

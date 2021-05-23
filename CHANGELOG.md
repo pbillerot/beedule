@@ -5,6 +5,10 @@ Historique des modifications
 ### À venir :
 - bug vue groupes type=table
 
+2.0.11 du 23 mai 2021
+----------------------
+- `fixed` pointer actif sur liste de type table si formulaire view ou edit
+
 2.0.10 du 23 mai 2021
 ----------------------
 - `fixed` xsrfdata dans eddy.html

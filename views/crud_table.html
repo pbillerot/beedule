@@ -159,9 +159,13 @@
         <tbody id="bee-table">
           <!-- LOOP $RECORD -->
           {{ range $irecord, $record := .Records }}
-          <tr id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.FormView}}
+          <tr id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.Deletable}}
             class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
-            data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" {{else}}
+            data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" 
+            {{else if $view.FormEdit }}
+            class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
+            data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}" 
+            {{else}}
             class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
             {{ range $num, $key := $cols }}
             {{ $element := index $elements $key }}
