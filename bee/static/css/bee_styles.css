@@ -4,6 +4,8 @@ body {
     min-height: 100vh;
     flex-direction: column;
     background-color: whitesmoke;
+    background-image: url("/bee/static/img/beedule-bg.png");
+    background-size: cover;
 }
 main {
     flex: 1;

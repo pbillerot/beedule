@@ -5,6 +5,10 @@ Historique des modifications
 ### À venir :
 - 
 
+2.0.9 du 23 mai 2021
+----------------------
+- `added` fond d'écran
+
 2.0.8 du 21 mai 2021
 ----------------------
 - `removed` dico : params.path supprimé car en doublon avec params.src
