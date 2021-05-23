@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"html/template"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
@@ -32,6 +33,9 @@ func (c *loggedRouter) Prepare() {
 		c.Data["TabIcon"] = dico.Ctx.IconFile
 		c.Data["TabTitle"] = dico.Ctx.Title
 	}
+	// XSRF protection des formulaires
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+
 }
 
 // adminRouter implements global settings for all other routers.

@@ -3,7 +3,6 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"reflect"
 	"regexp"
 	"sort"
@@ -509,8 +508,6 @@ func setContext(c beego.Controller, table string) {
 	config.Theme = beego.AppConfig.String("theme")
 	c.Data["Config"] = &config
 
-	// XSRF protection des formulaires
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Title
 	c.Data["Title"] = config.Appname
 	c.Data["Portail"] = &dico.Ctx

@@ -5,6 +5,10 @@ Historique des modifications
 ### À venir :
 - 
 
+2.0.10 du 23 mai 2021
+----------------------
+- `fixed` xsrfdata dans eddy.html
+
 2.0.9 du 23 mai 2021
 ----------------------
 - `added` fond d'écran
