@@ -3,7 +3,7 @@
 Historique des modifications
 
 ### À venir :
-- 
+- bug vue groupes type=table
 
 2.0.10 du 23 mai 2021
 ----------------------

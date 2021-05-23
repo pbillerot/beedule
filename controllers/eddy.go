@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"path"
 	"strings"
@@ -62,6 +63,8 @@ func (c *EddyController) EddyDocument() {
 	record.Path = keyid
 
 	// Remplissage du contexte pour le template
+	// XSRF protection des formulaires
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Data["TabTitle"] = keyid
