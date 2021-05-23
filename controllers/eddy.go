@@ -71,13 +71,15 @@ func (c *EddyController) EddyDocument() {
 	c.Data["CursorCh"] = cursorCh
 	c.Data["CursorLine"] = cursorLine
 	// load liste des rubriques
-	tableid := strings.TrimSuffix(keyid, path.Ext(keyid))
 	var rubriques string
-	for k := range dico.Ctx.Tables[tableid].Elements {
-		if len(rubriques) != 0 {
-			rubriques += ","
+	if keyid != "portail.yaml" {
+		tableid := strings.TrimSuffix(keyid, path.Ext(keyid))
+		for k := range dico.Ctx.Tables[tableid].Elements {
+			if len(rubriques) != 0 {
+				rubriques += ","
+			}
+			rubriques += k
 		}
-		rubriques += k
 	}
 	c.Data["Rubriques"] = rubriques
 	c.TplName = "eddy.html"

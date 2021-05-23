@@ -260,8 +260,8 @@ func (c *CrudListController) CrudList() {
 	if view.Type == "image" {
 		c.TplName = "crud_list_image.html"
 	} else if view.Type == "table" {
-		c.TplName = "crud_table.html"
+		c.TplName = "crud_list_table.html"
 	} else {
-		c.TplName = "crud_list.html"
+		c.TplName = "crud_list_card.html"
 	}
 }

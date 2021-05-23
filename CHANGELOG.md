@@ -5,6 +5,11 @@ Historique des modifications
 ### À venir :
 - bug vue groupes type=table
 
+2.0.12 du 23 mai 2021
+----------------------
+- `changed` template crud_list*.html renommés 
+- `fixed` correction edit de portail.yaml
+
 2.0.11 du 23 mai 2021
 ----------------------
 - `fixed` pointer actif sur liste de type table si formulaire view ou edit
