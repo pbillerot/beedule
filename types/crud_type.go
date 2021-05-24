@@ -1,16 +1,18 @@
 package types
 
-// Config Paramètres de config pour alimenter le "A propos"
-type Config struct {
-	Appname string
-	Appnote string
-	Date    string
-	Icone   string
-	Site    string
-	Email   string
-	Author  string
-	Version string
-	Theme   string
+// BeeConfig Paramètres de config de la webapp
+type BeeConfig struct {
+	Appname  string
+	Appnote  string
+	Date     string
+	Icone    string
+	Site     string
+	Email    string
+	Author   string
+	Version  string
+	Theme    string
+	HelpDir  string
+	HelpPath string
 }
 
 // Session Données de session dans le contexte

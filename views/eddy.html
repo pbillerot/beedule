@@ -26,6 +26,13 @@
       <!-- RIGHT MENU -->
       <div class="right menu">
         <div class="item">
+          <button class="ui icon {{$theme}} button eddy-window-open"
+          data-url="{{.Config.HelpPath}}{{if eq $record.Path `portail.yaml`}}/dico-portail-help/{{else}}/dico-table-help/{{end}}"
+          data-width="900" data-posy="50" target="eddy-help" title="Aide Éditeur...">
+            <i class="help icon"></i>
+          </button>
+        </div>
+        <div class="item">
           <button id="button_validate" class="ui icon red button crud-jquery-submit" disabled="disabled"
             title="Enregistrer">
             <i class="save icon"></i>

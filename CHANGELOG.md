@@ -3,11 +3,17 @@
 Historique des modifications
 
 ### À venir :
-- bug vue groupes type=table
+- conflit login et session entre victor et beedule
 
-2.0.12 du 23 mai 2021
+2.1.0 du 24 mai 2021
 ----------------------
-- `changed` template crud_list*.html renommés 
+- `added` /bee/help -> aide en ligne
+- `added` lien doc dans readme
+- `changed` config chargé une seule fois dans main
+
+2.0.13 du 23 mai 2021
+----------------------
+- `added` template crud_list*.html renommés 
 - `fixed` correction edit de portail.yaml
 
 2.0.11 du 23 mai 2021

@@ -7,11 +7,15 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/dico"
+	"github.com/pbillerot/beedule/types"
 
 	"github.com/beego/beego/v2/client/orm"
 )
 
 var err error
+
+// Config de config.yaml
+var Config types.BeeConfig
 
 // IfNotEmpty as
 func IfNotEmpty(chaine string, valTrue string, valFalse string) string {

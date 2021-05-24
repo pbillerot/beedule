@@ -497,22 +497,12 @@ func setContext(c beego.Controller, table string) {
 	}
 	c.Data["Session"] = &session
 
-	config := types.Config{}
-	config.Appname = beego.AppConfig.String("appname")
-	config.Appnote = beego.AppConfig.String("appnote")
-	config.Date = beego.AppConfig.String("date")
-	config.Icone = beego.AppConfig.String("icone")
-	config.Site = beego.AppConfig.String("site")
-	config.Email = beego.AppConfig.String("email")
-	config.Author = beego.AppConfig.String("author")
-	config.Version = beego.AppConfig.String("version")
-	config.Theme = beego.AppConfig.String("theme")
-	c.Data["Config"] = &config
+	c.Data["Config"] = &models.Config
 
 	// XSRF protection des formulaires
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	// Title
-	c.Data["Title"] = config.Appname
+	c.Data["Title"] = models.Config.Appname
 	c.Data["Portail"] = &dico.Ctx
 	// Contexte crud
 	c.Data["From"] = c.Ctx.Input.Cookie("from")

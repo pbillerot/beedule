@@ -9,6 +9,7 @@ import (
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/pbillerot/beedule/dico"
+	"github.com/pbillerot/beedule/models"
 )
 
 // Eddydoc table
@@ -63,6 +64,7 @@ func (c *EddyController) EddyDocument() {
 	record.Path = keyid
 
 	// Remplissage du contexte pour le template
+	c.Data["Config"] = &models.Config
 	// XSRF protection des formulaires
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["Record"] = record

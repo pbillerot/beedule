@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"strconv"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -9,10 +11,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pbillerot/beedule/dico"
+	"github.com/pbillerot/beedule/models"
 	_ "github.com/pbillerot/beedule/routers"
+	"github.com/pbillerot/beedule/shutil"
 )
 
 func init() {
+
+	// Init de la structure config
+	models.Config.Appname = beego.AppConfig.String("appname")
+	models.Config.Appnote = beego.AppConfig.String("appnote")
+	models.Config.Date = beego.AppConfig.String("date")
+	models.Config.Icone = beego.AppConfig.String("icone")
+	models.Config.Site = beego.AppConfig.String("site")
+	models.Config.Email = beego.AppConfig.String("email")
+	models.Config.Author = beego.AppConfig.String("author")
+	models.Config.Version = beego.AppConfig.String("version")
+	models.Config.Theme = beego.AppConfig.String("theme")
+	models.Config.HelpDir = beego.AppConfig.String("helpdir")
+	models.Config.HelpPath = beego.AppConfig.String("helppath")
 
 	// Répertoire du dictionnaire
 	// beego.AppConfig.String("dicodir")
@@ -63,6 +80,20 @@ func init() {
 		}
 	}
 
+	// Récupération de l'aide en ligne
+	if src := beego.AppConfig.String("helpdir"); src != "" {
+		dst := "help"
+		_, err := os.Open(src + "/index.html")
+		if !os.IsNotExist(err) {
+			logs.Info("...chargement de l'aide", src)
+			err = shutil.CopyTree(src, dst, nil)
+			if err != nil {
+				msg := fmt.Sprintf("Copie [%s] vers [%s] : %v", src, dst, err)
+				logs.Error(msg)
+			}
+		}
+		beego.SetStaticPath("/bee/help", "help")
+	}
 }
 func main() {
 	beego.Run()

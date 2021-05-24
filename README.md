@@ -1,57 +1,21 @@
-# BEEDULE
+**BEEDULE** est un framework de développement d'application WEB **et** un serveur d'application WEB
 
-Framework de développement d'application WEB en Yaml
+C'est un [CRUD](https://fr.wikipedia.org/wiki/CRUD) pour réaliser des opérations de base sur des données :
+- **C**reate : créer
+- **R**ead : lire
+- **U**pdate : mettre à jour
+- **D**elete : supprimer
 
-- Utilisation du framework MVC https://beego.me/
-- Utilisation du CSS https://fomantic-ui.com/
+Le moteur **Beedule** va réaliser des **INSERT**, **SELECT**, **UPDATE** et **DELETE** sur des bases de données **Mysql**, **Sqlite**, **Oracle** ou **Postgres** 
 
-Beedule est un CRUD dont les spécifications sont décrites dans un fichier Yaml
+Le développeur d'application Beedule ne devra connaître qu'un seul langage, le langage [SQL](https://fr.wikipedia.org/wiki/Structured_Query_Language).  
+Les opérations à réaliser, les listes et formulaires seront décrits dans des fichiers textes au format [YAML](https://fr.wikipedia.org/wiki/YAML) que nous appelerons le **dictionnaire**.
 
-```yaml
-# Table groups
-setting:
-  alias-db: admin
-  key: group_id
-  col-display: group_id
-  icon-name: "users"
+L'objectif du guide est de vous présenter :
 
-elements:
-  group_id:
-    type: text
-    label-long: "Groupes"
-    label-short: "Groupes"
-  group_note:
-    type: textarea
-    label-long: "Note"
-    label-short: "Note"
+- comment installer **Beedule** sur un serveur dans un container [DOCKER](https://fr.wikipedia.org/wiki/Docker_(logiciel))
+- la structure du dictionnaire
+- l'éditeur du dictionnaire
+- ...
 
-views:
-  vall:
-    form-add: fedit
-    form-edit: fedit
-    deletable: true
-    group: admin
-    title: "Groupes"
-    icon-name: users
-    order-by: group_id
-    mask:
-      header:
-        - group_id
-      meta:
-      description:
-        - group_note
-      extra:
-    elements:
-      group_id:
-      group_note:
-
-forms:
-  fedit:
-    title: "Fiche Groupe"
-    groupe: admin
-    elements:
-      group_id:
-        order: 10
-      group_note:
-        order: 20
-```
+--> [Guide Utilisation](https://www.billerot.eu/beedule-doc)
