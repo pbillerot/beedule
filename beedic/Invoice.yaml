@@ -1,0 +1,105 @@
+# Table des Factures
+setting:
+  alias-db: chinook
+  key: InvoiceId
+  col-display: InvoiceId
+  icon-name: "file invoice"
+
+elements:
+  InvoiceId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  CustomerId:
+    type: text
+    label-long: "Client"
+    label-short: "Client"
+  InvoiceDate:
+    type: text
+    label-long: "Date"
+    label-short: "Date"
+  BillingAddress:
+    type: text
+    label-long: "Adresse facturation"
+    label-short: "Adresse facturation"
+  BillingCity:
+    type: text
+    label-long: "Ville"
+    label-short: "Ville"
+  BillingState:
+    type: text
+    label-long: "État"
+    label-short: "État"
+  BillingCountry:
+    type: text
+    label-long: "Région"
+    label-short: "Région"
+  BillingPostalCode:
+    type: text
+    label-long: "Code postal"
+    label-short: "Code postal"
+  Total:
+    type: text
+    label-long: "Montant Total"
+    label-short: "Total"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Factures"
+    icon-name: "file invoice"
+    order-by: Name
+    mask:
+      header:
+        - InvoiceId
+      meta:
+      description:
+        - Name
+      extra:
+    elements:
+      InvoiceId:
+        order: 10
+      CustomerId:
+        order: 20
+      InvoiceDate:
+        order: 30
+      BillingAddress:
+        order: 40
+      BillingCity:
+        order: 50
+      BillingState:
+        order: 60
+      BillingCountry:
+        order: 70
+      BillingPostalCode:
+        order: 80
+      Total:
+        order: 90
+
+forms:
+  fedit:
+    title: "Facture"
+    groupe: chinook
+    elements:
+      InvoiceId:
+        order: 10
+      CustomerId:
+        order: 20
+      InvoiceDate:
+        order: 30
+      BillingAddress:
+        order: 40
+      BillingCity:
+        order: 50
+      BillingState:
+        order: 60
+      BillingCountry:
+        order: 70
+      BillingPostalCode:
+        order: 80
+      Total:
+        order: 90

@@ -1,0 +1,66 @@
+# Table des Factures
+setting:
+  alias-db: chinook
+  key: InvoiceLineId
+  col-display: InvoiceLineId
+  icon-name: "receipt"
+
+elements:
+  InvoiceLineId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  InvoiceId:
+    type: numeric
+    label-long: "Facture"
+    label-short: "Facture"
+  TrackId:
+    type: numeric
+    label-long: "Morceau"
+    label-short: "Morceau"
+  UnitPrice:
+    type: amount
+    label-long: "P.U."
+    label-short: "P.U."
+  Quantity:
+    type: numeric
+    label-long: "Quantité"
+    label-short: "Quantité"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Produits"
+    icon-name: "receipt"
+    order-by: Name
+    elements:
+      InvoiceLineId:
+        order: 10
+      InvoiceId:
+        order: 10
+      TrackId:
+        order: 20
+      UnitPrice:
+        order: 30
+      Quantity:
+        order: 40
+
+forms:
+  fedit:
+    title: "Produit"
+    groupe: chinook
+    elements:
+      InvoiceLineId:
+        order: 10
+      InvoiceId:
+        order: 10
+      TrackId:
+        order: 20
+      UnitPrice:
+        order: 30
+      Quantity:
+        order: 40

@@ -393,19 +393,20 @@ $(document).ready(function () {
    */
   $(document).on('click', '.eddy-window-open', function (event) {
     // Préparation window.open
-    var height = $(this).data("height") ? $(this).data("height") : 'max';
-    var width = $(this).data("width") ? $(this).data("width") : 'large';
-    var posx = $(this).data("posx") ? $(this).data("posx") : 'left';
-    var posy = $(this).data("posy") ? $(this).data("posy") : '3';
-    var target = $(this).attr("target") ? $(this).attr("target") : 'eddy-win';
+    var $height = $(this).data("height") ? $(this).data("height") : 'max';
+    var $width = $(this).data("width") ? $(this).data("width") : 'large';
+    var $posx = $(this).data("posx") ? $(this).data("posx") : 'left';
+    var $posy = $(this).data("posy") ? $(this).data("posy") : '3';
+    var $target = $(this).attr("target") ? $(this).attr("target") : 'eddy-win';
+    var $url = $(this).data("url");
     if (window.opener == null) {
-      window.open($(this).data('url')
-        , target
-        , computeWindow(posx, posy, width, height, false));
+      window.open($url
+        , $target
+        , computeWindow($posx, $posy, $width, $height, false));
     } else {
-      window.opener.open($(this).data('url')
-        , target
-        , computeWindow(posx, posy, width, height, false));
+      window.opener.open($url
+        , $target
+        , computeWindow($posx, $posy, $width, $height, false));
     }
     event.preventDefault();
   });

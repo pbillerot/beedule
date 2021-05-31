@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v2"
@@ -96,6 +97,7 @@ type Element struct {
 	PostAction    []Action          `yaml:"post-action"`  // actions sql ou plugin à exécuter après la mise à jour
 	Protected     bool              // Est en mise à jour mais protégé en saisie
 	ReadOnly      bool              `yaml:"read-only"` // Lecteur seule
+	Record        orm.Params        // l'enregistrement  valorisant la rubrique
 	Refresh       bool              // TODO avec un bouton refresh pour actualiser le formulaire en mise à jour
 	Required      bool              // obligatoire
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
@@ -119,7 +121,7 @@ type View struct {
 	Deletable    bool               // Suppression fiche autorisée
 	FormAdd      string             `yaml:"form-add"`   // Formulaire d'ajout
 	FormEdit     string             `yaml:"form-edit"`  // Formulaire d'édition
-	FormView     string             `yaml:"form-view"`  // Masque de visualisation d'un enregistreement
+	FormView     string             `yaml:"form-view"`  // Masque de visualisation d'un enregistrement
 	FooterSQL    string             `yaml:"footer-sql"` // requête sur la table courante
 	Hide         bool               // Vue cachée dans le menu
 	HideOnMobile bool               `yaml:"hide-on-mobile"` // Vue cachée dur mobile
@@ -152,15 +154,18 @@ type Form struct {
 // Params paramètres d'un élément
 type Params struct {
 	Action          string
-	Form            string
-	IconName        string   `yaml:"icon-name"`
+	Form            string   // section: form à ouvrir
+	IconName        string   `yaml:"icon-name"` // image: section
 	Header          []string // card pour image
 	Description     []string // card pour image
 	Meta            []string // card pour image
 	Extra           []string // card pour image
 	URL             string   `yaml:"url"`
-	Src             string   // src de l'image
+	Src             string   // section: src de l'image
 	SQL             []string `yaml:"sql"`
+	Table           string   // section:
+	View            string   // section:
+	Where           string   // section: + params.table + params.view
 	WithConfirm     bool     `yaml:"with-confirm"`
 	WithInput       bool     `yaml:"witn-input"`
 	WithInputFile   bool     `yaml:"with-input-file"`

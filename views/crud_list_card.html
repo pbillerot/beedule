@@ -4,16 +4,18 @@
 {{$portail := .Portail}}
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
-{{$tableid := .TableId}}
-{{$viewName := .ViewId}}
-{{$table := .Table}}
-{{$tablekey := .Table.Setting.Key}}
-{{$view := .View}}
-{{$elements := .Elements}}
-{{$cols := .Cols}}
 {{$composter := .Composter}}
-{{$qrecords := .Qrecords}}
-{{$search := .Search}}
+{{$tableid := .UIView.TableID}}
+{{$viewName := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$sortid := .UIView.SortID}}
+{{$sortdirection := .UIView.SortDirection}}
+{{$search := .UIView.Search}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -143,7 +145,7 @@
         {{end}}
       </div>
       <!-- ITEMS -->
-      {{ range $irecord, $record := .Records }}
+      {{ range $irecord, $record := .UIView.Records }}
       <a id="{{CrudIndexAnchor $record $tablekey}}"
         class="ui link icon crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}} message crud-card-searchable"
         {{if or $view.FormView $view.Deletable}}

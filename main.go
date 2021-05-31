@@ -40,7 +40,7 @@ func init() {
 
 	// default est utilisé pour exécuter les ordres de calcul sql par le moteur
 	orm.RegisterDriver("sqlite3", orm.DRSqlite)
-	orm.RegisterDataBase("default", "sqlite3", "./database/beedule.sqlite")
+	orm.RegisterDataBase("default", "sqlite3", "./beedat/db/beedule.sqlite")
 
 	if ok, _ := beego.AppConfig.Bool("debug"); ok {
 		orm.Debug = true
@@ -67,17 +67,23 @@ func init() {
 					logs.Info("...Enregistrement connecteur", table.Setting.AliasDB, drivertype, drivername, datasource)
 					orm.RegisterDriver(drivername, orm.DriverType(drivertype))
 					orm.RegisterDataBase(table.Setting.AliasDB, drivername, datasource)
-					// Déclaration éventuelle du répertoire statique des applications
-					if datadir, ok := section["datadir"]; ok {
-						logs.Info("...Enregistrement statique", "/bee/data/"+table.Setting.AliasDB, datadir)
-						beego.SetStaticPath("/bee/data/"+table.Setting.AliasDB, datadir)
-					}
+					// // Déclaration éventuelle du répertoire statique des applications
+					// if datadir, ok := section["datadir"]; ok {
+					// 	logs.Info("...Enregistrement statique", "/bee/data/"+table.Setting.AliasDB, datadir)
+					// 	beego.SetStaticPath("/bee/data/"+table.Setting.AliasDB, datadir)
+					// }
 				} else {
 					// ERR l'alias n'pas été déclaré dans app.conf
 					logs.Error("ERREUR aliasDB non déclaré dans app.conf", table.Setting.AliasDB)
 				}
 			}
 		}
+	}
+
+	// Déclaration du répertoire data en static
+	if src := beego.AppConfig.String("datadir"); src != "" {
+		logs.Info("...Enregistrement statique", "/bee/data/", src)
+		beego.SetStaticPath("/bee/data", src)
 	}
 
 	// Récupération de l'aide en ligne

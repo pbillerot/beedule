@@ -211,6 +211,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 	elements := make(map[string]dico.Element, len(viewOrFormElements))
 
 	for key, element := range viewOrFormElements {
+		element.LabelLong = macro(c, element.LabelLong, record)
 		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
 			element.Class = macroSQL(c, element.ClassSQL, record)
@@ -367,6 +368,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 		if !IsInGroup(c, element.Group, "") {
 			element.Hide = true
 		}
+		element.Record = record
 		elements[key] = element
 	}
 

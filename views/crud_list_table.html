@@ -4,18 +4,18 @@
 {{$portail := .Portail}}
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
-{{$tableid := .TableId}}
-{{$viewName := .ViewId}}
-{{$table := .Table}}
-{{$tablekey := .Table.Setting.Key}}
-{{$view := .View}}
-{{$elements := .Elements}}
-{{$cols := .Cols}}
 {{$composter := .Composter}}
-{{$qrecords := .Qrecords}}
-{{$sortid := .SortID}}
-{{$sortdirection := .SortDirection}}
-{{$search := .Search}}
+{{$tableid := .UIView.TableID}}
+{{$viewName := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$sortid := .UIView.SortID}}
+{{$sortdirection := .UIView.SortDirection}}
+{{$search := .UIView.Search}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -136,77 +136,7 @@
           {{end}}
       </div>
       <!-- LIST TABLE -->
-      <table
-        class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled table"
-        data-role="table" data-mode="columntoggle">
-        <thead>
-          <!-- ENTETE TABLE -->
-          <tr>
-            {{ range $num, $key := $cols }}
-            {{ $element := index $elements $key }}
-            {{if (ne $element.Hide true)}}
-            <th id="col_{{$key}}"
-              class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}{{if (eq $sortid $key)}} sorted {{$sortdirection}}{{end}} crud-ajax-sort"
-              data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}" title="{{$key}}">
-              {{$element.LabelShort}}
-            </th>
-            {{end}}
-            <!-- end if Hide -->
-            {{end}}
-            <!-- end loop $cols -->
-          </tr>
-        </thead>
-        <tbody id="bee-table">
-          <!-- LOOP $RECORD -->
-          {{ range $irecord, $record := .Records }}
-          <tr id="{{CrudIndexAnchor $record $tablekey}}" {{if or $view.FormView $view.Deletable}}
-            class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
-            data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" 
-            {{else if $view.FormEdit }}
-            class="crud-jquery-url {{CrudMacroSQL $view.ClassSQL $record $session}}"
-            data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}" 
-            {{else}}
-            class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
-            {{ range $num, $key := $cols }}
-            {{ $element := index $elements $key }}
-            {{ $class := CrudClassSQL $element $record $session}}
-            {{ $val := CrudIndexSQL $record $key $element $session}}
-            {{if (ne $element.Hide true)}}
-            <td
-              class="ui {{$class}} {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
-              {{if (eq $element.Type "combobox")}}
-              <!-- combobox -->
-              {{CrudItem $element.Items $val}} ({{$val}})
-              {{else if (eq $element.Type "checkbox")}}
-              <!-- checkbox -->
-              {{if (eq $val "1")}}<i class="check icon"></i>{{end}}
-              {{else if (eq $element.Type "password")}}
-              <!-- password -->
-              ***
-              {{else if (eq $element.Type "tag")}}
-              <!--   tag -->
-              {{$arr := CrudSplit $val ","}}
-              {{range $i, $item := $arr}}
-              <div c lass="ui small label">{{$item}}</div>
-              {{end}}
-              {{else}}
-              <!-- autres -->
-              {{if and $element.Format $val}}
-              {{CrudFormat $element.Format $val}}
-              {{else}}
-              {{$val}}
-              {{end}}
-              {{end}}
-            </td>
-            {{end}}
-            <!-- end if Hide -->
-            {{end}}
-            <!-- end loop $cols -->
-          </tr>
-          {{end}}
-          <!-- fin loop $records -->
-        </tbody>
-      </table>
+      {{template "_crud_table.html" .}}
     </div>
   </main>
   <!-- Demande de confirmation de l'action' -->

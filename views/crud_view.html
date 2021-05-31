@@ -17,6 +17,9 @@
 {{$elements := .Elements}}
 {{$cols := .Cols}}
 {{$composter := .Composter}}
+{{$uiViews := .UIViews}}
+{{$ctx := .}}
+
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -130,11 +133,9 @@
           <div class="card raised crud-card-view {{$element.Class}}">
             {{end}}
             <div class="content">
-              <div class="ui right floated">
-                <i class="big {{$theme}} {{$view.IconName}} icon"></i>
-              </div>
               <div class="header">
-                <h4>{{$form.Title}}</h4>
+                <i class="big {{$theme}} {{$view.IconName}} icon"></i>
+                {{$form.Title}}
               </div>
               {{ $isStart = false}}
               {{end}}
@@ -147,23 +148,33 @@
           </div> <!-- end card -->
           {{end}}
           {{ $isStart = false}}
+          {{ $label := $element.LabelLong}}
+          {{ $iconName := $element.Params.IconName}}
           {{if $element.Params.Form}}
-          <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-            data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$element.Params.Form}}/{{$id}}">
+            <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
+              data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$element.Params.Form}}/{{$id}}">
           {{else if $element.Params.URL}}
-          <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-            data-url="{{$element.Params.URL}}">
+            <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
+              data-url="{{$element.Params.URL}}">
+          {{else if $element.Params.View}}
+            {{ $uiView := index $uiViews $element.Params.View}} 
+            {{ $label = $uiView.View.Title}}
+            {{ $iconName = $uiView.View.IconName}}
+            <div class="link card raised crud-card-view crud-card-view2 {{$element.Class}} crud-jquery-url">
           {{else}}
             <div class="card raised crud-card-view {{$element.Class}}">
-              {{end}}
+          {{end}}
               <div class="content">
-                <div class="ui right floated">
-                  <i class="big {{$theme}} {{$element.Params.IconName}} icon"></i>
-                </div>
                 <div class="header">
-                  <h4>{{$element.LabelLong}}</h4>
+                  <i class="big {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
                 </div>
-                <!-- ***************** SECTION -->
+            {{if $element.Params.View }}
+              </div> <!-- end content -->
+              <div class="content">
+                {{template "_crud_table.html" $ctx}}
+            {{end}}
+                <!-- ***************** /SECTION -->
                 <!-- DEBUT type -->
                 {{else if (eq $element.Type "action")}}
                 <div class="ui divider"></div>

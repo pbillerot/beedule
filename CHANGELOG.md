@@ -3,7 +3,16 @@
 Historique des modifications
 
 ### À venir :
-- conflit login et session entre victor et beedule
+- dupliquer un fichier en le renommant
+- scroll horizontal dans view table
+- menu horizontal fixe si >900
+- formulaire dans fenêtre séparée
+
+2.2.0 du 31 mai 2021
+----------------------
+- `added` dictionnaire exemple avec base chinook
+- `added` élement de type section avec params view table where
+- `changed`vue table en sous-module pour réutilisation dans formView
 
 2.1.0 du 24 mai 2021
 ----------------------

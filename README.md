@@ -18,4 +18,4 @@ L'objectif du guide est de vous présenter :
 - l'éditeur du dictionnaire
 - ...
 
---> [Guide Utilisation](https://www.billerot.eu/beedule-doc)
+--> [Guide Utilisation](https://beedule.billerot.eu/bee/help)

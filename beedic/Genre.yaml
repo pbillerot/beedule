@@ -1,0 +1,49 @@
+# Table des Genres de musique
+setting:
+  alias-db: chinook
+  key: GenreId
+  col-display: Name
+  icon-name: "music"
+
+elements:
+  GenreId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  Name:
+    type: text
+    label-long: "Genre"
+    label-short: "Genre"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Genres de musique"
+    icon-name: "music"
+    order-by: GenreId
+    mask:
+      header:
+        - GenreId
+      meta:
+      description:
+        - Name
+      extra:
+    elements:
+      GenreId:
+        order: 10
+      Name:
+        order: 20
+
+forms:
+  fedit:
+    title: "Genre de musique"
+    groupe: chinook
+    elements:
+      GenreId:
+        order: 10
+      Name:
+        order: 20

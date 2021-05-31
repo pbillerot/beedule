@@ -5,17 +5,18 @@
 {{$portail := .Portail}}
 {{$app := .Application}}
 {{$theme := .Config.Theme}}
-{{$tableid := .TableId}}
-{{$viewName := .ViewId}}
-{{$formaddid := .FormAddId}}
-{{$table := .Table}}
-{{$tablekey := .Table.Setting.Key}}
-{{$view := .View}}
-{{$elements := .Elements}}
-{{$cols := .Cols}}
 {{$composter := .Composter}}
-{{$qrecords := .Qrecords}}
-{{$search := .Search}}
+{{$tableid := .UIView.TableID}}
+{{$viewName := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$sortid := .UIView.SortID}}
+{{$sortdirection := .UIView.SortDirection}}
+{{$search := .UIView.Search}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -97,7 +98,7 @@
           <div class="menu">
             {{if $view.FormAdd}}
             <a class="ui icon item crud-jquery-url"
-              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formaddid}}">
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormAdd}}">
               <i class="plus square icon"></i> Ajouter un élément...
             </a>
             {{end}}
@@ -138,7 +139,7 @@
       <div>&nbsp;</div>
       <!-- ITEMS -->
       <div class="ui cards crud-searchable">
-        {{ range $irecord, $record := .Records }}
+        {{ range $irecord, $record := .UIView.Records }}
         {{ range $num, $key := $cols }}
         {{ $val := CrudIndex $record $key }}
         {{ $element := index $elements $key }}

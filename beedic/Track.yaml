@@ -1,0 +1,128 @@
+# Table des Morceaux
+setting:
+  alias-db: chinook
+  key: TrackId
+  col-display: Name
+  icon-name: "file audio"
+
+elements:
+  TrackId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  Name:
+    type: text
+    label-long: "Morceau"
+    label-short: "Morceau"
+  AlbumId:
+    type: numeric
+    label-long: "Album"
+    label-short: "Album"
+  MediaTypeId:
+    type: numeric
+    label-long: Type média"
+    label-short: "Type média"
+  GenreId:
+    type: numeric
+    label-long: "Genre de musique"
+    label-short: "Genre de musique"
+  Composer:
+    type: text
+    label-long: "Compositeur"
+    label-short: "Compositeur"
+  Milliseconds:
+    type: numeric
+    label-long: "Durée"
+    label-short: "Durée"
+  Bytes:
+    type: numeric
+    label-long: "Taille"
+    label-short: "Taille"
+  UnitPrice:
+    type: text
+    label-long: "P.U."
+    label-short: "P.U."
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    order-by: Name
+    limit: 50
+    mask:
+      header:
+        - TrackId
+      meta:
+      description:
+        - Name
+      extra:
+    elements:
+      TrackId:
+        order: 10
+      Name:
+        order: 20
+      AlbumId:
+        order: 30
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+  valbum:
+#     form-add: fedit
+#     form-edit: fedit
+#     deletable: false
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    order-by: Name
+    limit: 50
+    mask:
+      header:
+        - TrackId
+      meta:
+      description:
+        - Name
+      extra:
+    elements:
+      TrackId:
+        order: 10
+      Name:
+        order: 20
+
+forms:
+  fedit:
+    Name: "Morceau de musique"
+    groupe: chinook
+    elements:
+      TrackId:
+        order: 10
+      Name:
+        order: 20
+      AlbumId:
+        order: 30
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90

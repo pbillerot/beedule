@@ -1,0 +1,46 @@
+title: "Beedule"
+info: "Framework de développement WEB en Yaml"
+icon-file: "/bee/static/img/beedule.png"
+# Paramètres globaux
+parameters:
+  __amount_min: 1200 # mise minimum
+  __cost: 0.0047 # coût en % d'une transaction
+  __optimum: 0.03 # seuil minimum à atteindre en % pour vendre
+
+# Liste des applications gérées
+applications:
+  admin:
+    title: "Gestion des Utilisateurs"
+    image: "/bee/static/img/tools.png"
+    group: admin
+    tables-views:
+    - table-name: users
+      view-name: vall
+    - table-name: groups
+      view-name: vall
+  chinook:
+    title: "Chinook"
+    image: "/bee/data/files/chinook.jpg"
+    group: chinook
+    tables-views:
+    - table-name: Artist
+      view-name: vall
+    - table-name: Album
+      view-name: vall
+    - table-name: Track
+      view-name: vall
+    - table-name: PlayList
+      view-name: vall
+    - table-name: Customer
+      view-name: vall
+    - table-name: Employee
+      view-name: vall
+    - table-name: Invoice
+      view-name: vall
+    - table-name: InvoiceLine
+      view-name: vall
+    - table-name: MediaType
+      view-name: vall
+    - table-name: Genre
+      view-name: vall
+

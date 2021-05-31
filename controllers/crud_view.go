@@ -121,6 +121,27 @@ func (c *CrudViewController) Get() {
 		return
 	}
 
+	// Cas rubrique type section avec params view table
+	uiViews := map[string]*UIView{}
+	var uiView UIView
+	for _, element := range elements {
+		if element.Type == "section" {
+			if element.Params.View != "" {
+				// Appel constructeur de la vue
+				if element.Params.Where != "" {
+					element.Params.Where = macro(c.Controller, element.Params.Where, element.Record)
+				}
+				err = uiView.load(c.Controller, appid, element.Params.Table, element.Params.View, element)
+				if err != nil {
+					ReturnFrom(c.Controller)
+				} else {
+					// ATTENTION le nom des vues dans un formulaire doivent être unique
+					uiViews[element.Params.View] = &uiView
+				}
+			}
+		}
+	}
+
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 
@@ -142,6 +163,8 @@ func (c *CrudViewController) Get() {
 	c.Data["Elements"] = &elements
 	c.Data["Records"] = &records
 	c.Data["Cols"] = &cols
+	c.Data["UIViews"] = &uiViews
+	c.Data["UIView"] = &uiView
 
 	c.TplName = "crud_view.html"
 }

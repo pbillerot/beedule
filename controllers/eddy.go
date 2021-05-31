@@ -43,6 +43,7 @@ func (c *EddyController) EddyDocument() {
 			flash.Store(&c.Controller)
 		}
 		// Demande d'actualisation de l'arborescence
+		dico.Ctx = dico.Portail{}
 		msg, err := dico.Ctx.Load()
 		if err != nil {
 			flash.Error(strings.Join(msg[:], ","))

@@ -24,52 +24,106 @@ func (c *CrudListController) CrudList() {
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
 
-	flash := beego.ReadFromRequest(&c.Controller)
+	var uiView UIView
+	err = uiView.load(c.Controller, appid, tableid, viewid, dico.Element{})
+	if err != nil {
+		ReturnFrom(c.Controller)
+		return
+	}
+
+	// Remplissage du contexte pour le template
+	setContext(c.Controller, uiView.TableID)
+
+	c.Data["AppId"] = uiView.AppID
+	c.Data["Application"] = dico.Ctx.Applications[uiView.AppID]
+	c.Data["UIView"] = &uiView
+
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
+
+	if uiView.View.Type == "image" {
+		c.TplName = "crud_list_image.html"
+	} else if uiView.View.Type == "table" {
+		c.TplName = "crud_list_table.html"
+	} else {
+		c.TplName = "crud_list_card.html"
+	}
+}
+
+// UIView Vue
+type UIView struct {
+	Title         string
+	AppID         string
+	TableID       string
+	ViewID        string
+	Table         dico.Table
+	View          dico.View
+	Elements      map[string]dico.Element
+	Records       []orm.Params
+	Qrecords      int
+	Cols          map[int]string
+	SortID        string
+	SortDirection string
+	Search        string
+}
+
+func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid string, parentElement dico.Element) (err error) {
+	ui.AppID = appid
+	ui.TableID = tableid
+	ui.ViewID = viewid
+
+	flash := beego.ReadFromRequest(&c)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
-		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		err = fmt.Errorf("App not found %s", appid)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
 		return
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
-			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			ReturnFrom(c.Controller)
+			err = fmt.Errorf("View not found %s", viewid)
+			logs.Error(err.Error())
+			flash.Error(err.Error())
+			flash.Store(&c)
 			return
 		}
 	} else {
-		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
-		ReturnFrom(c.Controller)
+		err = fmt.Errorf("Table not found %s", tableid)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
 		return
 	}
 
 	// Contrôle d'accès à la vue
 	table := dico.Ctx.Tables[tableid]
 	view := dico.Ctx.Tables[tableid].Views[viewid]
+	ui.Table = *table
+	ui.View = view
+	ui.Title = view.Title
 	if view.Group == "" {
 		view.Group = dico.Ctx.Applications[appid].Group
 	}
-	if !IsInGroup(c.Controller, view.Group, "") {
-		logs.Error("Accès non autorisé", c.GetSession("Username").(string), viewid, view.Group)
-		flash.Error("Accès non autorisé")
-		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+	if !IsInGroup(c, view.Group, "") {
+		err = fmt.Errorf("Accès non autorisé de %s à %s", viewid, view.Group)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
 		return
 	}
 	// Ctrl d'accès FormAdd FormView FormEdit
-	if !IsInGroup(c.Controller, table.Forms[view.FormView].Group, "") {
+	if !IsInGroup(c, table.Forms[view.FormView].Group, "") {
 		view.FormView = ""
 	}
-	if !IsInGroup(c.Controller, table.Forms[view.FormAdd].Group, "") {
+	if !IsInGroup(c, table.Forms[view.FormAdd].Group, "") {
 		view.FormAdd = ""
 	}
-	if !IsInGroup(c.Controller, table.Forms[view.FormEdit].Group, "") {
+	if !IsInGroup(c, table.Forms[view.FormEdit].Group, "") {
 		view.FormEdit = ""
 	}
-
-	setContext(c.Controller, tableid)
 
 	// Gestion du TRI enregistré dans la session et contexte
 	sortID := c.GetString("sortid")
@@ -88,35 +142,48 @@ func (c *CrudListController) CrudList() {
 		}
 	}
 	// Data récupéré dans mergeElements et dans le template ensuite
-	c.Data["SortID"] = sortID
-	c.Data["SortDirection"] = sortDirection
+	ui.SortID = sortID
+	ui.SortDirection = sortDirection
 
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
-	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Views[viewid].Elements, "")
-
+	elements, cols := mergeElements(c, tableid, dico.Ctx.Tables[tableid].Views[viewid].Elements, "")
+	ui.Cols = cols
 	// Calcul des champs SQL de la vue
 	if view.OrderBy != "" {
-		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
+		view.OrderBy = macro(c, view.OrderBy, orm.Params{})
 	}
 	if view.FooterSQL != "" {
-		view.FooterSQL = requeteSQL(c.Controller, view.FooterSQL, orm.Params{}, dico.Ctx.Tables[tableid].Setting.AliasDB)
+		view.FooterSQL = requeteSQL(c, view.FooterSQL, orm.Params{}, dico.Ctx.Tables[tableid].Setting.AliasDB)
 	}
 	if len(view.PreUpdateSQL) > 0 {
 		for _, presql := range view.PreUpdateSQL {
 			// Remplissage d'un record avec les elements.SQLout
 			record := orm.Params{}
-			sql := macro(c.Controller, presql, record)
+			sql := macro(c, presql, record)
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
 					flash.Error(err.Error())
-					flash.Store(&c.Controller)
+					flash.Store(&c)
 				}
 			}
 		}
 	}
-	if view.Where != "" {
-		view.Where = macro(c.Controller, view.Where, orm.Params{})
+	// CAS appel d'une vue dans le formulaire
+	if parentElement.Params.View != "" {
+		if parentElement.Params.Where != "" {
+			view.Where = macro(c, parentElement.Params.Where, parentElement.Record)
+		} else {
+			if view.Where != "" {
+				view.Where = macro(c, view.Where, orm.Params{})
+			}
+		}
+		if parentElement.LabelLong != "" {
+			view.Title = parentElement.LabelLong
+		}
+		if parentElement.Params.IconName != "" {
+			view.IconName = parentElement.Params.IconName
+		}
 	}
 
 	// RECHERCHE DANS LA VUE
@@ -221,7 +288,7 @@ func (c *CrudListController) CrudList() {
 	// Filtrage si élément owner
 	for key, element := range elements {
 		// Un seule élément owner par enregistrement
-		if element.Group == "owner" && !IsAdmin(c.Controller) {
+		if element.Group == "owner" && !IsAdmin(c) {
 			if view.Search != "" {
 				view.Search = "(" + view.Search + ") AND "
 			}
@@ -229,39 +296,21 @@ func (c *CrudListController) CrudList() {
 			break
 		}
 	}
-	c.Data["Search"] = search
+	ui.Search = search
 
 	// lecture des records
 	records, err := models.CrudList(tableid, viewid, &view, elements)
+	ui.Records = records
 	if err != nil {
 		flash.Error(err.Error())
-		flash.Store(&c.Controller)
+		flash.Store(&c)
 	}
 	if len(records) > 0 {
 		// Calcul des éléments hors values
-		elements = computeElements(c.Controller, false, elements, records[0])
+		elements = computeElements(c, false, elements, records[0])
+		ui.Qrecords = len(records)
 	}
+	ui.Elements = elements
 
-	// Remplissage du contexte pour le template
-	c.Data["Title"] = view.Title
-	c.Data["AppId"] = appid
-	c.Data["Application"] = dico.Ctx.Applications[appid]
-	c.Data["TableId"] = tableid
-	c.Data["ViewId"] = viewid
-	c.Data["Table"] = &table
-	c.Data["View"] = &view
-	c.Data["Elements"] = elements
-	c.Data["Records"] = records
-	c.Data["Qrecords"] = len(records)
-	c.Data["Cols"] = cols
-
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
-
-	if view.Type == "image" {
-		c.TplName = "crud_list_image.html"
-	} else if view.Type == "table" {
-		c.TplName = "crud_list_table.html"
-	} else {
-		c.TplName = "crud_list_card.html"
-	}
+	return nil
 }

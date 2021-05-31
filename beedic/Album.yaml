@@ -1,0 +1,103 @@
+# Table des Albums
+setting:
+  alias-db: chinook
+  key: AlbumId
+  col-display: Title
+  icon-name: "circle"
+
+elements:
+  AlbumId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  Title:
+    type: text
+    label-long: "Album"
+    label-short: "Album"
+  ArtistId:
+    type: combobox
+    label-long: "Artiste"
+    label-short: "Artiste"
+    items-sql: "SELECT ArtistId as 'key', Name as 'label' From Artist order by Name"
+  ArtistName:
+    type: jointure
+    jointure:
+      join: "left outer join Artist on Artist.ArtistId = Album.ArtistId"
+      column: "Artist.Name"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: false
+    type: table
+    group: chinook
+    title: "Albums"
+    icon-name: "circle"
+    order-by: Title
+    mask:
+      header:
+        - AlbumId
+      meta:
+      description:
+        - Title
+      extra:
+    elements:
+      ArtistId:
+        order: 10
+#         hide: true
+      _artistName:
+        order: 20
+      Title:
+        order: 40
+  
+  vartist:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Albums"
+    icon-name: "circle"
+    order-by: Title
+    elements:
+      AlbumId:
+        order: 10
+      Title:
+        order: 20
+
+forms:
+  fedit:
+    title: "Album"
+    groupe: chinook
+    elements:
+      AlbumId:
+        order: 10
+      Title:
+        order: 20
+      ArtistId:
+        order: 30
+  fview:
+    title: "Album"
+    groupe: chinook
+    elements:
+      AlbumId:
+        order: 10
+      Title:
+        order: 20
+      ArtistId:
+        order: 30
+        hide: true
+      _artistName:
+        order: 40
+        hide: true
+      _vTrack:
+        type: section
+        order: 50
+        label-long: "Morceaux"
+        params:
+          icon-name: "file audio"
+          table: Track
+          view: valbum
+          where: "AlbumId = '{AlbumId}'"

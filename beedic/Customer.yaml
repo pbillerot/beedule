@@ -1,0 +1,121 @@
+# Table des Clients
+setting:
+  alias-db: chinook
+  key: CustomerId
+  col-display: FirstName
+  icon-name: "user"
+
+elements:
+  CustomerId:
+    type: numeric
+    label-long: "Id"
+    label-short: "Id"
+  FirstName:
+    type: text
+    label-long: "Nom"
+    label-short: "Nom"
+  LastName:
+    type: text
+    label-long: "Prénom"
+    label-short: "Prénom"
+  Company:
+    type: text
+    label-long: "Entreprise"
+    label-short: "Entreprise"
+  Address:
+    type: textarea
+    label-long: "Adresse"
+    label-short: "Adresse"
+  City:
+    type: text
+    label-long: "Ville"
+    label-short: "Ville"
+  PostalCode:
+    type: text
+    label-long: "Code postal"
+    label-short: "Code postal"
+  Phone:
+    type: text
+    label-long: "Téléphone"
+    label-short: "Téléphone"
+  Fax:
+    type: text
+    label-long: "Fax"
+    label-short: "Fax"
+  Email:
+    type: email
+    label-long: "Email"
+    label-short: "Email"
+  SupportRepId:
+    type: numeric
+    label-long: "Support"
+    label-short: "Support"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Clients"
+    icon-name: "user"
+    order-by: CustomerId
+    mask:
+      header:
+        - CustomerId
+      meta:
+      description:
+        - FirstName
+      extra:
+    elements:
+      CustomerId:
+        order: 10
+      FirstName:
+        order: 20
+      LastName:
+        order: 30
+      Company:
+        order: 40
+      Address:
+        order: 50
+      City:
+        order: 60
+      PostalCode:
+        order: 70
+      Phone:
+        order: 80
+      Fax:
+        order: 90
+      Email:
+        order: 100
+      SupportRepId:
+        order: 110
+
+forms:
+  fedit:
+    title: "Client"
+    groupe: chinook
+    elements:
+      CustomerId:
+        order: 10
+      FirstName:
+        order: 20
+      LastName:
+        order: 30
+      Company:
+        order: 40
+      Address:
+        order: 50
+      City:
+        order: 60
+      PostalCode:
+        order: 70
+      Phone:
+        order: 80
+      Fax:
+        order: 90
+      Email:
+        order: 100
+      SupportRepId:
+        order: 110
