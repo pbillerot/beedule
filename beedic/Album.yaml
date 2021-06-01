@@ -20,8 +20,10 @@ elements:
     label-short: "Artiste"
     items-sql: "SELECT ArtistId as 'key', Name as 'label' From Artist order by Name"
   ArtistName:
+    label-long: "Artiste"
+    label-short: "Artiste"
     type: jointure
-    jointure:
+    params:
       join: "left outer join Artist on Artist.ArtistId = Album.ArtistId"
       column: "Artist.Name"
 
@@ -46,8 +48,8 @@ views:
     elements:
       ArtistId:
         order: 10
-#         hide: true
-      _artistName:
+        hide: true
+      ArtistName:
         order: 20
       Title:
         order: 40
@@ -55,6 +57,7 @@ views:
   vartist:
     form-add: fedit
     form-edit: fedit
+    form-view: fview
     deletable: false
     type: table
     group: chinook
@@ -89,7 +92,7 @@ forms:
       ArtistId:
         order: 30
         hide: true
-      _artistName:
+      ArtistName:
         order: 40
         hide: true
       _vTrack:

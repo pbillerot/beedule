@@ -43,9 +43,9 @@ func CrudList(tableid string, viewid string, view *dico.View, elements map[strin
 			keys = append(keys, "'' as "+k)
 			continue
 		}
-		if element.Jointure.Column != "" {
-			keys = append(keys, element.Jointure.Column+" as "+k)
-			joins = append(joins, element.Jointure.Join)
+		if element.Params.Column != "" {
+			keys = append(keys, element.Params.Column+" as "+k)
+			joins = append(joins, element.Params.Join)
 		} else {
 			keys = append(keys, tableid+"."+k)
 		}
@@ -112,9 +112,9 @@ func CrudRead(filter string, tableid string, id string, elements map[string]dico
 			keys = append(keys, "'' as "+k)
 			continue
 		}
-		if element.Jointure.Column != "" {
-			keys = append(keys, element.Jointure.Column+" as "+k)
-			joins = append(joins, element.Jointure.Join)
+		if element.Params.Column != "" {
+			keys = append(keys, element.Params.Column+" as "+k)
+			joins = append(joins, element.Params.Join)
 		} else {
 			keys = append(keys, tableid+"."+k)
 		}

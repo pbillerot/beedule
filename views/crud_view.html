@@ -70,7 +70,7 @@
         </div>
       </div>
       {{ if not (eq $viewName "vprofil")}}
-      <a href="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}" class="item" style="padding: 0.5em;">
+      <a href="{{.From}}" class="item" style="padding: 0.5em;">
         <i class="arrow left icon"></i>
       </a>
       {{ end }}
@@ -126,23 +126,23 @@
         {{if and (eq $element.Hide false) (eq $isSectionHide false)}}
         <!-- 1ère section automatique si le 1er élement n'est pas une section-->
         {{if and $isStart (ne $element.Type "section")}}
-        {{if $view.FormEdit}}
+          {{if $view.FormEdit}}
         <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
           data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formid}}/{{$id}}">
           {{else}}
           <div class="card raised crud-card-view {{$element.Class}}">
-            {{end}}
+          {{end}}
             <div class="content">
               <div class="header">
                 <i class="big {{$theme}} {{$view.IconName}} icon"></i>
                 {{$form.Title}}
               </div>
               {{ $isStart = false}}
-              {{end}}
-              <!-- Affichage de l'élément -->
-              {{if (eq $element.Type "section")}}
-              <!-- SECTION ********************* -->
-              {{if not $isStart}}
+        {{end}}
+        <!-- Affichage de l'élément -->
+        {{if (eq $element.Type "section")}}
+        <!-- SECTION ********************* -->
+          {{if not $isStart}}
               <!-- Fermeture de la card et ouverture d'une autre -->
             </div> <!-- end content card -->
           </div> <!-- end card -->
@@ -153,30 +153,44 @@
           {{if $element.Params.Form}}
             <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
               data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$element.Params.Form}}/{{$id}}">
-          {{else if $element.Params.URL}}
-            <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-              data-url="{{$element.Params.URL}}">
-          {{else if $element.Params.View}}
-            {{ $uiView := index $uiViews $element.Params.View}} 
-            {{ $label = $uiView.View.Title}}
-            {{ $iconName = $uiView.View.IconName}}
-            <div class="link card raised crud-card-view crud-card-view2 {{$element.Class}} crud-jquery-url">
-          {{else}}
-            <div class="card raised crud-card-view {{$element.Class}}">
-          {{end}}
               <div class="content">
                 <div class="header">
                   <i class="big {{$theme}} {{$iconName}} icon"></i>
                   {{$label}}
                 </div>
-            {{if $element.Params.View }}
+          {{else if $element.Params.URL}}
+            <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
+              data-url="{{$element.Params.URL}}">
+              <div class="content">
+                <div class="header">
+                  <i class="big {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+          {{else if $element.Params.View}}
+            {{ $uiView := index $uiViews $element.Params.View}} 
+            {{ $iconName = $uiView.View.IconName}}
+            <div class="card raised crud-card-view crud-card-view2 {{$element.Class}}">
+              <div class="content">
+                <div class="header">
+                  <i class="big {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+          {{else}}
+            <div class="card raised crud-card-view {{$element.Class}}">
+              <div class="content">
+                <div class="header">
+                  <i class="big {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+          {{end}}
+          {{if $element.Params.View }}
               </div> <!-- end content -->
               <div class="content">
                 {{template "_crud_table.html" $ctx}}
-            {{end}}
-                <!-- ***************** /SECTION -->
-                <!-- DEBUT type -->
-                {{else if (eq $element.Type "action")}}
+          {{end}}
+        <!-- ***************** /SECTION -->
+        <!-- DEBUT type -->
+        {{else if (eq $element.Type "action")}}
                 <div class="ui divider"></div>
                 <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
                   data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$formviewid}}/{{$id}}/{{$key}}">

@@ -27,7 +27,7 @@ func (c *CrudEditController) Get() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
-	beego.Debug("from", c.Ctx.Input.Cookie("from"))
+	// beego.Debug("from", c.Ctx.Input.Cookie("from"))
 
 	flash := beego.ReadFromRequest(&c.Controller)
 

@@ -24,8 +24,8 @@ var err error
 
 // ReturnFrom as
 func ReturnFrom(c beego.Controller) {
-	if c.Ctx.Input.Cookie("from") != "" {
-		c.Ctx.Redirect(302, c.Ctx.Input.Cookie("from"))
+	if c.Data["From"] != "" {
+		c.Ctx.Redirect(302, c.Data["From"].(string))
 	} else {
 		c.Ctx.Redirect(302, "/bee")
 	}
@@ -113,11 +113,11 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
-			if element.Jointure.Column != "" {
-				element.Jointure.Column = macro(c, element.Jointure.Column, orm.Params{})
+			if element.Params.Column != "" {
+				element.Params.Column = macro(c, element.Params.Column, orm.Params{})
 			}
-			if element.Jointure.Join != "" {
-				element.Jointure.Join = macro(c, element.Jointure.Join, orm.Params{})
+			if element.Params.Join != "" {
+				element.Params.Join = macro(c, element.Params.Join, orm.Params{})
 			}
 			if sortID == key {
 				element.SortDirection = sortDirection
@@ -507,7 +507,7 @@ func setContext(c beego.Controller, table string) {
 	c.Data["Title"] = models.Config.Appname
 	c.Data["Portail"] = &dico.Ctx
 	// Contexte crud
-	c.Data["From"] = c.Ctx.Input.Cookie("from")
+	// c.Data["From"] = c.Ctx.Input.Cookie("from")
 	c.Data["Composter"] = time.Now().Unix()
 }
 

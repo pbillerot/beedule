@@ -143,7 +143,7 @@ func (c *CrudViewController) Get() {
 	}
 
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
+	// c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)

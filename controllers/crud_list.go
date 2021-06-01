@@ -38,8 +38,6 @@ func (c *CrudListController) CrudList() {
 	c.Data["Application"] = dico.Ctx.Applications[uiView.AppID]
 	c.Data["UIView"] = &uiView
 
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
-
 	if uiView.View.Type == "image" {
 		c.TplName = "crud_list_image.html"
 	} else if uiView.View.Type == "table" {
@@ -231,8 +229,8 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 						if view.Search != "" {
 							view.Search += " OR "
 						}
-						if element.Jointure.Column != "" {
-							view.Search += element.Jointure.Column + " = '1'"
+						if element.Params.Column != "" {
+							view.Search += element.Params.Column + " = '1'"
 						} else {
 							view.Search += tableid + "." + key + " = '1'"
 						}
@@ -243,11 +241,11 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 					if view.Search != "" {
 						view.Search += " OR "
 					}
-					if element.Jointure.Column != "" {
+					if element.Params.Column != "" {
 						if ope == "=" {
-							view.Search += element.Jointure.Column + " = '" + val + "'"
+							view.Search += element.Params.Column + " = '" + val + "'"
 						} else {
-							view.Search += element.Jointure.Column + " = '" + val + "'"
+							view.Search += element.Params.Column + " = '" + val + "'"
 						}
 					} else {
 						if ope == "=" {
@@ -265,8 +263,8 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 					if view.Search != "" {
 						view.Search += " OR "
 					}
-					if element.Jointure.Column != "" {
-						view.Search += element.Jointure.Column + " = '1'"
+					if element.Params.Column != "" {
+						view.Search += element.Params.Column + " = '1'"
 					} else {
 						view.Search += tableid + "." + key + " = '1'"
 					}
@@ -277,8 +275,8 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 				if view.Search != "" {
 					view.Search += " OR "
 				}
-				if element.Jointure.Column != "" {
-					view.Search += element.Jointure.Column + " LIKE '%" + search + "%'"
+				if element.Params.Column != "" {
+					view.Search += element.Params.Column + " LIKE '%" + search + "%'"
 				} else {
 					view.Search += tableid + "." + key + " LIKE '%" + search + "%'"
 				}
@@ -311,6 +309,13 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		ui.Qrecords = len(records)
 	}
 	ui.Elements = elements
+
+	if parentElement.Type != "" {
+		// cas d'un appel from formulaire
+		c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
+	} else {
+		c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
+	}
 
 	return nil
 }

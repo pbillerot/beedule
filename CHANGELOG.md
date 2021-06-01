@@ -3,10 +3,16 @@
 Historique des modifications
 
 ### À venir :
-- dupliquer un fichier en le renommant
+- eddy: liste déroulante des fichiers dictionnaire
+- eddy: bouton ajout d'un dictionnaire
 - scroll horizontal dans view table
-- menu horizontal fixe si >900
-- formulaire dans fenêtre séparée
+- mémoriser urlFrom par programmation
+- struct jointure / params
+
+2.2.1 du xx mai 2021
+----------------------
+- `removed` jointure.join jointure.column 
+- `added` params.join params.column 
 
 2.2.0 du 31 mai 2021
 ----------------------
