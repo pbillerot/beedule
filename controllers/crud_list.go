@@ -45,6 +45,9 @@ func (c *CrudListController) CrudList() {
 	} else {
 		c.TplName = "crud_list_card.html"
 	}
+	// ne sert à rien car une vue liste est ouverte via le manu applicatif
+	// sans bouton retour arrière
+	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
 }
 
 // UIView Vue
@@ -309,13 +312,6 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		ui.Qrecords = len(records)
 	}
 	ui.Elements = elements
-
-	if parentElement.Type != "" {
-		// cas d'un appel from formulaire
-		c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
-	} else {
-		c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
-	}
 
 	return nil
 }

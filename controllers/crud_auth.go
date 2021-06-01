@@ -32,14 +32,15 @@ func (c *loggedRouter) Prepare() {
 		c.Data["TabIcon"] = dico.Ctx.IconFile
 		c.Data["TabTitle"] = dico.Ctx.Title
 	}
-	// TODO à revoir : il faut mémoriser la navigation
+
 	from := fmt.Sprintf("%v", c.Ctx.Request.URL)
 	if c.Ctx.Input.Cookie("from") != "" {
 		c.Data["From"] = c.Ctx.Input.Cookie("from")
 	} else {
 		c.Data["From"] = from
 	}
-	c.Ctx.Output.Cookie("from", from)
+	// le from sera positionné par la fonction d'affichage
+	// c.Ctx.Output.Cookie("from", from)
 	logs.Trace("data_from: %v cookie_from: %v", c.Data["From"], c.Ctx.Input.Cookie("from"))
 }
 
