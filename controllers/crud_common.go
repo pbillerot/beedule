@@ -22,16 +22,6 @@ import (
 
 var err error
 
-// ReturnFrom as
-func ReturnFrom(c beego.Controller) {
-	if c.Data["From"] != "" {
-		c.Ctx.Redirect(302, c.Data["From"].(string))
-	} else {
-		c.Ctx.Redirect(302, "/bee")
-	}
-	return
-}
-
 // IsInGroup as
 func IsInGroup(c beego.Controller, group string, id string) (out bool) {
 	out = false
@@ -607,5 +597,96 @@ func requeteSQL(c beego.Controller, in string, record orm.Params, aliasDB string
 			}
 		}
 	}
+	return
+}
+
+// ctxNavigation enregistré dans la session de l'utilisteur
+type ctxNavigation struct {
+	Current int
+	URL     map[int]string
+}
+
+// Set dans page portail /bee
+func (nav *ctxNavigation) init() string {
+	nav.Current = 0
+	nav.URL = map[int]string{}
+	nav.URL[nav.Current] = "/bee"
+	return nav.URL[nav.Current]
+}
+
+// Appel nouvelle page
+// from portail -> list
+// from list -> view ou edit
+// from view.list -> view ou edit
+func (nav *ctxNavigation) forward(url string) string {
+	if nav.getBackURL() == url {
+		// forward suite à un backward
+		return nav.backward()
+	}
+	if nav.URL[nav.Current] == url {
+		// refresh
+		return nav.URL[nav.Current]
+	}
+	nav.Current = nav.Current + 1
+	nav.URL[nav.Current] = url
+	return nav.URL[nav.Current]
+}
+
+// Bouton retour
+func (nav *ctxNavigation) backward() string {
+	if nav.Current > 0 {
+		nav.Current = nav.Current - 1
+	}
+	return nav.URL[nav.Current]
+}
+
+// Donne l'URL du bouton retour arrière
+func (nav *ctxNavigation) getBackURL() string {
+	if nav.Current != 0 {
+		return nav.URL[nav.Current-1]
+	}
+	return nav.URL[nav.Current]
+}
+
+func navigateInit(c beego.Controller) {
+	if c.GetSession("navigateur") != nil {
+		navigateur := c.GetSession("navigateur").(ctxNavigation)
+		navigateur.init()
+		c.SetSession("navigateur", navigateur)
+		c.Data["From"] = navigateur.getBackURL()
+	} else {
+		navigateur := ctxNavigation{}
+		navigateur.init()
+		c.SetSession("navigateur", navigateur)
+		c.Data["From"] = navigateur.getBackURL()
+	}
+	// logs.Info(fmt.Printf("\nNAVIGATEUR init %v\n", c.GetSession("navigateur").(ctxNavigation)))
+}
+func forward(c beego.Controller, url string) {
+	if c.GetSession("navigateur") != nil {
+		navigateur := c.GetSession("navigateur").(ctxNavigation)
+		navigateur.forward(url)
+		c.SetSession("navigateur", navigateur)
+		c.Data["From"] = navigateur.getBackURL()
+	} else {
+		navigateur := ctxNavigation{}
+		navigateur.init()
+		c.SetSession("navigateur", navigateur)
+		c.Data["From"] = navigateur.getBackURL()
+	}
+	// logs.Info(fmt.Printf("\nNAVIGATEUR forward %v\n", c.GetSession("navigateur").(ctxNavigation)))
+}
+
+// backward as
+func backward(c beego.Controller) {
+	if c.GetSession("navigateur") != nil {
+		navigateur := c.GetSession("navigateur").(ctxNavigation)
+		c.Ctx.Redirect(302, navigateur.backward())
+		c.Data["From"] = navigateur.getBackURL()
+	} else {
+		c.Ctx.Redirect(302, "/bee")
+		c.Data["From"] = "/bee"
+	}
+	// logs.Info(fmt.Printf("\nNAVIGATEUR backward %v\n", c.GetSession("navigateur").(ctxNavigation)))
 	return
 }

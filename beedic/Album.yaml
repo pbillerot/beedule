@@ -46,13 +46,14 @@ views:
         - Title
       extra:
     elements:
-      ArtistId:
+      AlbumId:
         order: 10
         hide: true
-      ArtistName:
-        order: 20
       Title:
-        order: 40
+        order: 20
+      ArtistId:
+        order: 30
+        hide: false
   
   vartist:
     form-add: fedit

@@ -53,7 +53,7 @@ data-role="table" data-mode="columntoggle">
       class="ui {{$class}} {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
       {{if (eq $element.Type "combobox")}}
       <!-- combobox -->
-      {{CrudItem $element.Items $val}} ({{$val}})
+      {{CrudItem $element.Items $val}}
       {{else if (eq $element.Type "checkbox")}}
       <!-- checkbox -->
       {{if (eq $val "1")}}<i class="check icon"></i>{{end}}

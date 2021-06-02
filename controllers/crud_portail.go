@@ -14,5 +14,6 @@ func (c *CrudPortailController) Get() {
 	setContext(c.Controller, "users")
 	flash := beego.ReadFromRequest(&c.Controller)
 	flash.Store(&c.Controller)
+	navigateInit(c.Controller)
 	c.TplName = "crud_portail.html"
 }

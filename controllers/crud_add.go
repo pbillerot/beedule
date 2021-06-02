@@ -26,7 +26,7 @@ func (c *CrudAddController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
@@ -34,17 +34,17 @@ func (c *CrudAddController) Get() {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
 				logs.Error("Form not found", c.GetSession("Username").(string), formid)
-				ReturnFrom(c.Controller)
+				backward(c.Controller)
 				return
 			}
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
 		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -61,7 +61,7 @@ func (c *CrudAddController) Get() {
 	if !IsInGroup(c.Controller, form.Group, id) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -115,15 +115,15 @@ func (c *CrudAddController) Post() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				ReturnFrom(c.Controller)
+				backward(c.Controller)
 				return
 			}
 		} else {
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -189,7 +189,7 @@ func (c *CrudAddController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	// PostSQL
@@ -205,7 +205,7 @@ func (c *CrudAddController) Post() {
 			logs.Error("Ordre sql incorrect ", postsql)
 			flash.Error("Ordre sql incorrect ", postsql)
 			flash.Store(&c.Controller)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	}
@@ -213,5 +213,5 @@ func (c *CrudAddController) Post() {
 	flash.Notice("Création effectuée avec succès")
 	flash.Store(&c.Controller)
 
-	ReturnFrom(c.Controller)
+	backward(c.Controller)
 }

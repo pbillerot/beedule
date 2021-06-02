@@ -39,9 +39,6 @@ func (c *loggedRouter) Prepare() {
 	} else {
 		c.Data["From"] = from
 	}
-	// le from sera positionné par la fonction d'affichage
-	// c.Ctx.Output.Cookie("from", from)
-	logs.Trace("data_from: %v cookie_from: %v", c.Data["From"], c.Ctx.Input.Cookie("from"))
 }
 
 // adminRouter implements global settings for all other routers.
@@ -70,6 +67,7 @@ func (c *adminRouter) Prepare() {
 		c.Data["TabIcon"] = dico.Ctx.IconFile
 		c.Data["TabTitle"] = dico.Ctx.Title
 	}
+	logs.Info("Navigateur:", c.GetSession("navigateur"))
 }
 
 // LoginController as
@@ -135,6 +133,7 @@ func (c *LoginController) Post() {
 	} else {
 		c.SetSession("IsAdmin", false)
 	}
+	navigateInit(c.Controller)
 	logs.Info(fmt.Sprintf("CONNEXION de [%s] groupe:[%s]", user.Username, user.Groupes))
 	c.Ctx.Redirect(302, "/bee")
 }

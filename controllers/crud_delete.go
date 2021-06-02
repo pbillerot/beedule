@@ -27,19 +27,19 @@ func (c *CrudDeleteController) Post() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
 		logs.Error("table not found", c.GetSession("Username").(string), tableid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	// Contrôle d'accès
@@ -51,7 +51,7 @@ func (c *CrudDeleteController) Post() {
 	if !IsInGroup(c.Controller, view.Group, id) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -73,14 +73,14 @@ func (c *CrudDeleteController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 

@@ -27,7 +27,7 @@ func (c *CrudListController) CrudList() {
 	var uiView UIView
 	err = uiView.load(c.Controller, appid, tableid, viewid, dico.Element{})
 	if err != nil {
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -38,6 +38,9 @@ func (c *CrudListController) CrudList() {
 	c.Data["Application"] = dico.Ctx.Applications[uiView.AppID]
 	c.Data["UIView"] = &uiView
 
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
+
 	if uiView.View.Type == "image" {
 		c.TplName = "crud_list_image.html"
 	} else if uiView.View.Type == "table" {
@@ -45,9 +48,6 @@ func (c *CrudListController) CrudList() {
 	} else {
 		c.TplName = "crud_list_card.html"
 	}
-	// ne sert à rien car une vue liste est ouverte via le manu applicatif
-	// sans bouton retour arrière
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
 }
 
 // UIView Vue

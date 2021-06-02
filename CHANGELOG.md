@@ -6,13 +6,12 @@ Historique des modifications
 - eddy: liste déroulante des fichiers dictionnaire
 - eddy: bouton ajout d'un dictionnaire
 - scroll horizontal dans view table
-- mémoriser urlFrom par programmation
-- struct jointure / params
 
-2.2.1 du xx mai 2021
+2.2.1 du 2 juin 2021
 ----------------------
 - `removed` jointure.join jointure.column 
 - `added` params.join params.column 
+- `changed` historique navigation pour gérer le retour arrière
 
 2.2.0 du 31 mai 2021
 ----------------------

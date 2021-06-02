@@ -28,19 +28,19 @@ func (c *CrudViewController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
 		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -117,7 +117,7 @@ func (c *CrudViewController) Get() {
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -133,7 +133,7 @@ func (c *CrudViewController) Get() {
 				}
 				err = uiView.load(c.Controller, appid, element.Params.Table, element.Params.View, element)
 				if err != nil {
-					ReturnFrom(c.Controller)
+					backward(c.Controller)
 				} else {
 					// ATTENTION le nom des vues dans un formulaire doivent être unique
 					uiViews[element.Params.View] = &uiView
@@ -143,7 +143,9 @@ func (c *CrudViewController) Get() {
 	}
 
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
-	c.Ctx.Output.Cookie("from", fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
+
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/view/%s/%s/%s/%s", appid, tableid, viewid, id))
 
 	if err == nil {
 		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)

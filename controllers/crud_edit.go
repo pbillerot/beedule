@@ -34,7 +34,7 @@ func (c *CrudEditController) Get() {
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	if val, ok := dico.Ctx.Tables[tableid]; ok {
@@ -42,17 +42,17 @@ func (c *CrudEditController) Get() {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
 				logs.Error("Form not found", c.GetSession("Username").(string), formid)
-				ReturnFrom(c.Controller)
+				backward(c.Controller)
 				return
 			}
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
 		logs.Error("table not found", c.GetSession("Username").(string), tableid)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -70,7 +70,7 @@ func (c *CrudEditController) Get() {
 		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	setContext(c.Controller, tableid)
@@ -92,18 +92,21 @@ func (c *CrudEditController) Get() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
 	// Calcul des éléments (valeur par défaut comprise)
 	elements = computeElements(c.Controller, true, elements, records[0])
+
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/edit/%s/%s/%s/%s/%s", appid, tableid, viewid, formid, id))
 
 	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	c.Data["AppId"] = appid
@@ -140,19 +143,19 @@ func (c *CrudEditController) Post() {
 			} else {
 				flash.Error("Formulaire non trouvé :", formid)
 				flash.Store(&c.Controller)
-				ReturnFrom(c.Controller)
+				backward(c.Controller)
 				return
 			}
 		} else {
 			flash.Error("Vue non trouvée :", viewid)
 			flash.Store(&c.Controller)
-			ReturnFrom(c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
 		flash.Error("Application non trouvée :", appid)
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	table := dico.Ctx.Tables[tableid]
@@ -180,14 +183,14 @@ func (c *CrudEditController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé: ", id)
 		flash.Store(&c.Controller)
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -241,7 +244,7 @@ func (c *CrudEditController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 		return
 	}
 	// Remplissage d'un record avec les elements.SQLout
@@ -356,7 +359,7 @@ func (c *CrudEditController) Post() {
 	if withPlugin {
 		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 	} else {
-		ReturnFrom(c.Controller)
+		backward(c.Controller)
 	}
 
 	return
