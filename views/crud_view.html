@@ -135,7 +135,7 @@
             <div class="content">
               <div class="header">
                 <i class="big {{$theme}} {{$view.IconName}} icon"></i>
-                {{$form.Title}}
+                {{$form.Title}} : {{$coldisplay}}
               </div>
               {{ $isStart = false}}
         {{end}}
@@ -208,7 +208,7 @@
                   </div>
                 </div>
                 <div class="header">
-                  <span class="ui medium {{$element.Class}} text">{{CrudItem $element.Items $val}} ({{$val}})</span>
+                  <span class="ui medium {{$element.Class}} text">{{CrudItem $element.Items $val}}</span>
                 </div>
                 {{else if (eq $element.Type "checkbox")}}
                 <div class="description">&nbsp;</div>
@@ -299,6 +299,8 @@
                   <span class="ui medium {{$element.Class}} text">
                     {{if $element.Format}}
                     {{CrudFormat $element.Format $val}}
+                    {{else if and $element.FormatSQL $val}}
+                    {{CrudMacroSQL $element.FormatSQL $record $session}}
                     {{else}}
                     {{$val}}
                     {{end}}

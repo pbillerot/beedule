@@ -145,8 +145,10 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	// Data récupéré dans mergeElements et dans le template ensuite
 	ui.SortID = sortID
 	ui.SortDirection = sortDirection
-
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
+	// en intégrant les éléments de tri fournis dans c.Data
+	c.Data["SortID"] = sortID
+	c.Data["SortDirection"] = sortDirection
 	elements, cols := mergeElements(c, tableid, dico.Ctx.Tables[tableid].Views[viewid].Elements, "")
 	ui.Cols = cols
 	// Calcul des champs SQL de la vue

@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"regexp"
 	"sort"
-	"strconv"
 	"strings"
 
 	beego "github.com/beego/beego/v2/adapter"
@@ -55,19 +54,15 @@ func CrudDebug(msg string) (out string) {
 }
 
 // CrudIncrement as
-func CrudIncrement(snum string) (out string) {
-	in, _ := strconv.Atoi(snum)
+func CrudIncrement(in int) int {
 	in++
-	out = strconv.Itoa(in)
-	return
+	return in
 }
 
 // CrudDecrement as
-func CrudDecrement(snum string) (out string) {
-	in, _ := strconv.Atoi(snum)
+func CrudDecrement(in int) int {
 	in--
-	out = strconv.Itoa(in)
-	return
+	return in
 }
 
 // CrudIsInGroup as

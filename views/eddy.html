@@ -11,7 +11,6 @@
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
-
 <body>
   <!-- NAVBAR -->
   <div class="ui container">
@@ -37,6 +36,22 @@
             title="Enregistrer">
             <i class="save icon"></i>
           </button>
+        </div>
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{range $file := $portail.Files}}
+            {{if eq $file.Ext ".yaml"}}
+            <a class="ui icon {{if eq $record.Path $file.Base}}active{{end}} item eddy-window-open" data-url="/bee/eddy/document/{{$file.Base}}" 
+            data-posx="right" target="{{$file.Base}}">
+              <i class="file code brown icon"></i>{{$file.Base}}</a>
+            {{else}}
+            <a class="ui icon item eddy-window-open" data-url="/bee/eddy/document/{{$file.Base}}" 
+            data-posx="right" target="{{$file.Base}}">
+              <i class="project diagram orange icon"></i>{{$file.Base}}</a>
+            {{end}}
+            {{end}}
+          </div>
         </div>
         <!-- end dropdown MENU à droite -->
       </div>

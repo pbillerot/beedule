@@ -14,11 +14,11 @@
 {{$sortdirection := .UIView.SortDirection}}
 {{$search := .UIView.Search}}
 <table
-class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled large table"
-data-role="table" data-mode="columntoggle">
+class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormView}}selectable{{end}} celled large table" data-role="table" data-mode="columntoggle">
 <thead>
   <!-- ENTETE TABLE -->
   <tr>
+    {{if $view.WithLineNumber}}<th>&nbsp;</th>{{end}}
     {{ range $num, $key := $cols }}
     {{ $element := index $elements $key }}
     {{if (ne $element.Hide true)}}
@@ -44,12 +44,13 @@ data-role="table" data-mode="columntoggle">
     data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormEdit}}/{{index $record $tablekey}}" 
     {{else}}
     class="{{CrudMacroSQL $view.ClassSQL $record $session}}" {{end}}>
+    {{if $view.WithLineNumber}}<td class="right aligned">{{CrudIncrement $irecord}}</td>{{end}}
     {{ range $num, $key := $cols }}
     {{ $element := index $elements $key }}
     {{ $class := CrudClassSQL $element $record $session}}
     {{ $val := CrudIndexSQL $record $key $element $session}}
     {{if (ne $element.Hide true)}}
-    <td
+    <td {{if $element.ColNoWrap}}nowrap{{end}}
       class="ui {{$class}} {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSQL $record $session}}">
       {{if (eq $element.Type "combobox")}}
       <!-- combobox -->
@@ -70,6 +71,8 @@ data-role="table" data-mode="columntoggle">
       <!-- autres -->
       {{if and $element.Format $val}}
       {{CrudFormat $element.Format $val}}
+      {{else if and $element.FormatSQL $val}}
+      {{CrudMacroSQL $element.FormatSQL $record $session}}
       {{else}}
       {{$val}}
       {{end}}

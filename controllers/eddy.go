@@ -65,6 +65,7 @@ func (c *EddyController) EddyDocument() {
 	record.Path = keyid
 
 	// Remplissage du contexte pour le template
+	c.Data["Portail"] = &dico.Ctx
 	c.Data["Config"] = &models.Config
 	// XSRF protection des formulaires
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())

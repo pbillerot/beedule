@@ -3,6 +3,9 @@ package dico
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"sort"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
@@ -22,6 +25,14 @@ type Portail struct {
 	Applications map[string]Application
 	Tables       map[string]*Table // chargé par portail.Load
 	Parameters   map[string]string
+	Files        []File // liste des fichiers trouvés dans beedic
+}
+
+// File as les fichiers du dictionnaire dicodir
+type File struct {
+	Base string // le filename
+	Ext  string // l'extension
+	Path string //le chemin compley
 }
 
 // Application as
@@ -64,15 +75,16 @@ type Element struct {
 	Actions       []Action // bouton d'actions - utilise Params
 	Args          Args
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
-	ClassSQL      string            `yaml:"class-sql"` // SQL pour alimenter Class error warning info green blue
-	ColAlign      string            `yaml:"col-align"` //
-	ColWith       int               `yaml:"col-with"`  // TODO largeur de la colonne
-	Dataset       map[string]string `yaml:"dataset"`   // Dataset pour un Chartjs
+	ClassSQL      string            `yaml:"class-sql"`  // SQL pour alimenter Class error warning info green blue
+	ColAlign      string            `yaml:"col-align"`  //
+	ColNoWrap     bool              `yaml:"col-nowrap"` // nowrap de la colonne
+	Dataset       map[string]string `yaml:"dataset"`    // Dataset pour un Chartjs
 	Default       string            // Valeur par défaut (macro possible)
 	DefaultSQL    string            `yaml:"default-sql"` // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string            // contiendra "error" si le champ est en erreur de saisie
 	Format        string            // "%3.2f %%" "%3.2f €" date datetime time
-	ComputeSQL    string            `yaml:"compute-sql"` // formule de calcul de Value en SQL dans VIEW EDIR ADD (pas dans LIST)
+	FormatSQL     string            `yaml:"format-sql"`  // select strftime('%H:%M:%S', {Milliseconds}/1000, 'unixepoch')
+	ComputeSQL    string            `yaml:"compute-sql"` // formule de calcul de Value en SQL dans VIEW EDIT ADD (pas dans LIST)
 	Grid          string            // Class pour donner la largeur du champ dans le formulaire "four wide field" 16 colonnes
 	Group         string            // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
 	Height        int               // TODO hauteur de la colonne
@@ -102,7 +114,7 @@ type Element struct {
 	Required      bool              // obligatoire
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string            // Type : action amount button checkbox combobox counter date datetime email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
+	Type          string            // Type : action amount button checkbox combobox counter date datetime duration email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
 }
 
 // HashPassword hashage de Value
@@ -116,27 +128,28 @@ func (element *Element) HashPassword(password string) string {
 
 // View Vue d'une table
 type View struct {
-	Actions      []Action           // Action sur la vue (ordres sql)
-	ClassSQL     string             `yaml:"class-sql"` // couleur theme de la ligne
-	Deletable    bool               // Suppression fiche autorisée
-	FormAdd      string             `yaml:"form-add"`   // Formulaire d'ajout
-	FormEdit     string             `yaml:"form-edit"`  // Formulaire d'édition
-	FormView     string             `yaml:"form-view"`  // Masque de visualisation d'un enregistrement
-	FooterSQL    string             `yaml:"footer-sql"` // requête sur la table courante
-	Hide         bool               // Vue cachée dans le menu
-	HideOnMobile bool               `yaml:"hide-on-mobile"` // Vue cachée dur mobile
-	IconName     string             `yaml:"icon-name"`      // nom de l'icone
-	Limit        int                // pour limiter le nbre de ligne dans la vue
-	Group        string             // groupe qui peut accéder à la vue
-	OrderBy      string             `yaml:"group-by"` // Tri des données SQL
-	Where        string             // Condition SQL
-	Type         string             // type de vue : card(default),image,table
-	Title        string             // Titre de la vue
-	Elements     map[string]Element // Eléments à récupérer de la base de données
-	Mask         MaskList           // Masque html d'une ligne dans la vue
-	PostSQL      []string           `yaml:"post-sql"`       // Ordre exécutée après la suppression si OK
-	PreUpdateSQL []string           `yaml:"pre-update-sql"` // requêtes SQL avant l'affichage
-	Search       string             // Chaîne de recherche dans toutes les colonnes de la vue
+	Actions        []Action           // Action sur la vue (ordres sql)
+	ClassSQL       string             `yaml:"class-sql"` // couleur theme de la ligne
+	Deletable      bool               // Suppression fiche autorisée
+	FormAdd        string             `yaml:"form-add"`   // Formulaire d'ajout
+	FormEdit       string             `yaml:"form-edit"`  // Formulaire d'édition
+	FormView       string             `yaml:"form-view"`  // Masque de visualisation d'un enregistrement
+	FooterSQL      string             `yaml:"footer-sql"` // requête sur la table courante
+	Hide           bool               // Vue cachée dans le menu
+	HideOnMobile   bool               `yaml:"hide-on-mobile"` // Vue cachée dur mobile
+	IconName       string             `yaml:"icon-name"`      // nom de l'icone
+	Limit          int                // pour limiter le nbre de ligne dans la vue
+	Group          string             // groupe qui peut accéder à la vue
+	OrderBy        string             `yaml:"group-by"` // Tri des données SQL
+	Where          string             // Condition SQL
+	Type           string             // type de vue : card(default),image,table
+	Title          string             // Titre de la vue
+	Elements       map[string]Element // Eléments à récupérer de la base de données
+	Mask           MaskList           // Masque html d'une ligne dans la vue
+	PostSQL        []string           `yaml:"post-sql"`       // Ordre exécutée après la suppression si OK
+	PreUpdateSQL   []string           `yaml:"pre-update-sql"` // requêtes SQL avant l'affichage
+	Search         string             // Chaîne de recherche dans toutes les colonnes de la vue
+	WithLineNumber bool               `yaml:"with-line-number"` // list.table n° de ligne en 1ère colonne
 }
 
 // Form formulaire
@@ -251,6 +264,38 @@ func (c *Portail) Load() ([]string, error) {
 				table.Load(tableview.TableName)
 				c.Tables[tableview.TableName] = &table
 			}
+		}
+	}
+	// load liste des fichiers dicodir
+	// ouverture du dossier
+	f, err := os.Open(beego.AppConfig.String("dicodir"))
+	if err != nil {
+		msg := fmt.Sprintf("%s : [%v]", beego.AppConfig.String("dicodir"), err)
+		dicoError = append(dicoError, msg)
+		logs.Error("DICODIR", msg)
+		return dicoError, err
+	}
+	// lecture ds fichiers et dossiers du dossier courant
+	list, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		msg := fmt.Sprintf("%s : [%v]", beego.AppConfig.String("dicodir"), err)
+		dicoError = append(dicoError, msg)
+		logs.Error("DICODIR", msg)
+		return dicoError, err
+	}
+	// tri des fichiers sur le nom
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].Name() < list[j].Name()
+	})
+
+	for _, fileinfo := range list {
+		if !fileinfo.IsDir() {
+			file := File{}
+			file.Base = fileinfo.Name()
+			file.Ext = filepath.Ext(fileinfo.Name())
+			file.Path = beego.AppConfig.String("dicodir") + "/" + fileinfo.Name()
+			c.Files = append(c.Files, file)
 		}
 	}
 	return dicoError, err

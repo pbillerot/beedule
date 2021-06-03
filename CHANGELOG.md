@@ -3,9 +3,16 @@
 Historique des modifications
 
 ### À venir :
-- eddy: liste déroulante des fichiers dictionnaire
-- eddy: bouton ajout d'un dictionnaire
-- scroll horizontal dans view table
+- list image
+- view image
+
+2.2.2 du 3 juin 2021
+----------------------
+- `added` col-nowrap
+- `added` format-sql
+- `added` help sur rubrique intégrée 
+- `added` view: with-line-number
+- `added` eddy: menu vertical avec liste des fichiers dicodir pour les ouvrir
 
 2.2.1 du 2 juin 2021
 ----------------------

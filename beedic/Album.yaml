@@ -38,6 +38,7 @@ views:
     title: "Albums"
     icon-name: "circle"
     order-by: Title
+    with-line-number: true
     mask:
       header:
         - AlbumId
@@ -65,6 +66,7 @@ views:
     title: "Albums"
     icon-name: "circle"
     order-by: Title
+    with-line-number: true
     elements:
       AlbumId:
         order: 10
@@ -95,11 +97,11 @@ forms:
         hide: true
       ArtistName:
         order: 40
-        hide: true
+        hide: false
       _vTrack:
         type: section
         order: 50
-        label-long: "Morceaux"
+        label-long: Morceaux
         params:
           icon-name: "file audio"
           table: Track

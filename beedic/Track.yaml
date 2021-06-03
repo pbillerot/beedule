@@ -14,60 +14,83 @@ elements:
     type: text
     label-long: "Morceau"
     label-short: "Morceau"
+    grid: "eight wide"
   AlbumId:
-    type: numeric
+    type: combobox
     label-long: "Album"
     label-short: "Album"
+    items-sql: "SELECT AlbumId as 'key', Title as 'label' From Album order by Title"
+    grid: "eight wide"
   MediaTypeId:
-    type: numeric
+    type: combobox
     label-long: Type média"
     label-short: "Type média"
+    items-sql: "SELECT MediaTypeId as 'key', Name as 'label' From MediaType order by Name"
+    grid: "eight wide"
   GenreId:
-    type: numeric
+    type: combobox
     label-long: "Genre de musique"
-    label-short: "Genre de musique"
+    label-short: "Genre"
+    items-sql: "SELECT GenreId as 'key', Name as 'label' From Genre order by Name"
+    grid: "eight wide"
   Composer:
     type: text
     label-long: "Compositeur"
     label-short: "Compositeur"
+    grid: "eight wide"
   Milliseconds:
-    type: numeric
-    label-long: "Durée"
+    type: number
+    label-long: "Durée en mn"
     label-short: "Durée"
+    help: "Saisir la durée en millisecondes"
+    format-sql: "select strftime('%M:%S', {Milliseconds}/1000, 'unixepoch')"
+    grid: "eight wide"
   Bytes:
-    type: numeric
+    type: number
     label-long: "Taille"
     label-short: "Taille"
+    help: "Saisir la taille en octets"
+    format-sql: "select printf('%3.2f Mo', {Bytes}.00/1000000, 'unixepoch')"
+    col-align: right
+    col-nowrap: true
+    grid: "eight wide"
   UnitPrice:
-    type: text
+    type: amount
     label-long: "P.U."
     label-short: "P.U."
+    help: "Montant en €"
+    col-nowrap: true
+    grid: "eight wide"
+  ArtistName:
+    type: jointure
+    label-long: Artiste
+    label-court: Artiste
+    params:
+      join: "left outer join Album on Album.AlbumId = Track.AlbumId left outer join Artist on Artist.ArtistId = Album.ArtistId"
+      column: Artist.Name
 
 views:
   vall:
     form-add: fedit
     form-edit: fedit
-    deletable: false
+    form-view: fview
+    deletable: true
     type: table
     group: chinook
     title: "Morceaux"
     icon-name: "file audio"
-    order-by: Name
+    order-by: ArtistName, AlbumId
     limit: 50
-    mask:
-      header:
-        - TrackId
-      meta:
-      description:
-        - Name
-      extra:
     elements:
+      ArtistName:
+        order: 1 
+      AlbumId:
+        order: 3
       TrackId:
         order: 10
+        hide: true
       Name:
         order: 20
-      AlbumId:
-        order: 30
       MediaTypeId:
         order: 40
       GenreId:
@@ -90,6 +113,7 @@ views:
     icon-name: "file audio"
     order-by: Name
     limit: 50
+    with-line-number: true
     mask:
       header:
         - TrackId
@@ -100,12 +124,28 @@ views:
     elements:
       TrackId:
         order: 10
+        hide: true
       Name:
         order: 20
+      AlbumId:
+        order: 30
+        hide: true
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
 
 forms:
   fedit:
-    Name: "Morceau de musique"
+    title: "Morceau"
     groupe: chinook
     elements:
       TrackId:
@@ -126,3 +166,43 @@ forms:
         order: 80
       UnitPrice:
         order: 90
+  fview:
+    title: "Morceau"
+    groupe: chinook
+    elements:
+      ArtistName:
+        order: 1 
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+      _section_Album:
+        type: section
+        order: 100
+        label-long: Album
+        params:
+          icon-name: circle 
+      AlbumId:
+        order: 110
+      _section_Artist:
+        type: section
+        order: 200
+        label-long: Artiste
+        params:
+          icon-name: user secret 
+      ArtistName:
+        order: 210
+          
