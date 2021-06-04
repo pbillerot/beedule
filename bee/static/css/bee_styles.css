@@ -22,8 +22,20 @@ main {
 .ui.cards>.crud-card-view {
     width: 360px;
 }
-.ui.cards>.crud-card-view2 {
-    width: 100%;
+.ui.cards>.crud-card-view-s {
+  width: 150px;
+}
+.ui.cards>.crud-card-view-m {
+  width: 360px;
+}
+.ui.cards>.crud-card-view-l {
+  width: 450px;
+}
+.ui.cards>.crud-card-view-xl {
+  width: 600px;
+}
+.ui.cards>.crud-card-view-max {
+  width: 100%;
 }
 .crud-cell-nowrap {
     white-space: nowrap;

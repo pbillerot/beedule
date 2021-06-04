@@ -28,9 +28,6 @@ func (c *EddyController) EddyDocument() {
 	flash := beego.ReadFromRequest(&c.Controller)
 	// keyid = nom du fichier
 	keyid := c.Ctx.Input.Param(":key")
-	// Mémorisation de la position du curseur
-	cursorCh := c.GetString("cursor_ch")
-	cursorLine := c.GetString("cursor_line")
 
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
@@ -72,8 +69,6 @@ func (c *EddyController) EddyDocument() {
 	c.Data["Record"] = record
 	c.Data["KeyID"] = keyid
 	c.Data["TabTitle"] = keyid
-	c.Data["CursorCh"] = cursorCh
-	c.Data["CursorLine"] = cursorLine
 	// load liste des rubriques
 	var rubriques string
 	if keyid != "portail.yaml" {

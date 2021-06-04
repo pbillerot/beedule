@@ -57,15 +57,14 @@ $(document).ready(function () {
         lineWrapping: true,
         mode: 'yaml',
         readOnly: false,
+        autoRefresh: true,
         theme: 'eclipse',
         tabSize: 2,
         autofocus: true,
         viewportMargin: 20,
-        keyword: $keyword
+        keyword: $keyword,
       }
     );
-    myCodeMirror.focus();
-    myCodeMirror.setCursor({ line: $('#cursor_line').val(), ch: $('#cursor_ch').val() });
     myCodeMirror.setOption("extraKeys", {
       Tab: function (cm) {
         var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
@@ -73,8 +72,8 @@ $(document).ready(function () {
       },
       "Ctrl-S": function (cm) {
         var cursor = cm.getCursor();
-        $('#cursor_ch').val(cursor.ch);
-        $('#cursor_line').val(cursor.line);
+        sessionStorage.setItem("ch", cursor.ch);
+        sessionStorage.setItem("line", cursor.line);
         $("#button_validate").trigger('click');
       },
       "Ctrl-Space": "autocomplete",
@@ -84,10 +83,16 @@ $(document).ready(function () {
     });
     myCodeMirror.on("change", function (cm) {
       var cursor = cm.getCursor();
-      $('#cursor_ch').val(cursor.ch);
-      $('#cursor_line').val(cursor.line);
+      sessionStorage.setItem("ch", cursor.ch);
+      sessionStorage.setItem("line", cursor.line);
       $('#button_validate').removeAttr('disabled');
     })
+    myCodeMirror.focus();
+    if (sessionStorage.getItem("line")) {
+      myCodeMirror.setCursor({ 
+        line: parseInt(sessionStorage.getItem("line")), 
+        ch: parseInt(sessionStorage.getItem("ch")) });
+    }
   }
 
   // Collapse

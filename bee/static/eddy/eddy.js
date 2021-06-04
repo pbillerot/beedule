@@ -76,6 +76,7 @@ var $eddy_dico = [
   { text: 'src: ""', displayText: 'p_src' },
   { text: 'url: ""', displayText: 'p_url' },
   { text: 'view: ""', displayText: 'p_view (section)' },
+  { text: 'width: s m l xl max', displayText: 'p_width' },
   { text: 'with-confirm: true', displayText: 'p_with-confirm' },
   { text: 'with-image-editor: true', displayText: 'p_with-image-editor' },
   { text: 'with-input-file: true', displayText: 'p_with-input-file' },

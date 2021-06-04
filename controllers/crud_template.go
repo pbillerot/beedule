@@ -38,6 +38,7 @@ func init() {
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
 	beego.AddFuncMap("CrudDebug", CrudDebug)
 	beego.AddFuncMap("BeeReplace", BeeReplace)
+	beego.AddFuncMap("dict", Dictionary)
 	beego.AddFuncMap("CrudComputeDataset", CrudComputeDataset)
 }
 
@@ -331,4 +332,45 @@ func CrudComputeDataset(dataset map[string]string, record orm.Params, session ty
 		out[key] = val
 	}
 	return out
+}
+
+// Dictionary creates a map[string]interface{} from the given parameters by
+// walking the parameters and treating them as key-value pairs.  The number
+// of parameters must be even.
+// The keys can be string slices, which will create the needed nested structure.
+// Clone dict du projet https://github.com/gohugoio/hugo/blob/master/tpl/collections/collections.go
+func Dictionary(values ...interface{}) (map[string]interface{}, error) {
+	if len(values)%2 != 0 {
+		return nil, errors.New("invalid dictionary call")
+	}
+
+	root := make(map[string]interface{})
+
+	for i := 0; i < len(values); i += 2 {
+		dict := root
+		var key string
+		switch v := values[i].(type) {
+		case string:
+			key = v
+		case []string:
+			for i := 0; i < len(v)-1; i++ {
+				key = v[i]
+				var m map[string]interface{}
+				v, found := dict[key]
+				if found {
+					m = v.(map[string]interface{})
+				} else {
+					m = make(map[string]interface{})
+					dict[key] = m
+				}
+				dict = m
+			}
+			key = v[len(v)-1]
+		default:
+			return nil, errors.New("invalid dictionary key")
+		}
+		dict[key] = values[i+1]
+	}
+
+	return root, nil
 }

@@ -179,6 +179,7 @@ type Params struct {
 	Table           string   // section:
 	View            string   // section:
 	Where           string   // section: + params.table + params.view
+	Width           string   // image: largeur s m l xl max 150px 360px 450px 600px 100%
 	WithConfirm     bool     `yaml:"with-confirm"`
 	WithInput       bool     `yaml:"witn-input"`
 	WithInputFile   bool     `yaml:"with-input-file"`

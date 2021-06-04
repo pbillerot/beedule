@@ -20,7 +20,7 @@ applications:
       view-name: vall
   chinook:
     title: "Chinook"
-    image: "/bee/data/files/chinook.jpg"
+    image: "/bee/data/chinook/files/chinook.jpg"
     group: chinook
     tables-views:
     - table-name: Artist

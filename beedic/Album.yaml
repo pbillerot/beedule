@@ -19,6 +19,16 @@ elements:
     label-long: "Artiste"
     label-short: "Artiste"
     items-sql: "SELECT ArtistId as 'key', Name as 'label' From Artist order by Name"
+  _image:
+    type: "image"
+    label-long: "Pochette"
+    label-short: "Pochette"
+    params: 
+      src: "/bee/data/chinook/files/chinook.jpg"
+      url: "/bee/data/chinook/files/chinook.jpg"
+      width: s
+      header:
+        - Name
 
 views:
   vall:
@@ -88,12 +98,15 @@ forms:
         order: 20
       ArtistId:
         order: 30
+      _image:
+        order: 40
       _vTrack:
         type: section
-        order: 50
+        order: 100
         label-long: Morceaux
         params:
           icon-name: "file audio"
           table: Track
           view: valbum
           where: "AlbumId = '{AlbumId}'"
+          width: max

@@ -217,7 +217,7 @@
 {{else if (eq $element.Type "hidden")}}
   <input type="hidden" name="{{$key}}" value="{{$val}}">
 {{else if (eq $element.Type "image")}}
-<div class="ui card raised crud-card-view2 {{$element.Class}}" >
+<div class="ui card raised crud-card-view-{{$element.Params.Width}} {{$element.Class}}" >
   <div class="ui image">
     <img id="{{$key}}_img" src="{{$element.Params.URL}}?{{$composter}}">
   </div>

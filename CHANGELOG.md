@@ -3,9 +3,19 @@
 Historique des modifications
 
 ### À venir :
-- plusieurs list dans une view
+- aide sur l'application Application.Help url
 - list image
 - view image
+- bug eddy ctrl+s la reprise de l'édition est bizarre
+- eddy: ctrl+h
+- utiliser localStorage à la place des cookies
+
+2.2.5 du 4 juin 2021
+----------------------
+- `added` Params.Width s m l xl max pour les sections image pdf et list
+- `added` template function dict
+- `fixed` correction reprise saisie après ctrl+s
+- `changed` codemirror 5.58.1 -> 5.61.1
 
 2.2.4 du 4 juin 2021
 ----------------------
