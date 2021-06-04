@@ -103,11 +103,11 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 			if element.PlaceHolder == "" {
 				element.PlaceHolder = element.LabelLong
 			}
-			if element.Params.Column != "" {
-				element.Params.Column = macro(c, element.Params.Column, orm.Params{})
+			if element.Jointure.Column != "" {
+				element.Jointure.Column = macro(c, element.Jointure.Column, orm.Params{})
 			}
-			if element.Params.Join != "" {
-				element.Params.Join = macro(c, element.Params.Join, orm.Params{})
+			if element.Jointure.Join != "" {
+				element.Jointure.Join = macro(c, element.Jointure.Join, orm.Params{})
 			}
 			if sortID == key {
 				element.SortDirection = sortDirection

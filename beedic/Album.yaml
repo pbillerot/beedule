@@ -19,13 +19,6 @@ elements:
     label-long: "Artiste"
     label-short: "Artiste"
     items-sql: "SELECT ArtistId as 'key', Name as 'label' From Artist order by Name"
-  ArtistName:
-    label-long: "Artiste"
-    label-short: "Artiste"
-    type: jointure
-    params:
-      join: "left outer join Artist on Artist.ArtistId = Album.ArtistId"
-      column: "Artist.Name"
 
 views:
   vall:
@@ -90,14 +83,11 @@ forms:
     elements:
       AlbumId:
         order: 10
+        hide: true
       Title:
         order: 20
       ArtistId:
         order: 30
-        hide: true
-      ArtistName:
-        order: 40
-        hide: false
       _vTrack:
         type: section
         order: 50

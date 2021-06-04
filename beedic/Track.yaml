@@ -62,10 +62,10 @@ elements:
     col-nowrap: true
     grid: "eight wide"
   ArtistName:
-    type: jointure
+    type: text
     label-long: Artiste
     label-court: Artiste
-    params:
+    jointure:
       join: "left outer join Album on Album.AlbumId = Track.AlbumId left outer join Artist on Artist.ArtistId = Album.ArtistId"
       column: Artist.Name
 
@@ -170,8 +170,6 @@ forms:
     title: "Morceau"
     groupe: chinook
     elements:
-      ArtistName:
-        order: 1 
       TrackId:
         order: 10
         hide: true

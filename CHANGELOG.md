@@ -3,8 +3,13 @@
 Historique des modifications
 
 ### À venir :
+- plusieurs list dans une view
 - list image
 - view image
+
+2.2.3 du 4 juin 2021
+----------------------
+- `fixed` attribut jointure pour indiquer que la rubrique est le résulat d'une jointure
 
 2.2.2 du 3 juin 2021
 ----------------------
@@ -17,7 +22,7 @@ Historique des modifications
 2.2.1 du 2 juin 2021
 ----------------------
 - `removed` jointure.join jointure.column 
-- `added` params.join params.column 
+- `added` Jointure.Join Jointure.Column 
 - `changed` historique navigation pour gérer le retour arrière
 
 2.2.0 du 31 mai 2021

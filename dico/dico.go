@@ -114,7 +114,7 @@ type Element struct {
 	Required      bool              // obligatoire
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string            // Type : action amount button checkbox combobox counter date datetime duration email float image jointure list markdown month number pdf percent plugin section tag tel text time radio url week
+	Type          string            // Type : action amount button checkbox combobox counter date datetime duration email float image list markdown month number pdf percent plugin section tag tel text time radio url week
 }
 
 // HashPassword hashage de Value
@@ -167,12 +167,10 @@ type Form struct {
 // Params paramètres d'un élément
 type Params struct {
 	Action          string
-	Column          string   // jointure: colonne retournée par la jointure
 	Form            string   // section: form à ouvrir
 	IconName        string   `yaml:"icon-name"` // image: section
 	Header          []string // card pour image
 	Description     []string // card pour image
-	Join            string   // jointure: la commande du genre : left outer join on field = field
 	Meta            []string // card pour image
 	Extra           []string // card pour image
 	URL             string   `yaml:"url"`
