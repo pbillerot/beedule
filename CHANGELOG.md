@@ -7,6 +7,10 @@ Historique des modifications
 - list image
 - view image
 
+2.2.4 du 4 juin 2021
+----------------------
+- `fixed` datadir par aliasdb
+
 2.2.3 du 4 juin 2021
 ----------------------
 - `fixed` attribut jointure pour indiquer que la rubrique est le résulat d'une jointure
