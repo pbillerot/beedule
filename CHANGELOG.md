@@ -5,10 +5,13 @@ Historique des modifications
 ### À venir :
 - aide sur l'application Application.Help url
 - list image
-- view image
 - bug eddy ctrl+s la reprise de l'édition est bizarre
 - eddy: ctrl+h
 - utiliser localStorage à la place des cookies
+
+2.2.6 du 4 juin 2021
+----------------------
+- `added` Params.Width list image
 
 2.2.5 du 4 juin 2021
 ----------------------
