@@ -7,7 +7,7 @@ setting:
 
 elements:
   AlbumId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   Title:
@@ -26,7 +26,6 @@ elements:
     params: 
       src: "/bee/data/chinook/files/chinook.jpg"
       url: "/bee/data/chinook/files/chinook.jpg"
-      width: s
       header:
         - Name
 
@@ -104,9 +103,9 @@ forms:
         type: section
         order: 100
         label-long: Morceaux
+        width: max
         params:
           icon-name: "file audio"
           table: Track
           view: valbum
           where: "AlbumId = '{AlbumId}'"
-          width: max

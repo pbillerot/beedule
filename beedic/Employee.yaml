@@ -7,7 +7,7 @@ setting:
 
 elements:
   EmployeeId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   FirstName:
@@ -23,7 +23,7 @@ elements:
     label-long: "Titre"
     label-short: "Titre"
   ReportsTo:
-    type: numeric
+    type: number
     label-long: "Chargé(e) de"
     label-short: "Chargé(e)"
   BirthDate:

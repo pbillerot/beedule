@@ -113,7 +113,10 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 				element.SortDirection = sortDirection
 			}
 			// Attributs par défaut en fonction du type
+			// action amount button checkbox combobox counter date datetime duration email float image list markdown month number pdf percent plugin radio section tag tel text textarea time url week
 			switch element.Type {
+			case "action":
+				break
 			case "amount":
 				if element.Format == "" {
 					element.Format = "%3.2f €"
@@ -124,34 +127,92 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 				if element.Class == "" {
 					element.Class = "crud-cell-nowrap"
 				}
-			case "count":
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
+			case "button":
+				break
+			case "checkbox":
+				break
+			case "combobox":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "counter":
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
 				}
-			case "editor":
-				if element.Class == "" {
-					element.Class = "warning"
+				if element.Width == "" {
+					element.Width = "s"
 				}
+				break
 			case "date":
 				if element.Format == "" {
 					element.Format = "date"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
 			case "datetime":
 				if element.Format == "" {
 					element.Format = "datetime"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
+			case "duration":
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
+			case "editor":
+				if element.Class == "" {
+					element.Class = "warning"
+				}
+				break
+			case "email":
+				element.Width = "m"
+				break
 			case "float":
 				if element.ColAlign == "" {
 					element.ColAlign = "right"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
+			case "image":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "list":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "markdown":
+				break
 			case "month":
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
 			case "number":
 				if element.ColAlign == "" {
 					element.ColAlign = "right"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
 			case "percent":
 				if element.Format == "" {
 					element.Format = "%3.2f %%"
@@ -162,21 +223,67 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 				if element.Class == "" {
 					element.Class = "crud-cell-nowrap"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+				break
+			case "pdf":
+				break
+			case "plugin":
+				break
+			case "radio":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
 			case "section":
 				if !IsInGroup(c, table.Forms[element.Params.Form].Group, id) {
 					element.Params.Form = ""
 				}
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "tag":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "tel":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
+			case "text":
+				if element.Width == "" {
+					element.Width = "m"
+				}
+				break
 			case "textarea":
 				if element.Class == "" {
 					element.Class = "warning"
+				}
+				if element.Width == "" {
+					element.Width = "l"
 				}
 			case "time":
 				if element.Format == "" {
 					element.Format = "time"
 				}
+				if element.Width == "" {
+					element.Width = "s"
+				}
+			case "url":
+				if element.Width == "" {
+					element.Width = "l"
+				}
+				break
 			case "week":
 				if element.ColAlign == "" {
 					element.ColAlign = "center"
+				}
+				if element.Width == "" {
+					element.Width = "s"
 				}
 			}
 			elements[key] = element

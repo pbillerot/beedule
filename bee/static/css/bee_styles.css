@@ -22,19 +22,19 @@ main {
 .ui.cards>.crud-card-view {
     width: 360px;
 }
-.ui.cards>.crud-card-view-s {
+.ui.cards>.bee-width-s {
   width: 150px;
 }
-.ui.cards>.crud-card-view-m {
+.ui.cards>.bee-width-m {
   width: 360px;
 }
-.ui.cards>.crud-card-view-l {
+.ui.cards>.bee-width-l {
   width: 450px;
 }
-.ui.cards>.crud-card-view-xl {
+.ui.cards>.bee-width-xl {
   width: 600px;
 }
-.ui.cards>.crud-card-view-max {
+.ui.cards>.bee-width-max {
   width: 100%;
 }
 .crud-cell-nowrap {
@@ -94,6 +94,23 @@ pre {
 .ui.navbar.bee-bar-light {
     background:white;
     border-bottom: 1px solid #dedede;
+}
+
+/* largeur field */
+.ui.form>.bee-width-s {
+  width: 150px !important;
+}
+.ui.form>.bee-width-m {
+  width: 360px !important;
+}
+.ui.form .bee-width-l {
+  width: 450px !important;
+}
+.ui.form .bee-width-xl {
+  width: 600px !important;
+}
+.ui.form .bee-width-max {
+  width: 100% !important;
 }
 
 /* Mobile */

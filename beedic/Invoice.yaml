@@ -7,7 +7,7 @@ setting:
 
 elements:
   InvoiceId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   CustomerId:
@@ -38,6 +38,7 @@ elements:
     type: text
     label-long: "Code postal"
     label-short: "Code postal"
+    width: s
   Total:
     type: text
     label-long: "Montant Total"

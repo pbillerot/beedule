@@ -7,7 +7,7 @@ setting:
 
 elements:
   CustomerId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   FirstName:
@@ -47,7 +47,7 @@ elements:
     label-long: "Email"
     label-short: "Email"
   SupportRepId:
-    type: numeric
+    type: number
     label-long: "Support"
     label-short: "Support"
 

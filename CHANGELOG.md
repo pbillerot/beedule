@@ -4,14 +4,18 @@ Historique des modifications
 
 ### À venir :
 - aide sur l'application Application.Help url
-- list image
-- bug eddy ctrl+s la reprise de l'édition est bizarre
 - eddy: ctrl+h
 - utiliser localStorage à la place des cookies
+
+2.2.7 du 5 juin 2021
+----------------------
+- `changed` Params.Width dans Element.Width
+- `added` width par default par type de rubrique
 
 2.2.6 du 4 juin 2021
 ----------------------
 - `added` Params.Width list image
+- `fixed` correction reprise édition suite sauvegarde
 
 2.2.5 du 4 juin 2021
 ----------------------

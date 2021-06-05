@@ -168,7 +168,7 @@
           {{else if $element.Params.View}}
             {{ $uiView := index $uiViews $element.Params.View}} 
             {{ $iconName = $uiView.View.IconName}}
-            <div class="card raised crud-card-view crud-card-view-{{$element.Params.Width}} {{$element.Class}}">
+            <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content">
                 <div class="header">
                   <i class="big {{$theme}} {{$iconName}} icon"></i>
@@ -226,7 +226,7 @@
                 <!-- Fermeture de la card et ouverture d'une autre -->
               </div> <!-- end content card -->
             </div> <!-- end card -->
-            <div class="card raised crud-card-view crud-card-view-{{$element.Params.Width}} {{$element.Class}}" >
+            <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}" >
               {{if $element.Dataset}}
               <a class="crud-popup-chart">
               <canvas class="ui link {{$element.Dataset.classjquery}}" style="background-color: white" 

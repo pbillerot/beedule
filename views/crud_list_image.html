@@ -148,7 +148,7 @@
         {{$url := CrudMacro $element.Params.URL $record $session}}
         {{$src := CrudMacro $element.Params.Src $record $session}}
         <div id="{{CrudIndexAnchor $record $tablekey}}" {{if $view.FormView}}
-          class="link raised card crud-card-view crud-card-view-{{$element.Params.Width}} {{CrudMacroSQL $view.ClassSQL $record $session}} crud-card-searchable crud-jquery-url"
+          class="link raised card crud-card-view bee-width-{{$element.Width}} {{CrudMacroSQL $view.ClassSQL $record $session}} crud-card-searchable crud-jquery-url"
           data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" {{else}}
           class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable" {{end}}>
           {{if $element.Dataset}}

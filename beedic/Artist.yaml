@@ -7,7 +7,7 @@ setting:
 
 elements:
   ArtistId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   Name:

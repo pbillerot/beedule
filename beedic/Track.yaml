@@ -7,60 +7,52 @@ setting:
 
 elements:
   TrackId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   Name:
     type: text
     label-long: "Morceau"
     label-short: "Morceau"
-    grid: "eight wide"
   AlbumId:
     type: combobox
     label-long: "Album"
     label-short: "Album"
     items-sql: "SELECT AlbumId as 'key', Title as 'label' From Album order by Title"
-    grid: "eight wide"
   MediaTypeId:
     type: combobox
     label-long: Type média"
     label-short: "Type média"
     items-sql: "SELECT MediaTypeId as 'key', Name as 'label' From MediaType order by Name"
-    grid: "eight wide"
   GenreId:
     type: combobox
     label-long: "Genre de musique"
     label-short: "Genre"
     items-sql: "SELECT GenreId as 'key', Name as 'label' From Genre order by Name"
-    grid: "eight wide"
   Composer:
     type: text
     label-long: "Compositeur"
     label-short: "Compositeur"
-    grid: "eight wide"
   Milliseconds:
     type: number
     label-long: "Durée en mn"
     label-short: "Durée"
-    help: "Saisir la durée en millisecondes"
+    help: "Durée en millisecondes"
     format-sql: "select strftime('%M:%S', {Milliseconds}/1000, 'unixepoch')"
-    grid: "eight wide"
   Bytes:
     type: number
     label-long: "Taille"
     label-short: "Taille"
-    help: "Saisir la taille en octets"
+    help: "Taille en octets"
     format-sql: "select printf('%3.2f Mo', {Bytes}.00/1000000, 'unixepoch')"
     col-align: right
     col-nowrap: true
-    grid: "eight wide"
   UnitPrice:
     type: amount
     label-long: "P.U."
     label-short: "P.U."
     help: "Montant en €"
     col-nowrap: true
-    grid: "eight wide"
   ArtistName:
     type: text
     label-long: Artiste

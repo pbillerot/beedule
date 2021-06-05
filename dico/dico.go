@@ -115,6 +115,7 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	Type          string            // Type : action amount button checkbox combobox counter date datetime duration email float image list markdown month number pdf percent plugin section tag tel text time radio url week
+	Width         string            // largeur s m l xl max 150px 360px 450px 600px 100% dans view et edit
 }
 
 // HashPassword hashage de Value
@@ -179,7 +180,6 @@ type Params struct {
 	Table           string   // section:
 	View            string   // section:
 	Where           string   // section: + params.table + params.view
-	Width           string   // image: largeur s m l xl max 150px 360px 450px 600px 100%
 	WithConfirm     bool     `yaml:"with-confirm"`
 	WithInput       bool     `yaml:"witn-input"`
 	WithInputFile   bool     `yaml:"with-input-file"`

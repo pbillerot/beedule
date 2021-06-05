@@ -7,15 +7,15 @@ setting:
 
 elements:
   InvoiceLineId:
-    type: numeric
+    type: number
     label-long: "Id"
     label-short: "Id"
   InvoiceId:
-    type: numeric
+    type: number
     label-long: "Facture"
     label-short: "Facture"
   TrackId:
-    type: numeric
+    type: number
     label-long: "Morceau"
     label-short: "Morceau"
   UnitPrice:
@@ -23,7 +23,7 @@ elements:
     label-long: "P.U."
     label-short: "P.U."
   Quantity:
-    type: numeric
+    type: number
     label-long: "Quantité"
     label-short: "Quantité"
 
