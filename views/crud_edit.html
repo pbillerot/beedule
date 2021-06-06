@@ -103,17 +103,28 @@
   {{end}}
   {{ .xsrfdata }}
   {{$section := false}}
+  <!-- BOUCLE RECORDS -->
   {{ range $irecord, $record := .Records }}
 <div class="ui form">
   {{ range $num, $key := $cols }}
   {{ $val := CrudIndex $record $key }}
   {{ $element := index $elements $key }}
-  {{ if (eq $element.Hide false) }}
-{{if (eq $element.Type "section")}}
+  {{ $type := $element.Type}}
+  {{if or $element.Protected $element.ReadOnly}}
+    {{if and $element.Format $val}}
+      {{$val = CrudFormat $element.Format $val}}
+      {{$type = "text"}}
+    {{else if and $element.FormatSQL $val}}
+      {{$val = CrudMacroSQL $element.FormatSQL $record $session}}
+      {{$type = "text"}}
+    {{end}}
+ {{end}}
+{{ if (eq $element.Hide false) }}
+{{if (eq $type "section")}}
   {{ if $section}}</div>{{end}}
   <div class="fields">
     {{$section = true}}
-{{else if (eq $element.Type "action")}}
+{{else if (eq $type "action")}}
   {{if $element.Params.WithInput }}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
@@ -148,8 +159,8 @@
     </button>
   </div>
 {{end}}
-{{else if (eq $element.Type "button")}}
-{{else if (eq $element.Type "amount")}}
+{{else if (eq $type "button")}}
+{{else if (eq $type "amount")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -157,7 +168,7 @@
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "combobox")}}
+{{else if (eq $type "combobox")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -170,14 +181,14 @@
     </select>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "counter")}}
+{{else if (eq $type "counter")}}
   <div class="disabled  bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
     <input type="number" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "checkbox")}}
+{{else if (eq $type "checkbox")}}
   <div
     class="inline {{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <div class="ui checkbox">
@@ -186,7 +197,7 @@
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
     </div>
   </div>
-{{else if (eq $element.Type "datetime")}}
+{{else if (eq $type "datetime")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -199,14 +210,14 @@
     </div>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "markdown")}}
+{{else if (eq $type "markdown")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
       <label>{{$element.LabelLong}}</label>
       <textarea id="codemirror-markdown" name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "float")}}
+{{else if (eq $type "float")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -214,9 +225,9 @@
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "hidden")}}
+{{else if (eq $type "hidden")}}
   <input type="hidden" name="{{$key}}" value="{{$val}}">
-{{else if (eq $element.Type "image")}}
+{{else if (eq $type "image")}}
 <div class="ui card raised bee-width-{{$element.Width}} {{$element.Class}}" >
   <div class="ui image">
     <img id="{{$key}}_img" src="{{$element.Params.URL}}?{{$composter}}">
@@ -231,7 +242,7 @@
   </div>
   <input type="hidden" id="{{$key}}" name="{{$key}}" value="">
 </div>
-{{else if (eq $element.Type "radio")}}
+{{else if (eq $type "radio")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}}inline  bee-width-{{$element.Width}}  fields {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -246,7 +257,7 @@
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
     {{end}}
   </div>
-{{else if (eq $element.Type "tag")}}
+{{else if (eq $type "tag")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -259,22 +270,22 @@
     </select>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "textarea")}}
+{{else if (eq $type "textarea")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
       <label>{{$element.LabelLong}}</label>
       <textarea name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "password")}}
+{{else if (eq $type "password")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
-    <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}"
+    <input type="{{$type}}" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{if $val}}***{{end}}">
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
-{{else if (eq $element.Type "percent")}}
+{{else if (eq $type "percent")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
@@ -287,8 +298,7 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
-    {{if $element.Help}}<div class="bottom floating ui label">{{$element.Help}}</div>{{end}}
-    <input type="{{$element.Type}}" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
+    <input type="{{$type}}" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
@@ -301,7 +311,7 @@
   <!-- end range cols -->
 {{end}}
 {{ if $section }}</div>{{end}}
-<!-- end range records -->
+<!-- /END BOUCLE RECORDS -->
 </div> <!-- end ui form -->
 </form>
   </div> <!-- /container -->

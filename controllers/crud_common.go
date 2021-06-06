@@ -85,7 +85,8 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 
 	order := 1 // pour ordrer les colonnes
 	for key, element := range viewOrFormElements {
-		err := mergo.Merge(&element, dico.Ctx.Tables[tableid].Elements[key])
+		ele := dico.Ctx.Tables[tableid].Elements[key]
+		err := mergo.Merge(&element, &ele)
 		if err != nil {
 			logs.Error(err)
 		} else {
@@ -309,6 +310,12 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 
 	for key, element := range viewOrFormElements {
 		element.LabelLong = macro(c, element.LabelLong, record)
+		// Help si non readOnly et non protected
+		if element.Help != "" {
+			if element.Protected || element.ReadOnly {
+				element.Help = ""
+			}
+		}
 		// Valorisation de Items ClassSQL ItemsSQL, DefaultSQL, HideSQL
 		if element.ClassSQL != "" {
 			element.Class = macroSQL(c, element.ClassSQL, record)
@@ -458,9 +465,6 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 					record[key] = val
 				}
 			}
-		}
-		if key == "_action_sell" {
-			elements[key] = element
 		}
 		if !IsInGroup(c, element.Group, "") {
 			element.Hide = true

@@ -3,9 +3,17 @@
 Historique des modifications
 
 ### À venir :
+- raz historique git
+- un sous-répertoire dictionnaire par application
 - aide sur l'application Application.Help url
 - eddy: ctrl+h
 - utiliser localStorage à la place des cookies
+
+2.2.8 du 6 juin 2021
+----------------------
+- `changed` Width maw-with: 100% pour mobile
+- `changed` format appliqué dans le formulaire edit pour les rubriques qui ne sont pas en saisie
+- `changed` help non affiché pour les champs disabled
 
 2.2.7 du 5 juin 2021
 ----------------------

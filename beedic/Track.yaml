@@ -156,8 +156,10 @@ forms:
         order: 70
       Bytes:
         order: 80
+        read-only: true
       UnitPrice:
         order: 90
+        protected: true
   fview:
     title: "Morceau"
     groupe: chinook
