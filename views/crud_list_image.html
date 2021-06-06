@@ -1,0 +1,320 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$aliasDB := .AliasDB}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$tableid := .UIView.TableID}}
+{{$viewName := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$sortid := .UIView.SortID}}
+{{$sortdirection := .UIView.SortDirection}}
+{{$search := .UIView.Search}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed borderless  menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.TablesViews}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $tableView := $app.TablesViews }}
+          {{$t := index $portail.Tables $tableView.TableName }}
+          {{$v := index $t.Views $tableView.ViewName }}
+          {{if (CrudIsInGroup $v.Group $session)}}
+          <a class="item{{if and (eq $tableView.TableName $tableid) (eq $tableView.ViewName $viewName)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$tableView.TableName}}/{{$tableView.ViewName}}">
+            <i class="{{$v.IconName}} {{$theme}} icon"></i>
+            {{$v.Title}}
+          </a>
+          {{end}}
+          <!-- end if isingroup -->
+          {{end}}
+          <!-- end range tablesViews-->
+          {{if (CrudIsInGroup "dev" $session)}}
+          {{$eddy := index $portail.Applications "eddy" }}
+          <div class="divider"></div>
+          <a class="item eddy-window-open"
+                  data-url="/bee/eddy/document/{{$tableid}}.yaml" data-posx="right" target="{{$tableid}}"
+                  title="Editer le dictionnaire...">
+                  <i class="file code large brown icon"></i> {{$tableid}}.yaml</a>
+          {{end}}
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
+        </div>
+      </div>
+      <div class="header item" id="crud-header">
+        <span class="crud-mobile-hide">
+          {{$view.Title}}
+          {{if (eq $qrecords 0)}}
+          (auncun élément)
+          {{else if (eq $qrecords 1)}}
+          (1 élément)
+          {{else}}
+          ({{$qrecords}} éléments)
+          {{end}}
+        </span>
+      </div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="ui icon item">
+          <i class="search link icon" id="crud-search-active" title="Rechercher..."></i>
+          <!-- Recherche -->
+          <div style="display: none" id="crud-search">
+            <div class="ui icon input">
+              <input type="text" id="search" data-url="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}"
+                value="{{$search}}" placeholder="Recherche...">
+              <i class="circular search link icon" id="crud-search-go" title="Rechercher"></i>
+            </div>
+            <i class="close link icon" id="crud-search-close" title="Fermer recherche"></i>
+          </div>
+        </div>
+        {{if or $view.Actions $view.FormAdd}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{if $view.FormAdd}}
+            <a class="ui icon item crud-jquery-url"
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$view.FormAdd}}">
+              <i class="plus square icon"></i> Ajouter un élément...
+            </a>
+            {{end}}
+            {{if $view.Actions}}
+            {{if $view.FormAdd}}
+            <div class="divider"></div>
+            {{end}}
+            {{range $iaction, $action := $view.Actions}}
+            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewName}}/{{$iaction}}">{{str2html $action.Label}}</a>
+            {{end}}
+            <!-- end range actions-->
+            {{end}}
+            <!-- end if actions-->
+          </div>
+        </div>
+        {{end}}
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{$view.Title}}
+        {{if (eq $qrecords 0)}}
+        (auncun élément)
+        {{else if (eq $qrecords 1)}}
+        (1 élément)
+        {{else}}
+        ({{$qrecords}} éléments)
+        {{end}}
+      </div>
+      <div>&nbsp;</div>
+      <!-- ITEMS -->
+      <div class="ui cards crud-searchable">
+        {{ range $irecord, $record := .UIView.Records }}
+        {{ range $num, $key := $cols }}
+        {{ $val := CrudIndex $record $key }}
+        {{ $element := index $elements $key }}
+        <!-- On ne prend que les element image-->
+        {{if (eq $element.Type "image")}}
+        {{$url := CrudMacro $element.Params.URL $record $session}}
+        {{$src := CrudMacro $element.Params.Src $record $session}}
+        <div id="{{CrudIndexAnchor $record $tablekey}}" {{if $view.FormView}}
+          class="link raised card crud-card-view bee-width-{{$element.Width}} {{CrudMacroSQL $view.ClassSQL $record $session}} crud-card-searchable crud-jquery-url"
+          data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewName}}/{{index $record $tablekey}}" {{else}}
+          class="raised {{CrudMacroSQL $view.ClassSQL $record $session}} card crud-card-view crud-card-searchable" {{end}}>
+          {{if $element.Dataset}}
+          {{ $dataset := CrudComputeDataset $element.Dataset $record $session $aliasDB}}
+          <a class="crud-popup-chart">
+          <canvas class="ui link {{$dataset.classjquery}}" style="background-color: white" 
+          {{ range $key, $value := $dataset }} data-{{$key}}="{{$value}}"{{end}}>
+          </canvas>
+          </a>
+          {{else}}
+          <div class="ui image">
+            <img src="{{$src}}?{{$composter}}" class="crud-popup-image" data-url="{{$url}}?{{$composter}}">
+          </div>
+          {{end}}
+          <div class="content">
+            <div class="center aligned description">
+              {{$element.LabelLong}}
+            </div>
+
+            {{if $element.Params.Header}}
+            <div class="header">
+              {{range $im, $key := $element.Params.Header}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudClassSQL $element $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "combobox")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else}}
+              <span class="ui {{$class}} text searchable">{{CrudFormat $ele.Format $val}}</span>
+              {{end}}
+              {{end}}
+
+            </div><!-- end Header -->
+            {{end}}
+
+            {{if $element.Params.Meta}}
+            <div class="right floated meta">
+              {{range $im, $key := $element.Params.Meta}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudClassSQL $element $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <div class="ui label">
+                <i class="check square outline icon"></i>
+                <span class="searchable">{{$ele.LabelLong}}</span>
+              </div>
+              {{else}}
+              <div class="ui label">
+                <i class="square outline icon"></i>
+                <span>{{$ele.LabelLong}}</span>
+              </div>
+              {{end}}
+              {{else if (eq $ele.Type "combobox")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else if (eq $ele.Type "tag")}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui tag label"><b>{{$item}}</b></div>
+              {{end}}
+              {{else}}
+              <!-- autre type -->
+              {{if $ele.LabelShort}}<span class="ui grey text">{{$ele.LabelShort}} : </span>{{end}}
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+              {{end}}
+            </div><!-- end Meta -->
+            {{end}}
+
+            {{if $element.Params.Description}}
+            <div class="description">
+              {{range $im, $key := $element.Params.Description}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudClassSQL $element $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+            </div><!-- end Description -->
+            {{end}}
+
+            {{if $element.Params.Extra}}
+            <div class="right floated extra">
+              {{range $im, $key := $element.Params.Extra}}
+              {{ $ele := index $elements $key }}
+              {{ $class := CrudClassSQL $element $record $session}}
+              {{ $val := CrudIndex $record $key}}
+              {{if (eq $ele.Type "checkbox")}}
+              {{if (eq $val "1") }}
+              <div class="ui label">
+                <i class="check square outline icon"></i>
+                <span class="searchable">{{$ele.LabelLong}}</span>
+              </div>
+              {{else}}
+              <div class="ui label">
+                <i class="square outline icon"></i>
+                <span>{{$ele.LabelLong}}</span>
+              </div>
+              {{end}}
+              {{else if (eq $ele.Type "combobox")}}
+              <span class="ui {{$class}} text searchable">{{CrudItem $ele.Items $val}} ({{$val}})</span>
+              {{else if (eq $ele.Type "tag")}}
+              {{$arr := CrudSplit $val ","}}
+              {{range $i, $item := $arr}}
+              <div class="ui tag label"><b>{{$item}}</b></div>
+              {{end}}
+              {{else if (eq $ele.Type "hidden")}}
+              <input type="hidden" name="{{$key}}">
+              {{else}}
+              <!-- autre type -->
+              {{if $ele.LabelShort}}<span class="ui grey text">{{$ele.LabelShort}} : </span>{{end}}
+              <span class="ui {{$class}} text searchable"><b>{{CrudFormat $ele.Format $val}}</b></span>
+              {{end}}
+              {{end}}
+            </div><!-- end Extra -->
+            {{end}}
+
+          </div><!-- end content-->
+        </div>
+        {{end}}
+        <!-- end if image -->
+        {{end}}
+        <!-- end range records-->
+        {{end}}
+        <!-- end range $records -->
+      </div>
+    </div> <!-- end container-->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+  <!-- Affichage d'un chart en popup-->
+  <div id="crud-modal-chart" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content" id="crud-chart">
+    </div>
+  </div> <!-- end modal image -->  
+  <form method="POST" action="/bee/list/{{$appid}}/{{$tableid}}/{{$viewName}}">
+    {{ .xsrfdata }}
+    <input type="hidden" id="crud-form-search" name="search">
+    <input type="hidden" id="crud-form-searchstop" name="searchstop">
+    <input type="hidden" id="crud-form-sortid" name="sortid">
+    <input type="hidden" id="crud-form-sortdirection" name="sortdirection">
+  </form>
+  <!-- CONTEXTE -->
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewName}}">
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

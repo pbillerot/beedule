@@ -1,0 +1,14 @@
+<!-- _crud_footer.html -->
+<div class="ui {{.Config.Theme}} inverted compact small menu">
+    <div class="item">
+        <a href="/bee/about" class="item">À propos</a>
+    </div>
+    <div class="right menu">
+        {{if .Session.LoggedIn}}
+        <div class="header item">{{.Session.Username}}</div>
+        <a class="item" href="/bee/logout">Se déconnecter</a>
+        {{else}}
+        <a class="item" href="/bee/login">Se connecter...</a>
+        {{end}}
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<!-- about.html -->
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+    <!-- NAVBAR -->
+    <div class="ui container">
+        <div class="ui {{.Config.Theme}} inverted large fixed borderless menu navbar">
+            <!-- LEFT MENU -->
+            <div class="ui dropdown item">
+                <div class="ui mini image">
+                    <img src="/bee/static/img/beedule.png">
+                </div>
+                <div class="menu">
+                    <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="user icon"></i>
+                        {{.Session.Username}}
+                    </div>
+                    <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+                    <a class="item" href="/bee/logout">Se déconnecter</a>
+                    <a href="/bee/about" class="item disabled">À propos</a>
+                </div>
+            </div>
+            <div class="header item">{{.Title}}</div>
+        </div>
+    </div>
+    <main>
+        <div class="ui centered card">
+            <div class="image">
+                <img src="{{.Config.Icone}}">
+            </div>
+            <div class="content">
+                <a class="header">{{.Config.Appname}}</a>
+                <div class="description">
+                    {{.Config.Appnote}}
+                </div>
+            </div>
+            <div class="content">
+                <div class="meta">
+                    <div class="icon label">
+                        <i class="user icon"></i> {{.Config.Author}}
+                    </div>
+                    <div class="icon label">
+                        <i class="code icon"></i> Version {{.Config.Version}} du {{.Config.Date}}
+                    </div>
+                </div>
+            </div>
+            <div class="extra content">
+                <a href="{{.Config.Site}}" target="_blank">
+                    <i class="github icon"></i>Github
+                </a>
+            </div>
+        </div>
+        </div>
+    </main>
+    {{template "_crud_foot.html" .}}
+</body>
+
+</html>

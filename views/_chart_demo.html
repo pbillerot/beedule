@@ -1,0 +1,136 @@
+<canvas id="demo" style="background-color: white">
+    <script>
+      // MYCHART
+      var color = Chart.helpers.color;
+      var ctx = document.getElementById('demo');
+      var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['01-12 Matin', 'Soir', '02-12 Matin', 'Soir', '03-12 Matin', 'Soir'],
+          datasets: [
+            {
+              type: 'line',
+              label: 'Cotation',
+              borderColor: 'darkred',
+              borderWidth: 3,
+              fill: false,
+              data: [120, 160, 140, 145, 130, 125],
+              yAxisID: 'cotation'
+            },
+            {
+              type: 'line',
+              label: 'Seuil Vente',
+              borderColor: 'darkgreen',
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              data: [180, 180, 180, 180, 180, 180],
+              yAxisID: 'cotation'
+            },
+            {
+              type: 'line',
+              label: 'Seuil Rentabilité',
+              borderColor: 'darkgreen',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              data: [160, 160, 160, 160, 160, 160],
+              yAxisID: 'cotation'
+            },
+            {
+              type: 'line',
+              label: 'Pourcentage',
+              borderColor: 'grey',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              fill: false,
+              data: [2, 6, -4, -1, -1, 4],
+              yAxisID: 'pourcentage'
+            },
+            // {
+            //   label: 'Min',
+            //   stack: 'minmax',
+            //   data: [1, 1, -5, -5, -1, -1],
+            //   backgroundColor: 'thistle',
+            //   yAxisID: 'pourcentage'
+            // },
+            // {
+            //   label: 'Max',
+            //   stack: 'minmax',
+            //   data: [8, 8, 4, 4, 7, 7],
+            //   backgroundColor: 'powderblue',
+            //   yAxisID: 'pourcentage'
+            // },
+            {
+              label: 'Max',
+              stack: 'minmax',
+              data: [[8, 1], [8, 1], [4, -5], [4, -5], [7, -1], [7, -1]],
+              backgroundColor: 'powderblue',
+              yAxisID: 'pourcentage'
+            }
+          ]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'CHART.JS DEMO',
+              font: {
+                style: 'bold',
+                size: 14
+              },
+              padding: {
+                top: 10,
+                bottom: 30
+              }
+            }
+          },
+          scales: {
+            cotation: {
+              display: true,
+              Min: 110,
+              Max: 190,
+              scaleLabel: {
+                display: true,
+                labelString: 'Cotation en €',
+                font: {
+                  style: 'bold',
+                }
+              },
+              display: true,
+              position: 'right'
+            },
+            pourcentage: {
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Pourcentage évolution',
+                font: {
+                  style: 'bold'
+                }
+              },
+              gridLines: {
+                borderDash: [5, 5],
+              },
+              display: true,
+              position: 'left'
+            },
+            x: {
+              stacked: true,
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Jour de cotation',
+                font: {
+                  style: 'bold'
+                }
+              },
+            }
+          }
+        }
+      });
+    </script>
+  </canvas>
