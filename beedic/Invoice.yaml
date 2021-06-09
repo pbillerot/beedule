@@ -8,14 +8,15 @@ setting:
 elements:
   InvoiceId:
     type: number
-    label-long: "Id"
-    label-short: "Id"
+    label-long: "Ref."
+    label-short: "Ref."
   CustomerId:
-    type: text
+    type: combobox
     label-long: "Client"
     label-short: "Client"
+    items-sql: "SELECT CustomerId as 'key', FirstName || ' ' || LastName as 'label' From Customer order by LastName"
   InvoiceDate:
-    type: text
+    type: date
     label-long: "Date"
     label-short: "Date"
   BillingAddress:
@@ -40,7 +41,7 @@ elements:
     label-short: "Code postal"
     width: s
   Total:
-    type: text
+    type: amount
     label-long: "Montant Total"
     label-short: "Total"
 
@@ -48,19 +49,13 @@ views:
   vall:
     form-add: fedit
     form-edit: fedit
+    form-view: fview
     deletable: false
     type: table
     group: chinook
     title: "Factures"
     icon-name: "file invoice"
     order-by: Name
-    mask:
-      header:
-        - InvoiceId
-      meta:
-      description:
-        - Name
-      extra:
     elements:
       InvoiceId:
         order: 10
@@ -78,6 +73,25 @@ views:
         order: 70
       BillingPostalCode:
         order: 80
+      Total:
+        order: 90
+
+  vclient:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: false
+    type: table
+    group: chinook
+    title: "Factures"
+    icon-name: "file invoice"
+    order-by: Name
+    with-line-number: true
+    elements:
+      InvoiceId:
+        order: 10
+      InvoiceDate:
+        order: 30
       Total:
         order: 90
 
@@ -88,6 +102,7 @@ forms:
     elements:
       InvoiceId:
         order: 10
+        hide: true
       CustomerId:
         order: 20
       InvoiceDate:
@@ -104,3 +119,37 @@ forms:
         order: 80
       Total:
         order: 90
+
+  fview:
+    title: "Facture"
+    groupe: chinook
+    elements:
+      InvoiceId:
+        order: 10
+        hide: true
+      CustomerId:
+        order: 20
+      InvoiceDate:
+        order: 30
+      BillingAddress:
+        order: 40
+      BillingCity:
+        order: 50
+      BillingState:
+        order: 60
+      BillingCountry:
+        order: 70
+      BillingPostalCode:
+        order: 80
+      Total:
+        order: 90
+      _vinvoice:
+        type: section
+        order: 200
+        width: max
+        params:
+          icon-name: "receipt"
+          table: InvoiceLine
+          view: vinvoice
+          where: "InvoiceId = '{InvoiceId}'"
+          

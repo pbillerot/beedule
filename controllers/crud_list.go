@@ -32,7 +32,7 @@ func (c *CrudListController) CrudList() {
 	}
 
 	// Remplissage du contexte pour le template
-	setContext(c.Controller, uiView.TableID)
+	setContext(c.Controller, appid, uiView.TableID)
 
 	c.Data["AppId"] = uiView.AppID
 	c.Data["Application"] = dico.Ctx.Applications[uiView.AppID]

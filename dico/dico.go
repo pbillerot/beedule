@@ -316,7 +316,7 @@ func (c *Table) Load(table string) ([]string, error) {
 	err = yaml.Unmarshal(yamlFile, c)
 	if err != nil {
 		logs.Error("Unmarshal", err)
-		return dicoError, err
+		// return dicoError, err
 	}
 	return dicoError, err
 }

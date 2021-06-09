@@ -134,7 +134,7 @@
             <div class="content">
               <div class="header">
                 <i class="big {{$theme}} {{$view.IconName}} icon"></i>
-                {{$form.Title}} : {{$coldisplay}}
+                {{$form.Title}} : [{{$coldisplay}}]
               </div>
               {{ $isStart = false}}
         {{end}}
@@ -184,7 +184,7 @@
           {{end}}
           {{if $element.Params.View }}
               </div> <!-- end content -->
-              <div class="content">
+              <div class="content" style="overflow-x: scroll;">
                 {{ $uiView := index $uiViews $element.Params.View}} 
                 {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
           {{end}}

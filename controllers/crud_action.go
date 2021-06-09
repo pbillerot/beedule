@@ -57,7 +57,7 @@ func (c *CrudActionViewController) Post() {
 		return
 	}
 
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
@@ -145,7 +145,7 @@ func (c *CrudActionFormController) Post() {
 		return
 	}
 
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 	var withPlugin bool
 
 	iactionid, err := strconv.Atoi(actionid)
@@ -227,7 +227,7 @@ func (c *CrudActionElementController) Post() {
 		return
 	}
 
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 	var withPlugin bool
 
 	// Si un formView est défini on utilisera son modèle pour les éléments

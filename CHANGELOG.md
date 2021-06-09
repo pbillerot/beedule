@@ -3,11 +3,14 @@
 Historique des modifications
 
 ### À venir :
-- raz historique git
-- un sous-répertoire dictionnaire par application
 - aide sur l'application Application.Help url
 - eddy: ctrl+h
 - utiliser localStorage à la place des cookies
+
+2.2.9 du 9 juin 2021
+----------------------
+- `removed` raz historique git
+- `changed` chinook : toutes les tables visualisables avec jointures
 
 2.2.8 du 6 juin 2021
 ----------------------

@@ -131,6 +131,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 				if element.Width == "" {
 					element.Width = "s"
 				}
+				element.ColNoWrap = true
 				break
 			case "button":
 				break
@@ -154,7 +155,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 					element.Format = "date"
 				}
 				if element.Width == "" {
-					element.Width = "s"
+					element.Width = "m"
 				}
 				break
 			case "datetime":
@@ -162,7 +163,7 @@ func mergeElements(c beego.Controller, tableid string, viewOrFormElements map[st
 					element.Format = "datetime"
 				}
 				if element.Width == "" {
-					element.Width = "s"
+					element.Width = "m"
 				}
 				break
 			case "duration":
@@ -566,9 +567,9 @@ func checkElement(c *beego.Controller, key string, element *dico.Element, record
 }
 
 // setContext remplissage du controller.Data
-func setContext(c beego.Controller, table string) {
+func setContext(c beego.Controller, appid string, tableid string) {
 	// Contexte de la table
-	aliasDB := dico.Ctx.Tables[table].Setting.AliasDB
+	aliasDB := dico.Ctx.Tables[tableid].Setting.AliasDB
 	section, _ := beego.AppConfig.GetSection(aliasDB)
 	dataurl := "/bee/data/" + aliasDB
 	if url, ok := section["dataurl"]; ok {
@@ -580,9 +581,9 @@ func setContext(c beego.Controller, table string) {
 	}
 	c.Data["DataUrl"] = dataurl
 	c.Data["Datadir"] = datadir
-	c.Data["TableID"] = table
+	c.Data["TableID"] = tableid
 	c.Data["AliasDB"] = aliasDB
-	c.Data["KeyID"] = dico.Ctx.Tables[table].Setting.Key
+	c.Data["KeyID"] = dico.Ctx.Tables[tableid].Setting.Key
 
 	// Contexte de la session
 	session := types.Session{}
@@ -598,6 +599,8 @@ func setContext(c beego.Controller, table string) {
 	if c.GetSession("Groups") != nil {
 		session.Groups = c.GetSession("Groups").(string)
 	}
+	c.SetSession("AppId", appid)
+
 	c.Data["Session"] = &session
 
 	c.Data["Config"] = &models.Config

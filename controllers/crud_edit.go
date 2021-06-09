@@ -73,7 +73,7 @@ func (c *CrudEditController) Get() {
 		backward(c.Controller)
 		return
 	}
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
@@ -162,7 +162,7 @@ func (c *CrudEditController) Post() {
 	view := dico.Ctx.Tables[tableid].Views[viewid]
 	form := dico.Ctx.Tables[tableid].Forms[formid]
 
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 	var withPlugin bool
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire

@@ -23,6 +23,7 @@ elements:
     type: "image"
     label-long: "Pochette"
     label-short: "Pochette"
+    width: s
     params: 
       src: "/bee/data/chinook/files/chinook.jpg"
       url: "/bee/data/chinook/files/chinook.jpg"
@@ -108,4 +109,4 @@ forms:
           icon-name: "file audio"
           table: Track
           view: valbum
-          where: "AlbumId = '{AlbumId}'"
+          where: "Track.AlbumId = '{AlbumId}'"

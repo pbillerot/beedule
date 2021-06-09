@@ -11,7 +11,7 @@ type CrudPortailController struct {
 
 // Get CrudPortailController
 func (c *CrudPortailController) Get() {
-	setContext(c.Controller, "users")
+	setContext(c.Controller, "admin", "users")
 	flash := beego.ReadFromRequest(&c.Controller)
 	flash.Store(&c.Controller)
 	navigateInit(c.Controller)

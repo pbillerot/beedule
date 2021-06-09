@@ -26,6 +26,22 @@ elements:
     type: number
     label-long: "Quantité"
     label-short: "Quantité"
+  TrackName:
+    type: text
+    label-short: "Titre"
+    jointure: 
+      join: "left outer join Track on Track.TrackId = InvoiceLine.TrackId left outer join Album on Album.AlbumId = Track.AlbumId left outer join Artist on Artist.ArtistId = Album.ArtistId"
+      column: Track.Name
+  AlbumTitle:
+    type: text
+    label-short: "Album"
+    jointure: 
+      column: Album.Title
+  ArtistName:
+    type: text
+    label-short: "Artiste"
+    jointure: 
+      column: Artist.Name    
 
 views:
   vall:
@@ -36,7 +52,6 @@ views:
     group: chinook
     title: "Produits"
     icon-name: "receipt"
-    order-by: Name
     elements:
       InvoiceLineId:
         order: 10
@@ -48,6 +63,36 @@ views:
         order: 30
       Quantity:
         order: 40
+
+  vinvoice:
+    form-add: fedit
+    form-edit: fedit
+    deletable: false
+    type: table
+    group: chinook
+    title: "Produits"
+    icon-name: "receipt"
+    with-line-number: true
+    elements:
+      InvoiceLineId:
+        order: 10
+        hide: true
+      InvoiceId:
+        order: 10
+        hide: true
+      TrackId:
+        order: 20
+        hide: true
+      ArtistName:
+        order: 40
+      AlbumTitle:
+        order: 50
+      TrackName:
+        order: 60
+      Quantity:
+        order: 70
+      UnitPrice:
+        order: 80
 
 forms:
   fedit:

@@ -85,7 +85,7 @@ func (c *CrudViewController) Get() {
 		view.FormEdit = ""
 	}
 
-	setContext(c.Controller, tableid)
+	setContext(c.Controller, appid, tableid)
 
 	var elementsVF map[string]dico.Element
 	if formviewid == "" {

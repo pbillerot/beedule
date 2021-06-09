@@ -12,8 +12,8 @@ elements:
     label-short: "Id"
   Name:
     type: text
-    label-long: "Morceau"
-    label-short: "Morceau"
+    label-long: "Titre"
+    label-short: "Titre"
   AlbumId:
     type: combobox
     label-long: "Album"
@@ -55,8 +55,8 @@ elements:
     col-nowrap: true
   ArtistName:
     type: text
-    label-long: Artiste
-    label-court: Artiste
+    label-long: "Artiste"
+    label-short: "Artiste"
     jointure:
       join: "left outer join Album on Album.AlbumId = Track.AlbumId left outer join Artist on Artist.ArtistId = Album.ArtistId"
       column: Artist.Name
@@ -89,12 +89,38 @@ views:
         order: 50
       Composer:
         order: 60
+      Composer:
+        order: 60
       Milliseconds:
         order: 70
       Bytes:
         order: 80
       UnitPrice:
         order: 90
+
+  vplaylist:
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    with-line-number: true
+#     order-by: ArtistName, AlbumId
+#     limit: 50
+    elements:
+      ArtistName:
+        order: 1 
+      AlbumId:
+        order: 3
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      GenreId:
+        order: 50
+      Milliseconds:
+        order: 70
+
   valbum:
 #     form-add: fedit
 #     form-edit: fedit
@@ -106,26 +132,18 @@ views:
     order-by: Name
     limit: 50
     with-line-number: true
-    mask:
-      header:
-        - TrackId
-      meta:
-      description:
-        - Name
-      extra:
     elements:
       TrackId:
         order: 10
         hide: true
       Name:
         order: 20
-      AlbumId:
-        order: 30
-        hide: true
       MediaTypeId:
         order: 40
       GenreId:
         order: 50
+      Composer:
+        order: 60
       Composer:
         order: 60
       Milliseconds:
@@ -156,10 +174,8 @@ forms:
         order: 70
       Bytes:
         order: 80
-        read-only: true
       UnitPrice:
         order: 90
-        protected: true
   fview:
     title: "Morceau"
     groupe: chinook

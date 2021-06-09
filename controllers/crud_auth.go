@@ -87,14 +87,14 @@ type AboutController struct {
 
 // Get AboutController
 func (c *AboutController) Get() {
-	setContext(c.Controller, "users")
+	setContext(c.Controller, "admin", "users")
 	c.Data["Title"] = "A propos de Beedule"
 	c.TplName = "crud_about.html"
 }
 
 // Get of LoginController
 func (c *LoginController) Get() {
-	setContext(c.Controller, "users")
+	setContext(c.Controller, "admin", "users")
 	c.Data["Title"] = "Beedule"
 	c.TplName = "crud_login.html"
 }
@@ -109,7 +109,7 @@ func (c *LoginController) Post() {
 	if err != nil {
 		flash.Error("Compte ou mot de passe erroné")
 		flash.Store(&c.Controller)
-		setContext(c.Controller, "users")
+		setContext(c.Controller, "admin", "users")
 		c.TplName = "crud_login.html"
 		return
 	}
@@ -119,7 +119,7 @@ func (c *LoginController) Post() {
 		if err != nil {
 			flash.Error("Compte ou mot de passe erroné")
 			flash.Store(&c.Controller)
-			setContext(c.Controller, "users")
+			setContext(c.Controller, "admin", "users")
 			c.TplName = "crud_login.html"
 			return
 		}
@@ -145,7 +145,7 @@ func (c *LogoutController) Get() {
 	c.DelSession("Username")
 	c.DelSession("IsAdmin")
 	c.DelSession("Groups")
-	setContext(c.Controller, "users")
+	setContext(c.Controller, "admin", "users")
 	c.Ctx.Redirect(302, "/bee/login")
 }
 

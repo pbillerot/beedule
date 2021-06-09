@@ -89,7 +89,7 @@
       <div class="ui attached icon message">
         <i class="{{if $form.IconName}}{{$form.IconName}}{{else}}{{$view.IconName}}{{end}} {{$theme}} icon"></i>
         <div class="header">
-          {{$form.Title}}: {{$coldisplay}}
+          {{$form.Title}}: [{{$coldisplay}}]
         </div>
       </div>
       {{if (eq $id "")}}
@@ -205,7 +205,7 @@
       <div class="ui input left icon">
         <i class="calendar icon"></i>
         <input type="text" name="{{$key}}" id="{{$key}}"
-          {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
+          {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{CrudFormat $element.Format $val}}">
       </div>
     </div>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
@@ -300,7 +300,7 @@
     <label>{{$element.LabelLong}}</label>
     <input type="{{$type}}" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
-      {{end}} value="{{$val}}">
+      {{end}} value="{{CrudFormat $element.Format $val}}">
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{end}}

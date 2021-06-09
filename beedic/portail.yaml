@@ -37,8 +37,6 @@ applications:
       view-name: vall
     - table-name: Invoice
       view-name: vall
-    - table-name: InvoiceLine
-      view-name: vall
     - table-name: MediaType
       view-name: vall
     - table-name: Genre
