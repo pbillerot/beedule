@@ -22,7 +22,7 @@ applications:
     title: "Chinook"
     image: "/bee/data/chinook/files/chinook.jpg"
     group: chinook
-    tables-views:
+    tables-views: # Vues présentées dans le portail
     - table-name: Artist
       view-name: vall
     - table-name: Album

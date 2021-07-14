@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
@@ -31,7 +32,8 @@ type Portail struct {
 // File as les fichiers du dictionnaire dicodir
 type File struct {
 	Base string // le filename
-	Ext  string // l'extension
+	Name string // le filename sans l'extension
+	Ext  string // l'extensions
 	Path string //le chemin compley
 }
 
@@ -72,13 +74,13 @@ type Setting struct {
 
 // Element as
 type Element struct {
-	Actions       []Action // bouton d'actions - utilise Params
-	Args          Args
+	Actions       []Action          // bouton d'actions - utilise Params
+	Args          map[string]string // Args pour passer des arguments à une vue
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSQL      string            `yaml:"class-sql"`  // SQL pour alimenter Class error warning info green blue
 	ColAlign      string            `yaml:"col-align"`  //
 	ColNoWrap     bool              `yaml:"col-nowrap"` // nowrap de la colonne
-	Dataset       map[string]string `yaml:"dataset"`    // Dataset pour un Chartjs
+	Dataset       map[string]string `yaml:"dataset"`    // Dataset pour un Chartjs ou pour passer des arguments à une vue
 	Default       string            // Valeur par défaut (macro possible)
 	DefaultSQL    string            `yaml:"default-sql"` // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string            // contiendra "error" si le champ est en erreur de saisie
@@ -141,7 +143,7 @@ type View struct {
 	IconName       string             `yaml:"icon-name"`      // nom de l'icone
 	Limit          int                // pour limiter le nbre de ligne dans la vue
 	Group          string             // groupe qui peut accéder à la vue
-	OrderBy        string             `yaml:"group-by"` // Tri des données SQL
+	OrderBy        string             `yaml:"order-by"` // Tri des données SQL
 	Where          string             // Condition SQL
 	Type           string             // type de vue : card(default),image,table
 	Title          string             // Titre de la vue
@@ -168,22 +170,23 @@ type Form struct {
 // Params paramètres d'un élément
 type Params struct {
 	Action          string
-	Form            string   // section: form à ouvrir
-	IconName        string   `yaml:"icon-name"` // image: section
-	Header          []string // card pour image
-	Description     []string // card pour image
-	Meta            []string // card pour image
-	Extra           []string // card pour image
-	URL             string   `yaml:"url"`
-	Src             string   // section: src de l'image
-	SQL             []string `yaml:"sql"`
-	Table           string   // section:
-	View            string   // section:
-	Where           string   // section: + params.table + params.view
-	WithConfirm     bool     `yaml:"with-confirm"`
-	WithInput       bool     `yaml:"witn-input"`
-	WithInputFile   bool     `yaml:"with-input-file"`
-	WithImageEditor bool     `yaml:"with-image-editor"`
+	Dataset         map[string]string // section: champs fournis à la vue
+	Form            string            // section: form à ouvrir
+	IconName        string            `yaml:"icon-name"` // image: section
+	Header          []string          // card pour image
+	Description     []string          // card pour image
+	Meta            []string          // card pour image
+	Extra           []string          // card pour image
+	URL             string            `yaml:"url"`
+	Src             string            // section: src de l'image
+	SQL             []string          `yaml:"sql"`
+	Table           string            // section:
+	View            string            // section:
+	Where           string            // section: + params.table + params.view
+	WithConfirm     bool              `yaml:"with-confirm"`
+	WithInput       bool              `yaml:"witn-input"`
+	WithInputFile   bool              `yaml:"with-input-file"`
+	WithImageEditor bool              `yaml:"with-image-editor"`
 }
 
 // Action dans le menu d'une vue ou formulaire
@@ -237,36 +240,7 @@ var dicoError []string
 func (c *Portail) Load() ([]string, error) {
 	// Raz error
 	dicoError = []string{}
-	// Read file
-	yf := beego.AppConfig.String("dicodir") + "/portail.yaml"
-	logs.Info("...load", yf)
-	yamlFile, err := ioutil.ReadFile(yf)
-	if err != nil {
-		logs.Error("yamlFile.Get err", err)
-		return dicoError, err
-	}
-	// chargement de la structure Portail
-	err = yaml.Unmarshal(yamlFile, c)
-	if err != nil {
-		msg := fmt.Sprintf("portail.yaml : [%v]", err)
-		dicoError = append(dicoError, msg)
-		logs.Error("Unmarshal", msg)
-		return dicoError, err
-	}
-	// Chargement des structures Table
-	c.Tables = map[string]*Table{}
-	for _, app := range c.Applications {
-		logs.Info("...load application:", app.Title)
-		for _, tableview := range app.TablesViews {
-			if _, ok := c.Tables[tableview.TableName]; !ok {
-				var table Table
-				table.Load(tableview.TableName)
-				c.Tables[tableview.TableName] = &table
-			}
-		}
-	}
-	// load liste des fichiers dicodir
-	// ouverture du dossier
+	// lecture du dossier dicodir
 	f, err := os.Open(beego.AppConfig.String("dicodir"))
 	if err != nil {
 		msg := fmt.Sprintf("%s : [%v]", beego.AppConfig.String("dicodir"), err)
@@ -274,7 +248,7 @@ func (c *Portail) Load() ([]string, error) {
 		logs.Error("DICODIR", msg)
 		return dicoError, err
 	}
-	// lecture ds fichiers et dossiers du dossier courant
+	// lecture des fichiers et dossiers du dossier courant
 	list, err := f.Readdir(-1)
 	f.Close()
 	if err != nil {
@@ -287,36 +261,64 @@ func (c *Portail) Load() ([]string, error) {
 	sort.Slice(list, func(i, j int) bool {
 		return list[i].Name() < list[j].Name()
 	})
-
+	c.Tables = map[string]*Table{}
+	// Chargement du dictionnaire
 	for _, fileinfo := range list {
 		if !fileinfo.IsDir() {
 			file := File{}
 			file.Base = fileinfo.Name()
 			file.Ext = filepath.Ext(fileinfo.Name())
+			file.Name = strings.ReplaceAll(file.Base, file.Ext, "")
 			file.Path = beego.AppConfig.String("dicodir") + "/" + fileinfo.Name()
 			c.Files = append(c.Files, file)
+			if file.Ext != ".yaml" {
+				// extension non reconnue
+			} else if file.Base == "portail.yaml" {
+				// load portail
+				yamlFile, err := ioutil.ReadFile(file.Path)
+				if err != nil {
+					msg := fmt.Sprintf("%s : [%v]", file.Path, err)
+					dicoError = append(dicoError, msg)
+					logs.Error("Open", msg)
+					return dicoError, err
+				}
+				err = yaml.Unmarshal(yamlFile, c)
+				if err != nil {
+					msg := fmt.Sprintf("%s : [%v]", file.Path, err)
+					dicoError = append(dicoError, msg)
+					logs.Error("Unmarshal", msg)
+					return dicoError, err
+				}
+			} else {
+				// load table
+				var table Table
+				msg, err := table.Load(file)
+				if err != nil {
+					dicoError = append(dicoError, msg)
+				}
+				c.Tables[file.Name] = &table
+			}
 		}
 	}
 	return dicoError, err
 }
 
 // Load as
-func (c *Table) Load(table string) ([]string, error) {
-	yf := beego.AppConfig.String("dicodir") + "/" + table + ".yaml"
-	logs.Info("...load", yf)
+func (c *Table) Load(file File) (string, error) {
+	logs.Info("...load", file.Path)
 	// Read file
-	yamlFile, err := ioutil.ReadFile(yf)
+	yamlFile, err := ioutil.ReadFile(file.Path)
 	if err != nil {
-		msg := fmt.Sprintf("%s.yaml : [%v]", table, err)
-		dicoError = append(dicoError, msg)
+		msg := fmt.Sprintf("%s : [%v]", file.Path, err)
 		logs.Error("Unmarshal", msg)
-		return dicoError, err
+		return msg, err
 	}
 	// chargement de la structure Table
 	err = yaml.Unmarshal(yamlFile, c)
 	if err != nil {
+		msg := fmt.Sprintf("%s : [%v]", file.Path, err)
 		logs.Error("Unmarshal", err)
-		// return dicoError, err
+		return msg, err
 	}
-	return dicoError, err
+	return "", err
 }

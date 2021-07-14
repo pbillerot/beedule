@@ -170,6 +170,7 @@
             {{ $iconName = $uiView.View.IconName}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content">
+                {{if $uiView.View.FormAdd}}<div class="right floated meta"><a class="crud-jquery-url" data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"title="Ajouter un élément..."><i class="plus circular red icon"></i></a></div>{{end}}
                 <div class="header">
                   <i class="big {{$theme}} {{$iconName}} icon"></i>
                   {{$label}}

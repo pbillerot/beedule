@@ -63,6 +63,8 @@ forms:
         type: section
         order: 100
         label-long: "Albums de {Name}"
+        args:
+          ArtistId: "{ArtistId}"
         params:
           table: Album
           view: vartist

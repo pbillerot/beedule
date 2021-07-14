@@ -141,15 +141,18 @@ forms:
         order: 70
       BillingPostalCode:
         order: 80
-      Total:
-        order: 90
       _vinvoice:
         type: section
+        label-long: "Titres achetés"
         order: 200
         width: max
+        args:
+          InvoiceId: "{InvoiceId}"
         params:
           icon-name: "receipt"
           table: InvoiceLine
           view: vinvoice
           where: "InvoiceId = '{InvoiceId}'"
+      Total:
+        order: 210
           

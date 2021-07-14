@@ -7,7 +7,7 @@ setting:
 
 elements:
   AlbumId:
-    type: number
+    type: counter
     label-long: "Id"
     label-short: "Id"
   Title:
@@ -63,7 +63,7 @@ views:
     form-add: fedit
     form-edit: fedit
     form-view: fview
-    deletable: false
+    deletable: true
     type: table
     group: chinook
     title: "Albums"
@@ -105,6 +105,8 @@ forms:
         order: 100
         label-long: Morceaux
         width: max
+        args:
+          AlbumId: "{AlbumId}"
         params:
           icon-name: "file audio"
           table: Track

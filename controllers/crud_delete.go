@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
@@ -102,6 +100,7 @@ func (c *CrudDeleteController) Post() {
 			}
 		}
 	}
-	c.DelSession(fmt.Sprintf("anch_%s_%s", tableid, viewid))
-	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
+	backward(c.Controller)
+	// c.DelSession(fmt.Sprintf("anch_%s_%s", tableid, viewid))
+	// c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 }

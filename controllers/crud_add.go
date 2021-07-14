@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
@@ -70,11 +72,14 @@ func (c *CrudAddController) Get() {
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
 	elements, cols := mergeElements(c.Controller, tableid, dico.Ctx.Tables[tableid].Forms[formid].Elements, id)
 
-	// Création d'un record fictif vide ""
+	// Création d'un record fictif vide avec éventuellement les champs passés en argument
 	record := orm.Params{}
 	for _, colname := range cols {
 		if c.GetStrings(colname) != nil {
 			record[colname] = c.GetString(colname)
+			element := elements[colname]
+			element.Protected = true
+			elements[colname] = element
 		} else {
 			record[colname] = ""
 		}
@@ -84,6 +89,9 @@ func (c *CrudAddController) Get() {
 
 	// Calcul des éléments
 	elements = computeElements(c.Controller, true, elements, records[0])
+
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/add/%s/%s/%s/%s", appid, tableid, viewid, formid))
 
 	c.Data["AppId"] = appid
 	c.Data["Application"] = dico.Ctx.Applications[appid]

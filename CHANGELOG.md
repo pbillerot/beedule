@@ -3,9 +3,21 @@
 Historique des modifications
 
 ### À venir :
+- perte vue git dans codium
+- ajout rubrique de type mask en readonly
+- bug refresh cotation
 - aide sur l'application Application.Help url
 - eddy: ctrl+h
 - utiliser localStorage à la place des cookies
+
+2.2.10 du 14 juillet 2021
+----------------------
+- `changed` chargement de tous les fichiers dictionnaires présents dans dicodir et non plus seulement des tables déclarées dans TableView
+- `added` via element.Args passage d'arguments au formulaire d'ajout - le champ sera protégé
+- `added` bouton Ajout dans les vues table
+- `fixed` correction retour formulaire d'ajout (utilisation du forward)
+- `fixed` correction retour suppression d'un enregistrement (utilisation du forward)
+- `fixed` correction order-by qui n'était pas pris en compte
 
 2.2.9 du 9 juin 2021
 ----------------------

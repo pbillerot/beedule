@@ -20,7 +20,7 @@ var $eddy_dico = [
   { text: 'col-align: left center right', displayText: 'e_col-align' },
   { text: 'col-nowrap: true', displayText: 'e_col-nowrap' },
   { text: 'compute-sql: "select..."', displayText: 'e_compute-sql' },
-  { text: 'dataset:\n    arg: "value"', displayText: 'e_dataset' },
+  { text: 'dataset:\n        arg: "value"', displayText: 'e_dataset' },
   { text: 'default-sql: "select..."', displayText: 'e_default-sql' },
   { text: 'default: "value"', displayText: 'e_default' },
   { text: 'format: "%3.2f %%" "%3.2f €"', displayText: 'e_format' },

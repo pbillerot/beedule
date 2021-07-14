@@ -180,6 +180,8 @@ forms:
         type: section
         order: 300
         label-long: "Factures"
+        args:
+          CustomerId: "{CustomerId}"
         params:
           icon-name: "file invoice"
           table: Invoice

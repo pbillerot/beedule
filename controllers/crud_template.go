@@ -35,11 +35,26 @@ func init() {
 	beego.AddFuncMap("CrudSplit", CrudSplit)
 	beego.AddFuncMap("CrudSQL", CrudSQL)
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
+	beego.AddFuncMap("CrudArgs", CrudArgs)
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
 	beego.AddFuncMap("CrudDebug", CrudDebug)
 	beego.AddFuncMap("BeeReplace", BeeReplace)
 	beego.AddFuncMap("dict", Dictionary)
 	beego.AddFuncMap("CrudComputeDataset", CrudComputeDataset)
+}
+
+// CrudArgs as ?key=val&key=val
+func CrudArgs(in map[string]string) (out string) {
+	out = ""
+	for key, val := range in {
+		if out == "" {
+			out = "?"
+		} else {
+			out += "&"
+		}
+		out += fmt.Sprintf("%s=%s", key, val)
+	}
+	return
 }
 
 // BeeReplace as

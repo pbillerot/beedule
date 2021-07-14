@@ -122,9 +122,9 @@ views:
         order: 70
 
   valbum:
-#     form-add: fedit
-#     form-edit: fedit
-#     deletable: false
+    form-add: fedit
+    form-edit: fedit
+    deletable: true
     type: table
     group: chinook
     title: "Morceaux"
@@ -164,6 +164,7 @@ forms:
         order: 20
       AlbumId:
         order: 30
+        protected: true
       MediaTypeId:
         order: 40
       GenreId:

@@ -7,7 +7,7 @@ setting:
 
 elements:
   InvoiceLineId:
-    type: number
+    type: counter
     label-long: "Id"
     label-short: "Id"
   InvoiceId:
@@ -78,10 +78,10 @@ views:
         order: 10
         hide: true
       InvoiceId:
-        order: 10
+        order: 20
         hide: true
       TrackId:
-        order: 20
+        order: 30
         hide: true
       ArtistName:
         order: 40
@@ -102,10 +102,11 @@ forms:
       InvoiceLineId:
         order: 10
       InvoiceId:
-        order: 10
-      TrackId:
         order: 20
-      UnitPrice:
+        protected: true
+      TrackId:
         order: 30
-      Quantity:
+      UnitPrice:
         order: 40
+      Quantity:
+        order: 50
