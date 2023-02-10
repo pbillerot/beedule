@@ -1,0 +1,346 @@
+# Table DEMO des types de rubrique
+setting:
+  alias-db: demo
+  key: rub_counter
+  col-display: rub_text
+  icon-name: "pallet"
+
+elements:
+  rub_amount:
+    type: amount
+    label-long: "amount"
+    label-short: "amount"
+  _rub_chart:
+    type: chart
+    label-long: "chart"
+    label-short: "chart"
+    dataset:
+      chartid: "select 'chart-demo'"
+      title: "select 'Titre du Graphique'"
+  rub_checkbox:
+    type: checkbox
+    label-long: "checkbox"
+    label-short: "checkbox"
+  rub_counter:
+    type: counter
+    label-long: "counter"
+    label-short: "counter"
+  rub_date:
+    type: date
+    label-long: "date"
+    label-short: "date"
+  rub_email:
+    type: email
+    label-long: "email"
+    label-short: "email"
+  rub_float:
+    type: float
+    label-long: "float"
+    label-short: "float"
+  _rub_image:
+    type: image
+    label-long: "Une image"
+    label-short: "image"
+    params: 
+      src: "/bee/data/demo/demo.jpg"
+      url: "/bee/data/demo/demo.jpg"
+      title: "Le title sur l'image"
+  rub_list:
+    type: list
+    label-long: "list"
+    label-short: "list"
+    items-sql: "SELECT item_key as 'key', item_label as 'label' From items order by item_label"
+  rub_number:
+    type: number
+    label-long: "number"
+    label-short: "number"
+    required: true
+  _rub_pdf:
+    type: pdf
+    label-long: "Un document PDF"
+    label-short: "pdf"
+    params: 
+      src: "/bee/data/demo/pdf-exemple.pdf"
+      url: "/bee/data/demo/pdf-exemple.pdf"
+      title: "Cliquez pour ouvrir le pdf en grand"
+  rub_percent:
+    type: percent
+    label-long: "percent"
+    label-short: "percent"
+  rub_radio:
+    type: radio
+    label-long: "radio"
+    label-short: "radio"
+    items-sql: "SELECT item_key as 'key', item_label as 'label' From items order by item_label"
+  rub_tag:
+    type: tag
+    label-long: "tags"
+    label-short: "tags"
+    items-sql: "SELECT item_key as 'key', item_label as 'label' From items order by item_label"
+  rub_text:
+    type: text
+    label-long: "text"
+    label-short: "text"
+    required: true
+  rub_textarea:
+    type: textarea
+    label-long: "textarea"
+    label-short: "textarea"
+  rub_time:
+    type: time
+    label-long: "time"
+    label-short: "time"
+  rub_url:
+    type: url
+    label-long: "url"
+    label-short: "url"
+
+views:
+  vdashboard:
+    type: dashboard
+    title: "Tableau de bord"
+    icon-name: dashboard
+    elements:
+      _card_vue:
+        order: 200
+        type: card
+        label-long: "Vue sur une autre table" 
+        #width: l
+        params:
+          table: items
+          view: vall
+      _card_chart:
+        order: 300
+        type: card
+        label-long: "card chart" 
+        #width: l
+        icon-name: chart pie
+      rub_checkbox:
+        order: 310
+        hide: false
+      _rub_image:
+        order: 320
+        hide: false
+      _rub_chart:
+        order: 330
+      _card_epdf:
+        order: 400
+        type: card
+        label-long: "card labelmake PDF" 
+        #width: l
+        icon-name: "file pdf"
+      _rub_epdf:
+        type: epdf
+        order: 410
+        dataset:
+          pdfid: "select 'pdf-demo'"
+          c1: "select 'champ 1'"
+          c2: "select 'champ 2'"
+
+  vall:
+    form-add: fedit
+    form-view: fview
+    form-edit: fedit
+    deletable: true
+    type: card
+    group: demo
+    title: "Toutes les rubriques"
+    icon-name: pallet
+    order-by: rub_counter
+    elements:
+      rub_counter:
+      rub_text:
+      rub_checkbox:
+      rub_date:
+      rub_email:
+      rub_textarea:
+      rub_tag:
+    card:
+      header:
+        - rub_counter
+        - rub_text
+      meta:
+        - rub_checkbox
+        - rub_date
+      description:
+        - rub_textarea
+      extra:
+        - rub_email
+      footer:
+        - rub_tag
+
+forms:
+  fview:
+    title: "Exemple d'un dossier"
+    groupe: demo
+    elements:
+      rub_counter:
+        order: 01
+      _card_texte:
+        order: 05
+        type: card
+        label-long: "Rubriques TEXTE" 
+        icon-name: "tumblr square"
+        params:
+          form: ftexte
+      rub_text:
+        order: 20
+      rub_textarea:
+        order: 30
+      rub_email:
+        order: 50
+      _card_liste:
+        order: 100
+        type: card
+        label-long: "Rubriques LISTE" 
+        icon-name: "list"
+        params:
+          form: fliste
+      rub_list:
+        order: 120
+      rub_radio:
+        order: 130
+      rub_tag:
+        order: 140
+      _card_nombre:
+        order: 200
+        type: card
+        label-long: "Rubriques NUMÉRIQUES" 
+        icon-name: "euro sign"
+        params:
+          form: fnumber
+      rub_amount:
+        order: 220
+      rub_counter:
+        order: 230
+      rub_float:
+        order: 240
+      rub_number:
+        order: 250
+      rub_percent:
+        order: 260
+      _card_calendrier:
+        order: 300
+        type: card
+        label-long: "Rubriques CALENDRIER" 
+        icon-name: "calendar alternate outline"
+        params:
+          form: fcalendar
+      rub_date:
+        order: 320
+      rub_time:
+        order: 350
+      _card_image:
+        order: 400
+        type: card
+        label-long: "card image" 
+        icon-name: "image outline"
+        params:
+          form: ftexte
+      _rub_image:
+        order: 410
+      _card_pdf:
+        order: 500
+        type: card
+        label-long: "card pdf" 
+        icon-name: "file pdf outline"
+      _rub_pdf:
+        order: 510
+      _card_vue:
+        order: 600
+        type: card
+        label-long: "Exemple de vue sur une autre table" 
+        width: l
+        params:
+          table: items
+          view: vall
+      _card_chart:
+        order: 700
+        type: card
+        label-long: "card chart" 
+        width: xxl
+        icon-name: chart bar outline
+      _rub_chart:
+        order: 710
+  ftexte:
+    title: "Fiche Rubrique TEXTE"
+    icon-name: "tumblr square"
+    groupe: demo
+    elements:
+      rub_counter:
+        order: 10
+        hide: true
+      rub_text:
+        order: 20
+      rub_textarea:
+        order: 30
+      rub_email:
+        order: 50
+  fliste:
+    title: "Fiche Rubrique LISTE"
+    icon-name: "list"
+    groupe: demo
+    elements:
+      rub_counter:
+        order: 10
+        hide: true
+      rub_text:
+        order: 20
+        hide: true
+      rub_list:
+        order: 30
+      rub_radio:
+        order: 40
+      rub_tag:
+        order: 50
+  fedit:
+    title: "Fiche Rubrique"
+    groupe: demo
+    elements:
+      rub_counter:
+        order: 10
+      rub_text:
+        order: 20
+      rub_amount:
+        order: 30
+      rub_checkbox:
+        order: 40
+      rub_date:
+        order: 50
+      rub_email:
+        order: 60
+      rub_float:
+        order: 70
+      rub_textarea:
+        order: 80
+  fnumber:
+    title: "Fiche Rubrique NUMÉRIQUE"
+    groupe: demo
+    elements:
+      rub_text:
+        order: 20
+        hide: true
+      rub_amount:
+        order: 30
+      rub_counter:
+        order: 40
+      rub_float:
+        order: 50
+      rub_number:
+        order: 60
+      rub_percent:
+        order: 70
+  fcalendar:
+    title: "Fiche Rubrique CALENDRIER"
+    groupe: demo
+    elements:
+      rub_counter:
+        order: 10
+        hide: true
+      rub_text:
+        order: 20
+        hide: true
+      rub_date:
+        order: 30
+      rub_time:
+        order: 60

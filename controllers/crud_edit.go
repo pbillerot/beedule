@@ -1,10 +1,17 @@
 package controllers
 
 import (
-	"github.com/pbillerot/beedule/app"
+	"encoding/base64"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 // CrudEditController as
@@ -20,53 +27,94 @@ func (c *CrudEditController) Get() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
-	// Ctrl tableid et viewid
-	if val, ok := app.Tables[tableid]; ok {
-		if _, ok := val.Views[viewid]; ok {
-			if _, ok := val.Forms[formid]; ok {
-			} else {
-				c.Ctx.Redirect(302, "/crud")
-				return
-			}
-		} else {
-			c.Ctx.Redirect(302, "/crud")
-			return
-		}
-	} else {
-		c.Ctx.Redirect(302, "/crud")
-		return
-	}
+	// beego.Debug("from", c.Ctx.Input.Cookie("from"))
 
 	flash := beego.ReadFromRequest(&c.Controller)
 
-	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
-
-	records, err := models.CrudRead(tableid, id, elements)
-	if err != nil {
-		flash.Error(err.Error())
-		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+	// Ctrl appid tableid viewid formid
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
+		logs.Error("App not found", c.GetSession("Username").(string), appid)
+		backward(c.Controller)
+		return
+	}
+	if val, ok := dico.Ctx.Applications[appid].Tables[tableid]; ok {
+		if _, ok := val.Views[viewid]; ok {
+			if _, ok := val.Forms[formid]; ok {
+			} else {
+				logs.Error("Form not found", c.GetSession("Username").(string), formid)
+				backward(c.Controller)
+				return
+			}
+		} else {
+			logs.Error("View not found", c.GetSession("Username").(string), viewid)
+			backward(c.Controller)
+			return
+		}
+	} else {
+		logs.Error("table not found", c.GetSession("Username").(string), tableid)
+		backward(c.Controller)
+		return
 	}
 
-	// Remplissage records avec valeur par défaut
-	for ir, record := range records {
-		for key, val := range record {
-			if val == "" {
-				record[key] = elements[key].Value
-				records[ir] = record
-			}
+	// Contrôle d'accès
+	table := dico.Ctx.Applications[appid].Tables[tableid]
+	view := dico.Ctx.Applications[appid].Tables[tableid].Views[viewid]
+	form := dico.Ctx.Applications[appid].Tables[tableid].Forms[formid]
+	if form.Group == "" {
+		form.Group = view.Group
+	}
+	if form.Group == "" {
+		form.Group = dico.Ctx.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, form.Group, appid, id) {
+		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		backward(c.Controller)
+		return
+	}
+	setContext(c.Controller, appid, tableid)
+
+	// Fusion des attributs des éléments de la table dans les éléments du formulaire
+	elements, cols := mergeElements(c.Controller, appid, tableid, dico.Ctx.Applications[appid].Tables[tableid].Forms[formid].Elements, id)
+
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
 		}
 	}
 
-	table := app.Tables[tableid]
-	view := app.Tables[tableid].Views[viewid]
-	form := app.Tables[tableid].Forms[formid]
+	records, err := models.CrudRead(filter, appid, tableid, id, elements)
+	if err != nil {
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+		backward(c.Controller)
+		return
+	}
+	if len(records) == 0 {
+		flash.Error("Enregistrement non trouvé")
+		flash.Store(&c.Controller)
+		backward(c.Controller)
+		return
+	}
 
-	setContext(c.Controller)
+	// Calcul des éléments (valeur par défaut comprise)
+	elements = computeElements(c.Controller, true, elements, records[0])
+
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/edit/%s/%s/%s/%s/%s", appid, tableid, viewid, formid, id))
+
+	// Titre du formulaire
+	form.Title = macro(c.Controller, appid, form.Title, records[0])
+
+	c.SetSession(fmt.Sprintf("anch_%s_%s", tableid, viewid), fmt.Sprintf("anch_%s", strings.ReplaceAll(id, ".", "_")))
 	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
-	c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
+	c.Data["Application"] = dico.Ctx.Applications[appid]
+	c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)
 	c.Data["Id"] = id
 	c.Data["TableId"] = tableid
 	c.Data["ViewId"] = viewid
@@ -89,34 +137,63 @@ func (c *CrudEditController) Post() {
 	formid := c.Ctx.Input.Param(":form")
 	id := c.Ctx.Input.Param(":id")
 
+	flash := beego.ReadFromRequest(&c.Controller)
+
 	// Ctrl tableid et viewid
-	if val, ok := app.Tables[tableid]; ok {
+	if val, ok := dico.Ctx.Applications[appid].Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				c.Ctx.Redirect(302, "/crud")
+				flash.Error("Formulaire non trouvé :", formid)
+				flash.Store(&c.Controller)
+				backward(c.Controller)
 				return
 			}
 		} else {
-			c.Ctx.Redirect(302, "/crud")
+			flash.Error("Vue non trouvée :", viewid)
+			flash.Store(&c.Controller)
+			backward(c.Controller)
 			return
 		}
 	} else {
-		c.Ctx.Redirect(302, "/crud")
+		flash.Error("Application non trouvée :", appid)
+		flash.Store(&c.Controller)
+		backward(c.Controller)
 		return
 	}
+	table := dico.Ctx.Applications[appid].Tables[tableid]
+	view := dico.Ctx.Applications[appid].Tables[tableid].Views[viewid]
+	form := dico.Ctx.Applications[appid].Tables[tableid].Forms[formid]
 
-	flash := beego.NewFlash()
+	setContext(c.Controller, appid, tableid)
+	var withPlugin bool
 
 	// Fusion des attributs des éléments de la table dans les éléments du formulaire
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Forms[formid].Elements, id)
+	elements, cols := mergeElements(c.Controller, appid, tableid, dico.Ctx.Applications[appid].Tables[tableid].Forms[formid].Elements, id)
+
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
 
 	// lecture du record
-	records, err := models.CrudRead(tableid, id, elements)
+	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		backward(c.Controller)
+		return
+	}
+
+	if len(records) == 0 {
+		flash.Error("Enregistrement non trouvé: ", id)
+		flash.Store(&c.Controller)
+		backward(c.Controller)
 		return
 	}
 
@@ -132,18 +209,27 @@ func (c *CrudEditController) Post() {
 		}
 		elements[key] = element
 	}
-	if berr { // ERREUR: on va reproposer le formulaire pour rectification
-		flash.Store(&c.Controller)
-		table := app.Tables[tableid]
-		view := app.Tables[tableid].Views[viewid]
-		form := app.Tables[tableid].Forms[formid]
+	// CheckSqlite
+	for _, CheckSqlite := range form.CheckSqlite {
+		sql := macroSQL(c.Controller, appid, CheckSqlite, records[0])
+		if sql != "" {
+			berr = true
+			flash.Error(sql)
+		}
+	}
+	// Calcul des éléments (valeur par défaut comprise)
+	elements = computeElements(c.Controller, true, elements, records[0])
 
-		setContext(c.Controller)
+	if berr { // ERREUR: on va reproposer le formulaire pour rectification
+		// Titre du formulaire
+		form.Title = macro(c.Controller, appid, form.Title, records[0])
+
+		flash.Store(&c.Controller)
 		c.Data["AppId"] = appid
-		c.Data["Application"] = app.Applications[appid]
-		c.Data["ColDisplay"] = records[0][table.ColDisplay].(string)
+		c.Data["Application"] = dico.Ctx.Applications[appid]
+		c.Data["ColDisplay"] = records[0][table.Setting.ColDisplay].(string)
 		c.Data["Id"] = id
-		c.Data["App"] = app.Portail
+		c.Data["App"] = dico.Ctx
 		c.Data["TableId"] = tableid
 		c.Data["ViewId"] = viewid
 		c.Data["FormId"] = formid
@@ -157,18 +243,128 @@ func (c *CrudEditController) Post() {
 		c.TplName = "crud_edit.html"
 		return
 	}
+
 	// C'est OK, les données sont correctes et placées dans SQLout
-	err = models.CrudUpdate(tableid, id, elements)
+	err = models.CrudUpdate(appid, tableid, id, elements)
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
-		c.Ctx.Redirect(302, c.Ctx.Request.RequestURI)
+		backward(c.Controller)
 		return
 	}
+	// Remplissage d'un record avec les elements.SQLout
+	record := orm.Params{}
+	for key, element := range elements {
+		record[key] = element.SQLout
+	}
 
-	flash.Notice("Mise à jour effectuée avec succès")
-	flash.Store(&c.Controller)
+	// Traitements particuliers pour les images
+	// Enregistrement de l'image modifiée
+	for _, element := range elements {
+		if element.Type == "image" {
+			b64data := element.SQLout[strings.IndexByte(element.SQLout, ',')+1:]
+			unbased, err := base64.StdEncoding.DecodeString(b64data)
+			// img, _, err := image.Decode(bytes.NewReader([]byte(element.SQLout)))
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+				berr = true
+				break
+			}
 
-	c.Ctx.Redirect(302, "/crud/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+			outputFile, err := os.Create(element.Params.Src)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+				berr = true
+				break
+			}
+			defer outputFile.Close()
+
+			outputFile.Write(unbased)
+
+			// r := bytes.NewReader(unbased)
+			// ext := filepath.Ext(element.params.Src)
+			// if ext == ".png" {
+			// 	im, err := png.Decode(r)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 		break
+			// 	}
+			// 	err = png.Encode(outputFile, im)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 	}
+			// }
+			// if ext == ".jpg" {
+			// 	var opts jpeg.Options
+			// 	opts.Quality = 1
+			// 	err = jpeg.Encode(outputFile, img, &opts)
+			// 	if err != nil {
+			// 		flash.Error(err.Error())
+			// 		flash.Store(&c.Controller)
+			// 		berr = true
+			// 	}
+			// }
+
+		}
+	}
+
+	// PostActions des éléments
+	for _, element := range elements {
+		if len(element.PostAction) > 0 {
+			// Traitement des actions
+			for _, action := range element.PostAction {
+				if berr {
+					break
+				}
+				// Traitement SQL
+				for _, actionsql := range action.SQL {
+					sql := macro(c.Controller, appid, actionsql, record)
+					if sql != "" {
+						err = models.CrudExec(sql, table.Setting.AliasDB)
+						if err != nil {
+							flash.Error(err.Error())
+							flash.Store(&c.Controller)
+							berr = true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// PostSQL du formulaire
+	for _, postsql := range form.PostSQL {
+		// Remplissage d'un record avec les elements.SQLout
+		record := orm.Params{}
+		for key, element := range elements {
+			record[key] = element.SQLout
+		}
+		sql := macro(c.Controller, appid, postsql, record)
+		if sql != "" {
+			err = models.CrudExec(sql, table.Setting.AliasDB)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+				berr = true
+			}
+		}
+	}
+
+	if !berr {
+		flash.Notice("Mise à jour effectuée avec succès")
+		flash.Store(&c.Controller)
+	}
+
+	if withPlugin {
+		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
+	} else {
+		backward(c.Controller)
+	}
 }

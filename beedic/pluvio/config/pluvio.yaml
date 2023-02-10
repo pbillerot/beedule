@@ -1,0 +1,117 @@
+# Table pluviométrie pluvio.sqlite
+setting:
+  alias-db: pluvio
+  key: id
+  col-display: id
+  icon-name: "cloud rain"
+
+elements:
+  id:
+    type: counter
+    label-long: "id"
+    label-short: "id"
+    order: 10
+  annee:
+    type: text
+    label-long: "Année"
+    label-short: "Année"
+    width: s
+    order: 20
+  mois:
+    type: text
+    label-long: "Mois"
+    label-short: "Mois"
+    width: s
+    order: 22
+  date:
+    type: date
+    label-long: "Date"
+    label-short: "Date"
+    default-sql: "select CURRENT_DATE - 1"
+    order: 30
+  mm:
+    type: float
+    label-long: "Millimètre"
+    label-short: "mm"
+    order: 40
+  cumul_mois:
+    type: float
+    label-long: "Cumul du mois"
+    label-short: "Cumul du mois"
+    order: 50
+    
+views:
+  # Vue DASHBOARD
+  vdashboard:
+    type: dashboard
+    title: "Tableau de bord"
+    icon-name: dashboard
+    elements:
+      _card_pluvio:
+        type: card
+        order: 10
+        label-long: "Pluviométrie à Saint-Maixent l'École"
+        icon-name: "chart bar"
+        width: xxl
+      _graph:
+        order: 20
+        type: chart
+        width: xl
+        dataset:
+          chartid: "select 'chart-pluvio'"
+          mm2020: "select cumul_mois from (select distinct pluvio.mois, cumul_mois from pluvio where annee = '2020') as tt"
+          mm2021: "select cumul_mois from (select distinct pluvio.mois, cumul_mois from pluvio where annee = '2021') as tt"
+          mm2022: "select cumul_mois from (select distinct pluvio.mois, cumul_mois from pluvio where annee = '2022') as tt"
+      _card_table_pluvio:
+        type: card
+        order: 100
+        label-long: "Collecte Pluviométrie 2022"
+        width: m
+        params:
+          table: pluvio
+          view: vall
+          where: "annee = '2022'"
+
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: true
+    type: table
+    group: admin
+    title: "Pluviométrie"
+    icon-name: cloud rain
+    order-by: date desc
+    elements:
+      id:
+        hide: true
+      date:
+      mm:
+      cumul_mois:
+    post-sql: # sql après le delete de l'enregistrement
+      - "update pluvio set cumul_mois = (select cumul_mois from (select annee, mois, sum(mm) as cumul_mois from pluvio as cc where cc.annee = pluvio.annee and cc.mois = pluvio.mois group by annee, mois))"
+      
+forms:
+  fview:
+    title: "Pluviométrie du jour"
+    groupe: admin
+    elements:
+      id:
+        hide: true
+      annee:
+      mois:
+      date:
+      mm:
+      cumul_mois:
+  fedit:
+    title: "Pluviométrie du jour"
+    groupe: admin
+    elements:
+      id:
+        hide: true
+      date:
+      mm:
+    post-sql: 
+      - "update pluvio set mois = DATE_PART('month', date) where date='{date}'"
+      - "update pluvio set annee = DATE_PART('year', date) where date='{date}'"
+      - "update pluvio set cumul_mois = (select cumul_mois from (select annee, mois, sum(mm) as cumul_mois from pluvio as cc where cc.annee = pluvio.annee and cc.mois = pluvio.mois group by annee, mois) as tt)"

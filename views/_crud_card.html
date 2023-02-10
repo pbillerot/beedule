@@ -1,0 +1,233 @@
+<!-- VUE TABLE -->
+{{$session := .Session}}
+{{$aliasDB := .AliasDB}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$tableid := .UIView.TableID}}
+{{$viewid := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$search := .UIView.Search}}
+{{$script := DictCreate}}
+{{$link := ""}}
+{{if or $view.FormView $view.Deletable $view.FormEdit}}{{$link = "link"}}{{end}}
+<!-- CARDS -->
+<div class="ui cards">
+  {{ range $irecord, $record := .UIView.Records }}
+  <!-- CARD -->
+  <div class="{{$link}} raised card crud-card-view bee-width-{{$view.Width}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} crud-card-searchable crud-jquery-url"
+    {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
+    {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+    {{end}}>
+    <div class="content" style="padding-bottom: 0.5em;">
+      {{if $view.Card.Header}}
+      <!-- header -->
+      <div class="header">
+        {{if $view.IconName }}
+        <i class="large {{$theme}} {{$view.IconName}} icon"></i>
+        {{end}}    
+        <!-- range header-->  
+        {{range $im, $key := $view.Card.Header}}
+          {{ $element := index $elements $key }}
+          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          {{ if eq $key $table.Setting.Key}}{{$val = printf "[%s]" $val}}{{end}}
+          <span> {{CrudFormat $element.Format $val}}</span>
+        {{end}}
+        <!-- / range header --> 
+      </div>
+      <!-- / header -->
+      {{end}}
+    </div>
+    <div class="content" style="padding-top: 0.5em;padding-bottom: 0.5em;">
+      {{if $view.Card.Meta}}
+      <!-- meta -->
+      <div class="extra">
+        <!-- range meta-->  
+        {{range $im, $key := $view.Card.Meta}}
+          {{ $element := index $elements $key }}
+          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
+          {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+          {{else if (eq $element.Type "tag")}}
+          {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </span>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+          <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range meta --> 
+      </div>
+      <!-- / meta -->
+      {{end}}
+      {{if $view.Card.Description}}
+        {{range $im, $key := $view.Card.Description}}
+          {{ $element := index $elements $key }}
+          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          {{if (eq $element.Type "chart")}}
+            {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
+            {{ $chartid := index $dataset `chartid`}}
+      <div class="{{$chartid}} {{$class}} image" {{ range $k, $v :=$dataset }}
+        data-{{$k}}="{{$v}}" {{end}}>
+        <canvas class="ui link" style="background-color: white;border:1px solid darkgrey;">
+        </canvas>
+        {{ $script = DictSet $script $chartid $chartid}}
+      </div>
+          {{else if (eq $element.Type "image")}}
+      <div class="ui link {{$class}} image crud-popup-image"
+        data-url="{{CrudMacro $element.Params.URL $appid $record $session}}?{{$composter}}"
+        title="{{CrudMacro $element.Params.Title $appid $record $session}}">
+        <img src="{{CrudMacro $element.Params.Src $appid $record $session}}?{{$composter}}">
+      </div>
+            {{if $element.LabelLong }}
+      <div class="center aligned description">
+        <b>{{$element.LabelLong}}</b>
+      </div>
+            {{end}}
+          {{else}}
+          {{ if $val }}
+      <div class="ui message" style="margin: 0.5em 0;padding: 0.7em">
+        <p class="ui {{$class}} text searchable">{{CrudFormat $element.Format $val}}</p>
+      </div>
+          {{end}}
+          {{end}}
+          <!-- / type-->
+        {{end}}
+        <!-- / range mask-->
+      {{end}}
+      <!-- /description -->
+      {{if $view.Card.Extra}}
+      <!-- extra -->
+      <div class="extra">
+        <!-- range extra-->  
+        {{range $im, $key := $view.Card.Extra}}
+        {{ $element := index $elements $key }}
+        {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $val := CrudIndex $record $key}}
+        <!-- type -->
+        {{if (eq $element.Type "checkbox")}}
+        {{if (eq $val "1") }}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+        {{else}}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+        {{end}}
+        {{else if (eq $element.Type "list")}}
+        {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        {{else if (eq $element.Type "tag")}}
+        {{if $element.LabelShort}}><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        {{$arr := CrudSplit $val ","}}
+        {{range $i, $item := $arr}}
+        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        {{end}}
+        </span>
+        {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+        {{else}}
+        <!-- autre type -->
+        {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range extra --> 
+      </div>
+      <!-- / extra -->
+      {{end}}
+    </div>
+    <!-- /content -->   
+    {{if $view.Card.Footer}}
+    <!-- footer -->
+    <div class="content" style="padding-top: 0.5em;padding-bottom: 0.7em;">
+      <div class="extra">
+      <!-- range footer-->  
+      {{range $im, $key := $view.Card.Footer}}
+        {{ $element := index $elements $key }}
+        {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $val := CrudIndex $record $key}}
+        <!-- type -->
+        {{if (eq $element.Type "checkbox")}}
+        {{if (eq $val "1") }}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+        {{else}}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+        {{end}}
+        {{else if (eq $element.Type "list")}}
+        {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        {{else if (eq $element.Type "tag")}}
+        {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        {{$arr := CrudSplit $val ","}}
+        {{range $i, $item := $arr}}
+        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        {{end}}
+        </span>
+        {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+        {{else}}
+        <!-- autre type -->
+        {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        {{end}} 
+        <!-- / type-->
+      {{end}}
+      <!-- / range footer --> 
+    </div></div>
+    <!-- / div footer -->
+    {{end}}
+    <!-- / if footer --> 
+  </div>
+  <!-- / div CARD -->
+  {{end}}
+  <!-- / range records-->
+</div>
+<!-- / CARDS-->
+<!-- Insertion de script spécifique aux rubriques -->
+{{range $k, $v := $script}}
+<script defer src="/bee/dico/{{$appid}}/{{$k}}.js"></script>
+{{end}}
+

@@ -1,0 +1,99 @@
+# Table jecompte jeux.sqlite
+setting:
+  alias-db: jecompte
+  key: x_id
+  col-display: x_joueur
+  icon-name: "th list"
+
+elements:
+  x_id:
+    type: counter
+    label-long: "id"
+    label-short: "id"
+    order: 10
+    hide: true
+  x_joueur:
+    type: radio
+    label-long: "Joueur"
+    label-short: "Joueur"
+    order: 20
+    required: true
+    items-sql: "select j_joueur as key, j_joueur as label from joueurs order by j_joueur"
+
+  x_partie:
+    type: radio
+    label-long: "N° partie"
+    label-short: "N° partie"
+    width: s
+    order: 30
+    required: true
+    items-sql: "select p_partie as key, p_partie as label from parties order by p_partie"
+  x_points:
+    type: number
+    label-long: "Points de la partie"
+    label-short: "Points de la partie"
+    order: 40
+    required: true
+    
+views:
+  vdashboard:
+    type: dashboard
+    title: "Tableau de bord"
+    icon-name: dashboard
+    elements:
+      _card_jeux:
+        order: 100
+        type: card
+        label-long: "Jeux" 
+        #width: l
+        params:
+          table: jeux
+          view: vall
+      _card_joueurs:
+        order: 200
+        type: card
+        label-long: "Joueurs" 
+        #width: l
+        params:
+          table: joueurs
+          view: vall
+      _card_parties:
+        order: 300
+        type: card
+        label-long: "Parties" 
+        #width: l
+        params:
+          table: parties
+          view: vall
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    type: table
+    group: admin
+    title: "Jeux"
+    icon-name: "th list"
+    order-by: x_partie, x_joueur
+    elements:
+      x_id:
+      x_joueur:
+      x_partie:
+      x_points:
+forms:
+  fview:
+    title: "Score du joueur"
+    groupe: admin
+    elements:
+      x_id:
+      x_joueur:
+      x_partie:
+      x_points:
+  fedit:
+    title: "Score du joueur"
+    groupe: admin
+    elements:
+      x_id:
+      x_joueur:
+      x_partie:
+      x_points:
+

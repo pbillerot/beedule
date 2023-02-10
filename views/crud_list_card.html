@@ -1,0 +1,213 @@
+<!-- crud_list_card.html -->
+{{$session := .Session}}
+{{$aliasDB := .AliasDB}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$tableid := .UIView.TableID}}
+{{$viewid := .UIView.ViewID}}
+{{$table := .UIView.Table}}
+{{$tablekey := .UIView.Table.Setting.Key}}
+{{$view := .UIView.View}}
+{{$elements := .UIView.Elements}}
+{{$cols := .UIView.Cols}}
+{{$qrecords := .UIView.Qrecords}}
+{{$search := .UIView.Search}}
+{{$script := DictCreate}}
+{{$fromDashboard := false}}
+{{$infooter := 0}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui {{.Config.Theme}} inverted large fixed borderless  menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.Menu}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $menu := $app.Menu }}
+            {{$t := index $app.Tables $menu.TableID }}
+            {{$v := index $t.Views $menu.ViewID }}
+            {{if (CrudIsInGroup $v.Group $session $appid)}}
+          <a class="item{{if and (eq $menu.TableID $tableid) (eq $menu.ViewID $viewid)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$menu.TableID}}/{{$menu.ViewID}}">
+            <i class="{{$v.IconName}} {{$theme}} icon"></i>
+              {{$v.Title}}
+          </a>
+              {{if $menu.InFooter}}{{$infooter = CrudIncrement $infooter}}{{end}}
+            {{end}}
+          <!-- end if isingroup -->
+          {{end}}
+          <!-- end range Menu-->
+          {{if (CrudIsInGroup "dev" $session $appid)}}
+          <div class="divider"></div>
+          <a class="item eddy-window-open"
+            data-url="/bee/eddy/document/{{$tableid}}.yaml" data-posx="right" target="{{$tableid}}"
+            title="Editer le dictionnaire...">
+            <i class="file code large brown icon"></i> {{$tableid}}.yaml</a>
+          {{end}}
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+            {{.Session.Username}}
+          </div>
+          {{if not (CrudIsAnonymous $session)}}
+          <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+          {{end}}
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
+        </div>
+      </div>
+      <div class="header item" id="crud-header">
+        <span class="crud-mobile-hide">
+          {{$view.Title}}
+          {{if (eq $qrecords 0)}}
+          (aucun élément)
+          {{else if (eq $qrecords 1)}}
+          (1 élément)
+          {{else}}
+          ({{$qrecords}} éléments)
+          {{end}}
+        </span>
+      </div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="ui icon item crud-search-div">
+          <!-- Recherche -->
+          <i class="search link icon crud-search-active" title="Rechercher..."></i>
+          <div style="display: none" class="crud-search">
+            <div class="ui icon input">
+              <input class="crud-search-input-1" type="hidden" value="">
+              <input type="text" class="crud-search-input" data-url="/bee/search/{{$appid}}/{{$tableid}}/{{$viewid}}"
+                value="{{$search}}" placeholder="Recherche...">
+              <i class="circular search link icon crud-search-go" title="Rechercher"></i>
+            </div>
+            <i class="close link icon crud-search-close" title="Fermer recherche"></i>
+          </div>
+        </div>
+        {{if or $view.Actions $view.FormAdd}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{if $view.FormAdd}}
+            <a class="ui icon item crud-jquery-url"
+              data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}">
+              <i class="plus {{$theme}} icon"></i> Ajouter un élément...
+            </a>
+            {{end}}
+            {{if $view.Actions}}
+            {{if $view.FormAdd}}
+            <div class="divider"></div>
+            {{end}}
+            {{range $iaction, $action := $view.Actions}}
+            <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+              data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">
+              {{if $action.Checkbox.GetSQL}}
+              <div class="ui toggle checkbox">
+                <input type="checkbox"{{if (eq (CrudSQL $action.Checkbox.GetSQL $action.Checkbox.AliasDB) `1`)}} checked="checked"{{end}}>
+                <label>{{$action.Label}}</label>
+              </div>
+              {{else}}
+              {{str2html $action.Label}}
+              {{end}}
+            </a>
+            {{end}}
+            <!-- end range actions-->
+            {{end}}
+            <!-- end if actions-->
+          </div>
+        </div>
+        {{end}}
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container crud-searchable"{{if gt $infooter 1}} style="margin-bottom: 6em;"{{end}}>
+      {{template "_crud_flash.html" .}}
+      <!-- Title on Mobile -->
+      <div class="crud-mobile-show ui label">
+        {{$view.Title}}
+        {{if (eq $qrecords 0)}}
+        (aucun élément)
+        {{else if (eq $qrecords 1)}}
+        (1 élément)
+        {{else}}
+        ({{$qrecords}} éléments)
+        {{end}}
+      </div>
+      {{if $view.FormAdd}}
+      <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
+      data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}"
+      {{if gt $infooter 1}}style="position: fixed; bottom: 5em; right: 2em; padding: 1em;"{{else}}style="position: fixed; bottom: 3em; right: 2em; padding: 1em;"{{end}}
+      title="Ajouter un élément...">
+        <i class="icon plus"></i>
+      </button>
+      {{end}}
+      <!-- LIST CARD -->
+      {{template "_crud_card.html" .}}
+    </div> <!-- end container-->
+  </main>
+  {{if gt $infooter 0}}
+  <div class="ui bottom visible sidebar">
+    <div class="ui {{CrudNumberToEnglish $infooter}} labeled icon item menu">
+    {{ range $iv, $menu := $app.Menu }}
+      {{$t := index $app.Tables $menu.TableID }}
+      {{$v := index $t.Views $menu.ViewID }}
+      {{if and (CrudIsInGroup $v.Group $session $appid) $menu.InFooter }}
+      <a class="item{{if and (eq $menu.TableID $tableid) (eq $menu.ViewID $viewid)}} {{$theme}} active{{end}}"
+        href="/bee/list/{{$appid}}/{{$menu.TableID}}/{{$menu.ViewID}}">
+        <i class="{{$v.IconName}} {{$theme}} icon"></i>
+          {{$v.Title}}
+      </a>
+      {{end}}
+    {{end}}
+    </div>
+  </div>
+  {{end}}
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui tiny modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui basic modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+
+  <form id="beeForm" method="POST" action="à venir">
+    {{ .xsrfdata }}
+  </form>
+
+  <!-- CONTEXTE -->
+  <input type="hidden" id="xsrf" value="{{.xsrf}}">
+  <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

@@ -14,9 +14,7 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 data/
-bin/
-__debug_bin
 beedule
-vendor
-cpu*
-mem*
+lastupdate.tmp
+__debug_bin
+*.log

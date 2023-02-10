@@ -1,0 +1,112 @@
+<!-- vusers.html -->
+{{$session := .Session}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$files := .Files}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$composter := .Composter}}
+{{$record := .Record}}
+{{$keyid := .KeyID}}
+{{$methodurl := .URL}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container">
+    <div class="ui large fixed grey inverted menu borderless bee-bar-light">
+      <div class="item">
+        <button class="ui labeled icon {{$theme}} button crud-jquery-close">
+          <i class="left arrow icon"></i>
+          Fermer
+        </button>
+      </div>
+      <h3 class="header item"><i class="file code large icon"></i> {{$record.Path}}</h3>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+        <div class="item">
+          <button class="ui icon {{$theme}} button eddy-window-open"
+          data-url="{{.Config.HelpPath}}"
+          data-width="1200" data-posy="50" target="eddy-help" title="Aide Éditeur...">
+            <i class="help icon"></i>
+          </button>
+        </div>
+        <div class="item">
+          <button id="button_validate" class="ui icon google plus button crud-jquery-submit" disabled="disabled"
+            title="Enregistrer">
+            <i class="save icon"></i>
+          </button>
+        </div>
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+            {{range $file := $files}}
+              {{if eq $record.Path "portail.yaml"}}
+                {{if eq $record.Path $file.Base}}
+                <a class="ui icon {{if eq $record.Path $file.Base}}active{{end}} item eddy-window-open" data-url="/bee/eddy/document/{{$file.Base}}" 
+                data-posx="right" target="{{$file.Base}}">
+                  <i class="file code brown icon"></i>{{$file.Base}}</a>
+                {{end}}
+              {{else}}
+                {{if eq $file.Ext ".yaml"}}
+                <a class="ui icon {{if eq $record.Path $file.Base}}active{{end}} item eddy-window-open" data-url="/bee/eddy/document/{{$file.Base}}" 
+                data-posx="right" target="{{$file.Base}}">
+                  <i class="file code brown icon"></i>{{$file.Base}}</a>
+                {{else}}
+                <a class="ui icon {{if eq $record.Path $file.Base}}active{{end}} item eddy-window-open" data-url="/bee/eddy/document/{{$file.Base}}" 
+                data-posx="right" target="{{$file.Base}}">
+                  <i class="file document green icon"></i>{{$file.Base}}</a>
+                {{end}}
+              {{end}}
+            {{end}}
+            {{if ne $record.Path "portail.yaml"}}<div class="divider"></div>{{end}}
+            <a class="ui icon item eddy-window-open"
+              data-url="/bee/eddy/log" data-posx="right" target="portail"
+              title="Visualiser le log...">
+              <i class="paw grey icon"></i> beedule.log</a>
+          </div>
+        </div>
+        <!-- end dropdown MENU à droite -->
+      </div>
+      <!-- end right menu -->
+    </div>
+  </div>
+  <!-- MAIN -->
+  <main>
+    <div class="ui container">
+      {{template "_crud_flash.html" .}}
+      <!-- Formulaire d'Edition -->
+      <form class="ui form attached segment" id="beeForm" method="POST" action="{{$methodurl}}">
+        {{ .xsrfdata }}
+        <div class="ui form">
+          <section>
+            <div class="field">
+              <textarea id="codemirror-markdown" name="document" id="document">{{$record.Content}}</textarea>
+            </div>
+          </section>
+        </div>
+      </form>
+    </div>
+    </div> <!-- /container -->
+  </main>
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui tiny modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+
+  <!-- CONTEXTE -->
+  <input type="hidden" id="eddy_refresh" value="eddy-refresh">
+  <input type="hidden" id="eddy_rubriques" value="{{.Rubriques}}">
+  <input type="hidden" id="eddy_mode" value="{{.ModeMarkdown}}">
+  {{template "_crud_foot.html" .}}
+</body>
+
+</html>

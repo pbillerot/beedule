@@ -6,11 +6,26 @@
 <body>
     <!-- NAVBAR -->
     <div class="ui container">
-        <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-            <div class="item">
-                <a class="ui icon image" href="/crud">
-                    <img class="ui mini image" src="/crud/static/img/beedule.png">
-                </a>
+        <div class="ui {{.Config.Theme}} inverted large fixed borderless menu navbar">
+            <!-- LEFT MENU -->
+            <div class="ui dropdown item">
+                <div class="ui mini image">
+                    <img src="/bee/static/img/beedule.png">
+                </div>
+                <div class="menu">
+                    <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="user icon"></i>
+                        {{.Session.Username}}
+                    </div>
+                    {{if not (CrudIsAnonymous .Session)}}
+                    <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+                    {{end}}
+                    <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+                    <a class="item" href="/bee/logout">Se déconnecter</a>
+                    <a href="/bee/about" class="item disabled">À propos</a>
+                </div>
             </div>
             <div class="header item">{{.Title}}</div>
         </div>
@@ -32,7 +47,7 @@
                         <i class="user icon"></i> {{.Config.Author}}
                     </div>
                     <div class="icon label">
-                        <i class="code icon"></i> Version {{.Config.Version}}
+                        <i class="code icon"></i> Version {{.Config.Version}} du {{.Config.Date}}
                     </div>
                 </div>
             </div>
@@ -44,7 +59,7 @@
         </div>
         </div>
     </main>
-    {{template "_crud_footer.html" .}}
+    {{template "_crud_foot.html" .}}
 </body>
 
 </html>

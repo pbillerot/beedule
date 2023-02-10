@@ -1,11 +1,16 @@
 package controllers
 
 import (
-	"github.com/pbillerot/beedule/app"
+	"fmt"
+	"regexp"
+	"strings"
+
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 // CrudListController as
@@ -13,63 +18,300 @@ type CrudListController struct {
 	loggedRouter
 }
 
-// Get CrudListController
-func (c *CrudListController) Get() {
+// CrudList CrudListController
+func (c *CrudListController) CrudList() {
 	appid := c.Ctx.Input.Param(":app")
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
 
-	flash := beego.ReadFromRequest(&c.Controller)
-	// Ctrl tableid et viewid
-	if val, ok := app.Tables[tableid]; ok {
-		if _, ok := val.Views[viewid]; ok {
-		} else {
-			c.Ctx.Redirect(302, "/crud")
-			return
-		}
-	} else {
-		c.Ctx.Redirect(302, "/crud")
+	// mémorisation de la recherche dans la vue
+
+	var uiView UIView
+
+	err = uiView.load(c.Controller, appid, tableid, viewid, dico.Element{})
+	if err != nil {
+		backward(c.Controller)
+		return
+	}
+	if c.GetString("from-card-view") != "" {
+		backward(c.Controller)
 		return
 	}
 
+	// Remplissage du contexte pour le template
+	setContext(c.Controller, appid, uiView.TableID)
+
+	c.Data["AppId"] = uiView.AppID
+	c.Data["Application"] = dico.Ctx.Applications[uiView.AppID]
+	c.Data["UIView"] = &uiView
+
+	// Positionnement du navigateur sur la page qui va s'ouvrir
+	forward(c.Controller, fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
+
+	if uiView.View.Type == "card" {
+		c.TplName = "crud_list_card.html"
+	} else if uiView.View.Type == "table" {
+		c.TplName = "crud_list_table.html"
+	} else if uiView.View.Type == "dashboard" {
+		c.Ctx.Redirect(302, "/bee/dashboard/"+appid+"/"+tableid+"/"+viewid)
+		// c.TplName = "crud_dashboard.html"
+	} else {
+		c.TplName = "crud_list_card.html"
+	}
+}
+
+// UIView Vue
+type UIView struct {
+	Title         string
+	AppID         string
+	TableID       string
+	ViewID        string
+	Table         dico.Table
+	View          dico.View
+	Elements      map[string]dico.Element
+	Records       []orm.Params
+	Qrecords      int
+	Cols          map[int]string
+	SortID        string
+	SortDirection string
+	Search        string
+	SearchStop    string
+}
+
+func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid string, parentElement dico.Element) (err error) {
+	ui.AppID = appid
+	ui.TableID = tableid
+	ui.ViewID = viewid
+
+	flash := beego.ReadFromRequest(&c)
+
+	// Ctrl appid tableid viewid formid
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
+		err = fmt.Errorf("app not found %s", appid)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
+		return
+	}
+	if val, ok := dico.Ctx.Applications[appid].Tables[tableid]; ok {
+		if _, ok := val.Views[viewid]; ok {
+		} else {
+			err = fmt.Errorf("view not found %s", viewid)
+			logs.Error(err.Error())
+			flash.Error(err.Error())
+			flash.Store(&c)
+			return
+		}
+	} else {
+		err = fmt.Errorf("table not found %s", tableid)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
+		return
+	}
+
+	// Contrôle d'accès à la vue
+	table := dico.Ctx.Applications[appid].Tables[tableid]
+	view := dico.Ctx.Applications[appid].Tables[tableid].Views[viewid]
+	ui.Table = *table
+	ui.View = view
+	ui.Title = view.Title
+	if view.Group == "" {
+		view.Group = dico.Ctx.Applications[appid].Group
+	}
+	if !IsInGroup(c, view.Group, appid, "") {
+		err = fmt.Errorf("accès non autorisé de %s à %s", viewid, view.Group)
+		logs.Error(err.Error())
+		flash.Error(err.Error())
+		flash.Store(&c)
+		return
+	}
+	// Ctrl d'accès FormAdd FormView FormEdit
+	if !IsInGroup(c, table.Forms[view.FormView].Group, appid, "") {
+		view.FormView = ""
+	}
+	if !IsInGroup(c, table.Forms[view.FormAdd].Group, appid, "") {
+		view.FormAdd = ""
+	}
+	if !IsInGroup(c, table.Forms[view.FormEdit].Group, appid, "") {
+		view.FormEdit = ""
+	}
+
+	// Gestion du TRI enregistré dans la session et contexte
+	sortID := ""
+	sortDirection := ""
+	ctxSortid := fmt.Sprintf("%s-%s-%s-sortid", appid, tableid, viewid)
+	ctxSortdirection := fmt.Sprintf("%s-%s-%s-sortdirection", appid, tableid, viewid)
+	if c.GetSession(ctxSortid) != nil {
+		sortID = c.GetSession(ctxSortid).(string)
+	}
+	if c.GetSession(ctxSortdirection) != nil {
+		sortDirection = c.GetSession(ctxSortdirection).(string)
+	}
+	// Data récupéré dans mergeElements et dans le template ensuite
+	ui.SortID = sortID
+	ui.SortDirection = sortDirection
 	// Fusion des attributs des éléments de la table dans les éléments de la vue
-	elements, cols := mergeElements(c.Controller, tableid, app.Tables[tableid].Views[viewid].Elements, "")
-	// Calcul des champs SQL
-	view := app.Tables[tableid].Views[viewid]
+	// en intégrant les éléments de tri fournis dans c.Data
+	c.Data["SortID"] = sortID
+	c.Data["SortDirection"] = sortDirection
+	elements, cols := mergeElements(c, appid, tableid, dico.Ctx.Applications[appid].Tables[tableid].Views[viewid].Elements, "")
+	ui.Cols = cols
+	// Calcul des champs SQL de la vue
 	if view.OrderBy != "" {
-		view.OrderBy = macro(c.Controller, view.OrderBy, orm.Params{})
+		view.OrderBy = macro(c, appid, view.OrderBy, orm.Params{})
 	}
 	if view.FooterSQL != "" {
-		view.FooterSQL = macroSQL(c.Controller, view.OrderBy, orm.Params{}, app.Tables[tableid].AliasDB)
+		view.FooterSQL = requeteSQL(c, appid, view.FooterSQL, orm.Params{}, dico.Ctx.Applications[appid].Tables[tableid].Setting.AliasDB)
 	}
-	if view.Where != "" {
-		view.Where = macro(c.Controller, view.Where, orm.Params{})
+	if len(view.PreUpdateSQL) > 0 {
+		for _, presql := range view.PreUpdateSQL {
+			// Remplissage d'un record avec les elements.SQLout
+			record := orm.Params{}
+			sql := macro(c, appid, presql, record)
+			if sql != "" {
+				err = models.CrudExec(sql, table.Setting.AliasDB)
+				if err != nil {
+					flash.Error(err.Error())
+					flash.Store(&c)
+				}
+			}
+		}
 	}
+	// CAS appel d'une vue dans le formulaire
+	if parentElement.Params.View != "" {
+		if parentElement.Params.Where != "" {
+			view.Where = macro(c, appid, parentElement.Params.Where, parentElement.Record)
+		} else {
+			if view.Where != "" {
+				view.Where = macro(c, appid, view.Where, orm.Params{})
+			}
+		}
+		if parentElement.LabelLong != "" {
+			view.Title = parentElement.LabelLong
+		}
+		if parentElement.IconName != "" {
+			view.IconName = parentElement.IconName
+		}
+	}
+
+	// RECHERCHE DANS LA VUE
+	search := ""
+	ctxSearch := fmt.Sprintf("%s-%s-%s-search", appid, tableid, viewid)
+	if c.GetSession(ctxSearch) != nil {
+		search = c.GetSession(ctxSearch).(string)
+	}
+
+	if search != "" {
+		var colName string
+		var val string
+		var ope string
+		re := regexp.MustCompile(`^(.*):(.*)`)
+		match := re.FindStringSubmatch(search)
+		if len(match) > 0 {
+			colName = match[1]
+			val = match[2]
+			ope = "LIKE"
+		}
+		re = regexp.MustCompile(`^(.*)=(.*)`)
+		match = re.FindStringSubmatch(search)
+		if len(match) > 0 {
+			colName = match[1]
+			val = match[2]
+			ope = "="
+		}
+		for key, element := range elements {
+			if strings.HasPrefix(key, "_") {
+				continue
+			}
+			if ope != "" && key == colName {
+				// recherche sur une seule colonne
+				switch element.Type {
+				case "checkbox":
+					if strings.Contains(strings.ToLower(element.LabelShort), search) {
+						if view.Search != "" {
+							view.Search += " OR "
+						}
+						if element.Jointure.Column != "" {
+							view.Search += element.Jointure.Column + " = '1'"
+						} else {
+							view.Search += tableid + "." + key + " = '1'"
+						}
+					}
+				case "list":
+					// TODO recherche dans le label du list
+				default:
+					if view.Search != "" {
+						view.Search += " OR "
+					}
+					if element.Jointure.Column != "" {
+						if ope == "=" {
+							view.Search += "cast(" + element.Jointure.Column + " as TEXT) = '" + val + "'"
+						} else {
+							view.Search += "cast(" + element.Jointure.Column + " as TEXT) = '" + val + "'"
+						}
+					} else {
+						if ope == "=" {
+							view.Search += "cast(" + tableid + "." + key + " as TEXT) = '" + val + "'"
+						} else {
+							view.Search += "cast(" + tableid + "." + key + " as TEXT) LIKE '%" + val + "%'"
+						}
+					}
+				}
+				break
+			}
+			switch element.Type {
+			case "checkbox":
+				if strings.Contains(strings.ToLower(element.LabelShort), search) {
+					if view.Search != "" {
+						view.Search += " OR "
+					}
+					if element.Jointure.Column != "" {
+						view.Search += element.Jointure.Column + " = '1'"
+					} else {
+						view.Search += tableid + "." + key + " = '1'"
+					}
+				}
+			case "list":
+				// TODO recherche dans le label du list
+			default:
+				if view.Search != "" {
+					view.Search += " OR "
+				}
+				if element.Jointure.Column != "" {
+					view.Search += "cast(" + element.Jointure.Column + " as TEXT) LIKE '%" + search + "%'"
+				} else {
+					view.Search += "cast(" + tableid + "." + key + " as TEXT) LIKE '%" + search + "%'"
+				}
+			}
+		}
+	}
+	// Filtrage si élément owner
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c) {
+			if view.Search != "" {
+				view.Search = "(" + view.Search + ") AND "
+			}
+			view.Search += tableid + "." + key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+	ui.Search = search
 
 	// lecture des records
-	records, err := models.CrudList(tableid, viewid, &view, elements)
+	records, err := models.CrudList(appid, tableid, viewid, &view, elements)
+	ui.Records = records
 	if err != nil {
 		flash.Error(err.Error())
-		flash.Store(&c.Controller)
-		// c.Ctx.Redirect(302, "/crud")
-		// return
+		flash.Store(&c)
 	}
+	if len(records) > 0 {
+		// Calcul des éléments hors values
+		elements = computeElements(c, false, elements, records[0])
+		ui.Qrecords = len(records)
+	}
+	ui.Elements = elements
 
-	// Remplissage du contexte pour le template
-	setContext(c.Controller)
-	table := app.Tables[tableid]
-	formAddid := app.Tables[tableid].Views[viewid].FormAdd
-	c.Data["Title"] = view.Title
-	c.Data["AppId"] = appid
-	c.Data["Application"] = app.Applications[appid]
-	c.Data["TableId"] = tableid
-	c.Data["ViewId"] = viewid
-	c.Data["FormAddId"] = formAddid
-	c.Data["Table"] = &table
-	c.Data["View"] = &view
-	c.Data["Elements"] = elements
-	c.Data["Records"] = records
-	c.Data["Cols"] = cols
-
-	c.TplName = "crud_list.html"
+	return nil
 }

@@ -25,7 +25,7 @@
           {{.Title}}
         </div>
       </h2>
-      <form class="ui large form" action="/crud/login" method="POST">
+      <form class="ui large form" action="/bee/login" method="POST">
         {{ .xsrfdata }}
         <div class="ui stacked segment">
           <div class="field">
@@ -52,6 +52,7 @@
       </form>
     </div>
   </div>
+  <input type="hidden" id="xsrf" value="{{.xsrf}}">
   {{template "_crud_foot.html" .}}
 </body>
 

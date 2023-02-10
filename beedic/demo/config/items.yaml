@@ -1,0 +1,40 @@
+# Table LIST de KEY LABEL
+setting:
+  alias-db: demo
+  key: item_key
+  col-display: item_label
+  icon-name: "list"
+
+elements:
+  item_key:
+    type: text
+    label-long: "key"
+    label-short: "key"
+  item_label:
+    type: text
+    label-long: "label"
+    label-short: "label"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    deletable: true
+    type: table
+    group: demo
+    title: "Liste des Items"
+    icon-name: list
+    order-by: item_key
+    elements:
+      item_key:
+      item_label:
+
+forms:
+  fedit:
+    title: "Fiche ITEM"
+    groupe: demo
+    elements:
+      item_key:
+        order: 10
+      item_label:
+        order: 20

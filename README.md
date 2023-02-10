@@ -1,28 +1,10 @@
-# BEEDULE
 
-Framework de développement d'application WEB en GO
+![](/static/img/apropos.png)
 
+**BEEDULE** est un **cadriciel** de développement et un **serveur** d'application WEB
 
+C'est aussi un **[CRUD](https://fr.wikipedia.org/wiki/CRUD)** pour réaliser les opérations de base sur des bases de données **Mysql**, **Sqlite** ou **Postgres**.
 
-## Installation de GO sur ma Debian Buster
-```console
-cd ~/Téléchargements
-wget https://golang.org/dl/go1.14.6.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.14.6.linux-amd64.tar.gz
-```
+Le **développeur d'application** Beedule aura à décrire les vues, les formulaires et les traitements dans des fichiers textes au format **[YAML](https://fr.wikipedia.org/wiki/YAML)** que nous appelerons le **dictionnaire**.
 
-### dans .profil
-```console
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=~/go
-```
-
-### Mémo de commandes (pour le débutant que je suis)
-- go mod init beedule
-- **go mod tidy** pour mettre à jour go.mod
-- go get ./...
-- go get -u
-
- - git tag v1.0.0
- - git push --tags origin
-
+--> [Apprendre Beedule](https://philippe.billerot.eu/beedule-learn/)

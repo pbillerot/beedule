@@ -1,0 +1,13 @@
+title: "Beedule"
+info: "Framework de développement WEB en Yaml"
+icon-file: "/bee/static/img/beedule.png"
+
+# Liste des applications présentées dans le portail
+# sous chacun des répertoires on trouvera le fichier application.yaml
+dico-dir:
+- "./beedic/admin/config"
+#- "/voldev/data/beedule/jecompte/config"
+#- "/voldev/data/beedule/pluvio/config"
+- "/volshare/data/picsou/config"
+- "./beedic/chinook/config"
+

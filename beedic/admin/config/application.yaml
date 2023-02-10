@@ -1,0 +1,13 @@
+
+# application ADMIN de beedule
+app-id: admin
+title: "Gestion des Utilisateurs"
+image: "/bee/data/admin/groups.png"
+group: admin
+menu:
+- table-id: users
+  view-id: vall
+  in-footer: true
+- table-id: groups
+  view-id: vall
+  in-footer: true

@@ -1,5 +1,7 @@
 <!-- home.html -->
 {{$theme := .Config.Theme}}
+{{$session := .Session}}
+{{$portail := .Portail}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -7,46 +9,80 @@
 <body>
     <!-- NAVBAR -->
     <div class="ui container">
-        <div class="ui {{.Config.Theme}} inverted large fixed menu navbar">
-            <div class="item">
-                <a class="ui mini image" href="/crud">
-                    <img src="/crud/static/img/beedule.png">
-                </a>
+        <div class="ui {{.Config.Theme}} inverted large fixed borderless  menu navbar">
+            <!-- LEFT MENU -->
+            <div class="ui dropdown item">
+                <div class="ui mini image">
+                    <img src="/bee/static/img/beedule.png">
+                </div>
+                <div class="menu">
+                    <a href="/bee" class="item disabled"><i class="home icon"></i> Page d'accueil</a>
+                    {{if (CrudIsInGroup "dev" $session "")}}
+                    <div class="divider"></div>
+                    <a class="item eddy-window-open"
+                      data-url="/bee/eddy/document/portail.yaml" data-posx="right" target="portail"
+                      title="Editer le dictionnaire...">
+                      <i class="file code brown icon"></i> portail.yaml</a>
+                    {{end}}
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="user icon"></i>
+                        {{.Session.Username}}
+                    </div>
+                    {{if not (CrudIsAnonymous $session)}}
+                    <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+                    {{end}}
+                    <a class="item" href="/bee/logout">Se déconnecter</a>
+                    <a href="/bee/about" class="item">À propos</a>
+                </div>
             </div>
             <div class="header item">{{.Portail.Title}}</div>
         </div>
     </div>
     <main>
-        <div class="ui container">
-            {{template "_crud_flash.html" .}}
-            <div class="ui centered cards">
-            {{range $appid, $app := .Portail.Applications}}
-                {{if $app.Path}}
-                    <a class="card raised crud-card-portail" target="_blank" href="{{$app.Path}}">
-                        <div class="ui circular image">
-                            <img src="{{$app.Image}}">
-                        </div>
-                        <div class="content">
-                            <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                        </div>
-                    </a>
-                {{else if $app.AppViews}}
-                {{ $appView := index $app.AppViews 0 }}
-                <a class="card raised crud-card-portail" href="/crud/list/{{$appid}}/{{$appView.Tableid}}/{{$appView.Viewid}}">
-                        <div class="ui circular image">
-                            <img src="{{$app.Image}}">
-                        </div>
-                        <div class="content">
-                            <div class="center aligned description"><b>{{$app.Title}}</b></div>
-                        </div>
-                    </a>
-                {{end}} <!-- end if -->
-            {{end}} <!-- end range applications -->
+      <div class="ui container">
+      {{template "_crud_flash.html" .}}
+        <div class="ui centered cards">
+          {{range $appid, $app := .Portail.Applications}}
+            {{if (CrudIsInGroup $app.Group $session $appid)}}
+              {{if $app.Path }}
+            <a class="card raised crud-card-portail" target="{{$app.Target}}" href="{{$app.Path}}">
+              <div class="ui circular image">
+                <img src="{{$app.Image}}">
+              </div>
+              <div class="content" style="padding: 0 0.5em">
+                <div class="center aligned description"><b>{{$app.Title}}</b></div>
+              </div>
+            </a>
+              {{else if $app.Menu}}
+                {{ $menu := index $app.Menu 0 }}
+            <div class="card raised crud-card-portail">
+              <a class="" href="/bee/list/{{$appid}}/{{$menu.TableID}}/{{$menu.ViewID}}">
+                <div class="ui circular image">
+                  <img src="{{$app.Image}}">
+                </div>
+                <div class="content" style="padding: 0 0.5em">
+                  <div class="center aligned description"><b>{{$app.Title}}</b></div>
+                </div>
+              </a>
+              {{if $app.Shareable}}
+              <a class="extra content crud-share" data-url="/bee/share/{{$appid}}/{{$session.SessionID}}"
+              title="Partager l'application '{{$appid}}'" data-text="'{{$appid}}' partagéé par '{{$session.Username}}'">
+                <i class="share alternate icon"></i>
+                Partager...
+              </a>
+              {{end}}
             </div>
+              {{end}}
+            <!-- end if app-->
+          {{end}}
+          <!-- end if isInGroup app-->
+          {{end}}
+          <!-- end range applications -->
+          </div>
         </div>
-        </div>
+      </div>
     </main>
-    {{template "_crud_footer.html" .}}
     {{template "_crud_foot.html" .}}
 </body>
 

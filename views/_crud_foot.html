@@ -1,6 +1,34 @@
 <!-- _crud_foot.html -->
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.6/semantic.min.js"></script>
-<script defer src="/crud/static/js/tablesort.js"></script>
-<script defer src="/crud/static/js/crud_script.js?v={{.Config.Version}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!-- https://fomantic-ui.com/introduction/getting-started.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js"></script>
+<!-- https://github.com/js-cookie/js-cookie -->
+<script defer type="module" src="/bee/static/js/js.cookie.min.js"></script>
+<!-- CodeMirror https://codemirror.net/doc/manual.html -->
+<script defer src="/bee/static/codemirror/lib/codemirror.js"></script>
+<script defer src="/bee/static/codemirror/addon/mode/overlay.js"></script>
+<script defer src="/bee/static/codemirror/mode/javascript/javascript.js"></script>
+<script defer src="/bee/static/codemirror/mode/markdown/markdown.js"></script>
+<script defer src="/bee/static/codemirror/mode/gfm/gfm.js"></script>
+<script defer src="/bee/static/codemirror/mode/yaml/yaml.js"></script>
+<script defer src="/bee/static/codemirror/mode/yaml-frontmatter/yaml-frontmatter.js"></script>
+<script defer src="/bee/static/codemirror/mode/gfm/gfm.js"></script>
+<script defer src="/bee/static/codemirror/addon/comment/comment.js"></script>
+<script defer src="/bee/static/codemirror/addon/hint/show-hint.js"></script>
+<!-- https://cdnjs.com/libraries/Chart.js -->
+<!-- https://www.chartjs.org/docs/latest/ -->
+<!-- https://www.w3schools.com/js/js_graphics_chartjs.asp -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Validator : contrôle de la saisie des champs  -->
+<!-- https://github.com/validatorjs/validator.js -->
+<!-- les contrôles seront fait coté serveur -->
+<!-- <script src="https://unpkg.com/validator@latest/validator.min.js"></script> -->
+<!-- Labelmake pour créer des pdf https://labelmake.jp/javascript-pdf-generator-library/ -->
+<script src="https://cdn.jsdelivr.net/npm/labelmake@2.0.21/dist/labelmake.min.js" integrity="sha256-Di3KXYAMrO4oU2Ou6GtxirHkBtVZxxTr4d+9ggNeBTs=" crossorigin="anonymous"></script>
+<!-- Custom -->
+<script defer src="/bee/static/codemirror/addon/hint/eddy-hint.js"></script>
+<script defer src="/bee/static/eddy/eddy.js"></script>
+<script defer src="/bee/static/eddy/keyword.js"></script>
+<!-- https://github.com/ngryman/jquery.finger -->
+<script defer src="/bee/static/js/jquery.finger.min.js"></script>
+<script defer src="/bee/static/js/bee_script.js?v={{.Config.Version}}"></script>

@@ -1,0 +1,13 @@
+
+# application PLUVIO
+app-id: pluvio
+title: "Pluviométrie"
+image: "/bee/data/pluvio/pluviometre.jpg"
+group: admin
+menu:
+- table-id: pluvio
+  view-id: vdashboard
+  in-footer: true
+- table-id: pluvio
+  view-id: vall
+  in-footer: true

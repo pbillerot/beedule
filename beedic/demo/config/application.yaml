@@ -1,0 +1,12 @@
+# application DEMO
+app-id: demo
+title: "Démonstration Beedule"
+image: "/bee/data/demo/demo.jpg"
+group: demo
+menu:
+- table-id: rubriques
+  view-id: vdashboard
+- table-id: rubriques
+  view-id: vall
+- table-id: items
+  view-id: vall

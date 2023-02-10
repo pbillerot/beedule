@@ -1,0 +1,416 @@
+<!-- crud_dashboard.html -->
+{{$session := .Session}}
+{{$aliasDB := .AliasDB}}
+{{$appid := .AppId}}
+{{$portail := .Portail}}
+{{$app := .Application}}
+{{$theme := .Config.Theme}}
+{{$tableid := .TableId}}
+{{$viewid := .ViewId}}
+{{$formid := .FormId}}
+{{$table := .Table}}
+{{$view := .View}}
+{{$form := .FormView}}
+{{$id := .Id}}
+{{$tablekey := .Table.Setting.Key}}
+{{$coldisplay := .ColDisplay}}
+{{$elements := .Elements}}
+{{$cols := .Cols}}
+{{$composter := .Composter}}
+{{$uiViews := .UIViews}}
+{{$script := DictCreate}}
+{{$fromDashboard := true}}
+{{$infooter := 0}}
+<!DOCTYPE html>
+<html>
+{{template "_crud_head.html" .}}
+
+<body>
+  <!-- NAVBAR -->
+  <div class="ui container"{{if gt $infooter 1}} style="margin-bottom: 6em;"{{end}}>
+    <div class="ui {{$theme}} inverted large fixed borderless menu navbar">
+      <!-- LEFT MENU -->
+      <div class="ui dropdown item">
+        <div class="ui mini image">
+          <img src="{{$app.Image}}">
+        </div>
+        <div class="menu">
+          <a href="/bee" class="item"><i class="home icon"></i> Page d'accueil</a>
+          {{if $app.Menu}}
+          <div class="divider"></div>
+          {{end}}
+          {{ range $iv, $menu := $app.Menu }}
+            {{$t := index $app.Tables $menu.TableID }}
+            {{$v := index $t.Views $menu.ViewID }}
+            {{if (CrudIsInGroup $v.Group $session $appid)}}
+          <a class="item{{if and (eq $menu.TableID $tableid) (eq $menu.ViewID $viewid)}} {{$theme}} active{{end}}"
+            href="/bee/list/{{$appid}}/{{$menu.TableID}}/{{$menu.ViewID}}">
+            <i class="{{$v.IconName}} {{$theme}} icon"></i>
+              {{$v.Title}}
+          </a>
+              {{if $menu.InFooter}}{{$infooter = CrudIncrement $infooter}}{{end}}
+            {{end}}
+          <!-- end if isingroup -->
+          {{end}}
+          <!-- end range Menu-->
+          {{if (CrudIsInGroup "dev" $session $appid)}}
+          <div class="divider"></div>
+          <a class="item eddy-window-open"
+            data-url="/bee/eddy/document/{{$tableid}}.yaml" data-posx="right" target="{{$tableid}}"
+            title="Editer le dictionnaire...">
+            <i class="file code large brown icon"></i> {{$tableid}}.yaml</a>
+          {{end}}
+          <div class="divider"></div>
+          <div class="header">
+            <i class="user icon"></i>
+          {{.Session.Username}}
+          </div>
+          {{if not (CrudIsAnonymous $session)}}
+          <a class="item" href="/bee/view/admin/users/vprofil/{{.Session.Username}}">Mon profil</a>
+          {{end}}
+          <a class="item" href="/bee/logout">Se déconnecter</a>
+          <a href="/bee/about" class="item">À propos</a>
+        </div>
+      </div>
+      <!-- end ui dropdown item-->
+      <div class="header item">{{$view.Title}}</div>
+      <!-- RIGHT MENU -->
+      <div class="right menu">
+      {{if $view.Actions}}
+        <div class="ui dropdown item">
+          <i class="ellipsis vertical icon"></i>
+          <div class="menu">
+          {{range $iaction, $action := $view.Actions}}
+          <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
+            data-url="/bee/actionv/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$iaction}}">{{str2html $action.Label}}</a>
+          {{end}}
+          <!-- end range actions-->
+          </div>
+        </div>
+      {{end}}
+      <!-- end if actions-->
+      </div>
+      <!-- end right menu-->
+    </div>
+    <!-- end menu navbar -->
+  </div>
+  <!-- end ui container NAVBAR -->
+  <main>
+    <div class="ui container"{{if gt $infooter 1}} style="margin-bottom: 6em;"{{end}}>
+  {{template "_crud_flash.html" .}}
+      <!-- LIST CARD -->
+      <div class="ui cards">
+  {{ $isStart := true}}
+  {{ range $irecord, $record := .Records }}
+    {{ $isCardHide := false}}
+    {{ range $num, $key := $cols }}
+      {{ $val := CrudIndex $record $key }}
+      {{ $element := index $elements $key }}
+      {{if and (eq $isCardHide true) (eq $element.Hide false) (or (eq $element.Type "card") )}}
+        {{$isCardHide = false}}
+      {{end}}
+      {{if and (eq $element.Hide true) (or (eq $element.Type "card") )}}
+        {{$isCardHide = true}}
+        <!-- les champs de la card ne seront pas affichés -->
+      {{end}}
+      {{if and (eq $element.Hide false) (eq $isCardHide false)}}
+        <!-- 1ère CARD automatique si le 1er élement n'est pas une card-->
+        {{if and $isStart (ne $element.Type "card")}}
+          {{if $view.FormEdit}}
+        <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
+          data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
+          {{else}}
+          <div class="card raised crud-card-view {{$element.Class}}">
+          {{end}}
+            <div class="content">
+              <div class="header">
+                <i class="large {{$theme}} {{$view.IconName}} icon"></i>
+                {{$view.Title}}
+              </div>
+              <div class="ui divider"></div>
+          {{ $isStart = false}}
+        {{end}}
+        <!-- Affichage de l'élément -->
+        {{if (eq $element.Type "card")}}
+        <!-- CARD ********************* -->
+          {{if not $isStart}}
+              <!-- Fermeture de la card et ouverture d'une autre -->
+            </div> <!-- end content card -->
+          </div> <!-- end card -->
+          {{end}}
+          {{ $isStart = false}}
+          {{ $label := $element.LabelLong}}
+          {{ $iconName := $element.IconName}}
+          {{if $element.Params.Form}}
+            <div class="link card raised crud-card-view {{$element.Class}} bee-width-{{$element.Width}} crud-jquery-url"
+              data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
+              <div class="content">
+                <div class="header">
+                  <i class="large {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+                <div class="ui divider"></div>
+          {{else if $element.Params.URL}}
+            <div class="link card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}} crud-jquery-url"
+              data-url="{{$element.Params.URL}}">
+              <div class="content">
+                <div class="header">
+                  <i class="large {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+                <div class="ui divider"></div>
+          {{else if $element.Params.View}}
+            {{$uiView := index $uiViews $element.Params.View}} 
+            {{$search := $uiView.Search}}
+            {{$iconName = $uiView.View.IconName}}
+            <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
+              <div class="content crud-search-div">
+                <!-- Recherche -->
+                <div class="right floated meta">
+                  <i class="search link {{$theme}} icon crud-search-active" style="margin-left: 0.5em;" title="Rechercher..."></i>
+                </div>
+                <div style="display: none" class="crud-search">
+                  <div class="ui icon input">
+                    <input class="crud-search-input-1" type="hidden" value="">
+                    <input type="text" class="crud-search-input" data-url="/bee/search/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}"
+                      value="{{$search}}" placeholder="Recherche...">
+                    <i class="circular search link icon crud-search-go" title="Rechercher"></i>
+                  </div>
+                  <i class="close link icon crud-search-close" title="Fermer recherche"></i>
+                </div>
+                <!-- /recheche -->
+                {{if $uiView.View.FormAdd}}
+                <button class="right floated circular ui plus {{$theme}} icon button crud-jquery-url"
+                data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"
+                style="position: absolute; top: 2.5em; right: 2em; padding: 1em;"
+                title="Ajouter un élément...">
+                  <i class="icon plus"></i>
+                </button>
+                {{end}}
+                <div class="header">
+                  <i class="large {{$theme}} {{$iconName}} icon"></i>&nbsp;
+                  {{$label}}
+                </div>
+                <div class="ui divider"></div>
+                <div style="overflow-x: scroll; max-height: 500px">
+                {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+                </div>
+          {{else}}
+            <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
+              <div class="content">
+                <div class="header">
+                  <i class="large {{$theme}} {{$iconName}} icon"></i>
+                  {{$label}}
+                </div>
+                <div class="ui divider"></div>
+          {{end}}
+        <!-- ***************** /CARD -->
+        <!-- DEBUT type -->
+        {{else if (eq $element.Type "button")}}
+        <div class="ui divider"></div>
+          <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}">
+            {{$element.LabelLong}}
+          </button>
+        {{else if (eq $element.Type "chart")}}
+          {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
+          {{ $chartid := index $dataset `chartid`}}
+          <div class="{{$chartid}}" {{ range $k, $v := $dataset }} data-{{$k}}="{{$v}}"{{end}}>
+          <canvas class="ui link" style="background-color: white;border:1px solid darkgrey;">
+          </canvas>
+          {{ $script = DictSet $script $chartid $chartid}}
+          </div>
+          {{ if $element.LabelLong }}
+          <div class="content">
+            <div class="center aligned description">
+              <b>{{$element.LabelLong}}</b>
+            </div>
+          </div>
+          {{end}}
+        {{else if (eq $element.Type "checkbox")}}
+        <div class="description">&nbsp;</div>
+        <div class="header">
+          <h4>
+            {{if (eq $val "1") }}
+            <i class="check square outline icon"></i> {{$element.LabelLong}}
+            {{else}}
+            <i class="square outline icon"></i> {{$element.LabelLong}}
+            {{end}}
+          </h4>
+        </div>
+        {{else if (eq $element.Type "epdf")}}
+          {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
+          {{ $pdfid := index $dataset `pdfid`}}
+          <div id="{{$pdfid}}" style="margin-top: 5px" {{ range $k, $v := $dataset }} data-{{$k}}="{{$v}}"{{end}}>
+            <object id="obj_{{$pdfid}}" type="application/pdf" data="" width="100%" height="380px"></object>
+          </div>
+          {{ if $element.LabelLong }}
+          <div class="content">
+            <div class="center aligned description">
+              <b>{{$element.LabelLong}}</b>
+            </div>
+          </div>
+          {{end}}
+          <script defer src="/bee/dico/{{$appid}}/{{$pdfid}}.js"></script>
+        {{else if (eq $element.Type "image")}}
+        <a class="ui link image crud-popup-image" 
+        data-url="{{$element.Params.URL}}?{{$composter}}" title="{{$element.Params.Title}}">
+          <img src="{{$element.Params.Src}}?{{$composter}}">
+        </a>
+        <div class="content">
+          <div class="center aligned description">
+            <b>{{$element.LabelLong}}</b>
+          </div>
+        </div>
+        {{else if (eq $element.Type "list")}}
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        <div class="header">
+          <span class="ui medium {{$element.Class}} text">{{CrudItem $element.Items $val}}</span>
+        </div>
+        {{else if (eq $element.Type "password")}}
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        <div class="header">
+          <h4>***</h4>
+        </div>
+        {{else if (eq $element.Type "pdf")}}
+        <object type="application/pdf" data="{{$element.Params.URL}}?{{$composter}}" width="100%" height="75%"><p>Vous n'avez pas de plugin PDF mais vous pouvez <a href="{{$element.Params.URL}}?{{$composter}}">télécharger le fichier.</a></p></object>
+        <div class="center aligned description">
+          <a class="crud-popup-pdf" 
+          data-url="{{$element.Params.URL}}?{{$composter}}" title="{{$element.Params.Title}}">
+          <i class="large eye outline icon"></i><b>{{$element.LabelLong}}</b>
+          </a>
+        </div>
+        {{else if (eq $element.Type "radio")}}
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        <div class="header">
+          <span class="ui medium {{$element.Class}} text">{{CrudItem $element.Items $val}}</span>
+        </div>
+        {{else if (eq $element.Type "tag")}}
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        {{$arr := CrudSplit $val ","}}
+        {{range $i, $item := $arr}}
+        <div class="ui tag label">{{CrudItem $element.Items $item}}</div>
+        {{end}}
+        {{else if (eq $element.Type "textarea")}}
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        <div class="ui {{$element.Class}} message">
+          <pre>{{$val}}</pre>
+        </div>
+        {{else}}
+        <!-- Autres type -->
+        <div class="description">
+          <div class="meta">
+            <span>{{$element.LabelLong}}</span>
+          </div>
+        </div>
+        <div class="header">
+          <span class="ui medium {{$element.Class}} text">
+            {{if $element.Format}}
+            {{CrudFormat $element.Format $val}}
+            {{else if and $element.FormatSqlite $val}}
+            {{CrudMacroSQL $element.FormatSqlite $appid $record $session}}
+            {{else}}
+            {{$val}}
+            {{end}}
+          </span>
+        </div>
+        {{end}}
+        <!-- end if type -->
+      {{end}}
+      <!-- end if Hide -->
+    {{end}}
+    <!-- end range $cols -->
+      </div> <!-- end content card -->
+    </div> <!-- end card -->
+  {{end}}
+  <!-- end range records -->
+      </div>
+      <!-- end ui cards -->
+    </div> <!-- end ui container main -->
+  </main>
+  {{if gt $infooter 0}}
+  <div class="ui bottom visible sidebar">
+    <div class="ui {{CrudNumberToEnglish $infooter}} labeled icon item menu">
+    {{ range $iv, $menu := $app.Menu }}
+      {{$t := index $app.Tables $menu.TableID }}
+      {{$v := index $t.Views $menu.ViewID }}
+      {{if and (CrudIsInGroup $v.Group $session $appid) $menu.InFooter }}
+      <a class="item{{if and (eq $menu.TableID $tableid) (eq $menu.ViewID $viewid)}} {{$theme}} active{{end}}"
+        href="/bee/list/{{$appid}}/{{$menu.TableID}}/{{$menu.ViewID}}">
+        <i class="{{$v.IconName}} {{$theme}} icon"></i>
+          {{$v.Title}}
+      </a>
+      {{end}}
+    {{end}}
+    </div>
+  </div>
+  {{end}}
+  <!-- Demande de confirmation de l'action' -->
+  <div id="crud-modal-confirm" class="ui tiny modal">
+    <div class="header" id="crud-action">Texte à venir</div>
+    <div class="content">
+      <p>Veuillez le confirmer</p>
+    </div>
+    <div class="actions">
+      <div class="ui cancel button">Annuler</div>
+      <div class="ui approve button">Je confirme</div>
+    </div>
+  </div> <!-- end modal confirm -->
+  
+  <!-- Affichage d'une image en popup-->
+  <div id="crud-modal-image" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content">
+      <img id="crud-image" class="image center aligned" src="">
+    </div>
+  </div> <!-- end modal image -->
+  <!-- Affichage d'un pdf en popup-->
+  <div id="crud-modal-pdf" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="content">
+    </div>
+  </div> <!-- end modal image -->
+  <!-- Affichage d'un chart en popup-->
+  <div id="crud-modal-chart" class="ui fullscreen modal">
+    <div class="actions">
+      <div class="ui cancel button">Fermer</div>
+    </div>
+    <div class="image content" id="crud-chart">
+    </div>
+  </div> <!-- end modal image -->
+
+  <form id="beeForm" method="POST" action="à venir">
+    {{ .xsrfdata }}
+  </form>
+
+  <input type="hidden" id="xsrf" value="{{.xsrf}}">
+  {{template "_crud_foot.html" .}}
+  <!-- Insertion de script spécifique aux rubriques -->
+  {{range $k, $v := $script}}
+  <script defer src="/bee/dico/{{$appid}}/{{$k}}.js"></script>
+  {{end}}
+  </body>
+</html>

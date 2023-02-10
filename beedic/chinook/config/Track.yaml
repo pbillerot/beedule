@@ -1,0 +1,213 @@
+# Table des Morceaux
+setting:
+  alias-db: chinook
+  key: TrackId
+  col-display: Name
+  icon-name: "file audio"
+
+elements:
+  TrackId:
+    type: counter
+    label-long: "Id"
+    label-short: "Id"
+  Name:
+    type: text
+    label-long: "Titre"
+    label-short: "Titre"
+  AlbumId:
+    type: list
+    label-long: "Album"
+    label-short: "Album"
+    items-sql: "SELECT AlbumId as 'key', Title as 'label' From Album order by Title"
+  MediaTypeId:
+    type: list
+    label-long: Type média"
+    label-short: "Type média"
+    items-sql: "SELECT MediaTypeId as 'key', Name as 'label' From MediaType order by Name"
+  GenreId:
+    type: list
+    label-long: "Genre de musique"
+    label-short: "Genre"
+    items-sql: "SELECT GenreId as 'key', Name as 'label' From Genre order by Name"
+  Composer:
+    type: text
+    label-long: "Compositeur"
+    label-short: "Compositeur"
+  Milliseconds:
+    type: number
+    label-long: "Durée en mn"
+    label-short: "Durée"
+    help: "Durée en millisecondes"
+    format-sqlite: "select strftime('%M:%S', {Milliseconds}/1000, 'unixepoch')"
+  Bytes:
+    type: number
+    label-long: "Taille"
+    label-short: "Taille"
+    help: "Taille en octets"
+    format-sqlite: "select printf('%3.2f Mo', {Bytes}.00/1000000, 'unixepoch')"
+    col-align: right
+    col-nowrap: true
+  UnitPrice:
+    type: amount
+    label-long: "P.U."
+    label-short: "P.U."
+    help: "Montant en €"
+    col-nowrap: true
+  ArtistName:
+    type: text
+    label-long: "Artiste"
+    label-short: "Artiste"
+    jointure:
+      join: "left outer join Album on Album.AlbumId = Track.AlbumId left outer join Artist on Artist.ArtistId = Album.ArtistId"
+      column: Artist.Name
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: true
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    order-by: Artist.Name, Track.AlbumId
+    limit: 50
+    elements:
+      ArtistName:
+        order: 1 
+      AlbumId:
+        order: 3
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+
+  vplaylist:
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    with-line-number: true
+    elements:
+      ArtistName:
+        order: 1 
+      AlbumId:
+        order: 3
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      GenreId:
+        order: 50
+      Milliseconds:
+        order: 70
+
+  valbum:
+    form-add: fedit
+    form-edit: fedit
+    deletable: true
+    type: table
+    group: chinook
+    title: "Morceaux"
+    icon-name: "file audio"
+    order-by: Name
+    limit: 50
+    with-line-number: true
+    elements:
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+
+forms:
+  fedit:
+    title: "Morceau"
+    groupe: chinook
+    elements:
+      TrackId:
+        order: 10
+      Name:
+        order: 20
+      AlbumId:
+        order: 30
+        protected: true
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+  fview:
+    title: "Morceau"
+    groupe: chinook
+    elements:
+      TrackId:
+        order: 10
+        hide: true
+      Name:
+        order: 20
+      MediaTypeId:
+        order: 40
+      GenreId:
+        order: 50
+      Composer:
+        order: 60
+      Milliseconds:
+        order: 70
+      Bytes:
+        order: 80
+      UnitPrice:
+        order: 90
+      _card_Album:
+        type: card
+        order: 100
+        label-long: Album
+        icon-name: circle 
+      AlbumId:
+        order: 110
+      _card_Artist:
+        type: card
+        order: 200
+        label-long: Artiste
+        icon-name: user secret 
+      ArtistName:
+        order: 210
+          

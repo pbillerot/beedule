@@ -1,0 +1,117 @@
+# Table des Albums
+setting:
+  alias-db: chinook
+  key: AlbumId
+  col-display: Title
+  icon-name: "circle"
+
+elements:
+  AlbumId:
+    type: counter
+    label-long: "Id"
+    label-short: "Id"
+  Title:
+    type: text
+    label-long: "Album"
+    label-short: "Album"
+  ArtistId:
+    type: list
+    label-long: "Artiste"
+    label-short: "Artiste"
+    items-sql: "SELECT ArtistId as 'key', Name as 'label' From Artist order by Name"
+  _image:
+    type: "image"
+    label-long: "Pochette"
+    label-short: "Pochette"
+    width: s
+    params: 
+      src: "/bee/data/chinook/chinook.jpg"
+      url: "/bee/data/chinook/chinook.jpg"
+
+views:
+  vall:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: false
+    type: table
+    group: chinook
+    title: "Albums"
+    icon-name: "circle"
+    order-by: Title
+    with-line-number: true
+    card:
+      header:
+        - AlbumId
+      meta:
+      description:
+        - Title
+      extra:
+    elements:
+      AlbumId:
+        order: 10
+        hide: true
+      Title:
+        order: 20
+      ArtistId:
+        order: 30
+        hide: false
+  
+  vartist:
+    form-add: fedit
+    form-edit: fedit
+    form-view: fview
+    deletable: true
+    type: table
+    group: chinook
+    title: "Albums"
+    icon-name: "circle"
+    order-by: Title
+    with-line-number: true
+    elements:
+      AlbumId:
+        order: 10
+      Title:
+        order: 20
+
+forms:
+  fedit:
+    title: "Album"
+    groupe: chinook
+    elements:
+      AlbumId:
+        order: 10
+      Title:
+        order: 20
+      ArtistId:
+        order: 30
+  fview:
+    title: "Album"
+    groupe: chinook
+    elements:
+      AlbumId:
+        order: 10
+        hide: true
+      Title:
+        order: 20
+      ArtistId:
+        order: 30
+      _card_pochette:
+        type: card
+        icon-name: "circle"
+        label-long: "Pochette"
+        order: 40
+      _image:
+        order: 45
+      _vTrack:
+        type: card
+        order: 100
+        label-long: Morceaux
+        width: max
+        icon-name: "file audio"
+        args:
+          AlbumId: "{AlbumId}"
+        params:
+          table: Track
+          view: valbum
+          where: "Track.AlbumId = '{AlbumId}'"
