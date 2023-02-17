@@ -14,6 +14,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.1.1 17 février 2023
+- `changed` ajout texarea dans la doc
+
 5.1.0 10 février 2023
 - `changed` attention le nom d'une rubrique jointure ne doit pas être préfixé par un _
 

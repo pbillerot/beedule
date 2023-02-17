@@ -129,7 +129,7 @@ type Element struct {
 	Required      bool              // obligatoire
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
-	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text time radio url
+	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
 }
 
