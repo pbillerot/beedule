@@ -233,7 +233,7 @@
         </div>
         {{else if (eq $element.Type "button")}}
         <div class="meta">
-          <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}">
+          <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}" data-target="{{$element.Params.Target}}">
             {{$element.LabelLong}}
           </button>
         </div>

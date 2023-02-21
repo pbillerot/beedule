@@ -2,7 +2,6 @@ package dico
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -194,6 +193,7 @@ type Params struct {
 	Src             string            // card: src de l'image
 	SQL             []string          `yaml:"sql"`
 	Table           string            // card:
+	Target          string            // target si URL
 	Title           string            // title sur une image
 	View            string            // card:
 	Where           string            // card: + params.table + params.view
@@ -258,7 +258,7 @@ func (c *Portail) Load() ([]string, error) {
 
 	// load portail
 	logs.Info("...LOAD", beego.AppConfig.String("portail"))
-	yamlFile, err := ioutil.ReadFile(beego.AppConfig.String("portail"))
+	yamlFile, err := os.ReadFile(beego.AppConfig.String("portail"))
 	if err != nil {
 		msg := fmt.Sprintf("%s : [%v]", beego.AppConfig.String("portail"), err)
 		dicoError = append(dicoError, msg)
@@ -290,7 +290,7 @@ func (c *Portail) Load() ([]string, error) {
 		yamlPath := dicodir + "/application.yaml"
 		logs.Info("...LOAD", yamlPath)
 
-		yamlFile, err := ioutil.ReadFile(yamlPath)
+		yamlFile, err := os.ReadFile(yamlPath)
 		if err != nil {
 			msg := fmt.Sprintf("%s : [%v]", yamlPath, err)
 			dicoError = append(dicoError, msg)
@@ -397,7 +397,7 @@ func (app *Application) Load(dicodir string) (string, error) {
 func (c *Table) Load(file File) (string, error) {
 	logs.Info(".....load", file.Path)
 	// Read file
-	yamlFile, err := ioutil.ReadFile(file.Path)
+	yamlFile, err := os.ReadFile(file.Path)
 	if err != nil {
 		msg := fmt.Sprintf("%s : [%v]", file.Path, err)
 		logs.Error("Unmarshal", msg)
@@ -417,7 +417,7 @@ func (c *Table) Load(file File) (string, error) {
 func (c *Menu) Load(file File) (string, error) {
 	logs.Info(".....load", file.Path)
 	// Read file
-	yamlFile, err := ioutil.ReadFile(file.Path)
+	yamlFile, err := os.ReadFile(file.Path)
 	if err != nil {
 		msg := fmt.Sprintf("%s : [%v]", file.Path, err)
 		logs.Error("Unmarshal", msg)

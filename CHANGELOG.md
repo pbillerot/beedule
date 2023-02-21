@@ -14,6 +14,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.2.1 21 février 2023
+- `added` paramètre "params.target" si "params.url"
+
 5.1.1 17 février 2023
 - `changed` ajout texarea dans la doc
 
