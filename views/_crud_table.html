@@ -35,14 +35,15 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
 <tbody>
   <!-- LOOP $RECORD -->
   {{ range $irecord, $record := $records }}
+  {{ $id := index $record $tablekey}}
   <tr {{if or $view.FormView $view.Deletable}}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
     style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
-    data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" 
+    data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" 
     {{else if $view.FormEdit }}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
     style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
-    data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}" 
+    data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}" 
     {{else}}
     class="{{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
     style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
@@ -58,7 +59,7 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
       class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}" style="{{$style}}">
       {{if (eq $element.Type "button")}}
       <a class="crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actionve/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$irecord}}/{{$key}}" title="{{$element.LabelLong}}">
+      data-url="/bee/actionve/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
       {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
       </a>
       {{else if (eq $element.Type "list")}}

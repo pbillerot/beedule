@@ -10,11 +10,15 @@ Historique des modifications
 - view actions sur ligne ou appuis long
 - doc enlever option element.grid
 - element.button dans un formulaire non testé
+- doc corriger view mask / card + ajouter footer
 
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
+
+5.3.1 7 mars 2023
+- `fixed` crud_table correction calcul de la valeur de la clé
 
 5.3.0 7 mars 2023
 - `added` view style-sqlite
