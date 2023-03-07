@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 
@@ -38,7 +38,7 @@ func (c *EddyController) EddyDocument() {
 	if c.Ctx.Input.Method() == "POST" {
 		// ENREGISTREMENT DU DOCUMENT
 		content := c.GetString("document")
-		err = ioutil.WriteFile(pathFile, []byte(content), 0644)
+		err = os.WriteFile(pathFile, []byte(content), 0644)
 		if err != nil {
 			msg := fmt.Sprintf("EddyDocument %s : %s", pathFile, err)
 			beego.Error(msg)
@@ -57,7 +57,7 @@ func (c *EddyController) EddyDocument() {
 
 	// Lecture du fichier
 	var record eddyFile
-	content, err := ioutil.ReadFile(pathFile)
+	content, err := os.ReadFile(pathFile)
 	if err != nil {
 		msg := fmt.Sprintf("EddyDocument %s : %s", keyid, err)
 		beego.Error(msg)
@@ -108,7 +108,7 @@ func (c *EddyController) EddyLog() {
 
 	// Lecture du fichier
 	var record eddyFile
-	content, err := ioutil.ReadFile(keyid)
+	content, err := os.ReadFile(keyid)
 	if err != nil {
 		msg := fmt.Sprintf("EddyLog %s : %s", keyid, err)
 		beego.Error(msg)

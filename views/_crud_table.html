@@ -1,6 +1,7 @@
 <!-- VUE TABLE -->
 {{$session := .Session}}
 {{$appid := .AppId}}
+{{$theme := .Config.Theme}}
 {{$tableid := .UIView.TableID}}
 {{$viewid := .UIView.ViewID}}
 {{$table := .UIView.Table}}
@@ -36,21 +37,31 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
   {{ range $irecord, $record := $records }}
   <tr {{if or $view.FormView $view.Deletable}}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
+    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
     data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}" 
     {{else if $view.FormEdit }}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
+    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
     data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}" 
     {{else}}
-    class="{{CrudMacroSQL $view.ClassSqlite $appid $record $session}}" {{end}}>
+    class="{{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
+    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
+    {{end}}>
     {{if $view.WithLineNumber}}<td class="right aligned">{{CrudIncrement $irecord}}</td>{{end}}
     {{ range $num, $key := $cols }}
     {{ $element := index $elements $key }}
     {{ $class := CrudClassSqlite $element $appid $record $session}}
+    {{ $style := CrudStyleSqlite $element $appid $record $session}}
     {{ $val := CrudIndexSQL $record $key $element $session}}
     {{if (ne $element.Hide true)}}
     <td {{if $element.ColNoWrap}}nowrap{{end}}
-      class="ui {{$class}} {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}} {{CrudMacroSQL $element.ClassSqlite $tableid $record $session}}">
-      {{if (eq $element.Type "list")}}
+      class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}" style="{{$style}}">
+      {{if (eq $element.Type "button")}}
+      <a class="crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
+      data-url="/bee/actionve/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$irecord}}/{{$key}}" title="{{$element.LabelLong}}">
+      {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
+      </a>
+      {{else if (eq $element.Type "list")}}
       <!-- list -->
       {{CrudItem $element.Items $val}}
       {{else if (eq $element.Type "checkbox")}}

@@ -3,16 +3,25 @@
 Historique des modifications
 
 ### À venir :
-- eddy portail.yaml ne pas présenter les autres fichiers 
-
-- bug eddy si nom rubrique commence par le début d'une autre
 - bug refresh cotation
 - eddy: ctrl+h
+
+- bouton dans formulaire pour remplir autres zones
+- view actions sur ligne ou appuis long
+- doc enlever option element.grid
+- element.button dans un formulaire non testé
 
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
+
+5.3.0 7 mars 2023
+- `added` view style-sqlite
+- `added` element.option style-sqlite
+- `added` type button dans une liste table Params.SQL
+- `added` element.grid pour regrouper des champs sur la même ligne
+- `changed` fomantic 2.9.2 jquery 3.6.3
 
 5.2.1 21 février 2023
 - `added` paramètre "params.target" si "params.url"

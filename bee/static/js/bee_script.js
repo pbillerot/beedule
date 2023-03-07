@@ -349,13 +349,38 @@ $(document).ready(function () {
     }
   };
 
+  // ACTION DEMANDE CONFIRMATION
+  $('.crud-jquery-action').on('click', function (event) {
+    var $url = $(this).data('url');
+    if ($(this).data('confirm') == true) {
+      $('#crud-action').html($(this).html());
+      $('#crud-modal-confirm')
+        .modal({
+          closable: false,
+          onDeny: function () {
+            return true;
+          },
+          onApprove: function () {
+            $('#beeForm').attr('action', $url);
+            $('#beeForm', document).submit();
+          }
+        }).modal('show');
+    } else {
+      // Sans demande de confirmation
+      $('#beeForm').attr('action', $url);
+      $('#beeForm', document).submit()
+    }
+    event.preventDefault();
+  });
+  
   // CLIC URL
   $('.crud-jquery-url').on('click', function (event) {
     if (isUsed) {
       event.preventDefault();
       return
     }
-    if (event.target.nodeName == "BUTTON") {
+    var target = $( event.target );
+    if (target.hasClass("crud-jquery-action") || target.parent().hasClass("crud-jquery-action")) {
       // pour laisser la main à crud-jquery-button
       // Cas d'un button dans une card
       event.preventDefault();
@@ -402,30 +427,6 @@ $(document).ready(function () {
     if (event.which == 13) {
       $('.crud-jquery-submit').trigger('click');
     }
-  });
-
-  // ACTION DEMANDE CONFIRMATION
-  $('.crud-jquery-action').on('click', function (event) {
-    var $url = $(this).data('url');
-    if ($(this).data('confirm') == true) {
-      $('#crud-action').html($(this).html());
-      $('#crud-modal-confirm')
-        .modal({
-          closable: false,
-          onDeny: function () {
-            return true;
-          },
-          onApprove: function () {
-            $('#beeForm').attr('action', $url);
-            $('#beeForm', document).submit();
-          }
-        }).modal('show');
-    } else {
-      // Sans demande de confirmation
-      $('#beeForm').attr('action', $url);
-      $('#beeForm', document).submit()
-    }
-    event.preventDefault();
   });
 
   // CLIC IMAGE POPUP

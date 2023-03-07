@@ -35,6 +35,7 @@ func init() {
 	beego.AddFuncMap("CrudMacro", CrudMacro)
 	beego.AddFuncMap("CrudMacroSQL", CrudMacroSQL)
 	beego.AddFuncMap("CrudClassSqlite", CrudClassSqlite)
+	beego.AddFuncMap("CrudStyleSqlite", CrudStyleSqlite)
 	beego.AddFuncMap("CrudSplit", CrudSplit)
 	beego.AddFuncMap("CrudSQL", CrudSQL)
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
@@ -359,6 +360,25 @@ func CrudClassSqlite(element dico.Element, appid string, record orm.Params, sess
 		}
 	}
 	// }
+	return
+}
+
+// CrudStyleSqlite retourne le résulat de la requête avec macro
+func CrudStyleSqlite(element dico.Element, appid string, record orm.Params, session types.Session) (out string) {
+	sql := CrudMacro(element.StyleSqlite, appid, record, session)
+	if sql != "" {
+		recs, err := models.CrudSQL(sql, "default")
+		if err != nil {
+			logs.Error(err)
+		}
+		for _, rec := range recs {
+			for _, val := range rec {
+				if reflect.ValueOf(val).IsValid() {
+					out = val.(string)
+				}
+			}
+		}
+	}
 	return
 }
 

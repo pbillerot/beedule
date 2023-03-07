@@ -87,7 +87,7 @@ type Setting struct {
 
 // Element as
 type Element struct {
-	Actions       []Action          // bouton d'actions - utilise Params
+	Actions       []Action          // bouton d'actions
 	Args          map[string]string // Args pour passer des arguments à une vue
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSqlite   string            `yaml:"class-sqlite"` // SQL pour alimenter Class error warning info green blue
@@ -100,7 +100,6 @@ type Element struct {
 	Format        string            // "%3.2f %%" "%3.2f €" date time
 	FormatSqlite  string            `yaml:"format-sqlite"`  // select strftime('%H:%M:%S', {Milliseconds}/1000, 'unixepoch')
 	ComputeSqlite string            `yaml:"compute-sqlite"` // formule de calcul de Value en SQL dans VIEW EDIT ADD (pas dans LIST)
-	Grid          string            // Class pour donner la largeur du champ dans le formulaire "four wide field" 16 colonnes
 	Group         string            // Groupe autorisé à accéder à cette rubrique - Si owner c'est l'enregistreement qui sera protégé
 	Help          string            // TODO aide sur la rubrique
 	Hide          bool              // élémnt caché dans la vue ou formulaire
@@ -128,6 +127,7 @@ type Element struct {
 	Required      bool              // obligatoire
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
+	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
 	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
 }
@@ -161,6 +161,7 @@ type View struct {
 	PostSQL        []string           `yaml:"post-sql"`       // Ordre exécutée après la suppression si OK
 	PreUpdateSQL   []string           `yaml:"pre-update-sql"` // requêtes SQL avant l'affichage
 	Search         string             // Chaîne de recherche dans toutes les colonnes de la vue
+	StyleSqlite    string             `yaml:"style-sqlite"` // style de la ligne
 	Title          string             // Titre de la vue
 	Type           string             // type de vue : card(default),image,table
 	Where          string             // Condition SQL

@@ -23,7 +23,6 @@ var $eddy_dico = [
   { text: 'default-sqlite: "select..."', displayText: 'e_default-sqlite' },
   { text: 'default: "value"', displayText: 'e_default' },
   { text: 'format-sqlite: "select strftime(\'%H:%M:%S\', {Milliseconds}/1000, \'unixepoch\')"', displayText: 'e_format-sqlite' },
-  { text: 'grid: "four wide field"', displayText: 'e_grid' },
   { text: 'group: admin', displayText: 'e_group' },
   { text: 'help: "Help me"', displayText: 'e_help' },
   { text: 'hide-on-mobile: true', displayText: 'e_hide-on-mobile' },
