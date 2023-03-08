@@ -1,5 +1,6 @@
 <!-- vusers.html -->
 {{$session := .Session}}
+{{$aliasDB := .AliasDB}}
 {{$from := .From}}
 {{$appid := .AppId}}
 {{$portail := .Portail}}
@@ -17,6 +18,7 @@
 {{$elements := .Elements}}
 {{$cols := .Cols}}
 {{$composter := .Composter}}
+{{$script := DictCreate}}
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
@@ -168,11 +170,25 @@
   <div
   class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
   <label>&nbsp;</label>
+  {{if $element.LabelLong}}
   <button class="ui primary button crud-jquery-action"
   data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
   {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
   {{$element.LabelLong}}
   </button>
+  {{else}}
+  <a class="ui icon basic compact button" id="{{$key}}">
+  <i id="{{$key}}_icon" class=""></i>
+  </a>
+  {{if $element.WithScript}}
+    {{if $element.Dataset}}
+      {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
+      {{ $scriptName := index $dataset "scriptname"}}
+  <div class="{{$scriptName}}" {{ range $k, $v := $dataset }} data-{{$k}}="{{$v}}"{{end}}></div>
+      {{ $script = DictSet $script $scriptName $scriptName}}
+    {{end}}
+  {{end}}
+  {{end}}
   {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{else if (eq $type "amount")}}
@@ -342,6 +358,11 @@
 </div> <!-- end modal confirm -->
 
 {{template "_crud_foot.html" .}}
+<!-- Insertion de script spécifique aux rubriques -->
+{{range $k, $v := $script}}
+<script defer src="/bee/dico/{{$appid}}/{{$k}}.js"></script>
+{{end}}
+
 </body>
 
 </html>

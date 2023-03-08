@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.4.0 8 mars 2023
+- `added` element.WithScript dataset sur type button
+
 5.3.1 7 mars 2023
 - `fixed` crud_table correction calcul de la valeur de la clé
 

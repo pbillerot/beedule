@@ -130,6 +130,7 @@ type Element struct {
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
 	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
+	WithScript    string            `yaml:"with-script"` // javascript de présentation
 }
 
 // HashPassword hashage de Value
