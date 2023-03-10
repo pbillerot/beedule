@@ -4,7 +4,7 @@
 $(document).ready(function () {
   var isUsed = false;
   var $crud_view = $('#crud_view').val();
-  
+
   // CLIC IMAGE POPUP
   var $eddy_refresh = $('#eddy_refresh').val();
   var $eddy_rubriques = $('#eddy_rubriques').val();
@@ -314,7 +314,7 @@ $(document).ready(function () {
       if ($anchor.length) {
         // oui, c'est super
         // recherche du container scrollable 
-        var $container = $anchor.closest('div'); 
+        var $container = $anchor.closest('div');
         $container[0].scrollTo({
           top: $anchor.position().top - 100,
           left: 0,
@@ -372,17 +372,72 @@ $(document).ready(function () {
     }
     event.preventDefault();
   });
-  
+
+  // ACTION DEMANDE CONFIRMATION
+  $('.crud-jquery-ajax').on('click', function (event) {
+    var $datas = new FormData();
+    var $url = $(this).data('url');
+    var xsrf = $("#xsrf").val();
+    $datas.append("_xsrf", xsrf);
+    $.ajax({
+      type: "POST",
+      url: $url,
+      data: $datas,
+      dataType: 'json',
+      cache: false,
+      contentType: false,
+      processData: false,
+    })
+      //Ce code sera exécuté en cas de succès - La réponse du serveur est passée à done()
+      //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
+      .done(function (data) {
+        let mes = JSON.stringify(data);
+        if (data.Response != "ok") {
+          $.toast({
+            message: data.Message,
+            class: 'error',
+            className: {
+              toast: 'ui message'
+            },
+            position: 'bottom center',
+            minDisplayTime: 1500
+          });
+        } else {
+          $.toast({
+            message: data.Message,
+            class: 'success',
+            className: {
+              toast: 'ui message'
+            },
+            position: 'bottom center',
+            minDisplayTime: 1500
+          });
+        }
+        //$("div#res").append(mes);
+      })
+      //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
+      //On peut afficher les informations relatives à la requête et à l'erreur
+      .fail(function (error) {
+        $.toast({
+          message: "La requête s'est terminée en échec. Infos : " + JSON.stringify(error),
+          class: 'error',
+          className: {
+            toast: 'ui message'
+          },
+          position: 'bottom center',
+          minDisplayTime: 1500
+        });
+      })
+      //Ce code sera exécuté que la requête soit un succès ou un échec
+      .always(function () {
+        setTimeout(() => { window.location.reload(true) }, 1500);
+      });
+    event.preventDefault();
+  });
+
   // CLIC URL
   $('.crud-jquery-url').on('click', function (event) {
     if (isUsed) {
-      event.preventDefault();
-      return
-    }
-    var target = $( event.target );
-    if (target.hasClass("crud-jquery-action") || target.parent().hasClass("crud-jquery-action")) {
-      // pour laisser la main à crud-jquery-button
-      // Cas d'un button dans une card
       event.preventDefault();
       return
     }
@@ -399,6 +454,19 @@ $(document).ready(function () {
       var $anchorid = $("#crud_view").val();
       Cookies.set($anchorid, $(this).data("url"))
       $(this).addClass("crud-list-selected");
+    }
+    var target = $(event.target);
+    if (target.hasClass("crud-jquery-action") || target.parent().hasClass("crud-jquery-action")) {
+      // pour laisser la main à crud-jquery-action
+      // Cas d'un button dans une card
+      event.preventDefault();
+      return
+    }
+    if (target.hasClass("crud-jquery-ajax") || target.parent().hasClass("crud-jquery-ajax")) {
+      // pour laisser la main à crud-jquery-ajax
+      // Cas d'un button dans une card
+      event.preventDefault();
+      return
     }
 
     var $url = $(this).data('url');

@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.5.0 - 10 mars 2023
+- `added` bouton crud-jquery-ajax
+
 5.4.0 8 mars 2023
 - `added` element.WithScript dataset sur type button
 

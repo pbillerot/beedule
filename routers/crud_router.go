@@ -27,7 +27,7 @@ func init() {
 	beego.Router("/bee/actionv/:app/:table/:view/:action", &controllers.CrudActionViewController{})
 	beego.Router("/bee/actionf/:app/:table/:view/:form/:id/:action", &controllers.CrudActionFormController{})
 	beego.Router("/bee/actione/:app/:table/:view/:form/:id/:action", &controllers.CrudActionElementController{})
-	beego.Router("/bee/actionve/:app/:table/:view/:id/:action", &controllers.CrudActionViewElementController{})
+	beego.Router("/bee/actionx/:app/:table/:view/:id/:action", &controllers.CrudActionAjaxController{})
 	beego.Router("/bee/share/:appid/:shareid", &controllers.CrudShareController{}, "get:CrudShareApp")
 	beego.Router("/bee/search/:app/:table/:view", &controllers.CrudSearchController{}, "post:Post")
 	beego.Router("/bee/sort/:app/:table/:view", &controllers.CrudSortController{}, "post:Post")

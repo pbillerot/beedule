@@ -309,37 +309,54 @@ func (c *CrudActionElementController) Post() {
 	}
 }
 
-// CrudActionViewElementController as
-type CrudActionViewElementController struct {
+// CrudActionAjaxController as
+type CrudActionAjaxController struct {
 	loggedRouter
 }
 
+type ajaxResponse struct {
+	Response string // ok or ko
+	Message  string
+}
+
 // Post CrudActionElementController
-func (c *CrudActionViewElementController) Post() {
+func (c *CrudActionAjaxController) Post() {
 	appid := c.Ctx.Input.Param(":app")
 	tableid := c.Ctx.Input.Param(":table")
 	viewid := c.Ctx.Input.Param(":view")
 	id := c.Ctx.Input.Param(":id")
 	actionid := c.Ctx.Input.Param(":action") // l'id de l'élément
 
+	var rest ajaxResponse
+	rest.Response = "Error"
+	rest.Message = "Ya un problème"
+
 	flash := beego.ReadFromRequest(&c.Controller)
 
 	// Ctrl appid tableid viewid formid
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		logs.Error("App not found", c.GetSession("Username").(string), appid)
-		backward(c.Controller)
+		rest.Message = "App not found"
+		c.Data["json"] = &rest
+		c.ServeJSON()
 		return
 	}
 	if val, ok := dico.Ctx.Applications[appid].Tables[tableid]; ok {
 		if _, ok := val.Views[viewid]; ok {
 		} else {
 			logs.Error("View not found", c.GetSession("Username").(string), viewid)
-			backward(c.Controller)
+			rest.Message = "View not found"
+			c.Data["json"] = &rest
+			c.ServeJSON()
 			return
 		}
 	} else {
 		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
-		backward(c.Controller)
+		flash.Error("Table not found")
+		flash.Store(&c.Controller)
+		rest.Message = "Table not found"
+		c.Data["json"] = &rest
+		c.ServeJSON()
 		return
 	}
 
@@ -352,7 +369,9 @@ func (c *CrudActionViewElementController) Post() {
 	if !IsInGroup(c.Controller, view.Group, appid, actionid) {
 		flash.Error("Accès non autorisé")
 		flash.Store(&c.Controller)
-		backward(c.Controller)
+		rest.Message = "Accès non autorisé"
+		c.Data["json"] = &rest
+		c.ServeJSON()
 		return
 	}
 
@@ -378,11 +397,17 @@ func (c *CrudActionViewElementController) Post() {
 	if err != nil {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
+		rest.Message = err.Error()
+		c.Data["json"] = &rest
+		c.ServeJSON()
+		return
 	}
 	if len(records) == 0 {
 		flash.Error("Enregistrement non trouvé")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		rest.Message = "Enregistrement non trouvé"
+		c.Data["json"] = &rest
+		c.ServeJSON()
 		return
 	}
 	// Calcul des éléments
@@ -397,19 +422,26 @@ func (c *CrudActionViewElementController) Post() {
 				if err != nil {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
+					rest.Response = "Error"
+					rest.Message = err.Error()
+					c.Data["json"] = &rest
+					c.ServeJSON()
+					return
 				}
 			}
 		}
 	} else {
 		flash.Error("Action non trouvée")
 		flash.Store(&c.Controller)
-		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		rest.Message = "Action non trouvée"
+		c.Data["json"] = &rest
+		c.ServeJSON()
 		return
 	}
 
-	if err != nil {
-		flash.Error(err.Error())
-		flash.Store(&c.Controller)
-	}
-	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
+	rest.Response = "ok"
+	rest.Message = "ça roule"
+	c.Data["json"] = &rest
+	c.ServeJSON()
+
 }

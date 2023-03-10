@@ -58,8 +58,8 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
     <td {{if $element.ColNoWrap}}nowrap{{end}}
       class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}" style="{{$style}}">
       {{if (eq $element.Type "button")}}
-      <a class="crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actionve/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
+      <a class="crud-jquery-ajax"
+      data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
       {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
       </a>
       {{else if (eq $element.Type "list")}}

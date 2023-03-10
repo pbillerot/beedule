@@ -416,6 +416,9 @@
   <form id="crud-form-delete-id" action="/bee/delete/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" method="POST">
     {{ $xsrfdata }}
   </form>
+  <form id="beeForm" method="POST" action="à venir">
+    {{ .xsrfdata }}
+  </form>
   <input type="hidden" id="xsrf" value="{{.xsrf}}">
   {{template "_crud_foot.html" .}}
   <!-- Insertion de script spécifique aux rubriques -->
