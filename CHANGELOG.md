@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+
+5.6.0 - 13 mars 2023
+- `added` vue type smart adapatée au smartphone
+
 5.5.0 - 10 mars 2023
 - `added` bouton crud-jquery-ajax
 

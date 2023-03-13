@@ -128,7 +128,7 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
-	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url
+	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url uuid
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
 	WithScript    string            `yaml:"with-script"` // javascript de présentation
 }
@@ -146,6 +146,7 @@ func (element *Element) HashPassword(password string) string {
 type View struct {
 	Actions        []Action           // Action sur la vue (ordres sql)
 	Card           CardList           // Masque html d'une ligne dans la vue
+	Smart          SmartList          // Masque html d'une ligne dans la vue de type smarttable
 	ClassSqlite    string             `yaml:"class-sqlite"` // couleur theme de la ligne
 	Deletable      bool               // Suppression fiche autorisée
 	Elements       map[string]Element // Eléments à récupérer de la base de données
@@ -164,7 +165,7 @@ type View struct {
 	Search         string             // Chaîne de recherche dans toutes les colonnes de la vue
 	StyleSqlite    string             `yaml:"style-sqlite"` // style de la ligne
 	Title          string             // Titre de la vue
-	Type           string             // type de vue : card(default),image,table
+	Type           string             // type de vue : card(default),image,table,smart
 	Where          string             // Condition SQL
 	Width          string             // largeur s m l xl xxl max
 	WithLineNumber bool               `yaml:"with-line-number"` // list.table n° de ligne en 1ère colonne
@@ -241,6 +242,14 @@ type CardList struct {
 	Description []string
 	Extra       []string
 	Footer      []string
+}
+
+// SmartList Contenu du table Smart
+type SmartList struct {
+	First []string
+	Left  []string
+	Right []string
+	Last  []string
 }
 
 // Jointure entre tables

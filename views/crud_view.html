@@ -117,6 +117,8 @@
         {{ range $num, $key := $cols }}
         {{ $val := CrudIndex $record $key }}
         {{ $element := index $elements $key }}
+        {{ $class := CrudClassSqlite $element $appid $record $session}}
+        {{ $style := CrudStyleSqlite $element $appid $record $session}}
         {{if and (eq $isCardHide true) (eq $element.Hide false) (or (eq $element.Type "card") )}}
         {{$isCardHide = false}}
         {{end}}
@@ -211,7 +213,11 @@
                 </div>
               </div>
               <div class="content" style="max-height: 500px;overflow-x: scroll;">
+                {{if eq $uiView.View.Type "smart"}}
+                {{template "_crud_smart.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+                {{else}}
                 {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+                {{end}}
           {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content" style="flex-grow: 0;">
@@ -227,13 +233,14 @@
         {{else if (eq $element.Type "action")}}
         <div class="meta">
         <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-          data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
+          style="{{$style}}" data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
           {{$element.LabelLong}}
         </button>
         </div>
         {{else if (eq $element.Type "button")}}
         <div class="meta">
-          <button class="ui {{$theme}} button crud-jquery-button" data-url="{{$element.Params.URL}}" data-target="{{$element.Params.Target}}">
+          <button class="ui {{$theme}} button crud-jquery-button" style="{{$style}}"
+            data-url="{{$element.Params.URL}}" data-target="{{$element.Params.Target}}">
             {{$element.LabelLong}}
           </button>
         </div>
@@ -353,7 +360,7 @@
           </div>
         </div>
         <div class="header">
-          <span class="ui {{$element.Class}} text">
+          <span class="ui {{$element.Class}} text" style="{{$style}}">
             {{if $element.Format}}
             {{CrudFormat $element.Format $val}}
             {{else if and $element.FormatSqlite $val}}

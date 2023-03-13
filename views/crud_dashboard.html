@@ -193,7 +193,11 @@
                 </div>
                 <div class="ui divider"></div>
                 <div style="overflow-x: scroll; max-height: 500px">
+                {{if eq $view.Type "smart"}}
+                {{template "_crud_smart.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+                {{else}}
                 {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+                {{end}}
                 </div>
           {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">

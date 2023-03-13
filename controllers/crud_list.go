@@ -52,6 +52,8 @@ func (c *CrudListController) CrudList() {
 		c.TplName = "crud_list_card.html"
 	} else if uiView.View.Type == "table" {
 		c.TplName = "crud_list_table.html"
+	} else if uiView.View.Type == "smart" {
+		c.TplName = "crud_list_table.html"
 	} else if uiView.View.Type == "dashboard" {
 		c.Ctx.Redirect(302, "/bee/dashboard/"+appid+"/"+tableid+"/"+viewid)
 		// c.TplName = "crud_dashboard.html"
@@ -308,7 +310,12 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	}
 	if len(records) > 0 {
 		// Calcul des éléments hors values
-		elements = computeElements(c, false, elements, records[0])
+		if view.Type == "smart" {
+			elements = computeElements(c, true, elements, records[0])
+		} else {
+			elements = computeElements(c, false, elements, records[0])
+		}
+
 		ui.Qrecords = len(records)
 	}
 	ui.Elements = elements

@@ -21,6 +21,8 @@
 <!-- CARDS -->
 <div class="ui cards">
   {{ range $irecord, $record := .UIView.Records }}
+  {{ $class := ""}}
+  {{ $style := ""}}
   <!-- CARD -->
   <div class="{{$link}} raised card crud-card-view bee-width-{{$view.Width}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} crud-card-searchable crud-jquery-url"
     {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
@@ -36,7 +38,7 @@
         <!-- range header-->  
         {{range $im, $key := $view.Card.Header}}
           {{ $element := index $elements $key }}
-          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
           {{ $val := CrudIndex $record $key}}
           {{ if eq $key $table.Setting.Key}}{{$val = printf "[%s]" $val}}{{end}}
           <span> {{CrudFormat $element.Format $val}}</span>
@@ -53,7 +55,8 @@
         <!-- range meta-->  
         {{range $im, $key := $view.Card.Meta}}
           {{ $element := index $elements $key }}
-          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
           {{ $val := CrudIndex $record $key}}
           <!-- type -->
           {{if (eq $element.Type "checkbox")}}
@@ -83,7 +86,7 @@
           {{else}}
         <!-- autre type -->
           {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-          <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+          <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
           {{end}} 
         <!-- / type-->
         {{end}}
@@ -94,7 +97,8 @@
       {{if $view.Card.Description}}
         {{range $im, $key := $view.Card.Description}}
           {{ $element := index $elements $key }}
-          {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
           {{ $val := CrudIndex $record $key}}
           {{if (eq $element.Type "chart")}}
             {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
@@ -119,7 +123,7 @@
           {{else}}
           {{ if $val }}
       <div class="ui message" style="margin: 0.5em 0;padding: 0.7em">
-        <p class="ui {{$class}} text searchable">{{CrudFormat $element.Format $val}}</p>
+        <p class="ui {{$class}} text searchable" style="{{$style}}">{{CrudFormat $element.Format $val}}</p>
       </div>
           {{end}}
           {{end}}
@@ -134,7 +138,8 @@
         <!-- range extra-->  
         {{range $im, $key := $view.Card.Extra}}
         {{ $element := index $elements $key }}
-        {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $style = CrudStyleSqlite $element $appid $record $session}}
         {{ $val := CrudIndex $record $key}}
         <!-- type -->
         {{if (eq $element.Type "checkbox")}}
@@ -164,7 +169,7 @@
         {{else}}
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
         {{end}} 
         <!-- / type-->
         {{end}}
@@ -181,7 +186,8 @@
       <!-- range footer-->  
       {{range $im, $key := $view.Card.Footer}}
         {{ $element := index $elements $key }}
-        {{$class := CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{$class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $style = CrudStyleSqlite $element $appid $record $session}}
         {{ $val := CrudIndex $record $key}}
         <!-- type -->
         {{if (eq $element.Type "checkbox")}}
@@ -211,7 +217,7 @@
         {{else}}
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text searchable"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
         {{end}} 
         <!-- / type-->
       {{end}}
