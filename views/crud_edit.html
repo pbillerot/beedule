@@ -172,7 +172,8 @@
   <label>&nbsp;</label>
   {{if $element.LabelLong}}
   <button class="ui primary button crud-jquery-action"
-  data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
+  data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}"
+  >
   {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
   {{$element.LabelLong}}
   </button>
@@ -180,6 +181,7 @@
   <a class="ui icon basic compact button" id="{{$key}}">
   <i id="{{$key}}_icon" class=""></i>
   </a>
+  {{end}}
   {{if $element.WithScript}}
     {{if $element.Dataset}}
       {{ $dataset := CrudComputeDataset $element.Dataset $appid $record $session $aliasDB}}
@@ -187,7 +189,6 @@
   <div class="{{$scriptName}}" {{ range $k, $v := $dataset }} data-{{$k}}="{{$v}}"{{end}}></div>
       {{ $script = DictSet $script $scriptName $scriptName}}
     {{end}}
-  {{end}}
   {{end}}
   {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>

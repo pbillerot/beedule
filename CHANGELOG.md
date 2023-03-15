@@ -6,17 +6,22 @@ Historique des modifications
 - bug refresh cotation
 - eddy: ctrl+h
 
-- bouton dans formulaire pour remplir autres zones
+- bouton dans formulaire pour remplir autres zones -> query
 - view actions sur ligne ou appuis long
 - doc enlever option element.grid
 - element.button dans un formulaire non testé
-- doc corriger view mask / card + ajouter footer
+- doc vue smart structure smart
+
+- type query ajax pour pré-remplir des zones
 
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
 
+
+5.6.1 - 15 mars 2023
+- `changed` vue type smart adapatée au smartphone
 
 5.6.0 - 13 mars 2023
 - `added` vue type smart adapatée au smartphone

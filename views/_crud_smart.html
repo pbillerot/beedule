@@ -14,7 +14,7 @@
 {{$sortid := .UIView.SortID}}
 {{$sortdirection := .UIView.SortDirection}}
 <table
-class="ui compact unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}}selectable{{end}} table" data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$tableid}}" data-view="{{$viewid}}">
+class="ui compact unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}}selectable{{end}} large table" data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$tableid}}" data-view="{{$viewid}}" style="min-width: 600px">
 <tbody>
   <!-- LOOP $RECORD -->
   {{ range $irecord, $record := $records }}
