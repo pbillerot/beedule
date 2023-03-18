@@ -77,7 +77,7 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
       <!--   tag -->
       {{$arr := CrudSplit $val ","}}
       {{range $i, $item := $arr}}
-      <div c lass="ui small label">{{$item}}</div>
+      <div class="ui small label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
       {{end}}
       {{else}}
       <!-- autres -->

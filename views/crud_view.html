@@ -341,7 +341,7 @@
         </div>
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <div class="ui tag label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
+        <div class="ui tag small label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
         {{end}}
         {{else if (eq $element.Type "textarea")}}
         <div class="description">

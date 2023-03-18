@@ -76,12 +76,13 @@ class="ui compact unstackable collapsing sortable {{if or $view.FormView $view.F
         <!-- checkbox -->
         <div class="{{$class}}" style="{{$style}}">{{if (eq $val "1")}}<i class="check icon"></i>{{end}}</div>
         {{else if (eq $element.Type "radio")}}
+        <!--   radio -->
         <div class="{{$class}}" style="{{$style}}">{{CrudItem $element.Items $val}}</div>
         {{else if (eq $element.Type "tag")}}
         <!--   tag -->
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <div class="ui small label">{{$item}}</div>
+        <div class="ui horizontal label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
         {{end}}
         {{else}}
         <!-- autres -->
@@ -115,7 +116,7 @@ class="ui compact unstackable collapsing sortable {{if or $view.FormView $view.F
         <!--   tag -->
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <div class="ui small label">{{$item}}</div>
+        <div class="ui horizontal label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
         {{end}}
         {{else}}
         <!-- autres -->

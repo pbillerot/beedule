@@ -20,6 +20,9 @@ Historique des modifications
 - `changed` 
 
 
+5.6.2 - 18 mars 2023
+- `fixed` affichage type "tag" dans une vue "table" et "smart"
+
 5.6.1 - 15 mars 2023
 - `changed` vue type smart adapatée au smartphone
 
