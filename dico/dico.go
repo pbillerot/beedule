@@ -89,11 +89,12 @@ type Setting struct {
 type Element struct {
 	Actions       []Action          // bouton d'actions
 	Args          map[string]string // Args pour passer des arguments à une vue
+	AjaxSQL       string            `yaml:"ajax-sql"` // query sql pour ramenener des données dans le formulaire
 	Class         string            // Class du texte dans la cellule https://fomantic-ui.com/collections/table.html
 	ClassSqlite   string            `yaml:"class-sqlite"` // SQL pour alimenter Class error warning info green blue
 	ColAlign      string            `yaml:"col-align"`    //
 	ColNoWrap     bool              `yaml:"col-nowrap"`   // nowrap de la colonne
-	Dataset       map[string]string `yaml:"dataset"`      // Dataset pour un Chartjs ou pour passer des arguments à une vue
+	Dataset       map[string]string `yaml:"dataset"`      // Dataset pour un Chartjs ou pour passer des arguments à une vue ou à une "ajax-sql"
 	Default       string            // Valeur par défaut (macro possible)
 	DefaultSqlite string            `yaml:"default-sqlite"` // Ordre SQL qui retournera la colonne pour alimenter Default
 	Error         string            // contiendra "error" si le champ est en erreur de saisie
@@ -128,7 +129,7 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
-	Type          string            // Type : action amount button card chart checkbox counter date epdf email float image list number password pdf percent plugin tag tel text textarea time radio url uuid
+	Type          string            // Type : action amount button card chart checkbox counter date email float image list number password pdf percent plugin tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
 	WithScript    string            `yaml:"with-script"` // javascript de présentation
 }

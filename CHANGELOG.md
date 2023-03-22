@@ -12,13 +12,15 @@ Historique des modifications
 - element.button dans un formulaire non testé
 - doc vue smart structure smart
 
-- type query ajax pour pré-remplir des zones
-
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
 
+
+5.7.0 - 22 mars 2023
+- `added` option ajax-sql pour récupérer des données en ajax sur l'appui d'un bouton - dataset utilisé pour valoriser les variables de la requête
+- `changed` un passage d'argument à un formulaire d'ajout ne protège plus la rubrique associée
 
 5.6.2 - 18 mars 2023
 - `fixed` affichage type "tag" dans une vue "table" et "smart"

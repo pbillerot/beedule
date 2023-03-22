@@ -376,7 +376,6 @@ $(document).ready(function () {
   // query sql en ajax
   $('.crud-jquery-ajax').on('click', function (event) {
     var $datas = new FormData();
-    var $dataset = $(this).data();
     var $url = $(this).data('url');
     var xsrf = $("#xsrf").val();
     $datas.append("_xsrf", xsrf);
@@ -439,14 +438,19 @@ $(document).ready(function () {
   // Exécute en ajax une requête SQL sur le serveur et remplit les champs reçus du formulaire courant
   /**
     <a class="crud-jquery-ajax"
-     data-url="/bee/query/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
+     data-url="/bee/ajax/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
     </a>
    */
-  $('.crud-ajax-query').on('click', function (event) {
+  $('.crud-ajax-sql').on('click', function (event) {
     var $datas = new FormData();
     var $url = $(this).data('url');
-    var $sql = $(this).data('sql');
-
+    // ajout de données variables à la requête POST
+    var $dataset = $(this).data();
+    for( var d in $dataset) {
+      if (d == "url") continue;
+      var val = $("#" + $dataset[d]).val()
+      $datas.append(d, val);
+    }
     var xsrf = $("#xsrf").val();
     $datas.append("_xsrf", xsrf);
     $.ajax({
@@ -461,7 +465,6 @@ $(document).ready(function () {
       //Ce code sera exécuté en cas de succès - La réponse du serveur est passée à done()
       //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
       .done(function (data) {
-        let mes = JSON.stringify(data);
         if (data.Response != "ok") {
           $.toast({
             message: data.Message,
@@ -473,6 +476,15 @@ $(document).ready(function () {
             minDisplayTime: 1500
           });
         } else {
+          // mise à jour des rubriques trouvées dans la table
+          for( var rub in data.Dataset) {
+            if ($('#' + rub).is("select")) {
+              $('#' + rub).dropdown('set selected', data.Dataset[rub]);
+            } else {
+              $('#' + rub).val(data.Dataset[rub])
+            }
+
+          }
           $.toast({
             message: data.Message,
             class: 'success',
@@ -488,6 +500,8 @@ $(document).ready(function () {
       //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
       //On peut afficher les informations relatives à la requête et à l'erreur
       .fail(function (error) {
+        let mes = JSON.stringify(error);
+        alert(mes)
         $.toast({
           message: "La requête s'est terminée en échec. Infos : " + JSON.stringify(error),
           class: 'error',
@@ -499,9 +513,9 @@ $(document).ready(function () {
         });
       })
       //Ce code sera exécuté que la requête soit un succès ou un échec
-      .always(function () {
-        setTimeout(() => { window.location.reload(true) }, 1500);
-      });
+      // .always(function () {
+      //   setTimeout(() => { window.location.reload(true) }, 1500);
+      // });
     event.preventDefault();
   });
 

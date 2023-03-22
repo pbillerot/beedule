@@ -78,7 +78,7 @@ func (c *CrudAddController) Get() {
 		if c.GetStrings(colname) != nil {
 			record[colname] = c.GetString(colname)
 			element := elements[colname]
-			element.Protected = true
+			// element.Protected = true
 			elements[colname] = element
 		} else {
 			record[colname] = ""
