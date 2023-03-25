@@ -40,7 +40,7 @@ export GOPATH=~/go
 ```
 
 ### Mémo de commandes (pour le débutant que je suis)
-- go mod init beedule
+- go mod init github.com/pbillerot/beedule
 - go mod tidy pour mettre à jour go.mod
 - go get ./...
 - go get -u

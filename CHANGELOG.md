@@ -18,7 +18,8 @@ Historique des modifications
 - `changed` 
 
 
-5.7.0 - 22 mars 2023
+5.7.0 - 25 mars 2023
+- `added` planificateur de tâches via une table tasks id, name, day, month, last_day, last_month, disabled
 - `added` option ajax-sql pour récupérer des données en ajax sur l'appui d'un bouton - dataset utilisé pour valoriser les variables de la requête
 - `changed` un passage d'argument à un formulaire d'ajout ne protège plus la rubrique associée
 

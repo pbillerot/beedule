@@ -7,6 +7,7 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
+	"github.com/beego/beego/v2/task"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
@@ -30,6 +31,7 @@ func init() {
 	models.Config.HelpPath = beego.AppConfig.String("helppath")
 	models.Config.LogPath = beego.AppConfig.String("logpath")
 	models.Config.Portail = beego.AppConfig.String("portail")
+	models.Config.TaskCron = beego.AppConfig.String("taskcron")
 
 	// Config du Logger
 	beego.BConfig.Log.AccessLogs = true
@@ -74,6 +76,13 @@ func init() {
 
 	// Chargement du dictionnaire
 	dico.Ctx.Load()
+
+	// Initialisation des tâches planifiées (table tasks)
+	// https://github.com/beego/beedoc/blob/master/en-US/module/task.md
+	// https//pkg.go.dev/github.com/beego/beego/v2@v2.0.7/task
+	tk := task.NewTask("Beedule tasks...", models.Config.TaskCron, models.EveryDay)
+	task.AddTask("Beedule tasks...", tk)
+	task.StartTask()
 
 }
 func main() {

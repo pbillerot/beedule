@@ -1,9 +1,12 @@
 package models
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/pbillerot/beedule/dico"
@@ -260,4 +263,63 @@ func CrudExec(sql string, aliasDB string) error {
 		logs.Error(err)
 	}
 	return err
+}
+
+// EveryDay as appelé par le planificateur des tâches tous les jours
+/**
+CREATE TABLE "tasks" (
+	"id"	INTEGER,
+	"name"	TEXT,
+	"day"	INTEGER DEFAULT 0,
+	"month"	INTEGER DEFAULT 0,
+	"last_day"	INTEGER DEFAULT 0,
+	"last_month"	INTEGER DEFAULT 0,
+	"disabled"	INTEGER,
+	"sql"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+)
+*/
+func EveryDay(ctx context.Context) error {
+	now := time.Now()
+	now_day := now.Day()
+	now_month := int(now.Month())
+	logs.Info("o_o everyDay", now_day, now_month)
+	for _, application := range dico.Ctx.Applications {
+		if application.TasksTableName != "" {
+			sql := fmt.Sprintf("select * from %s where disabled != 1", application.TasksTableName)
+			recs, err := CrudSQL(sql, application.AliasDB)
+			if err == nil {
+				for _, rec := range recs {
+					id, _ := strconv.Atoi(rec["id"].(string))
+					day, _ := strconv.Atoi(rec["day"].(string))
+					last_day, _ := strconv.Atoi(rec["last_day"].(string))
+					month, _ := strconv.Atoi(rec["month"].(string))
+					last_month, _ := strconv.Atoi(rec["last_month"].(string))
+					if last_month < now_month || (now_month < 12 && last_month == 12) {
+						// maj début de mois -> raz last_day
+						last_day = 0
+					}
+					if month == 0 || (last_month < month && month == now_month) {
+						// month ok
+						if last_day < day && day == now_day {
+							// day ok
+							// exécution du sql
+							err = CrudExec(rec["sql"].(string), application.AliasDB)
+							if err != nil {
+								continue
+							}
+							// maj planif
+							maj := fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
+								application.TasksTableName, now_day, now_month, id)
+							err = CrudExec(maj, application.AliasDB)
+							if err != nil {
+								continue
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
 }

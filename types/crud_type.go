@@ -15,6 +15,7 @@ type BeeConfig struct {
 	HelpDir  string
 	HelpPath string
 	LogPath  string
+	TaskCron string
 }
 
 // Session Données de session dans le contexte

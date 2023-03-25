@@ -42,20 +42,22 @@ type File struct {
 
 // Application as
 type Application struct {
-	AppID      string            `yaml:"app-id"` // id de l'application
-	Title      string            // Label de l'application
-	Image      string            // image de l'application affichée au niveau du portail
-	IconFile   string            `yaml:"icon-file"` // url de l'icône de l'application
-	IconName   string            `yaml:"icon-name"` // Icône https://semantic-ui.com/elements/icon.html
-	Group      string            // groupe utilisateur habilité à accéder à l'application
-	DicoDir    string            `yaml:"dico-dir"` // working
-	Parameters map[string]string // paramètres de l'application accessible par {__param1}
-	Path       string            // Path ou URL de l'application externe
-	Target     string            // _blank pour ouvrir l'application dans un nouvel onglet
-	Tables     map[string]*Table // Tables de l'application chargées par portail.load working
-	Files      []File            // liste des fichiers trouvés dans dicodir de l'application working
-	Menu       []TableView       // menu des Vues de l'application
-	Shareable  bool              // Partageable ou non
+	AppID          string            `yaml:"app-id"`   // id de l'application
+	AliasDB        string            `yaml:"alias-db"` // par défaut
+	Title          string            // Label de l'application
+	Image          string            // image de l'application affichée au niveau du portail
+	IconFile       string            `yaml:"icon-file"` // url de l'icône de l'application
+	IconName       string            `yaml:"icon-name"` // Icône https://semantic-ui.com/elements/icon.html
+	Group          string            // groupe utilisateur habilité à accéder à l'application
+	DicoDir        string            `yaml:"dico-dir"` // working
+	Parameters     map[string]string // paramètres de l'application accessible par {__param1}
+	Path           string            // Path ou URL de l'application externe
+	Target         string            // _blank pour ouvrir l'application dans un nouvel onglet
+	Tables         map[string]*Table // Tables de l'application chargées par portail.load working
+	Files          []File            // liste des fichiers trouvés dans dicodir de l'application working
+	Menu           []TableView       // menu des Vues de l'application
+	Shareable      bool              // Partageable ou non
+	TasksTableName string            `yaml:"tasks-table-name"` // Nom de la table des Tâches planifiées
 }
 
 // Menu as
