@@ -286,7 +286,7 @@ func EveryDay(ctx context.Context) error {
 	logs.Info("o_o everyDay", now_day, now_month)
 	for _, application := range dico.Ctx.Applications {
 		if application.TasksTableName != "" {
-			sql := fmt.Sprintf("select * from %s where disabled != 1", application.TasksTableName)
+			sql := fmt.Sprintf("select * from %s where enabled == 1", application.TasksTableName)
 			recs, err := CrudSQL(sql, application.AliasDB)
 			if err == nil {
 				for _, rec := range recs {

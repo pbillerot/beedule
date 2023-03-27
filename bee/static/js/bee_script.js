@@ -667,7 +667,7 @@ $(document).ready(function () {
   $('#toaster')
     .toast({
       class: $('#toaster').data('color'),
-      position: 'bottom right',
+      position: 'bottom center',
       message: $('#toaster').val()
     });
   // Calendar

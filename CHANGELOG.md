@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.1 - 27 mars 2023
+- `added` editeur coloriage sql
+- `changed` message toast centré en bas 
 
 5.7.0 - 25 mars 2023
 - `added` planificateur de tâches via une table tasks id, name, day, month, last_day, last_month, disabled
