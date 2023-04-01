@@ -115,15 +115,6 @@
   {{ $class := CrudClassSqlite $element $appid $record $session}}
   {{ $style := CrudStyleSqlite $element $appid $record $session}}
   {{ $type := $element.Type}}
-  {{if or $element.Protected $element.ReadOnly}}
-    {{if and $element.Format $val}}
-      {{$val = CrudFormat $element.Format $val}}
-      {{$type = "text"}}
-    {{else if and $element.FormatSqlite $val}}
-      {{$val = CrudMacroSQL $element.FormatSqlite $appid $record $session}}
-      {{$type = "text"}}
-    {{end}}
-  {{end}}
 {{ if $element.Hide }} 
 <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
 {{ else }}

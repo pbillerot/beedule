@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.3 - 1 avril 2023
+- `fixed` correction champ input avec le format
+- `changed` vue table sans scrolling - utiliser plutot une vvue smart
+
 5.7.2 - 1 avril 2023
 - `changed` vue table scrolling si débordement
 
