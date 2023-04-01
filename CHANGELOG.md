@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.2 - 1 avril 2023
+- `changed` vue table scrolling si débordement
+
 5.7.1 - 27 mars 2023
 - `added` editeur coloriage sql
 - `changed` message toast centré en bas 
