@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.4 - 2 avril 2023
+- `changed` Formulaire: champ protégés formatés dans un autre input
+
 5.7.3 - 1 avril 2023
 - `fixed` correction champ input avec le format
 - `changed` vue table sans scrolling - utiliser plutot une vvue smart

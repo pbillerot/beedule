@@ -115,7 +115,16 @@
   {{ $class := CrudClassSqlite $element $appid $record $session}}
   {{ $style := CrudStyleSqlite $element $appid $record $session}}
   {{ $type := $element.Type}}
-{{ if $element.Hide }} 
+  {{ $format := ""}}
+  {{if or $element.Protected $element.ReadOnly}}
+    {{if and $element.Format $val}}
+      {{$format = CrudFormat $element.Format $val}}
+      {{$type = "text"}}
+    {{else if and $element.FormatSqlite $val}}
+      {{$format = CrudMacroSQL $element.FormatSqlite $appid $record $session}}
+      {{$type = "text"}}
+    {{end}}
+  {{end}}{{ if $element.Hide }} 
 <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
 {{ else }}
 {{if (eq $type "card")}}
@@ -196,8 +205,13 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
+    <input type="number" value="{{$format}}">
+    {{else}}
     <input type="number" step="0.01" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
+    {{end}}
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{else if (eq $type "list")}}
@@ -233,9 +247,14 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
+    <input type="number" value="{{$format}}">
+    {{else}}
     <input type="datetime-local" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
-      {{end}} value="{{CrudFormat $element.Format $val}}">
+      {{end}} value="{{$val}}">
+    {{end}}
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{else if (eq $type "float")}}
@@ -268,8 +287,13 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
+    <input type="number" value="{{$format}}">
+    {{else}}
     <input type="number" inputmode="numeric" step="any" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
+    {{end}}
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{else if (eq $type "radio")}}
@@ -318,8 +342,13 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
+    <input type="number" value="{{$format}}">
+    {{else}}
     <input type="number" inputmode="decimal" step="any" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
+    {{end}}
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{else}}
@@ -327,9 +356,14 @@
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
+    <input type="{{$type}}" value="{{$format}}">
+    {{else}}
     <input type="{{$type}}" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
-      {{end}} value="{{CrudFormat $element.Format $val}}">
+      {{end}} value="{{$val}}">
+    {{end}}
       {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
   </div>
 {{end}}
