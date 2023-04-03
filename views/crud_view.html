@@ -72,10 +72,12 @@
       <!-- end ui dropdown item-->
       {{ if not (eq $viewid "vprofil")}}
       <a href="{{.From}}" class="item" style="padding: 0.5em;">
-        <i class="arrow left icon"></i>
+        <i class="arrow left icon"></i> 
+        <div class="header item">{{$view.Title}}</div>
       </a>
+      {{else}}
+      <div class="header item">{{$view.Title}}</div>
       {{ end }}
-      <div class="header item">{{$form.Title}}</div>
       <!-- RIGHT MENU -->
       <div class="right menu">
         {{if $view.Deletable}}

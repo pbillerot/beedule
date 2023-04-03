@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.6 - 3 avril 2023
+- `fixed` titre des vues et formulaires qui n'étaient pas affichés
+
 5.7.5 - 3 avril 2023
 - `changed` card max -> 99%
 
