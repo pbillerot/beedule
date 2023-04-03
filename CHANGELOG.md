@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.5 - 3 avril 2023
+- `changed` card max -> 99%
+
 5.7.4 - 2 avril 2023
 - `changed` Formulaire: champ protégés formatés dans un autre input
 

@@ -54,7 +54,7 @@ main {
 }
 
 .ui.cards>.bee-width-max {
-    width: 100%;
+    width: 99%;
 }
 
 .crud-cell-nowrap {
@@ -171,8 +171,8 @@ pre {
 }
 
 .ui.form>.bee-width-max {
-    width: 100%;
-    max-width: 100%;
+    width: 99%;
+    max-width: 99%;
 }
 
 /* Mobile */
