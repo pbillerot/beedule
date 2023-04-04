@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.7.6 - 4 avril 2023
+- `changed` format des amount avec séparateur des milliers
+
 5.7.6 - 3 avril 2023
 - `fixed` titre des vues et formulaires qui n'étaient pas affichés
 

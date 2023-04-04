@@ -133,7 +133,7 @@ func mergeElements(c beego.Controller, appid string, tableid string, viewOrFormE
 				break
 			case "amount":
 				if element.Format == "" {
-					element.Format = "%3.2f €"
+					element.Format = "amount"
 				}
 				if element.ColAlign == "" {
 					element.ColAlign = "right"

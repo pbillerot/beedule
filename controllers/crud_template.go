@@ -6,11 +6,13 @@ import (
 	"reflect"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/leekchan/accounting"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 	"github.com/pbillerot/beedule/types"
@@ -203,6 +205,10 @@ func CrudFormat(in string, value string) (out string) {
 				return ""
 			}
 			recs, err = models.CrudSQL("SELECT strftime('%H:%M:%S','"+value+"')", "default")
+		} else if in == "amount" {
+			ac := accounting.Accounting{Symbol: "€", Precision: 2, Thousand: " ", Decimal: ",", Format: "%v %s"}
+			fl, _ := strconv.ParseFloat(value, 32)
+			out = ac.FormatMoney(fl)
 		} else {
 			recs, err = models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
 		}
