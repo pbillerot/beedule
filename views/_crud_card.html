@@ -21,27 +21,94 @@
 <!-- CARDS -->
 <div class="ui cards">
   {{ range $irecord, $record := .UIView.Records }}
+  {{ $id := index $record $tablekey}}
   {{ $class := ""}}
   {{ $style := ""}}
   <!-- CARD -->
   <div class="{{$link}} raised card crud-card-view bee-width-{{$view.Width}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} crud-card-searchable crud-jquery-url"
-    {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{index $record $tablekey}}"
-    {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{index $record $tablekey}}"
+    {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
+    {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{end}}>
     <div class="content" style="padding-bottom: 0.5em;">
-      {{if $view.Card.Header}}
+      {{if or $view.Card.Header $view.Card.HeaderRight}}
       <!-- header -->
       <div class="header">
+        <!-- range headerRight-->  
+        {{range $im, $key := $view.Card.HeaderRight}}
+          {{ $element := index $elements $key }}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<div class="right floated" style="white-space: nowrap">
+          {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        <span class="ui text searchable"><b>{{CrudItem $element.Items $val}}</b></span></div>
+          {{else if (eq $element.Type "tag")}}
+          {{if $element.LabelShort}}<div class="right floated"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </div>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          <div class="right floated" style="white-space: nowrap">
+          <span class="ui right floated text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          </div>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range header --> 
         {{if $view.IconName }}
         <i class="large {{$theme}} {{$view.IconName}} icon"></i>
         {{end}}    
         <!-- range header-->  
         {{range $im, $key := $view.Card.Header}}
           {{ $element := index $elements $key }}
-          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
           {{ $val := CrudIndex $record $key}}
-          {{ if eq $key $table.Setting.Key}}{{$val = printf "[%s]" $val}}{{end}}
-          <span> {{CrudFormat $element.Format $val}}</span>
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
+        <span class="ui text searchable"><b>{{CrudItem $element.Items $val}}</b></span>
+          {{else if (eq $element.Type "tag")}}
+          <span>
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </span>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          {{end}} 
+        <!-- / type-->
         {{end}}
         <!-- / range header --> 
       </div>
@@ -49,6 +116,90 @@
       {{end}}
     </div>
     <div class="content" style="padding-top: 0.5em;padding-bottom: 0.5em;">
+      {{if or $view.Card.MetaLeft $view.Card.MetaRight}}
+      <!-- meta left right -->
+      <div class="extra">
+        <!-- range meta-->  
+        {{range $im, $key := $view.Card.MetaLeft}}
+          {{ $element := index $elements $key }}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
+        <span class="ui text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+          {{else if (eq $element.Type "tag")}}
+          <span class="">
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag searchable label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </span>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          <span class="" style="white-space: nowrap">
+          <span class="ui text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          </span>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range meta left--> 
+        <!-- range meta right-->  
+        {{range $im, $key := $view.Card.MetaRight}}
+          {{ $element := index $elements $key }}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
+        <span class="ui right floated text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+          {{else if (eq $element.Type "tag")}}
+          <span class="right floated">
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag searchable label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </span>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          <span class="right floated" style="white-space: nowrap">
+          <span class="ui text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          </span>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range meta right--> 
+      </div>
+      <!-- / meta left right -->
+      {{end}}
       {{if $view.Card.Meta}}
       <!-- meta -->
       <div class="extra">
@@ -132,6 +283,91 @@
         <!-- / range mask-->
       {{end}}
       <!-- /description -->
+      {{if or $view.Card.ExtraLeft $view.Card.ExtraRight}}
+      <!-- extra left right -->
+      <div class="extra">
+        <!-- range meta-->  
+        {{range $im, $key := $view.Card.ExtraLeft}}
+          {{ $element := index $elements $key }}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui left floated label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui left floated label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style=" left floated">
+          <span class="ui text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span>
+          </span>
+          {{else if (eq $element.Type "tag")}}
+          <span class="left floated">
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+            <span class="ui tag searchable label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+          </span>
+          {{else if (eq $element.Type "hidden")}}
+          <input type="hidden" name="{{$key}}">
+          {{else}}
+          <!-- autre type -->
+          <span class="left floated ">
+          <span class="ui text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          </span>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range extra left--> 
+        <!-- range extra right-->  
+        {{range $im, $key := $view.Card.ExtraRight}}
+          {{ $element := index $elements $key }}
+          {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+          {{ $style = CrudStyleSqlite $element $appid $record $session}}
+          {{ $val := CrudIndex $record $key}}
+          <!-- type -->
+          {{if (eq $element.Type "checkbox")}}
+            {{if (eq $val "1") }}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+            {{else}}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+            {{end}}
+          {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
+        <span class="ui right floated text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+          {{else if (eq $element.Type "tag")}}
+          <span class="right floated">
+            {{$arr := CrudSplit $val ","}}
+            {{range $i, $item := $arr}}
+        <span class="ui tag searchable label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            {{end}}
+            </span>
+          {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+          {{else}}
+        <!-- autre type -->
+          <span class="right floated" style="white-space: nowrap">
+          <span class="ui text searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          </span>
+          {{end}} 
+        <!-- / type-->
+        {{end}}
+        <!-- / range extra right--> 
+      </div>
+      <!-- / extra left right -->
+      {{end}}
       {{if $view.Card.Extra}}
       <!-- extra -->
       <div class="extra">
@@ -179,18 +415,69 @@
       {{end}}
     </div>
     <!-- /content -->   
-    {{if $view.Card.Footer}}
+    {{if or $view.Card.Footer $view.Card.FooterRight}}
     <!-- footer -->
     <div class="content" style="padding-top: 0.5em;padding-bottom: 0.7em;">
       <div class="extra">
       <!-- range footer-->  
+      {{range $im, $key := $view.Card.FooterRight}}
+        {{ $element := index $elements $key }}
+        {{$class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
+        {{ $style = CrudStyleSqlite $element $appid $record $session}}
+        {{ $val := CrudIndex $record $key}}
+        <!-- type -->
+        {{if (eq $element.Type "button")}}
+        <a class="right floated acrud-jquery-ajax"
+        data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
+        {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
+        </a>
+        {{else if (eq $element.Type "checkbox")}}
+        {{if (eq $val "1") }}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="check square outline icon"></i>
+          <span class="searchable">{{$element.LabelLong}}</span>
+        </div>
+        {{else}}
+        <div class="ui right floated label" style="white-space: nowrap">
+          <i class="square outline icon"></i>
+          <span>{{$element.LabelLong}}</span>
+        </div>
+        {{end}}
+        {{else if (eq $element.Type "list")}}
+        <span style="right floated">
+        <span class="ui text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span>
+        </span>
+        {{else if (eq $element.Type "tag")}}
+        <span class="right floated">
+        {{$arr := CrudSplit $val ","}}
+        {{range $i, $item := $arr}}
+        <span class="ui tag searchable label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        {{end}}
+        </span>
+        {{else if (eq $element.Type "hidden")}}
+        <input type="hidden" name="{{$key}}">
+        {{else}}
+        <!-- autre type -->
+        <span style="right floated">
+        <span class="uitext searchable" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+      </span>
+        {{end}} 
+        <!-- / type-->
+      {{end}}
+      <!-- / range footer rigth--> 
+      <!-- range footer -->  
       {{range $im, $key := $view.Card.Footer}}
         {{ $element := index $elements $key }}
         {{$class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
         {{ $style = CrudStyleSqlite $element $appid $record $session}}
         {{ $val := CrudIndex $record $key}}
         <!-- type -->
-        {{if (eq $element.Type "checkbox")}}
+        {{if (eq $element.Type "button")}}
+        <a class="crud-jquery-ajax"
+        data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
+        {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
+        </a>
+        {{else if (eq $element.Type "checkbox")}}
         {{if (eq $val "1") }}
         <div class="ui label" style="white-space: nowrap">
           <i class="check square outline icon"></i>

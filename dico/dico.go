@@ -239,12 +239,22 @@ type Item struct {
 }
 
 // CardList Content d'une card https://fomantic-ui.com/views/card.html
+// ..Left ..Right -> pas de label-long affiché
 type CardList struct {
-	Header      []string
-	Meta        []string
-	Description []string
-	Extra       []string
-	Footer      []string
+	Header       []string
+	HeaderRight  []string `yaml:"header-right"`
+	HeaderAction Action   `yaml:"header-action"` // bouton menu d'action
+	Meta         []string
+	MetaLeft     []string `yaml:"meta-left"`
+	MetaRight    []string `yaml:"meta-right"`
+	Description  []string
+	Extra        []string
+	ExtraLeft    []string `yaml:"extra-left"`
+	ExtraRight   []string `yaml:"extra-right"`
+	Footer       []string
+	FooterLeft   []string `yaml:"footer-left"`
+	FooterRight  []string `yaml:"footer-right"`
+	FooterAction Action   `yaml:"footer-action"` // bouton menu d'action
 }
 
 // SmartList Contenu du table Smart

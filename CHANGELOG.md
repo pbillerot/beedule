@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.8.1 - 10 avril 2023
+- `added` card header-right -action meta-left right extra-left -right footer-left -right -action
+
 5.7.6 - 4 avril 2023
 - `changed` format des amount avec séparateur des milliers
 
