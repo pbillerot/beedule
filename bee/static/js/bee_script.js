@@ -335,6 +335,7 @@ $(document).ready(function () {
         $('html, body').animate({
           scrollTop: $anchor.offset().top - 200
         }, 1000);
+        $anchor.removeClass("raised");
         $anchor.addClass("crud-list-selected");
       } else {
         $anchor = $('tr[data-url="' + Cookies.get($anchorid) + '"]');
@@ -343,6 +344,7 @@ $(document).ready(function () {
           $('html, body').animate({
             scrollTop: $anchor.offset().top - 200
           }, 1000);
+          $anchor.removeClass("raised");
           $anchor.addClass("crud-list-selected");
         }
       }

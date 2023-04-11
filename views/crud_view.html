@@ -183,9 +183,11 @@
           {{else if $element.Params.View}}
             {{$uiView := index $uiViews $element.Params.View}} 
             {{$search := $uiView.Search}}
-            {{ $iconName = $uiView.View.IconName}}
+            {{$iconName = $uiView.View.IconName}}
             {{if eq $uiView.View.Type "card"}}
             </div> <!--/cards-->
+            <!-- si view avec crud_card on mémorise la view - ATTENTION une seule crud_card par view-->
+            <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
             {{if $uiView.View.FormAdd}}
             <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
             data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"
@@ -276,8 +278,7 @@
           </div>
           {{end}}
         {{else if (eq $element.Type "checkbox")}}
-        <div class="description">&nbsp;</div>
-        <div class="header">
+        <div class="content">
           <h4>
             {{if (eq $val "1") }}
             <i class="check square outline icon"></i> {{$element.LabelLong}}
