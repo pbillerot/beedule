@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.8.2 - 11 avril 2023
+- `changed` card enabled et couleur des données
+
 5.8.1 - 11 avril 2023
 - `fixed` card avec crud-list-selected est mainetent encadrée
 

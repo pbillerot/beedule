@@ -25,7 +25,7 @@
   {{ $class := ""}}
   {{ $style := ""}}
   <!-- CARD -->
-  <div class="{{$link}} raised card crud-card-view bee-width-{{$view.Width}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} crud-card-searchable crud-jquery-url"
+  <div class="ui {{$link}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} raised card crud-card-view bee-width-{{$view.Width}} crud-card-searchable crud-jquery-url"
     {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
     {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{end}}>
@@ -52,13 +52,11 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<div class="right floated" style="white-space: nowrap">
-          {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui text searchable"><b>{{CrudItem $element.Items $val}}</b></span></div>
+        <span class="ui text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></div>
           {{else if (eq $element.Type "tag")}}
-          {{if $element.LabelShort}}<div class="right floated"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label searchable" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </div>
           {{else if (eq $element.Type "hidden")}}
@@ -99,7 +97,7 @@
           <span>
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label searchable" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
           {{else if (eq $element.Type "hidden")}}
@@ -178,7 +176,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
@@ -224,12 +222,12 @@
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
           {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label searchable" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
           {{else if (eq $element.Type "hidden")}}
@@ -267,7 +265,7 @@
         <img src="{{CrudMacro $element.Params.Src $appid $record $session}}?{{$composter}}">
       </div>
             {{if $element.LabelLong }}
-      <div class="center aligned description">
+      <div class="center aligned description" style="{{$style}}">
         <b>{{$element.LabelLong}}</b>
       </div>
             {{end}}
@@ -346,12 +344,12 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag searchable label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag searchable label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
           {{else if (eq $element.Type "hidden")}}
@@ -392,12 +390,12 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
         {{if $element.LabelShort}}><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label searchable" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         </span>
         {{else if (eq $element.Type "hidden")}}
@@ -491,12 +489,12 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text searchable"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text searchable" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
         {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label searchable" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         </span>
         {{else if (eq $element.Type "hidden")}}
