@@ -182,7 +182,7 @@
                 {{if $uiView.View.FormAdd}}
                 <button class="right floated circular ui plus {{$theme}} icon button crud-jquery-url"
                 data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"
-                style="position: absolute; top: 2.5em; right: 2em; padding: 1em;"
+                style="z-index: 1000; position: absolute; top: 2.5em; right: 2em; padding: 1em;"
                 title="Ajouter un élément...">
                   <i class="icon plus"></i>
                 </button>

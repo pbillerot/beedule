@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.8.3 - 12 avril 2023
+- `fixed` correction bouton plus derrière les cartes
+
 5.8.2 - 11 avril 2023
 - `changed` card enabled et couleur des données
 

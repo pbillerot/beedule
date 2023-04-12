@@ -141,7 +141,7 @@
       {{if $view.FormAdd}}
       <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
       data-url="/bee/add/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormAdd}}"
-      {{if gt $infooter 1}}style="position: fixed; bottom: 5em; right: 2em; padding: 1em;"{{else}}style="position: fixed; bottom: 2em; right: 2em; padding: 1em;"{{end}}
+      {{if gt $infooter 1}}style="z-index: 1000; position: fixed; bottom: 5em; right: 2em; padding: 1em;"{{else}}style="z-index: 1000; position: fixed; bottom: 2em; right: 2em; padding: 1em;"{{end}}
       title="Ajouter un élément...">
         <i class="icon plus"></i>
       </button>
