@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.8.5 - 19 avril 2023
+- `fixed` correction passage d'argument à un formulaire
+
 5.8.4 - 19 avril 2023
 - `changed` couleur carte
 

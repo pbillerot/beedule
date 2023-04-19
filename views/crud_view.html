@@ -121,6 +121,7 @@
         {{ $element := index $elements $key }}
         {{ $class := CrudClassSqlite $element $appid $record $session}}
         {{ $style := CrudStyleSqlite $element $appid $record $session}}
+        {{ $args := CrudComputeArgs $element.Args $appid $record $session $aliasDB}}
         {{if and (eq $isCardHide true) (eq $element.Hide false) (or (eq $element.Type "card") )}}
         {{$isCardHide = false}}
         {{end}}
@@ -193,7 +194,7 @@
             <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
             {{if $uiView.View.FormAdd}}
             <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
-            data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"
+            data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $args}}"
             style="z-index: 1000; position: fixed; bottom: 3em; right: 2em; padding: 1em;"
             title="Ajouter un élément...">
               <i class="icon plus"></i>
@@ -219,7 +220,7 @@
                 <!-- /recheche -->
                 {{if $uiView.View.FormAdd}}
                 <button class="right floated circular ui plus {{$theme}} icon button crud-jquery-url"
-                data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $element.Args}}"
+                data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $args}}"
                 style="z-index: 1000; position: absolute; top: 2.5em; right: 2em; padding: 1em;"
                 title="Ajouter un élément...">
                   <i class="icon plus"></i>

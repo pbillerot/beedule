@@ -42,6 +42,7 @@ func init() {
 	beego.AddFuncMap("CrudSQL", CrudSQL)
 	beego.AddFuncMap("CrudIncrement", CrudIncrement)
 	beego.AddFuncMap("CrudArgs", CrudArgs)
+	beego.AddFuncMap("CrudComputeArgs", CrudComputeArgs)
 	beego.AddFuncMap("CrudDecrement", CrudDecrement)
 	beego.AddFuncMap("CrudDebug", CrudDebug)
 	beego.AddFuncMap("BeeReplace", BeeReplace)
@@ -415,6 +416,16 @@ func CrudComputeDataset(dataset map[string]string, appid string, record orm.Para
 				val += cols[k].(string)
 			}
 		}
+		out[key] = val
+	}
+	return out
+}
+
+// CrudComputeArgs retourne le dataset valorisé
+func CrudComputeArgs(dataset map[string]string, appid string, record orm.Params, session types.Session, aliasDB string) map[string]string {
+	out := make(map[string]string, len(dataset))
+	for key, value := range dataset {
+		val := CrudMacro(value, appid, record, session)
 		out[key] = val
 	}
 	return out

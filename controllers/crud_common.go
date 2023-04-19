@@ -313,9 +313,9 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 				action.Plugin = macro(c, appid, action.Plugin, record)
 			}
 		}
-		for key, value := range element.Args {
-			element.Args[key] = macro(c, appid, value, record)
-		}
+		// for key, value := range element.Args {
+		// 	element.Args[key] = macro(c, appid, value, record)
+		// }
 		if element.Params.URL != "" {
 			if !fromList {
 				element.Params.URL = macro(c, appid, element.Params.URL, record)
