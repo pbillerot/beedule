@@ -22,10 +22,11 @@
 <div class="ui cards">
   {{ range $irecord, $record := .UIView.Records }}
   {{ $id := index $record $tablekey}}
-  {{ $class := ""}}
-  {{ $style := ""}}
+  {{ $class := CrudMacroSQL $view.ClassSqlite $appid $record $session}}
+  {{ $style := CrudMacroSQL $view.StyleSqlite $appid $record $session}}
   <!-- CARD -->
-  <div class="ui {{$link}} {{CrudMacroSQL $view.ClassSqlite $appid $record $session}} raised card crud-card-view bee-width-{{$view.Width}} crud-card-searchable crud-jquery-url"
+  <div class="ui {{$link}} {{$class}} raised card crud-card-view bee-width-{{$view.Width}} crud-card-searchable crud-jquery-url"
+    style="{{$style}}"
     {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
     {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{end}}>

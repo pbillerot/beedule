@@ -133,6 +133,7 @@
         {{if and $isStart (ne $element.Type "card")}}
           {{if $view.FormEdit}}
         <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
+          style="{{$style}}"
           data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
           {{else}}
           <div class="card raised crud-card-view {{$element.Class}}">
@@ -160,6 +161,7 @@
           {{ $iconName := $element.IconName}}
           {{if $element.Params.Form}}
             <div class="link card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}} crud-jquery-url"
+              style="{{$style}}"
               data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
               <div class="content" style="flex-grow: 0;">
                 <div class="right floated meta"><a class="crud-jquery-url" data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}" title="Modifier..."><i class="edit {{$theme}} icon"></i></a></div>
@@ -171,6 +173,7 @@
               <div class="content">
           {{else if $element.Params.URL}}
             <div class="link card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}} crud-jquery-url"
+              style="{{$style}}"
               data-url="{{$element.Params.URL}}">
               <div class="content" style="flex-grow: 0;">
                 <div class="right floated meta"><a class="crud-jquery-url" data-url="{{$element.Params.URL}}" title="Modifier..."><i class="edit {{$theme}} icon"></i></a></div>
