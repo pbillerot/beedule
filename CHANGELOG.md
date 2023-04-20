@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.8.6 - 20 avril 2023
+- `changed` suppression class searchable
+
 5.8.5 - 19 avril 2023
 - `fixed` correction passage d'argument à un formulaire
 
