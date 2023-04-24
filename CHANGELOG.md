@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.9.1 - 24 avril 2023
+- `added` codemirror python
+
 5.9.0 - 24 avril 2023
 - `added` intégration de batman
 
