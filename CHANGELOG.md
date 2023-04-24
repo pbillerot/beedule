@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.9.0 - 24 avril 2023
+- `added` intégration de batman
+
 5.8.6 - 20 avril 2023
 - `changed` suppression class searchable
 

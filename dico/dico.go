@@ -44,6 +44,7 @@ type File struct {
 type Application struct {
 	AppID          string            `yaml:"app-id"`   // id de l'application
 	AliasDB        string            `yaml:"alias-db"` // par défaut
+	Batman         string            `yaml:"batman"`   // par défaut
 	Title          string            // Label de l'application
 	Image          string            // image de l'application affichée au niveau du portail
 	IconFile       string            `yaml:"icon-file"` // url de l'icône de l'application

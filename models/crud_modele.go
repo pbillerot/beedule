@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/keegancsmith/shell"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/types"
 
@@ -304,9 +306,26 @@ func EveryDay(ctx context.Context) error {
 						if last_day < day && day == now_day {
 							// day ok
 							// exécution du sql
-							err = CrudExec(rec["sql"].(string), application.AliasDB)
-							if err != nil {
-								continue
+							if rec["sql"].(string) != "" {
+								err = CrudExec(rec["sql"].(string), application.AliasDB)
+								if err != nil {
+									continue
+								}
+							}
+							// exécution du shell
+							if rec["shell"].(string) != "" {
+								var stdout, stderr bytes.Buffer
+								cmd := shell.Commandf("%s", rec["shell"].(string))
+								cmd.Stdout = &stdout
+								cmd.Stderr = &stderr
+
+								err := cmd.Run()
+								if err != nil {
+									logs.Error("could not run command: ", err)
+									continue
+								}
+								logs.Info(strings.TrimSpace(stderr.String()))
+								logs.Info(strings.TrimSpace(stdout.String()))
 							}
 							// maj planif
 							maj := fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
@@ -319,6 +338,21 @@ func EveryDay(ctx context.Context) error {
 					}
 				}
 			}
+		}
+		if application.Batman != "" {
+			// exécution du shell
+			var stdout, stderr bytes.Buffer
+			cmd := shell.Commandf(application.Batman)
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+
+			err := cmd.Run()
+			if err != nil {
+				logs.Error("could not run command: ", err, cmd)
+				continue
+			}
+			logs.Info(strings.TrimSpace(stderr.String()))
+			logs.Info(strings.TrimSpace(stdout.String()))
 		}
 	}
 	return nil

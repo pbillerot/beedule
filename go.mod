@@ -8,6 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/imdario/mergo v0.3.15
+	github.com/keegancsmith/shell v0.0.0-20160208231706-ccb53e0c7c5c
 	github.com/leekchan/accounting v1.0.0
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.16

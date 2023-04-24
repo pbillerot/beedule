@@ -83,6 +83,7 @@ func init() {
 	tk := task.NewTask("Beedule tasks...", models.Config.TaskCron, models.EveryDay)
 	task.AddTask("Beedule tasks...", tk)
 	task.StartTask()
+	// voir crud_modele.EveryDay() pour le traitement des tasks
 
 }
 func main() {
