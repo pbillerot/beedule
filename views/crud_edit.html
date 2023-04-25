@@ -200,7 +200,7 @@
       {{ $script = DictSet $script $scriptName $scriptName}}
     {{end}}
   {{end}}
-  {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+  {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "amount")}}
   <div
@@ -213,7 +213,7 @@
     <input type="number" step="0.01" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{end}}
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "list")}}
   <div
@@ -226,14 +226,14 @@
         {{$item.Label}}</option>
       {{end}}
     </select>
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "counter")}}
   <div class="disabled  bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
     <input type="number" inputmode="numeric" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
   {{else if (eq $type "checkbox")}}
   <div
@@ -241,7 +241,7 @@
     <div class="ui checkbox">
       <input type="checkbox" name="{{$key}}" id="{{$key}}" {{if(eq $val `1`)}} checked{{end}}>
       <label>{{$element.LabelLong}}</label>
-      {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+      {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
     </div>
   </div>
   {{else if (eq $type "datetime")}}
@@ -256,7 +256,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
     {{end}}
-      {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+      {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "float")}}
   <div
@@ -265,7 +265,7 @@
     <input type="number" inputmode="decimal" step="any" name="{{$key}}" id="{{$key}}"
       {{if $element.Pattern}} pattern="{{$element.Pattern}}"{{end}}
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "hidden")}}
   <input type="hidden" name="{{$key}}" value="{{$val}}">
@@ -295,7 +295,7 @@
     <input type="number" inputmode="numeric" step="any" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{end}}
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "radio")}}
   <div
@@ -310,7 +310,7 @@
     </div>
     {{end}}
   </div>
-  {{if $element.Help}}<span class="ui small blue text meta">{{$element.Help}}</span>{{end}}
+  {{if $element.Help}}<span class="ui small blue text meta">{{$element.Help | markdown}}</span>{{end}}
 {{else if (eq $type "tag")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
@@ -322,14 +322,14 @@
       </option>
       {{end}}
     </select>
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "textarea")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
       <label>{{$element.LabelLong}}</label>
       <textarea name="{{$key}}" id="{{$key}}">{{$val}}</textarea>
-      {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+      {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "password")}}
   <div
@@ -337,7 +337,7 @@
     <label>{{$element.LabelLong}}</label>
     <input type="{{$type}}" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{if $val}}***{{end}}">
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else if (eq $type "percent")}}
   <div
@@ -350,7 +350,7 @@
     <input type="number" inputmode="decimal" step="any" name="{{$key}}" id="{{$key}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}} value="{{$val}}">
     {{end}}
-    {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
 {{else}}
   <!-- date email number tel text time url -->
@@ -365,7 +365,7 @@
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
       {{end}} value="{{$val}}">
     {{end}}
-      {{if $element.Help}}<span class="ui small blue text">{{$element.Help}}</span>{{end}}
+      {{if $element.Help}}<span class="ui small blue text">{{ $element.Help | markdown }}</span>{{end}}
   </div>
 {{end}}
   <!-- end if element.Type -->

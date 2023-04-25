@@ -3,6 +3,7 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"html/template"
 	"reflect"
 	"regexp"
 	"sort"
@@ -12,6 +13,9 @@ import (
 	beego "github.com/beego/beego/v2/adapter"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/html"
+	"github.com/gomarkdown/markdown/parser"
 	"github.com/leekchan/accounting"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
@@ -56,6 +60,22 @@ func init() {
 	beego.AddFuncMap("DictAsKey", hasKey)
 	beego.AddFuncMap("DictKeys", keys)
 	beego.AddFuncMap("DictValues", values)
+	// autres
+	beego.AddFuncMap("markdown", markDowner)
+}
+
+// markDowner as
+func markDowner(args ...interface{}) template.HTML {
+	// s := blackfriday.MarkdownCommon([]byte(fmt.Sprintf("%s", args...)))
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
+	p := parser.NewWithExtensions(extensions)
+	doc := p.Parse([]byte(fmt.Sprintf("%s", args...)))
+
+	// create HTML renderer with extensions
+	htmlFlags := html.HrefTargetBlank
+	opts := html.RendererOptions{Flags: htmlFlags}
+	renderer := html.NewRenderer(opts)
+	return template.HTML(markdown.Render(doc, renderer))
 }
 
 // CrudArgs as ?key=val&key=val

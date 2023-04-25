@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.9.2 - 25 avril 2023
+- `added` help en markdown
+- `changed` retour arrière wide container 
+
 5.9.1 - 24 avril 2023
 - `added` codemirror python
 
