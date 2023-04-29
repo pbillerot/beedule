@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.11.0 - 29 avril 2023
+- `added` action shell
+
 5.10.1 - 29 avril 2023
 - `added` filtres dans une vue
 

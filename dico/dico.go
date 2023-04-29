@@ -222,6 +222,7 @@ type Action struct {
 	Hide        bool     // Action non visible
 	HideSqlite  string   `yaml:"hide-sqlite"` // requête pour cachée l'action
 	Plugin      string   // Fonction Système à appeler nomFonction(p1, p2, ...)
+	Shell       []string // commande dans le shell
 }
 
 // Setters as

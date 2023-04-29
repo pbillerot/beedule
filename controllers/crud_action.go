@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"bytes"
 	"strconv"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/keegancsmith/shell"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/models"
 
@@ -76,6 +79,24 @@ func (c *CrudActionViewController) Post() {
 					flash.Error(err.Error())
 					flash.Store(&c.Controller)
 				}
+			}
+		}
+		// Exécution des ordres SQL
+		for _, action := range view.Actions[iactionid].Shell {
+			commande := macro(c.Controller, appid, action, orm.Params{})
+			if commande != "" {
+				var stdout, stderr bytes.Buffer
+				cmd := shell.Commandf("%s", commande)
+				cmd.Stdout = &stdout
+				cmd.Stderr = &stderr
+
+				err := cmd.Run()
+				if err != nil {
+					logs.Error("could not run command: ", err)
+					continue
+				}
+				logs.Info(strings.TrimSpace(stderr.String()))
+				logs.Info(strings.TrimSpace(stdout.String()))
 			}
 		}
 	} else {
