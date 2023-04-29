@@ -154,6 +154,7 @@ type View struct {
 	ClassSqlite    string             `yaml:"class-sqlite"` // couleur theme de la ligne
 	Deletable      bool               // Suppression fiche autorisée
 	Elements       map[string]Element // Eléments à récupérer de la base de données
+	Filters        []string           // liste de nom d'élément sur la vue
 	FooterSQL      string             `yaml:"footer-sql"` // requête sur la table courante
 	FormAdd        string             `yaml:"form-add"`   // Formulaire d'ajout
 	FormEdit       string             `yaml:"form-edit"`  // Formulaire d'édition
@@ -166,7 +167,7 @@ type View struct {
 	OrderBy        string             `yaml:"order-by"`       // Tri des données SQL
 	PostSQL        []string           `yaml:"post-sql"`       // Ordre exécutée après la suppression si OK
 	PreUpdateSQL   []string           `yaml:"pre-update-sql"` // requêtes SQL avant l'affichage
-	Search         string             // Chaîne de recherche dans toutes les colonnes de la vue
+	Search         string             // calculé sql
 	StyleSqlite    string             `yaml:"style-sqlite"` // style de la ligne
 	Title          string             // Titre de la vue
 	Type           string             // type de vue : card(default),image,table,smart

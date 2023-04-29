@@ -131,6 +131,18 @@ $(document).ready(function () {
     event.preventDefault();
   });
 
+  // Envoi des filtres au serveur
+  $('.crud-filter-go').on('click', function (event) {
+    $('#beeFormFilter', document).submit();
+    event.preventDefault();
+  });
+  // Clear des filtres de la vue
+  $('.crud-filter-clear').on('click', function (event) {
+    $('#resetfilter').val("reset");
+    $('#beeFormFilter', document).submit();
+    event.preventDefault();
+  });
+  
   // RECHERCHE dans une vue 
   // Ouvrir la recherche 
   $('.crud-search-active').on('click', function (event) {

@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.10.1 - 29 avril 2023
+- `added` filtres dans une vue
+
 5.9.2 - 25 avril 2023
 - `added` help en markdown
 - `changed` retour arrière wide container 

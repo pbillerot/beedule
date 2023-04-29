@@ -14,6 +14,7 @@
 {{$cols := .UIView.Cols}}
 {{$qrecords := .UIView.Qrecords}}
 {{$search := .UIView.Search}}
+{{$filters := .UIView.Filters}}
 {{$fromDashboard := false}}
 {{$infooter := 0}}
 <!DOCTYPE html>
@@ -146,6 +147,32 @@
         <i class="icon plus"></i>
       </button>
       {{end}}
+      <!-- FILTRES DE LA VUE -->
+      {{if $view.Filters}}
+      <form class="ui form" id="beeFormFilter" method="POST"
+      enctype="multipart/form-data"
+      action="/bee/filter/{{$appid}}/{{$tableid}}/{{$viewid}}">
+      {{ .xsrfdata }}
+      <input id="resetfilter" name="resetfilter" type="hidden">
+      <div class="fields">
+      {{range $key := $view.Filters}}
+        {{$element := index $elements $key}}
+        {{ $val := index $filters $key}}
+        <div class="bee-width-s field">
+          <input type="text" name="{{$key}}" id="{{$key}}" placeholder="{{$element.PlaceHolder}}" value="{{$val}}">
+        </div>
+      {{end}}<!-- end range filters -->
+        <div class="field">
+          <button class="ui icon primary button" title="Sélectionner">
+          <i class="search icon crud-filter-go"></i>
+        </button>
+        <button class="ui icon primary button" title="Annuler la sélection">
+          <i class="close icon crud-filter-clear"></i>
+        </div>
+        </button>
+      </div><!-- end fields -->
+      </form>
+      {{end}} <!-- end FILTRES -->
       <!-- LIST TABLE SMARTTABLE -->
       {{if eq $view.Type "table"}}
       {{template "_crud_table.html" .}}

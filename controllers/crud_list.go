@@ -76,7 +76,8 @@ type UIView struct {
 	Cols          map[int]string
 	SortID        string
 	SortDirection string
-	Search        string
+	Search        string            // valeur de la recherche
+	Filters       map[string]string // valeur des filtres
 	SearchStop    string
 }
 
@@ -197,7 +198,25 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		}
 	}
 
-	// RECHERCHE DANS LA VUE
+	// FILTRES DANS LA VUE
+	// les valeurs ont été mémorisée dans la session voir crud_filter.go
+	ui.Filters = map[string]string{}
+	for _, keyFilter := range view.Filters {
+		filterSession := fmt.Sprintf("%s-%s-%s-filter-%s", appid, tableid, viewid, keyFilter)
+		filter := ""
+		if c.GetSession(filterSession) != nil {
+			filter = c.GetSession(filterSession).(string)
+			ui.Filters[keyFilter] = filter // set val récupérée dans le template
+		}
+		// génération du filtre en sql
+		if filter != "" {
+			if view.Search != "" {
+				view.Search += " AND "
+			}
+			view.Search += "" + keyFilter + " LIKE '%" + filter + "%'"
+		}
+	}
+	// RECHERCHE DANS LA VUE (pas de recherche si filter)
 	search := ""
 	ctxSearch := fmt.Sprintf("%s-%s-%s-search", appid, tableid, viewid)
 	if c.GetSession(ctxSearch) != nil {

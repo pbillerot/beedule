@@ -31,6 +31,7 @@ func init() {
 	beego.Router("/bee/ajax/:app/:table/:view/:form/:action", &controllers.CrudAjaxSqlController{}, "post:Post")
 	beego.Router("/bee/share/:appid/:shareid", &controllers.CrudShareController{}, "get:CrudShareApp")
 	beego.Router("/bee/search/:app/:table/:view", &controllers.CrudSearchController{}, "post:Post")
+	beego.Router("/bee/filter/:app/:table/:view", &controllers.CrudFilterController{}, "post:Post")
 	beego.Router("/bee/sort/:app/:table/:view", &controllers.CrudSortController{}, "post:Post")
 
 	// REST API
