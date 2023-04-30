@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -79,6 +80,7 @@ type UIView struct {
 	Search        string            // valeur de la recherche
 	Filters       map[string]string // valeur des filtres
 	SearchStop    string
+	Sum           map[string]float64
 }
 
 func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid string, parentElement dico.Element) (err error) {
@@ -334,8 +336,18 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		} else {
 			elements = computeElements(c, false, elements, records[0])
 		}
-
 		ui.Qrecords = len(records)
+	}
+	// Calcul des sum
+	ui.Sum = map[string]float64{}
+	for _, record := range records {
+		for key, element := range elements {
+			// WithSum
+			if element.WithSum {
+				ival, _ := strconv.ParseFloat(record[key].(string), 64)
+				ui.Sum[key] += ival
+			}
+		}
 	}
 	ui.Elements = elements
 

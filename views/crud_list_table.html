@@ -82,6 +82,7 @@
       </div>
       <!-- RIGHT MENU -->
       <div class="right menu">
+        {{ if not $view.Filters}}
         <div class="ui icon item crud-search-div">
           <!-- Recherche -->
           <i class="search link icon crud-search-active" title="Rechercher..."></i>
@@ -95,6 +96,7 @@
             <i class="close link icon crud-search-close" title="Fermer recherche"></i>
           </div>
         </div>
+        {{end}}
         {{if or $view.Actions $view.FormAdd}}
         <div class="ui dropdown item">
           <i class="ellipsis vertical icon"></i>

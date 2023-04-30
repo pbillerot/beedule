@@ -211,8 +211,20 @@ func CrudIndexSQL(record orm.Params, key string, element dico.Element, session t
 }
 
 // CrudFormat préféré à text/template/printf car les données fournies sont toujours des strings
-func CrudFormat(in string, value string) (out string) {
-	out = value
+func CrudFormat(in string, v interface{}) (out string) {
+	value := ""
+	switch v := v.(type) {
+	case string:
+		value = v
+	case []byte:
+		value = string(v)
+	case error:
+		value = v.Error()
+	case fmt.Stringer:
+		value = v.String()
+	default:
+		value = fmt.Sprintf("%v", v)
+	}
 	if in != "" && value != "" {
 		var recs []orm.Params
 		var err error

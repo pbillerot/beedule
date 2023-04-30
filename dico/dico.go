@@ -133,8 +133,9 @@ type Element struct {
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
 	Type          string            // Type : action amount button card chart checkbox counter date email float image list number password pdf percent plugin tag tel text textarea time radio url
-	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit
+	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit	WithSum       bool              // dans une table calcule la somme des valeurs
 	WithScript    string            `yaml:"with-script"` // javascript de présentation
+	WithSum       bool              `yaml:"with-sum"`    // dans une table calcule la somme des valeurs
 }
 
 // HashPassword hashage de Value
@@ -174,6 +175,7 @@ type View struct {
 	Where          string             // Condition SQL
 	Width          string             // largeur s m l xl xxl max
 	WithLineNumber bool               `yaml:"with-line-number"` // list.table n° de ligne en 1ère colonne
+	WithSum        bool               `yaml:"with-sum"`
 }
 
 // Form formulaire

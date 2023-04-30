@@ -13,8 +13,10 @@
 {{$qrecords := .UIView.Qrecords}}
 {{$sortid := .UIView.SortID}}
 {{$sortdirection := .UIView.SortDirection}}
+{{$sum := .UIView.Sum}}
 <table
-class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}}selectable{{end}} celled table" data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$tableid}}" data-view="{{$viewid}}">
+class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}}selectable{{end}} celled table"
+data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$tableid}}" data-view="{{$viewid}}">
 <thead>
   <!-- ENTETE TABLE -->
   <tr class="crud-unsort">
@@ -98,4 +100,31 @@ class="ui unstackable collapsing sortable {{if or $view.FormView $view.FormEdit}
   {{end}}
   <!-- fin loop $records -->
 </tbody>
+<!-- footer avec les sum -->
+{{if and $view.WithSum ($qrecords > 0)}}
+{{$record := index $records 0}}
+<tfoot>
+<tr class="">
+{{if $view.WithLineNumber}}<td>&nbsp;</td>{{end}}
+{{ range $num, $key := $cols }}
+  {{ $element := index $elements $key }}
+  {{if (ne $element.Hide true)}}
+    {{if $element.WithSum}}
+    {{$val := index $sum $key}}
+    {{ $style := CrudStyleSqlite $element $appid $record $session}}
+    <td style="{{$style}}">
+      {{if and $element.Format $val}}
+      {{CrudFormat $element.Format $val}}
+      {{else}}
+      {{$val}}
+      {{end}}
+    </td>
+    {{else}}
+    <td></td>
+    {{end}}
+  {{end}}
+{{end}}
+</tr>
+</tfoot>  
+{{end}}
 </table>
