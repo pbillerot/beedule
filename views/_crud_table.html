@@ -101,7 +101,7 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   <!-- fin loop $records -->
 </tbody>
 <!-- footer avec les sum -->
-{{if and $view.WithSum ($qrecords > 0)}}
+{{if $view.WithSum}}
 {{$record := index $records 0}}
 <tfoot>
 <tr class="">
