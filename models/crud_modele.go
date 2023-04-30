@@ -5,12 +5,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/keegancsmith/shell"
 	"github.com/pbillerot/beedule/dico"
 	"github.com/pbillerot/beedule/types"
 
@@ -314,18 +314,7 @@ func EveryDay(ctx context.Context) error {
 							}
 							// exécution du shell
 							if rec["shell"].(string) != "" {
-								var stdout, stderr bytes.Buffer
-								cmd := shell.Commandf("%s", rec["shell"].(string))
-								cmd.Stdout = &stdout
-								cmd.Stderr = &stderr
-
-								err := cmd.Run()
-								if err != nil {
-									logs.Error("could not run command: ", err)
-									continue
-								}
-								logs.Info(strings.TrimSpace(stderr.String()))
-								logs.Info(strings.TrimSpace(stdout.String()))
+								ShellExec(rec["shell"].(string))
 							}
 							// maj planif
 							maj := fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
@@ -340,20 +329,26 @@ func EveryDay(ctx context.Context) error {
 			}
 		}
 		if application.Batman != "" {
-			// exécution du shell
-			var stdout, stderr bytes.Buffer
-			cmd := shell.Commandf(application.Batman)
-			cmd.Stdout = &stdout
-			cmd.Stderr = &stderr
-
-			err := cmd.Run()
-			if err != nil {
-				logs.Error("could not run command: ", err, cmd)
-				continue
-			}
-			logs.Info(strings.TrimSpace(stderr.String()))
-			logs.Info(strings.TrimSpace(stdout.String()))
+			ShellExec(application.Batman)
 		}
+	}
+	return nil
+}
+
+func ShellExec(commande string) error {
+	if commande != "" {
+		var stdout, stderr bytes.Buffer
+		cmd := exec.Command("/bin/sh", "-c", commande)
+		cmd.Stdout = &stdout
+		cmd.Stderr = &stderr
+		logs.Info("shell", commande)
+		err := cmd.Run()
+		if err != nil {
+			logs.Error("could not run command: ", err)
+			return err
+		}
+		logs.Info(strings.TrimSpace(stderr.String()))
+		logs.Info(strings.TrimSpace(stdout.String()))
 	}
 	return nil
 }

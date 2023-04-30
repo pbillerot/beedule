@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.11.1 - 30 avril 2023
+- `fixed` correction appel su shell
+
 5.11.0 - 29 avril 2023
 - `added` action shell
 

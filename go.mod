@@ -9,7 +9,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gomarkdown/markdown v0.0.0-20230322041520-c84983bdbf2a
 	github.com/imdario/mergo v0.3.15
-	github.com/keegancsmith/shell v0.0.0-20160208231706-ccb53e0c7c5c
 	github.com/leekchan/accounting v1.0.0
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.16
