@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.12.2 - 1er mai 2023
+- `fixed` CodeFormat qui ne laissait plus passer les valeurs sans format
+
 5.12.1 - 1er mai 2023
 - `fixed` codemirror python
 

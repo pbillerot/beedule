@@ -225,6 +225,7 @@ func CrudFormat(in string, v interface{}) (out string) {
 	default:
 		value = fmt.Sprintf("%v", v)
 	}
+	out = value
 	if in != "" && value != "" {
 		var recs []orm.Params
 		var err error
@@ -256,6 +257,8 @@ func CrudFormat(in string, v interface{}) (out string) {
 				}
 			}
 		}
+	} else {
+
 	}
 	return
 }

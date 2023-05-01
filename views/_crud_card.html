@@ -59,7 +59,6 @@
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
-            </div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -74,7 +73,7 @@
         {{if $view.IconName }}
         <i class="large {{$theme}} {{$view.IconName}} icon"></i>
         {{end}}    
-        <!-- range header-->  
+        <!-- range header Right-->  
         {{range $im, $key := $view.Card.Header}}
           {{ $element := index $elements $key }}
           {{ $style = CrudStyleSqlite $element $appid $record $session}}
@@ -95,12 +94,10 @@
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
         <span class="ui text"><b>{{CrudItem $element.Items $val}}</b></span>
           {{else if (eq $element.Type "tag")}}
-          <span>
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
-            </span>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -140,12 +137,10 @@
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
         <span class="ui text"><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
-          <span class="">
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
-            </span>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -398,7 +393,6 @@
         {{range $i, $item := $arr}}
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
-        </span>
         {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
         {{else}}
@@ -492,12 +486,11 @@
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
-        {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
+        {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
-        </span>
         {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
         {{else}}
