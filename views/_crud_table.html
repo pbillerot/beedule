@@ -81,6 +81,11 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
       {{range $i, $item := $arr}}
       <div class="ui small label" style="margin-bottom: 0.5em">{{CrudItem $element.Items $item}}</div>
       {{end}}
+      {{else if and (eq $element.Type "url") (ne $val "")}}
+      <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+      {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+      {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+      </a>
       {{else}}
       <!-- autres -->
       {{if and $element.Format $val}}

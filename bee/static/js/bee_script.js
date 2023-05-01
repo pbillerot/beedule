@@ -566,6 +566,12 @@ $(document).ready(function () {
       event.preventDefault();
       return
     }
+    if (target.hasClass("crud-jquery-button") || target.parent().hasClass("crud-jquery-button")) {
+      // pour laisser la main à crud-jquery-button
+      // Cas d'un button dans une card
+      event.preventDefault();
+      return
+    }
 
     var $url = $(this).data('url');
     window.location = $url;
@@ -575,10 +581,11 @@ $(document).ready(function () {
   // CLIC BUTTON URL
   $('.crud-jquery-button').on('click', function (event) {
     var $target = $(this).data('target');
+    var $url = $(this).data('url');
     if (!$target || $target == '') {
-      window.location = $(this).data('url');
+      window.location = $url;
     } else {
-      window.open($(this).data('url'), $target);
+      window.open($url, $target);
     }
     event.preventDefault();
   });

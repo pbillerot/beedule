@@ -59,6 +59,11 @@
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="right floated">
+        <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+            {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+            {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+            </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -73,7 +78,7 @@
         {{if $view.IconName }}
         <i class="large {{$theme}} {{$view.IconName}} icon"></i>
         {{end}}    
-        <!-- range header Right-->  
+        <!-- range header -->  
         {{range $im, $key := $view.Card.Header}}
           {{ $element := index $elements $key }}
           {{ $style = CrudStyleSqlite $element $appid $record $session}}
@@ -98,6 +103,11 @@
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -141,6 +151,11 @@
             {{range $i, $item := $arr}}
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="left floated">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -180,6 +195,11 @@
         <span class="ui tag label" style="margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="right floated">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -226,6 +246,11 @@
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -309,6 +334,11 @@
             <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
           </span>
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="left floated">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
           <input type="hidden" name="{{$key}}">
           {{else}}
@@ -348,6 +378,11 @@
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
+          {{else if and (eq $element.Type "url") (ne $val "")}}<div class="right floated">
+            <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+                {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+                {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+                </a></div>
           {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
           {{else}}
@@ -393,6 +428,11 @@
         {{range $i, $item := $arr}}
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
+        {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
+          <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+              {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+              {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+              </a></div>
         {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
         {{else}}
@@ -447,6 +487,11 @@
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         </span>
+        {{else if and (eq $element.Type "url") (ne $val "")}}<span class="right floated">
+          <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+              {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+              {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+              </a></span>
         {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
         {{else}}
@@ -491,6 +536,11 @@
         {{range $i, $item := $arr}}
         <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
+        {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
+          <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
+              {{if $element.IconName}}<i class="{{$element.IconName}} icon"></i>
+              {{else}}<i class="ui {{$class}} paperclip icon"></i>{{end}}
+              </a></div>
         {{else if (eq $element.Type "hidden")}}
         <input type="hidden" name="{{$key}}">
         {{else}}
