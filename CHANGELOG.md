@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.12.1 - 1er mai 2023
+- `fixed` codemirror python
+
 5.12.0 - 30 avril 2023
 - `added` with-sum dans élément et vue
 

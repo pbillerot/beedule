@@ -81,6 +81,8 @@ func (c *EddyController) EddyDocument() {
 	c.Data["TabTitle"] = keyid
 	if path.Ext(keyid) == ".js" {
 		c.Data["ModeMarkdown"] = "javascript"
+	} else if path.Ext(keyid) == ".py" {
+		c.Data["ModeMarkdown"] = "python"
 	} else {
 		c.Data["ModeMarkdown"] = strings.Replace(path.Ext(keyid), ".", "", -1)
 	}
