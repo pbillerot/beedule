@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.12.3 - 1er mai 2023
+- `added` couleur des cumul bas de tableau
+- `fixed` exec shell par scheduler
+
 5.12.2 - 1er mai 2023
 - `fixed` CodeFormat qui ne laissait plus passer les valeurs sans format
 

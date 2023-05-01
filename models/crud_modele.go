@@ -306,14 +306,14 @@ func EveryDay(ctx context.Context) error {
 						if last_day < day && day == now_day {
 							// day ok
 							// exécution du sql
-							if rec["sql"].(string) != "" {
+							if rec["sql"] != nil && rec["sql"].(string) != "" {
 								err = CrudExec(rec["sql"].(string), application.AliasDB)
 								if err != nil {
 									continue
 								}
 							}
 							// exécution du shell
-							if rec["shell"].(string) != "" {
+							if rec["shell"] != nil && rec["shell"].(string) != "" {
 								ShellExec(rec["shell"].(string))
 							}
 							// maj planif

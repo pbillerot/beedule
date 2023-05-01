@@ -29,6 +29,7 @@ import (
 
 // Déclaration des fonctions utilisées dans les templates
 func init() {
+	beego.AddFuncMap("contains", CrudContains)
 	beego.AddFuncMap("CrudContains", CrudContains)
 	beego.AddFuncMap("CrudFormat", CrudFormat)
 	beego.AddFuncMap("CrudItem", CrudItem)

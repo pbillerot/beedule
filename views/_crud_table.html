@@ -101,7 +101,7 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   <!-- fin loop $records -->
 </tbody>
 <!-- footer avec les sum -->
-{{if $view.WithSum}}
+{{if and $view.WithSum (ne $qrecords 0)}}
 {{$record := index $records 0}}
 <tfoot>
 <tr class="">
@@ -110,21 +110,20 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   {{ $element := index $elements $key }}
   {{if (ne $element.Hide true)}}
     {{if $element.WithSum}}
-    {{$val := index $sum $key}}
-    {{ $style := CrudStyleSqlite $element $appid $record $session}}
-    <td style="{{$style}}">
-      {{if and $element.Format $val}}
-      {{CrudFormat $element.Format $val}}
-      {{else}}
-      {{$val}}
-      {{end}}
-    </td>
+      {{$val := index $sum $key}}
+      <td style="{{if lt $val 0.0}}color: red{{else}}color: green{{end}}">
+        {{if and $element.Format $val}}
+        {{CrudFormat $element.Format $val}}
+        {{else}}
+        {{$val}}
+        {{end}}
+      </td>
     {{else}}
-    <td></td>
-    {{end}}
-  {{end}}
-{{end}}
+      <td></td>
+    {{end}}<!--end withsum-->
+  {{end}}<!--end hide-->
+{{end}}<!--end range-->
 </tr>
 </tfoot>  
-{{end}}
+{{end}}<!--end if withsum-->
 </table>
