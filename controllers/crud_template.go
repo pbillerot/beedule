@@ -63,6 +63,12 @@ func init() {
 	beego.AddFuncMap("DictValues", values)
 	// autres
 	beego.AddFuncMap("markdown", markDowner)
+	beego.AddFuncMap("style", style)
+}
+
+// style as
+func style(in interface{}) template.HTMLAttr {
+	return template.HTMLAttr("style=\"" + in.(string) + "\"")
 }
 
 // markDowner as
@@ -258,8 +264,6 @@ func CrudFormat(in string, v interface{}) (out string) {
 				}
 			}
 		}
-	} else {
-
 	}
 	return
 }

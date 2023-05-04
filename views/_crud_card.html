@@ -26,7 +26,7 @@
   {{ $style := CrudMacroSQL $view.StyleSqlite $appid $record $session}}
   <!-- CARD -->
   <div class="ui {{$link}} {{$class}} raised card crud-card-view bee-width-{{$view.Width}} crud-jquery-url"
-    style="{{$style}}"
+    {{style $style}}
     {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
     {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{end}}>
@@ -53,7 +53,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<div class="right floated" style="white-space: nowrap">
-        <span class="ui text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></div>
+        <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></div>
           {{else if (eq $element.Type "tag")}}
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
@@ -69,7 +69,7 @@
           {{else}}
         <!-- autre type -->
           <div class="right floated" style="white-space: nowrap">
-          <span class="ui right floated text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui right floated text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </div>
           {{end}} 
         <!-- / type-->
@@ -112,7 +112,7 @@
         <input type="hidden" name="{{$key}}">
           {{else}}
         <!-- autre type -->
-          <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           {{end}} 
         <!-- / type-->
         {{end}}
@@ -161,7 +161,7 @@
           {{else}}
         <!-- autre type -->
           <span class="" style="white-space: nowrap">
-          <span class="ui text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
           {{end}} 
         <!-- / type-->
@@ -187,7 +187,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
@@ -205,7 +205,7 @@
           {{else}}
         <!-- autre type -->
           <span class="right floated" style="white-space: nowrap">
-          <span class="ui text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
           {{end}} 
         <!-- / type-->
@@ -238,7 +238,7 @@
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
           {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
             {{$arr := CrudSplit $val ","}}
@@ -256,7 +256,7 @@
           {{else}}
         <!-- autre type -->
           {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-          <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+          <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
           {{end}} 
         <!-- / type-->
         {{end}}
@@ -286,14 +286,14 @@
         <img src="{{CrudMacro $element.Params.Src $appid $record $session}}?{{$composter}}">
       </div>
             {{if $element.LabelLong }}
-      <div class="center aligned description" style="{{$style}}">
+      <div class="center aligned description" {{style $style}}>
         <b>{{$element.LabelLong}}</b>
       </div>
             {{end}}
           {{else}}
           {{ if $val }}
       <div class="ui message" style="margin: 0.5em 0;padding: 0.7em">
-        <p class="ui {{$class}} text" style="{{$style}}">{{CrudFormat $element.Format $val}}</p>
+        <p class="ui {{$class}} text" {{style $style}}>{{CrudFormat $element.Format $val}}</p>
       </div>
           {{end}}
           {{end}}
@@ -325,7 +325,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style=" left floated">
-          <span class="ui text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span>
+          <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span>
           </span>
           {{else if (eq $element.Type "tag")}}
           <span class="left floated">
@@ -344,7 +344,7 @@
           {{else}}
           <!-- autre type -->
           <span class="left floated ">
-          <span class="ui text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
           {{end}} 
         <!-- / type-->
@@ -370,7 +370,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
@@ -388,7 +388,7 @@
           {{else}}
         <!-- autre type -->
           <span class="right floated" style="white-space: nowrap">
-          <span class="ui text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
           {{end}} 
         <!-- / type-->
@@ -421,7 +421,7 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
         {{if $element.LabelShort}}><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
@@ -438,7 +438,7 @@
         {{else}}
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
         {{end}} 
         <!-- / type-->
         {{end}}
@@ -478,7 +478,7 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         <span style="right floated">
-        <span class="ui text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span>
+        <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span>
         </span>
         {{else if (eq $element.Type "tag")}}
         <span class="right floated">
@@ -497,7 +497,7 @@
         {{else}}
         <!-- autre type -->
         <span style="right floated">
-        <span class="uitext" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span>
+        <span class="uitext" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
       </span>
         {{end}} 
         <!-- / type-->
@@ -529,7 +529,7 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
         {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
@@ -546,7 +546,7 @@
         {{else}}
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" style="{{$style}}"><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
         {{end}} 
         <!-- / type-->
       {{end}}

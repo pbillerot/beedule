@@ -134,7 +134,7 @@
         {{if and $isStart (ne $element.Type "card")}}
           {{if $view.FormEdit}}
         <div class="link card raised crud-card-view {{$element.Class}} crud-jquery-url"
-          style="{{$style}}"
+          {{style $style}}
           data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
           {{else}}
           <div class="card raised crud-card-view {{$element.Class}}">
@@ -162,7 +162,7 @@
           {{ $iconName := $element.IconName}}
           {{if $element.Params.Form}}
             <div class="link card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}} crud-jquery-url"
-              style="{{$style}}"
+              {{style $style}}
               data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}">
               <div class="content" style="flex-grow: 0;">
                 <div class="right floated meta"><a class="crud-jquery-url" data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$element.Params.Form}}/{{$id}}" title="Modifier..."><i class="edit {{$theme}} icon"></i></a></div>
@@ -174,7 +174,7 @@
               <div class="content">
           {{else if $element.Params.URL}}
             <div class="link card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}} crud-jquery-url"
-              style="{{$style}}"
+              {{style $style}}
               data-url="{{$element.Params.URL}}">
               <div class="content" style="flex-grow: 0;">
                 <div class="right floated meta"><a class="crud-jquery-url" data-url="{{$element.Params.URL}}" title="Modifier..."><i class="edit {{$theme}} icon"></i></a></div>
@@ -201,6 +201,21 @@
             </button>
             {{end}}
             {{template "_crud_card.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+            {{else if eq $uiView.View.Type "smart"}}
+            </div> <!--/cards-->
+            <!-- si view avec crud_smart on mémorise la view - ATTENTION une seule crud_smart par view-->
+            <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
+            {{if $uiView.View.FormAdd}}
+            <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
+            data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $args}}"
+            style="z-index: 1000; position: fixed; bottom: 3em; right: 2em; padding: 1em;"
+            title="Ajouter un élément...">
+              <i class="icon plus"></i>
+            </button>
+            {{end}}
+            <div class="ui compact segment">
+            {{template "_crud_smart.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+            </div>
             {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content crud-search-div" style="flex-grow: 0;">
@@ -255,13 +270,13 @@
         {{else if (eq $element.Type "action")}}
         <div class="meta">
         <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-          style="{{$style}}" data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
+          {{style $style}} data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
           {{$element.LabelLong}}
         </button>
         </div>
         {{else if (eq $element.Type "button")}}
         <div class="meta">
-          <button class="ui {{$theme}} button crud-jquery-button" style="{{$style}}"
+          <button class="ui {{$theme}} button crud-jquery-button" {{style $style}}
             data-url="{{$element.Params.URL}}" data-target="{{$element.Params.Target}}">
             {{$element.LabelLong}}
           </button>
@@ -381,7 +396,7 @@
           </div>
         </div>
         <div class="header">
-          <span class="ui {{$element.Class}} text" style="{{$style}}">
+          <span class="ui {{$element.Class}} text" {{style $style}}>
             {{if $element.Format}}
             {{CrudFormat $element.Format $val}}
             {{else if and $element.FormatSqlite $val}}

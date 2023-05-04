@@ -58,7 +58,7 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
     {{ $val := CrudIndexSQL $record $key $element $session}}
     {{if (ne $element.Hide true)}}
     <td {{if $element.ColNoWrap}}nowrap{{end}}
-      class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}" style="{{$style}}">
+      class="ui {{$element.ColAlign}} aligned{{if $element.HideOnMobile}} crud-mobile-hide{{end}}" {{style $style}}>
       {{if (eq $element.Type "button")}}
       <a class="crud-jquery-ajax"
       data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">

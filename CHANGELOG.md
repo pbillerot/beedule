@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.12.5 - 4 mai 2023
+- `fixed` style-sqlite accepte désormais plusieurs attributs
+
 5.12.4 - 1er mai 2023
 - `added` interface url
 
