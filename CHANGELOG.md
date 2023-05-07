@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.13.0 - 7 mai 2023
+- `deleted` vue de type smart supprimée
+- `added` dans un formulaire hide hide-sqlite sur une card cache les éléments à l'intérieur
+
 5.12.5 - 4 mai 2023
 - `fixed` style-sqlite accepte désormais plusieurs attributs
 

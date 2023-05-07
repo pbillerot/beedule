@@ -274,6 +274,7 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 	}
 
 	elements := make(map[string]dico.Element, len(viewOrFormElements))
+	hideCard := false
 
 	for key, element := range viewOrFormElements {
 		element.LabelLong = macro(c, appid, element.LabelLong, record)
@@ -287,9 +288,23 @@ func computeElements(c beego.Controller, computeValue bool, viewOrFormElements m
 		if element.ClassSqlite != "" {
 			element.Class = macroSQL(c, appid, element.ClassSqlite, record)
 		}
-		if element.HideSqlite != "" {
-			if macroSQL(c, appid, element.HideSqlite, record) != "" {
+		if hideCard {
+			if element.Type == "card" {
+				// fin du bloc caché
+				hideCard = false
+			} else {
+				// les éléments dans le bloc seront cachés
 				element.Hide = true
+			}
+		} else {
+			if element.HideSqlite != "" {
+				if macroSQL(c, appid, element.HideSqlite, record) != "" {
+					element.Hide = true
+					if element.Type == "card" {
+						// début du bloc caché
+						hideCard = true
+					}
+				}
 			}
 		}
 		if element.ItemsSQL != "" {

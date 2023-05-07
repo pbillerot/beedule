@@ -151,7 +151,6 @@ func (element *Element) HashPassword(password string) string {
 type View struct {
 	Actions        []Action           // Action sur la vue (ordres sql)
 	Card           CardList           // Masque html d'une ligne dans la vue
-	Smart          SmartList          // Masque html d'une ligne dans la vue de type smarttable
 	ClassSqlite    string             `yaml:"class-sqlite"` // couleur theme de la ligne
 	Deletable      bool               // Suppression fiche autorisée
 	Elements       map[string]Element // Eléments à récupérer de la base de données
@@ -171,7 +170,7 @@ type View struct {
 	Search         string             // calculé sql
 	StyleSqlite    string             `yaml:"style-sqlite"` // style de la ligne
 	Title          string             // Titre de la vue
-	Type           string             // type de vue : card(default),image,table,smart
+	Type           string             // type de vue : card(default),image,table
 	Where          string             // Condition SQL
 	Width          string             // largeur s m l xl xxl max
 	WithLineNumber bool               `yaml:"with-line-number"` // list.table n° de ligne en 1ère colonne
@@ -260,14 +259,6 @@ type CardList struct {
 	FooterLeft   []string `yaml:"footer-left"`
 	FooterRight  []string `yaml:"footer-right"`
 	FooterAction Action   `yaml:"footer-action"` // bouton menu d'action
-}
-
-// SmartList Contenu du table Smart
-type SmartList struct {
-	First []string
-	Left  []string
-	Right []string
-	Last  []string
 }
 
 // Jointure entre tables

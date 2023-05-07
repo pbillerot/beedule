@@ -177,11 +177,9 @@
       </div><!-- end fields -->
       </form>
       {{end}} <!-- end FILTRES -->
-      <!-- LIST TABLE SMARTTABLE -->
+      <!-- LIST TABLE -->
       {{if eq $view.Type "table"}}
       {{template "_crud_table.html" .}}
-      {{else if eq $view.Type "smart"}}
-      {{template "_crud_smart.html" .}}
       {{end}}
     </div>
   </main>
