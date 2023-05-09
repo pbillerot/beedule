@@ -210,6 +210,7 @@ type Params struct {
 	WithInput       bool              `yaml:"witn-input"`
 	WithInputFile   bool              `yaml:"with-input-file"`
 	WithImageEditor bool              `yaml:"with-image-editor"`
+	WithoutFrame    bool              `yaml:"without-frame"` // card sans cadre
 }
 
 // Action dans le menu d'une vue ou formulaire

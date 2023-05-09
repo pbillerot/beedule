@@ -8,5 +8,6 @@ dico-dir:
 - "./beedic/admin/config"
 - "/volshare/data/picsou/config"
 - "/volshare/data/beedule/budget/config"
+- "/volshare/data/beedule/pluvio/config"
 - "./beedic/chinook/config"
 

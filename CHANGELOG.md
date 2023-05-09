@@ -17,6 +17,11 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.0 - 9 mai 2023
+- `fixed` édition d'une date postgres
+- `added` params.WithoutFrame pour ne pas afficher le cadre d'un élément card
+- `added` params.WithoutFrame avec une vue de type table
+
 5.13.0 - 7 mai 2023
 - `deleted` vue de type smart supprimée
 - `added` dans un formulaire hide hide-sqlite sur une card cache les éléments à l'intérieur

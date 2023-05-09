@@ -142,7 +142,7 @@ $(document).ready(function () {
     $('#beeFormFilter', document).submit();
     event.preventDefault();
   });
-  
+
   // RECHERCHE dans une vue 
   // Ouvrir la recherche 
   $('.crud-search-active').on('click', function (event) {
@@ -460,7 +460,7 @@ $(document).ready(function () {
     var $url = $(this).data('url');
     // ajout de données variables à la requête POST
     var $dataset = $(this).data();
-    for( var d in $dataset) {
+    for (var d in $dataset) {
       if (d == "url") continue;
       var val = $("#" + $dataset[d]).val()
       $datas.append(d, val);
@@ -491,7 +491,7 @@ $(document).ready(function () {
           });
         } else {
           // mise à jour des rubriques trouvées dans la table
-          for( var rub in data.Dataset) {
+          for (var rub in data.Dataset) {
             if ($('#' + rub).is("select")) {
               $('#' + rub).dropdown('set selected', data.Dataset[rub]);
             } else {
@@ -526,10 +526,10 @@ $(document).ready(function () {
           minDisplayTime: 1500
         });
       })
-      //Ce code sera exécuté que la requête soit un succès ou un échec
-      // .always(function () {
-      //   setTimeout(() => { window.location.reload(true) }, 1500);
-      // });
+    //Ce code sera exécuté que la requête soit un succès ou un échec
+    // .always(function () {
+    //   setTimeout(() => { window.location.reload(true) }, 1500);
+    // });
     event.preventDefault();
   });
 

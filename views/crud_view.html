@@ -188,19 +188,23 @@
             {{$uiView := index $uiViews $element.Params.View}} 
             {{$search := $uiView.Search}}
             {{$iconName = $uiView.View.IconName}}
-            {{if eq $uiView.View.Type "card"}}
+            {{if $element.Params.WithoutFrame}} <!-- Vue sans cadre -->
             </div> <!--/cards-->
-            <!-- si view avec crud_card on mémorise la view - ATTENTION une seule crud_card par view-->
-            <input type="hidden" id="crud_view" value="{{$appid}}-{{$tableid}}-{{$viewid}}">
-            {{if $uiView.View.FormAdd}}
+            <!-- si view avec crud_card on mémorise la view - ATTENTION une seule without-frame par page-->
+            <input type="hidden" id="crud_view" value="{{$appid}}-{{$element.Params.Table}}-{{$element.Params.View}}">
+              {{if $uiView.View.FormAdd}}
             <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
             data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $args}}"
             style="z-index: 1000; position: fixed; bottom: 3em; right: 2em; padding: 1em;"
             title="Ajouter un élément...">
               <i class="icon plus"></i>
             </button>
-            {{end}}
-            {{template "_crud_card.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              {{end}}
+              {{if eq $uiView.View.Type "card"}}
+              {{template "_crud_card.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              {{else}}
+              {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              {{end}}
             {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content crud-search-div" style="flex-grow: 0;">

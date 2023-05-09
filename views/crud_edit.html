@@ -215,6 +215,20 @@
     {{end}}
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
   </div>
+{{else if (eq $type "date")}}
+  {{$format = CrudFormat $element.Format $val}}
+  <div
+    class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
+    <label>{{$element.LabelLong}}</label>
+    {{if $format}}
+    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$format}}">
+    <input type="date" value="{{$format}}">
+    {{else}}
+    <input type="date" name="{{$key}}" id="{{$key}}" value="{{$format}}"
+      {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}}>
+    {{end}}
+    {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
+  </div>
 {{else if (eq $type "list")}}
   <div
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">

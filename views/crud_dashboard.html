@@ -106,6 +106,7 @@
     {{ range $num, $key := $cols }}
       {{ $val := CrudIndex $record $key }}
       {{ $element := index $elements $key }}
+      {{ $args := CrudComputeArgs $element.Args $appid $record $session $aliasDB}}
       {{if and (eq $isCardHide true) (eq $element.Hide false) (or (eq $element.Type "card") )}}
         {{$isCardHide = false}}
       {{end}}
@@ -163,6 +164,26 @@
             {{$uiView := index $uiViews $element.Params.View}} 
             {{$search := $uiView.Search}}
             {{$iconName = $uiView.View.IconName}}
+            {{if $element.Params.WithoutFrame}} <!-- Vue sans cadre -->
+            </div> <!--/cards-->
+            <!-- si view avec crud_card on mémorise la view - ATTENTION une seule without-frame par page-->
+            <input type="hidden" id="crud_view" value="{{$appid}}-{{$element.Params.Table}}-{{$element.Params.View}}">
+              {{if $uiView.View.FormAdd}}
+            <button class="right floated circular ui large plus {{$theme}} icon button crud-jquery-url"
+            data-url="/bee/add/{{$appid}}/{{ $element.Params.Table}}/{{$element.Params.View}}/{{$uiView.View.FormAdd}}{{CrudArgs $args}}"
+            {{if gt $infooter 1}}style="z-index: 1000; position: fixed; bottom: 5em; right: 2em; padding: 1em;"{{else}}style="z-index: 1000; position: fixed; bottom: 3em; right: 2em; padding: 1em;"{{end}}
+            title="Ajouter un élément...">
+              <i class="icon plus"></i>
+            </button>
+              {{end}}
+              {{if eq $uiView.View.Type "card"}}
+              {{template "_crud_card.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              {{else}}
+              <div style="margin-top: 1.5em;">
+              {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              </div>
+              {{end}}
+            {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content crud-search-div">
                 <!-- Recherche -->
@@ -195,6 +216,7 @@
                 <div style="overflow-x: scroll; max-height: 500px">
                 {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
                 </div>
+            {{end}}
           {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
               <div class="content">
