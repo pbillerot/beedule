@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.1 - 10 mai 2023
+- `fixed` coreection pour postgres
+
 5.14.0 - 9 mai 2023
 - `fixed` édition d'une date postgres
 - `added` params.WithoutFrame pour ne pas afficher le cadre d'un élément card

@@ -116,7 +116,7 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   {{if (ne $element.Hide true)}}
     {{if $element.WithSum}}
       {{$val := index $sum $key}}
-      <td style="{{if lt $val 0.0}}color: red{{else}}color: green{{end}}">
+      <td nowrap style="{{if lt $val 0.0}}color: red{{else}}color: green{{end}}">
         {{if and $element.Format $val}}
         {{CrudFormat $element.Format $val}}
         {{else}}

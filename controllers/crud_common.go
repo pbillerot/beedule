@@ -439,7 +439,20 @@ func checkElement(c *beego.Controller, key string, element *dico.Element, record
 			} else {
 				element.SQLout = val
 			}
+		case "checkbox":
+			if val == "" {
+				element.SQLout = "0"
+			} else {
+				// le mot de passe a été changé
+				element.SQLout = "1"
+			}
 		case "float":
+			if val == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = val
+			}
+		case "list":
 			if val == "" {
 				element.SQLout = "0"
 			} else {
@@ -451,25 +464,24 @@ func checkElement(c *beego.Controller, key string, element *dico.Element, record
 			} else {
 				element.SQLout = val
 			}
-		case "percent":
-			if val == "" {
-				element.SQLout = "0"
-			} else {
-				element.SQLout = val
-			}
-		case "checkbox":
-			if val == "" {
-				element.SQLout = "0"
-			} else {
-				// le mot de passe a été changé
-				element.SQLout = "1"
-			}
 		case "password":
 			if val == "***" {
 				element.SQLout = record[key].(string)
 			} else {
 				// le mot de passe a été changé
 				element.SQLout = element.HashPassword(val)
+			}
+		case "percent":
+			if val == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = val
+			}
+		case "tag":
+			if val == "" {
+				element.SQLout = "0"
+			} else {
+				element.SQLout = val
 			}
 		default:
 			element.SQLout = val
