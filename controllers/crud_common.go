@@ -452,12 +452,12 @@ func checkElement(c *beego.Controller, key string, element *dico.Element, record
 			} else {
 				element.SQLout = val
 			}
-		case "list":
-			if val == "" {
-				element.SQLout = "0"
-			} else {
-				element.SQLout = val
-			}
+		// case "list":
+		// 	if val == "" {
+		// 		element.SQLout = ""
+		// 	} else {
+		// 		element.SQLout = val
+		// 	}
 		case "number":
 			if val == "" {
 				element.SQLout = "0"
@@ -477,14 +477,18 @@ func checkElement(c *beego.Controller, key string, element *dico.Element, record
 			} else {
 				element.SQLout = val
 			}
-		case "tag":
-			if val == "" {
-				element.SQLout = "0"
+			// case "tag":
+			// 	if val == "" {
+			// 		element.SQLout = ""
+			// 	} else {
+			// 		element.SQLout = val
+			// 	}
+		default:
+			if val == "" && element.Default != "" {
+				element.SQLout = element.Default
 			} else {
 				element.SQLout = val
 			}
-		default:
-			element.SQLout = val
 		}
 	}
 	var err error

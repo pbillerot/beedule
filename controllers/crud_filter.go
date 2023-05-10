@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/pbillerot/beedule/dico"
 
@@ -28,7 +27,7 @@ func (c *CrudFilterController) Post() {
 	// enregistrement des filtres dans la session
 	reset := c.GetString("resetfilter")
 	for _, keyFilter := range view.Filters {
-		filter := strings.ToLower(c.GetString(keyFilter))
+		filter := c.GetString(keyFilter)
 		ctxFilter := fmt.Sprintf("%s-%s-%s-filter-%s", appid, tableid, viewid, keyFilter)
 		if reset == "reset" {
 			filter = ""

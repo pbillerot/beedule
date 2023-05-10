@@ -209,11 +209,22 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 			ui.Filters[keyFilter] = filter // set val récupérée dans le template
 		}
 		// génération du filtre en sql
+		// keyFilter corresponds au nom de l'élément
+		// qui peut être le résultat d'une jointure dans ce cas il faudra utiliser la colonne jointure
 		if filter != "" {
 			if view.Search != "" {
 				view.Search += " AND "
 			}
-			view.Search += "" + keyFilter + " LIKE '%" + filter + "%'"
+			if elements[keyFilter].Type == "list" || elements[keyFilter].Type == "radio" || elements[keyFilter].Type == "tag" {
+				view.Search += "'" + filter + "' IN (" + tableid + "." + keyFilter + ")"
+			} else {
+				if elements[keyFilter].Jointure.Column == "" {
+					view.Search += "lower(" + tableid + "." + keyFilter + ") LIKE '%" + strings.ToLower(filter) + "%'"
+				} else {
+					view.Search += "lower(" + elements[keyFilter].Jointure.Column + ") LIKE '%" + strings.ToLower(filter) + "%'"
+				}
+			}
+
 		}
 	}
 	// RECHERCHE DANS LA VUE (pas de recherche si filter)
