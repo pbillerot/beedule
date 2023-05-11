@@ -288,7 +288,7 @@ func EveryDay(ctx context.Context) error {
 	logs.Info("o_o everyDay", now_day, now_month)
 	for _, application := range dico.Ctx.Applications {
 		if application.TasksTableName != "" {
-			sql := fmt.Sprintf("select * from %s where enabled == 1", application.TasksTableName)
+			sql := fmt.Sprintf("select * from %s where enabled = 1 order by priority", application.TasksTableName)
 			recs, err := CrudSQL(sql, application.AliasDB)
 			if err == nil {
 				for _, rec := range recs {
@@ -303,18 +303,29 @@ func EveryDay(ctx context.Context) error {
 					}
 					if month == 0 || (last_month < month && month == now_month) {
 						// month ok
-						if last_day < day && day == now_day {
+						if day == 0 || (last_day < day && day == now_day) {
 							// day ok
+							result := ""
 							// exécution du sql
 							if rec["sql"] != nil && rec["sql"].(string) != "" {
 								err = CrudExec(rec["sql"].(string), application.AliasDB)
 								if err != nil {
-									continue
-								}
+								// maj result
+								maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+									application.TasksTableName, result, id)
+								CrudExec(maj, application.AliasDB)
+								Continue
 							}
 							// exécution du shell
 							if rec["shell"] != nil && rec["shell"].(string) != "" {
-								ShellExec(rec["shell"].(string))
+								result, err = ShellExec(rec["shell"].(string))
+								if err != nil {
+									// maj result
+									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+										application.TasksTableName, result, id)
+									CrudExec(maj, application.AliasDB)
+									Continue
+								}
 							}
 							// maj planif
 							maj := fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
@@ -328,14 +339,15 @@ func EveryDay(ctx context.Context) error {
 				}
 			}
 		}
-		if application.Batman != "" {
-			ShellExec(application.Batman)
-		}
+		// if application.Batman != "" {
+		// 	ShellExec(application.Batman)
+		// }
 	}
 	return nil
 }
 
-func ShellExec(commande string) error {
+func ShellExec(commande string) (out string, err error) {
+	out = ""
 	if commande != "" {
 		var stdout, stderr bytes.Buffer
 		cmd := exec.Command("/bin/sh", "-c", commande)
@@ -345,10 +357,10 @@ func ShellExec(commande string) error {
 		err := cmd.Run()
 		if err != nil {
 			logs.Error("could not run command: ", err)
-			return err
 		}
 		logs.Info(strings.TrimSpace(stderr.String()))
 		logs.Info(strings.TrimSpace(stdout.String()))
+		out = fmt.Sprintf("%s\n%s", strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()))
 	}
-	return nil
+	return out, err
 }

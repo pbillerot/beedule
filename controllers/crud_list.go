@@ -219,7 +219,11 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 				view.Search += "'" + filter + "' IN (" + tableid + "." + keyFilter + ")"
 			} else {
 				if elements[keyFilter].Jointure.Column == "" {
-					view.Search += "lower(" + tableid + "." + keyFilter + ") LIKE '%" + strings.ToLower(filter) + "%'"
+					if elements[keyFilter].Type == "date" {
+						view.Search += "cast(" + tableid + "." + keyFilter + " as varchar) LIKE '%" + strings.ToLower(filter) + "%'"
+					} else {
+						view.Search += "lower(" + tableid + "." + keyFilter + ") LIKE '%" + strings.ToLower(filter) + "%'"
+					}
 				} else {
 					view.Search += "lower(" + elements[keyFilter].Jointure.Column + ") LIKE '%" + strings.ToLower(filter) + "%'"
 				}

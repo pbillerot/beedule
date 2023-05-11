@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.3 - 11 mai 2023
+- `changed` batman dans echeances
+
 5.14.2 - 10 mai 2023
 - `changed` filtres avec liste et tag
 - `changed` default pris en compte si <> "" lors de l'enregistrement

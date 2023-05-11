@@ -4,6 +4,7 @@
 $(document).ready(function () {
   var isUsed = false;
   var $crud_view = $('#crud_view').val();
+  var $nosubmitkey = $('#nosubmitkey').val();
 
   // CLIC IMAGE POPUP
   var $eddy_refresh = $('#eddy_refresh').val();
@@ -597,7 +598,7 @@ $(document).ready(function () {
     event.preventDefault();
   });
   $('.field').on('keypress', function (event) {
-    if (event.which == 13) {
+    if (!$nosubmitkey && event.which == 13) {
       $('.crud-jquery-submit').trigger('click');
     }
   });

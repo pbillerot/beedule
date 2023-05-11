@@ -106,7 +106,8 @@
   action="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}">
   {{end}}
   {{ .xsrfdata }}
-  {{$card := false}}
+  {{ $card := false}}
+  {{ $nosubmitkey := false}}
   <!-- BOUCLE RECORDS -->
   {{ range $irecord, $record := .Records }}
 <div class="ui form">
@@ -116,6 +117,7 @@
   {{ $class := CrudClassSqlite $element $appid $record $session}}
   {{ $style := CrudStyleSqlite $element $appid $record $session}}
   {{ $type := $element.Type}}
+  {{ if eq $type "textarea" }}{{$nosubmitkey = true}}{{end}}
   {{ $format := ""}}
   {{if or $element.Protected $element.ReadOnly}}
     {{if and $element.Format $val}}
@@ -221,10 +223,10 @@
     class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
     <label>{{$element.LabelLong}}</label>
     {{if $format}}
-    <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$format}}">
-    <input type="date" value="{{$format}}">
-    {{else}}
     <input type="date" name="{{$key}}" id="{{$key}}" value="{{$format}}"
+      {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}}>
+    {{else}}
+    <input type="date" name="{{$key}}" id="{{$key}}" value="{{$val}}"
       {{if $element.PlaceHolder}}placeholder="{{$element.PlaceHolder}}" {{end}}>
     {{end}}
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
@@ -264,7 +266,7 @@
     <label>{{$element.LabelLong}}</label>
     {{if $format}}
     <input type="hidden" name="{{$key}}" id="{{$key}}" value="{{$val}}">
-    <input type="number" value="{{$format}}">
+    <input type="datetime" value="{{$format}}">
     {{else}}
     <input type="datetime-local" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
       placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
@@ -407,7 +409,9 @@
     <div class="ui approve button">Je confirme</div>
   </div>
 </div> <!-- end modal confirm -->
-
+{{if $nosubmitkey}}
+<input type="hidden" id="nosubmitkey" value="true">
+{{end}}
 {{template "_crud_foot.html" .}}
 <!-- Insertion de script spécifique aux rubriques -->
 {{range $k, $v := $script}}
