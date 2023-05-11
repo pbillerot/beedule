@@ -305,26 +305,32 @@ func EveryDay(ctx context.Context) error {
 						// month ok
 						if day == 0 || (last_day < day && day == now_day) {
 							// day ok
-							result := ""
 							// exécution du sql
 							if rec["sql"] != nil && rec["sql"].(string) != "" {
 								err = CrudExec(rec["sql"].(string), application.AliasDB)
 								if err != nil {
+									// maj result
+									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+										application.TasksTableName, err, id)
+									CrudExec(maj, application.AliasDB)
+									continue
+								} else {
+									// maj result
+									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+										application.TasksTableName, "ok", id)
+									CrudExec(maj, application.AliasDB)
+									continue
+								}
+							}
+							// exécution du shell
+							if rec["shell"] != nil && rec["shell"].(string) != "" {
+								result, err := ShellExec(rec["shell"].(string))
 								// maj result
 								maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
 									application.TasksTableName, result, id)
 								CrudExec(maj, application.AliasDB)
-								Continue
-							}
-							// exécution du shell
-							if rec["shell"] != nil && rec["shell"].(string) != "" {
-								result, err = ShellExec(rec["shell"].(string))
 								if err != nil {
-									// maj result
-									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
-										application.TasksTableName, result, id)
-									CrudExec(maj, application.AliasDB)
-									Continue
+									continue
 								}
 							}
 							// maj planif

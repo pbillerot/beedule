@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.4 - 11 mai 2023
+- `added` batman erreur sql et shell dans colonne result
+
 5.14.3 - 11 mai 2023
 - `changed` batman dans echeances
 
