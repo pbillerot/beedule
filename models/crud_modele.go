@@ -305,20 +305,24 @@ func EveryDay(ctx context.Context) error {
 						// month ok
 						if day == 0 || (last_day < day && day == now_day) {
 							// day ok
+							// raz result
+							sql := fmt.Sprintf("update %s set result = '%s', date_run = '%s' where id = %d",
+								application.TasksTableName, "...", time.Now().Format("2006-01-02 15:04:05"), id)
+							CrudExec(sql, application.AliasDB)
 							// exécution du sql
 							if rec["sql"] != nil && rec["sql"].(string) != "" {
 								err = CrudExec(rec["sql"].(string), application.AliasDB)
 								if err != nil {
 									// maj result
-									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+									sql = fmt.Sprintf("update %s set result = '%s' where id = %d",
 										application.TasksTableName, err, id)
-									CrudExec(maj, application.AliasDB)
+									CrudExec(sql, application.AliasDB)
 									continue
 								} else {
 									// maj result
-									maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+									sql = fmt.Sprintf("update %s set result = '%s' where id = %d",
 										application.TasksTableName, "ok", id)
-									CrudExec(maj, application.AliasDB)
+									CrudExec(sql, application.AliasDB)
 									continue
 								}
 							}
@@ -326,17 +330,17 @@ func EveryDay(ctx context.Context) error {
 							if rec["shell"] != nil && rec["shell"].(string) != "" {
 								result, err := ShellExec(rec["shell"].(string))
 								// maj result
-								maj := fmt.Sprintf("update %s set result = '%s' where id = %d",
+								sql = fmt.Sprintf("update %s set result = '%s' where id = %d",
 									application.TasksTableName, result, id)
-								CrudExec(maj, application.AliasDB)
+								CrudExec(sql, application.AliasDB)
 								if err != nil {
 									continue
 								}
 							}
 							// maj planif
-							maj := fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
+							sql = fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
 								application.TasksTableName, now_day, now_month, id)
-							err = CrudExec(maj, application.AliasDB)
+							err = CrudExec(sql, application.AliasDB)
 							if err != nil {
 								continue
 							}

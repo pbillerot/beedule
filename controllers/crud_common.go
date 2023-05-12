@@ -169,6 +169,13 @@ func mergeElements(c beego.Controller, appid string, tableid string, viewOrFormE
 					element.Width = "m"
 				}
 				element.ColNoWrap = true
+			case "datetime":
+				if element.Format == "" {
+					element.Format = "datetime"
+				}
+				if element.Width == "" {
+					element.Width = "m"
+				}
 			case "editor":
 				if element.Class == "" {
 					element.Class = "warning"

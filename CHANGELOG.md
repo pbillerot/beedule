@@ -17,6 +17,10 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.5 - 12 mai 2023
+- `added` batman ajout date run
+- `added` format type datetime
+
 5.14.4 - 11 mai 2023
 - `added` batman erreur sql et shell dans colonne result
 

@@ -241,6 +241,8 @@ func CrudFormat(in string, v interface{}) (out string) {
 				return ""
 			}
 			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d','"+value+"')", "default")
+		} else if in == "datetime" {
+			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d %H:%M:%S','"+value+"')", "default")
 		} else if in == "time" {
 			if strings.Contains(value, "00-00-00") {
 				return ""
