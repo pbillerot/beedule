@@ -306,7 +306,7 @@ func EveryDay(ctx context.Context) error {
 						if day == 0 || (last_day < day && day == now_day) {
 							// day ok
 							// raz result
-							sql := fmt.Sprintf("update %s set result = '%s', date_run = '%s' where id = %d",
+							sql := fmt.Sprintf("update %s set result = '%s', date_run = '%s', cret = 0 where id = %d",
 								application.TasksTableName, "...", time.Now().Format("2006-01-02 15:04:05"), id)
 							CrudExec(sql, application.AliasDB)
 							// exécution du sql
@@ -314,7 +314,7 @@ func EveryDay(ctx context.Context) error {
 								err = CrudExec(rec["sql"].(string), application.AliasDB)
 								if err != nil {
 									// maj result
-									sql = fmt.Sprintf("update %s set result = '%s' where id = %d",
+									sql = fmt.Sprintf("update %s set result = '%s', cret = 1 where id = %d",
 										application.TasksTableName, err, id)
 									CrudExec(sql, application.AliasDB)
 									continue
@@ -334,6 +334,10 @@ func EveryDay(ctx context.Context) error {
 									application.TasksTableName, result, id)
 								CrudExec(sql, application.AliasDB)
 								if err != nil {
+									// maj result
+									sql = fmt.Sprintf("update %s set cret = 1 where id = %d",
+										application.TasksTableName, id)
+									CrudExec(sql, application.AliasDB)
 									continue
 								}
 							}

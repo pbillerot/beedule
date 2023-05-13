@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.6 - 13 mai 2023
+- `added` batman ajout cret - coloriage si erreur
+
 5.14.5 - 12 mai 2023
 - `added` batman ajout date run
 - `added` format type datetime
