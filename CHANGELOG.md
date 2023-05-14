@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.8 - 14 mai 2023
+- `changed` overflow-x visible
+
 5.14.7 - 14 mai 2023
 - `fixed` le bouton recherche n'était pas caché lors de l'activation de la recherche
 
