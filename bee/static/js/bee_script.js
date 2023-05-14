@@ -149,6 +149,7 @@ $(document).ready(function () {
   $('.crud-search-active').on('click', function (event) {
     var $content = $(this).closest('.crud-search-div');
     $content.find('.crud-search').show();
+    $content.find('.crud-search-active').hide();
     $content.find('.header').hide();
     $content.find('.meta').hide();
     $content.find('input').focus();
@@ -159,6 +160,7 @@ $(document).ready(function () {
     var $content = $(this).closest('.crud-search-div');
     $content.find('.crud-search-input').val('');
     $content.find('.crud-search').hide();
+    $content.find('.crud-search-active').show();
     $content.find('.header').show();
     $content.find('.meta').show();
     if ($content.find('.crud-search-input-1').val().length == 0) {

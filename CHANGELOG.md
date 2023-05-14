@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.14.7 - 14 mai 2023
+- `fixed` le bouton recherche n'était pas caché lors de l'activation de la recherche
+
 5.14.6 - 13 mai 2023
 - `added` batman ajout cret - coloriage si erreur
 
