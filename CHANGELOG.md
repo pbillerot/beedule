@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.15.0 - 16 mai 2023
+- `added` manifest.com pour intégration WPA (Progressive Web App)
+
 5.14.8 - 14 mai 2023
 - `changed` overflow-x visible
 
