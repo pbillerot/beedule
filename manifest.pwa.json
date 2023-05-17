@@ -1,22 +1,16 @@
 {
-    "background_color": "#ffffff",
     "description": "Cadriciel de développement WEB en Yaml et Sql",
-    "dir": "ltr",
     "display": "standalone",
-    "name": "Beedule",
-    "orientation": "any",
-    "scope": "/",
+    "name": "Beedule le framework",
     "short_name": "beedule",
     "start_url": "/",
-    "theme_color": "#ffffff",
-    "categories": [],
     "screenshots": ["/bee/static/img/apropos.png"],
     "icons": [
       {
         "src": "/bee/static/img/beedule.png",
+        "sizes": "252x252",
         "type": "image/png"
       }
     ],
-    "shortcuts": [],
     "lang": "fr"
   }

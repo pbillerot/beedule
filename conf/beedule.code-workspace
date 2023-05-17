@@ -7,5 +7,7 @@
 			"path": "../../../../../../../../volshare/data/beedule"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"sqltools.connections": []
+	}
 }
