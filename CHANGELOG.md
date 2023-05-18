@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.15.2 - 18 mai 2023
+- `fixed` filtre avec recherche dans la liste et mémorisation saisie 
+
 5.15.1 - 17 mai 2023
 - `changed` manifest.pwa.lson intégré dans header html
 

@@ -162,11 +162,10 @@
         {{ $val := index $filters $key}}
         <div class="bee-width-s field">
           {{if or (eq $element.Type "tag") (eq $element.Type "list") (eq $element.Type "radio")}}
-          <select name="{{$key}}" id="{{$key}}" class="ui fluid dropdown">
+          <select name="{{$key}}" id="{{$key}}" class="ui fluid search dropdown">
             <option value="">{{$element.PlaceHolder}}</option>
             {{range $num, $item := $element.Items}}
-            <option value="{{$item.Key}}" {{if CrudContains $val $item.Key}} selected="" {{end}}>{{$item.Label}}
-            </option>
+            <option value="{{$item.Key}}" {{if eq $item.Key $val}} selected="" {{end}}>{{$item.Label}}</option>
             {{end}}
           </select>
           {{else}}

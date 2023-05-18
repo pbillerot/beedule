@@ -238,8 +238,7 @@
     <select name="{{$key}}" id="{{$key}}" class="ui fluid search dropdown">
       <option value="">{{$element.PlaceHolder}}</option>
       {{range $num, $item := $element.Items}}
-      <option value="{{$item.Key}}" {{if (eq $item.Key $val)}} selected="" {{end}}>
-        {{$item.Label}}</option>
+      <option value="{{$item.Key}}" {{if (eq $item.Key $val)}} selected="" {{end}}>{{$item.Label}}</option>
       {{end}}
     </select>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
@@ -334,8 +333,7 @@
     <select name="{{$key}}" id="{{$key}}" multiple="" class="ui fluid dropdown">
       <option value="">{{$element.PlaceHolder}}</option>
       {{range $num, $item := $element.Items}}
-      <option value="{{$item.Key}}" {{if CrudContains $val $item.Key}} selected="" {{end}}>{{$item.Label}}
-      </option>
+      <option value="{{$item.Key}}" {{if CrudContains $val $item.Key}} selected="" {{end}}>{{$item.Label}}</option>
       {{end}}
     </select>
     {{if $element.Help}}<span class="ui small blue text">{{$element.Help | markdown}}</span>{{end}}
