@@ -17,6 +17,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.16.0 - 22 mai 2023
+- `fixed` petites corrections suite rédaction de la doc
+
 5.15.2 - 18 mai 2023
 - `fixed` filtre avec recherche dans la liste et mémorisation saisie 
 

@@ -124,7 +124,6 @@ type Element struct {
 	Params        Params            // paramètres optionnels
 	Pattern       string            // Pattern de l'input HTML
 	PlaceHolder   string            `yaml:"place-holder"` // Label dans le champ en saisie si vide
-	PostAction    []Action          `yaml:"post-action"`  // actions sql ou plugin à exécuter après la mise à jour
 	Protected     bool              // Est en mise à jour mais protégé en saisie
 	ReadOnly      bool              `yaml:"read-only"` // Lecteur seule
 	Record        orm.Params        // l'enregistrement  valorisant la rubrique

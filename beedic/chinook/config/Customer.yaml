@@ -82,27 +82,16 @@ views:
         - SupportRepId
     elements:
       CustomerId:
-        order: 10
       FirstName:
-        order: 20
       LastName:
-        order: 30
       Company:
-        order: 40
       Address:
-        order: 50
       City:
-        order: 60
       PostalCode:
-        order: 70
       Phone:
-        order: 80
       Fax:
-        order: 90
       Email:
-        order: 100
       SupportRepId:
-        order: 110
 
   vwallet:
     form-add: fedit

@@ -23,11 +23,13 @@ elements:
     type: list
     label-long: Type média"
     label-short: "Type média"
+    width: m
     items-sql: "SELECT MediaTypeId as 'key', Name as 'label' From MediaType order by Name"
   GenreId:
     type: list
     label-long: "Genre de musique"
     label-short: "Genre"
+    width: m
     items-sql: "SELECT GenreId as 'key', Name as 'label' From Genre order by Name"
   Composer:
     type: text
@@ -158,23 +160,37 @@ forms:
     elements:
       TrackId:
         order: 10
-      Name:
-        order: 20
+        hide: true
       AlbumId:
-        order: 30
+        order: 20
         protected: true
-      MediaTypeId:
-        order: 40
-      GenreId:
-        order: 50
+      _group_title:
+        type: card
+        order: 100
+      Name:
+        order: 110
       Composer:
-        order: 60
+        order: 120
+      _group_media:
+        type: card
+        order: 200
+      MediaTypeId:
+        order: 210
+      GenreId:
+        order: 220
+      _group_data:
+        type: card
+        order: 300
       Milliseconds:
-        order: 70
+        order: 310
       Bytes:
-        order: 80
+        order: 320
+      _group_last:
+        type: card
+        order: 400
       UnitPrice:
-        order: 90
+        order: 410
+
   fview:
     title: "Morceau"
     groupe: chinook
