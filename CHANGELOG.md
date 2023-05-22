@@ -3,19 +3,15 @@
 Historique des modifications
 
 ### À venir :
-- bug refresh cotation
-- eddy: ctrl+h
-
-- bouton dans formulaire pour remplir autres zones -> query
-- view actions sur ligne ou appuis long
-- doc enlever option element.grid
-- element.button dans un formulaire non testé
-- doc vue smart structure smart
+- 
 
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
+
+5.16.1 - 22 mai 2023
+- `deleted` suppression de l'option element.PostAction
 
 5.16.0 - 22 mai 2023
 - `fixed` petites corrections suite rédaction de la doc

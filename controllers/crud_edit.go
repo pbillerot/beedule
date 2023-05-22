@@ -315,30 +315,6 @@ func (c *CrudEditController) Post() {
 		}
 	}
 
-	// PostActions des éléments
-	for _, element := range elements {
-		if len(element.PostAction) > 0 {
-			// Traitement des actions
-			for _, action := range element.PostAction {
-				if berr {
-					break
-				}
-				// Traitement SQL
-				for _, actionsql := range action.SQL {
-					sql := macro(c.Controller, appid, actionsql, record)
-					if sql != "" {
-						err = models.CrudExec(sql, table.Setting.AliasDB)
-						if err != nil {
-							flash.Error(err.Error())
-							flash.Store(&c.Controller)
-							berr = true
-						}
-					}
-				}
-			}
-		}
-	}
-
 	// PostSQL du formulaire
 	for _, postsql := range form.PostSQL {
 		// Remplissage d'un record avec les elements.SQLout
