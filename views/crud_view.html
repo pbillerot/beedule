@@ -94,7 +94,7 @@
           {{range $iaction, $action := $form.Actions}}
           {{if not $action.Hide}}
           <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-            data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
+            data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
           {{end}}
           {{end}}
           <!-- end range actions-->
@@ -203,7 +203,9 @@
               {{if eq $uiView.View.Type "card"}}
               {{template "_crud_card.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
               {{else}}
+              <div style="margin-top: 1.5em;">
               {{template "_crud_table.html" (dict "Session" $session "AppId" $appid "UIView" $uiView)}}
+              </div>
               {{end}}
             {{else}}
             <div class="card raised crud-card-view bee-width-{{$element.Width}} {{$element.Class}}">
@@ -409,7 +411,7 @@
   </main>
   <!-- Demande de confirmation de la suppression -->
   <div id="crud-modal-confirm" class="ui tiny modal">
-    <div class="header">Suppression de {{$coldisplay}}</div>
+    <div class="header" id="crud-action">texte à venir</div>
     <div class="content">
       <p>Veuillez le confirmer</p>
     </div>

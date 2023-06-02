@@ -76,7 +76,7 @@ func (c *CrudDeleteController) Post() {
 	}
 
 	if len(records) == 0 {
-		flash.Error("Enregistrement non trouvé: ", id)
+		flash.Error("Enregistrement non trouvé: %v", id)
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return

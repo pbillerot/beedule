@@ -211,7 +211,7 @@ func (c *CrudAddController) Post() {
 			}
 		} else {
 			logs.Error("Ordre sql incorrect ", postsql)
-			flash.Error("Ordre sql incorrect ", postsql)
+			flash.Error("Ordre sql incorrect %s", postsql)
 			flash.Store(&c.Controller)
 			backward(c.Controller)
 			return

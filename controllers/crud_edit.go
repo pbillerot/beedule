@@ -144,19 +144,19 @@ func (c *CrudEditController) Post() {
 		if _, ok := val.Views[viewid]; ok {
 			if _, ok := val.Forms[formid]; ok {
 			} else {
-				flash.Error("Formulaire non trouvé :", formid)
+				flash.Error("Formulaire non trouvé : %v", formid)
 				flash.Store(&c.Controller)
 				backward(c.Controller)
 				return
 			}
 		} else {
-			flash.Error("Vue non trouvée :", viewid)
+			flash.Error("Vue non trouvée : %v", viewid)
 			flash.Store(&c.Controller)
 			backward(c.Controller)
 			return
 		}
 	} else {
-		flash.Error("Application non trouvée :", appid)
+		flash.Error("Application non trouvée : %v", appid)
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return
@@ -191,7 +191,7 @@ func (c *CrudEditController) Post() {
 	}
 
 	if len(records) == 0 {
-		flash.Error("Enregistrement non trouvé: ", id)
+		flash.Error("Enregistrement non trouvé: %v", id)
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return

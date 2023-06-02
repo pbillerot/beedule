@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.16.2 - 2 juin 2023
+- `fixed` actions dans une formview traitées maintenant
+
 5.16.1 - 22 mai 2023
 - `deleted` suppression de l'option element.PostAction
 

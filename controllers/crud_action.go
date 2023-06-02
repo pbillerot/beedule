@@ -151,7 +151,49 @@ func (c *CrudActionFormController) Post() {
 	}
 
 	setContext(c.Controller, appid, tableid)
-	var withPlugin bool
+	// var withPlugin bool
+
+	// Si un formView est défini on utilisera son modèle pour les éléments
+	if form.Group == "" {
+		form.Group = view.Group
+	}
+	if form.Group == "" {
+		form.Group = dico.Ctx.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, form.Group, appid, id) {
+		logs.Error("Accès non autorisé", c.GetSession("Username").(string), formid, form.Group)
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		backward(c.Controller)
+		return
+	}
+	// var elementsVF map[string]dico.Element
+	var elementsVF = form.Elements
+	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
+	elements, _ := mergeElements(c.Controller, appid, tableid, elementsVF, id)
+
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
+	// lecture du record
+	records, err := models.CrudRead(filter, appid, tableid, id, elements)
+	if err != nil {
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	}
+	if len(records) == 0 {
+		flash.Error("Enregistrement non trouvé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		return
+	}
 
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
@@ -163,7 +205,7 @@ func (c *CrudActionFormController) Post() {
 	if iactionid <= len(form.Actions) {
 		// Exécution des ordres SQL
 		for _, action := range form.Actions[iactionid].SQL {
-			sql := macro(c.Controller, appid, action, orm.Params{})
+			sql := macro(c.Controller, appid, action, records[0])
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
@@ -177,11 +219,12 @@ func (c *CrudActionFormController) Post() {
 		flash.Store(&c.Controller)
 	}
 
-	if withPlugin {
-		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
-	} else {
-		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
-	}
+	// if withPlugin {
+	// 	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
+	// } else {
+	// 	c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	// }
+	c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 }
 
 // CrudActionElementController as
@@ -233,7 +276,7 @@ func (c *CrudActionElementController) Post() {
 	}
 
 	setContext(c.Controller, appid, tableid)
-	var withPlugin bool
+	// var withPlugin bool
 
 	// Si un formView est défini on utilisera son modèle pour les éléments
 	form := dico.Ctx.Applications[appid].Tables[tableid].Forms[formid]
@@ -307,11 +350,12 @@ func (c *CrudActionElementController) Post() {
 		flash.Error(err.Error())
 		flash.Store(&c.Controller)
 	}
-	if withPlugin {
-		c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
-	} else {
-		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
-	}
+	// if withPlugin {
+	// 	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
+	// } else {
+	// 	c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+	// }
+	c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 }
 
 // CrudActionAjaxController as

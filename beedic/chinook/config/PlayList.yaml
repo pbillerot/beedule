@@ -18,15 +18,6 @@ elements:
     type: number
     label-long: "Morceaux"
     label-short: "Morceaux"
-  _tracks:
-    type: card
-    label-long: "Titres de la playliste : {Name}"
-    width: max
-    icon-name: "file audio"
-    params:
-      table: Track
-      view: vplaylist
-      where: "TrackId in (select TrackId from PlaylistTrack where PlaylistTrack.PlaylistId = '{PlaylistId}')"
 
 views:
   vall:
@@ -67,9 +58,18 @@ forms:
     elements:
       PlaylistId:
         order: 10
-        hide: true
+        hide: false
       Name:
         order: 20
-        hide: true
+        hide: false
       _tracks:
         order: 100
+        type: card
+        label-long: "Titres de la playliste : {Name}"
+        width: max
+        icon-name: "file audio"
+        params:
+          without-frame: true
+          table: Track
+          view: vplaylist
+          where: "TrackId in (select TrackId from PlaylistTrack where PlaylistTrack.PlaylistId = '{PlaylistId}')"
