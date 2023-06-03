@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.17.0 - 3 juin 2023
+- `added` appui long sur un article pour le sélectionner (encadrer) - à suivre...
+
 5.16.2 - 2 juin 2023
 - `fixed` actions dans une formview traitées maintenant
 

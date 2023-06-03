@@ -95,6 +95,7 @@ tr.crud-list-selected,
 {
     -webkit-box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
     box-shadow: 0 0 0 1px #767676, 0 2px 0 0 #767676, 0 1px 3px 0 #767676;
+    pointer-events: none;
 }
 
 .ui.cards>.crud-gondole {

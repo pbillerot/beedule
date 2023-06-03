@@ -460,7 +460,7 @@
         {{ $val := CrudIndex $record $key}}
         <!-- type -->
         {{if (eq $element.Type "button")}}
-        <a class="right floated acrud-jquery-ajax"
+        <a class="right floated crud-jquery-ajax"
         data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
         {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
         </a>
