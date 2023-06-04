@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.17.1 - 4 juin 2023
+- `fixed` encadrement card selected qui ne faisait plus
+
 5.17.0 - 3 juin 2023
 - `added` appui long sur un article pour le sélectionner (encadrer) - à suivre...
 

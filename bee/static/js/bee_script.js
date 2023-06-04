@@ -537,30 +537,31 @@ $(document).ready(function () {
   });
 
   // APPUI LONG SUR UNE LIGNE OU CARD
-  // $('.crud-jquery-url').on('press', function (event) {
-  //   isUsed = true;
-  //   // Mémo de la ligne sélectionnée d'une table dans un cookie
-  //   if ($(this).prop("nodeName") == "TR") {
-  //     $(this).closest('.table').find('.crud-list-selected').removeClass('crud-list-selected');
-  //     var $node = $(this).closest("table");
-  //     var $app = $node.data("app");
-  //     var $table = $node.data("table");
-  //     var $view = $node.data("view");
-  //     var $anchorid = $app + "-" + $table + "-" + $view
-  //     Cookies.set($anchorid, $(this).data("url"))
-  //     $(this).addClass("crud-list-selected");
-  //   } else if ($(this).hasClass("card")) {
-  //     $(this).closest('.cards').find('.crud-list-selected').removeClass('crud-list-selected');
-  //     var $anchorid = $("#crud_view").val();
-  //     Cookies.set($anchorid, $(this).data("url"))
-  //     $(this).addClass("crud-list-selected");
-  //     $(this).removeClass("raised");
-  //   }
-  //   event.preventDefault();
-  // });
+  $('.crud-jquery-url').on('press', function (event) {
+    isUsed = true;
+    // Mémo de la ligne sélectionnée d'une table dans un cookie
+    if ($(this).prop("nodeName") == "TR") {
+      $(this).closest('.table').find('.crud-list-selected').removeClass('crud-list-selected');
+      var $node = $(this).closest("table");
+      var $app = $node.data("app");
+      var $table = $node.data("table");
+      var $view = $node.data("view");
+      var $anchorid = $app + "-" + $table + "-" + $view
+      Cookies.set($anchorid, $(this).data("url"))
+      $(this).addClass("crud-list-selected");
+    } else if ($(this).hasClass("card")) {
+      $(this).closest('.cards').find('.crud-list-selected').removeClass('crud-list-selected');
+      var $anchorid = $("#crud_view").val();
+      Cookies.set($anchorid, $(this).data("url"))
+      $(this).addClass("crud-list-selected");
+      $(this).removeClass("raised");
+    }
+    event.preventDefault();
+    isUsed = false;
+  });
   
   // CLIC URL
-  $('.crud-jquery-url').on('click', function (event) {
+  $('.crud-jquery-url').on('tap', function (event) {
     if (isUsed) {
       event.preventDefault();
       return
