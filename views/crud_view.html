@@ -256,13 +256,6 @@
           {{end}}
         <!-- ***************** /CARD -->
         <!-- DEBUT type -->
-        {{else if (eq $element.Type "action")}}
-        <div class="meta">
-        <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-          {{style $style}} data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$key}}">
-          {{$element.LabelLong}}
-        </button>
-        </div>
         {{else if (eq $element.Type "button")}}
         <div class="meta">
           <button class="ui {{$theme}} button crud-jquery-button" {{style $style}}

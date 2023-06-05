@@ -134,41 +134,6 @@
   {{ if $card}}</div>{{end}}
   <div class="fields">
     {{$card = true}}
-{{else if (eq $type "action")}}
-  {{if $element.Params.WithInput }}
-  <div
-    class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
-    <div class="ui action input">
-      <input type="text" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
-      placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
-      {{end}} value="{{$val}}">
-      <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
-      {{$element.LabelLong}}
-      </button>
-    </div>
-  </div>
-  {{else if $element.Params.WithInputFile }}
-  <div
-    class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
-    <div class="ui action input">
-      <input type="file" name="{{$key}}" id="{{$key}}" {{if $element.PlaceHolder}}
-      placeholder="{{$element.PlaceHolder}}" {{end}}{{if $element.Pattern}} pattern="{{$element.Pattern}}"
-      {{end}} value="{{$val}}">
-      <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
-      {{$element.LabelLong}}
-      </button>
-    </div>
-  </div>
-  {{else}}
-  <div class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
-    <button class="ui {{$theme}} button crud-jquery-action" data-confirm="{{$element.Params.WithConfirm}}"
-      data-url="/bee/actione/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formid}}/{{$id}}/{{$key}}">
-      {{$element.LabelLong}}
-    </button>
-  </div>
-{{end}}
 {{else if (eq $type "button")}}
   <div
   class="{{if(eq $element.Protected true)}}disabled {{end}}{{if(eq $element.ReadOnly true)}}disabled {{end}}{{if(eq $element.Required true)}}required {{end}} bee-width-{{$element.Width}} field {{$element.Error}}">
