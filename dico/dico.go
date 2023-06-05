@@ -131,7 +131,7 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
-	Type          string            // Type : action amount button card chart checkbox counter date email float image list number password pdf percent plugin tag tel text textarea time radio url
+	Type          string            // Type : amount button card chart checkbox counter date email float image list number password pdf percent plugin tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit	WithSum       bool              // dans une table calcule la somme des valeurs
 	WithScript    string            `yaml:"with-script"` // javascript de présentation
 	WithSum       bool              `yaml:"with-sum"`    // dans une table calcule la somme des valeurs
@@ -190,26 +190,21 @@ type Form struct {
 
 // Params paramètres d'un élément
 type Params struct {
-	Action          string
-	Dataset         map[string]string // card: champs fournis à la vue
-	Form            string            // card: form à ouvrir
-	Header          []string          // card pour image
-	Description     []string          // card pour image
-	Meta            []string          // card pour image
-	Extra           []string          // card pour image
-	URL             string            `yaml:"url"`
-	Src             string            // card: src de l'image
-	SQL             []string          `yaml:"sql"`
-	Table           string            // card:
-	Target          string            // target si URL
-	Title           string            // title sur une image
-	View            string            // card:
-	Where           string            // card: + params.table + params.view
-	WithConfirm     bool              `yaml:"with-confirm"`
-	WithInput       bool              `yaml:"witn-input"`
-	WithInputFile   bool              `yaml:"with-input-file"`
-	WithImageEditor bool              `yaml:"with-image-editor"`
-	WithoutFrame    bool              `yaml:"without-frame"` // card sans cadre
+	Form         string   // card: form à ouvrir
+	Header       []string // card pour image
+	Description  []string // card pour image
+	Meta         []string // card pour image
+	Extra        []string // card pour image
+	URL          string   `yaml:"url"`
+	Src          string   // card: src de l'image
+	SQL          []string `yaml:"sql"`
+	Table        string   // card:
+	Target       string   // target si URL
+	Title        string   // title sur une image
+	View         string   // card:
+	Where        string   // card: + params.table + params.view
+	WithConfirm  bool     `yaml:"with-confirm"`
+	WithoutFrame bool     `yaml:"without-frame"` // card sans cadre
 }
 
 // Action dans le menu d'une vue ou formulaire
