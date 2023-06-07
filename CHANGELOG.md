@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.17.2 - 7 juin 2023
+- `fixed` abandon appui long sur article
+
 5.17.1 - 4 juin 2023
 - `fixed` encadrement card selected qui ne faisait plus
 
