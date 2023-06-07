@@ -131,7 +131,7 @@ type Element struct {
 	SortDirection string            `yaml:"sort-direction"` // "", ascending, ou descending pour demander un tri à la requête sql
 	SQLout        string            `yaml:"sql-out"`        // Valeur à enregistrer dans la base de données (zone calculée par le beedule)
 	StyleSqlite   string            `yaml:"style-sqlite"`   // style de la cellule
-	Type          string            // Type : amount button card chart checkbox counter date email float image list number password pdf percent plugin tag tel text textarea time radio url
+	Type          string            // Type : amount button card chart checkbox counter date email float image list number password pdf percent tag tel text textarea time radio url
 	Width         string            // largeur s m l xl xxl max 150px 360px 450px 600px 750px 100% dans view et edit	WithSum       bool              // dans une table calcule la somme des valeurs
 	WithScript    string            `yaml:"with-script"` // javascript de présentation
 	WithSum       bool              `yaml:"with-sum"`    // dans une table calcule la somme des valeurs
@@ -148,6 +148,7 @@ func (element *Element) HashPassword(password string) string {
 
 // View Vue d'une table
 type View struct {
+	ActionPress    Action             // Action sur appui long sur l'article
 	Actions        []Action           // Action sur la vue (ordres sql)
 	Card           CardList           // Masque html d'une ligne dans la vue
 	ClassSqlite    string             `yaml:"class-sqlite"` // couleur theme de la ligne

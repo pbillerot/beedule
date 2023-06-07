@@ -561,7 +561,7 @@ $(document).ready(function () {
   });
   
   // CLIC URL
-  $('.crud-jquery-url').on('tap', function (event) {
+  $('.crud-jquery-url').on('click', function (event) {
     if (isUsed) {
       event.preventDefault();
       return
