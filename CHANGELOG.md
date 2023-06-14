@@ -3,12 +3,15 @@
 Historique des modifications
 
 ### À venir :
-- 
+- filtres avec < > !
 
 - `fixed` 
 - `added` 
 - `deleted` 
 - `changed` 
+
+5.17.3 - 14 juin 2023
+- `fixed` correction filtre sur colonne numérique
 
 5.17.2 - 7 juin 2023
 - `fixed` abandon appui long sur article
