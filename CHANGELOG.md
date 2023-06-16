@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.18.0 - 16 juin 2023
+- `added` appui long sur article actif
+
 5.17.3 - 14 juin 2023
 - `fixed` correction filtre sur colonne numérique
 
