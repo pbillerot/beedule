@@ -91,6 +91,100 @@ func (c *CrudActionViewController) Post() {
 	c.Ctx.Redirect(302, "/bee/list/"+appid+"/"+tableid+"/"+viewid)
 }
 
+// CrudActionPressController as
+type CrudActionPressController struct {
+	loggedRouter
+}
+
+// Post CrudActionPressController
+func (c *CrudActionPressController) Post() {
+	appid := c.Ctx.Input.Param(":app")
+	tableid := c.Ctx.Input.Param(":table")
+	viewid := c.Ctx.Input.Param(":view")
+	id := c.Ctx.Input.Param(":id")
+
+	flash := beego.ReadFromRequest(&c.Controller)
+
+	// Ctrl appid tableid viewid formid
+	if _, ok := dico.Ctx.Applications[appid]; !ok {
+		logs.Error("App not found", c.GetSession("Username").(string), appid)
+		backward(c.Controller)
+		return
+	}
+	if val, ok := dico.Ctx.Applications[appid].Tables[tableid]; ok {
+		if _, ok := val.Views[viewid]; ok {
+		} else {
+			logs.Error("View not found", c.GetSession("Username").(string), viewid)
+			backward(c.Controller)
+			return
+		}
+	} else {
+		logs.Error("Table not found", c.GetSession("Username").(string), tableid)
+		backward(c.Controller)
+		return
+	}
+
+	// Contrôle d'accès
+	table := dico.Ctx.Applications[appid].Tables[tableid]
+	view := dico.Ctx.Applications[appid].Tables[tableid].Views[viewid]
+	if view.Group == "" {
+		view.Group = dico.Ctx.Applications[appid].Group
+	}
+	if !IsInGroup(c.Controller, view.Group, appid, id) {
+		flash.Error("Accès non autorisé")
+		flash.Store(&c.Controller)
+		backward(c.Controller)
+		return
+	}
+
+	setContext(c.Controller, appid, tableid)
+	// var elementsVF map[string]dico.Element
+	var elementsVF = view.Elements
+	// Fusion des attributs des éléments de la table dans les éléments de la vue ou formulaire
+	elements, _ := mergeElements(c.Controller, appid, tableid, elementsVF, id)
+
+	// Filtrage si élément owner
+	filter := ""
+	for key, element := range elements {
+		// Un seule élément owner par enregistrement
+		if element.Group == "owner" && !IsAdmin(c.Controller) {
+			filter = key + " = '" + c.GetSession("Username").(string) + "'"
+			break
+		}
+	}
+
+	// lecture du record
+	records, err := models.CrudRead(filter, appid, tableid, id, elements)
+	if err != nil {
+		flash.Error(err.Error())
+		flash.Store(&c.Controller)
+	}
+	if len(records) == 0 {
+		flash.Error("Enregistrement non trouvé")
+		flash.Store(&c.Controller)
+		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
+		return
+	}
+
+	// Exécution des ordres SQL
+	for _, action := range view.ActionPress.SQL {
+		sql := macro(c.Controller, appid, action, records[0])
+		if sql != "" {
+			err = models.CrudExec(sql, table.Setting.AliasDB)
+			if err != nil {
+				flash.Error(err.Error())
+				flash.Store(&c.Controller)
+			}
+		}
+	}
+	var rest ajaxSqlResponse
+	rest.Response = "ok"
+	rest.Message = "ça roule"
+	c.Data["json"] = &rest
+	c.ServeJSON()
+
+}
+
 // CrudActionFormController as
 type CrudActionFormController struct {
 	loggedRouter

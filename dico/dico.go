@@ -148,7 +148,7 @@ func (element *Element) HashPassword(password string) string {
 
 // View Vue d'une table
 type View struct {
-	ActionPress    Action             // Action sur appui long sur l'article
+	ActionPress    Action             `yaml:"action-press"` // Action sur appui long sur l'article
 	Actions        []Action           // Action sur la vue (ordres sql)
 	Card           CardList           // Masque html d'une ligne dans la vue
 	ClassSqlite    string             `yaml:"class-sqlite"` // couleur theme de la ligne

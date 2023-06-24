@@ -26,7 +26,7 @@
   {{ $style := CrudMacroSQL $view.StyleSqlite $appid $record $session}}
   <!-- CARD -->
   <div class="ui {{$link}} {{$class}} raised card crud-card-view bee-width-{{$view.Width}} crud-jquery-url"
-    {{style $style}}
+    {{style $style}} {{range $view.ActionPress.SQL}}data-press="/bee/actionp/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"{{end}}
     {{if or $view.FormView $view.Deletable}} data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
     {{else if $view.FormEdit}} data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{end}}>
@@ -324,7 +324,7 @@
           <span>{{$element.LabelLong}}</span>
         </div>
             {{end}}
-          {{else if (eq $element.Type "list")}}<span style=" left floated">
+          {{else if (eq $element.Type "list")}}<span class=" left floated">
           <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span>
           </span>
           {{else if (eq $element.Type "tag")}}
@@ -477,7 +477,7 @@
         </div>
         {{end}}
         {{else if (eq $element.Type "list")}}
-        <span style="right floated">
+        <span class="right floated">
         <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span>
         </span>
         {{else if (eq $element.Type "tag")}}
@@ -496,7 +496,7 @@
         <input type="hidden" name="{{$key}}">
         {{else}}
         <!-- autre type -->
-        <span style="right floated">
+        <span class="right floated">
         <span class="uitext" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
       </span>
         {{end}} 

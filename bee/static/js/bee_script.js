@@ -452,6 +452,7 @@ $(document).ready(function () {
     event.preventDefault();
   });
 
+
   // Exécute en ajax une requête SQL sur le serveur et remplit les champs reçus du formulaire courant
   /**
     <a class="crud-jquery-ajax"
@@ -540,6 +541,7 @@ $(document).ready(function () {
   // APPUI LONG SUR UNE LIGNE OU CARD
   $('.crud-jquery-url').on('press', function (event) {
     isUsed = true;
+    $(this).addClass("disabled");
     // Mémo de la ligne sélectionnée d'une table dans un cookie
     if ($(this).prop("nodeName") == "TR") {
       $(this).closest('.table').find('.crud-list-selected').removeClass('crud-list-selected');
@@ -556,6 +558,65 @@ $(document).ready(function () {
       Cookies.set($anchorid, $(this).data("url"))
       $(this).addClass("crud-list-selected");
       $(this).removeClass("raised");
+      var $datas = new FormData();
+      var xsrf = $("#xsrf").val();
+      $datas.append("_xsrf", xsrf);
+        var $press = $(this).data("press");
+      if ($press) {
+        $.ajax({
+          type: "POST",
+          url: $press,
+          data: $datas,
+          dataType: 'json',
+          cache: false,
+          contentType: false,
+          processData: false,
+        })
+          //Ce code sera exécuté en cas de succès - La réponse du serveur est passée à done()
+          //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
+          .done(function (data) {
+            let mes = JSON.stringify(data);
+            // if (data.Response != "ok") {
+            //   $.toast({
+            //     message: data.Message,
+            //     class: 'error',
+            //     className: {
+            //       toast: 'ui message'
+            //     },
+            //     position: 'bottom center',
+            //     minDisplayTime: 1500
+            //   });
+            // } else {
+            //   $.toast({
+            //     message: data.Message,
+            //     class: 'success',
+            //     className: {
+            //       toast: 'ui message'
+            //     },
+            //     position: 'bottom center',
+            //     minDisplayTime: 1500
+            //   });
+            // }
+            //$("div#res").append(mes);
+          })
+          //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
+          //On peut afficher les informations relatives à la requête et à l'erreur
+          .fail(function (error) {
+            $.toast({
+              message: "La requête s'est terminée en échec. Infos : " + JSON.stringify(error),
+              class: 'error',
+              className: {
+                toast: 'ui message'
+              },
+              position: 'bottom center',
+              minDisplayTime: 1500
+            });
+          })
+          //Ce code sera exécuté que la requête soit un succès ou un échec
+          .always(function () {
+            setTimeout(() => { window.location.reload(true) }, 1500);
+          });
+      } // end press
     }
     event.preventDefault();
   });

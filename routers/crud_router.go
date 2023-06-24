@@ -25,6 +25,7 @@ func init() {
 	beego.Router("/bee/edit/:app/:table/:view/:form/:id", &controllers.CrudEditController{})
 	beego.Router("/bee/delete/:app/:table/:view/:id", &controllers.CrudDeleteController{})
 	beego.Router("/bee/actionv/:app/:table/:view/:action", &controllers.CrudActionViewController{})
+	beego.Router("/bee/actionp/:app/:table/:view/:id", &controllers.CrudActionPressController{})
 	beego.Router("/bee/actionf/:app/:table/:view/:form/:id/:action", &controllers.CrudActionFormController{})
 	beego.Router("/bee/actione/:app/:table/:view/:form/:id/:action", &controllers.CrudActionElementController{})
 	beego.Router("/bee/actionx/:app/:table/:view/:id/:action", &controllers.CrudActionAjaxController{})
