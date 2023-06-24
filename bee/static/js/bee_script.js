@@ -541,7 +541,6 @@ $(document).ready(function () {
   // APPUI LONG SUR UNE LIGNE OU CARD
   $('.crud-jquery-url').on('press', function (event) {
     isUsed = true;
-    $(this).addClass("disabled");
     // Mémo de la ligne sélectionnée d'une table dans un cookie
     if ($(this).prop("nodeName") == "TR") {
       $(this).closest('.table').find('.crud-list-selected').removeClass('crud-list-selected');
@@ -563,6 +562,7 @@ $(document).ready(function () {
       $datas.append("_xsrf", xsrf);
         var $press = $(this).data("press");
       if ($press) {
+        $(this).addClass("disabled");
         $.ajax({
           type: "POST",
           url: $press,
@@ -576,28 +576,6 @@ $(document).ready(function () {
           //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
           .done(function (data) {
             let mes = JSON.stringify(data);
-            // if (data.Response != "ok") {
-            //   $.toast({
-            //     message: data.Message,
-            //     class: 'error',
-            //     className: {
-            //       toast: 'ui message'
-            //     },
-            //     position: 'bottom center',
-            //     minDisplayTime: 1500
-            //   });
-            // } else {
-            //   $.toast({
-            //     message: data.Message,
-            //     class: 'success',
-            //     className: {
-            //       toast: 'ui message'
-            //     },
-            //     position: 'bottom center',
-            //     minDisplayTime: 1500
-            //   });
-            // }
-            //$("div#res").append(mes);
           })
           //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
           //On peut afficher les informations relatives à la requête et à l'erreur

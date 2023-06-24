@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.19.1 - 24 juin 2023
+- `changed` action-press disbled sur la ligne
+
 5.19.0 - 24 juin 2023
 - `added` action-press sur appui long sur article
 
