@@ -405,49 +405,15 @@ $(document).ready(function () {
       contentType: false,
       processData: false,
     })
-      //Ce code sera exécuté en cas de succès - La réponse du serveur est passée à done()
-      //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
       .done(function (data) {
-        let mes = JSON.stringify(data);
-        if (data.Response != "ok") {
-          $.toast({
-            message: data.Message,
-            class: 'error',
-            className: {
-              toast: 'ui message'
-            },
-            position: 'bottom center',
-            minDisplayTime: 1500
-          });
-        } else {
-          $.toast({
-            message: data.Message,
-            class: 'success',
-            className: {
-              toast: 'ui message'
-            },
-            position: 'bottom center',
-            minDisplayTime: 1500
-          });
-        }
-        //$("div#res").append(mes);
+        // code en cas de succès
       })
-      //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
-      //On peut afficher les informations relatives à la requête et à l'erreur
       .fail(function (error) {
-        $.toast({
-          message: "La requête s'est terminée en échec. Infos : " + JSON.stringify(error),
-          class: 'error',
-          className: {
-            toast: 'ui message'
-          },
-          position: 'bottom center',
-          minDisplayTime: 1500
-        });
+        // code en cas d'échec
       })
-      //Ce code sera exécuté que la requête soit un succès ou un échec
       .always(function () {
-        setTimeout(() => { window.location.reload(true) }, 1500);
+        // code systématique
+        window.location.reload(true);
       });
     event.preventDefault();
   });
@@ -557,45 +523,34 @@ $(document).ready(function () {
       Cookies.set($anchorid, $(this).data("url"))
       $(this).addClass("crud-list-selected");
       $(this).removeClass("raised");
+    }
+    // traitement de vue.action-press
+    var $urlpress = $(this).data("press");
+    if ($urlpress) {
+      $(this).addClass("disabled");
       var $datas = new FormData();
       var xsrf = $("#xsrf").val();
       $datas.append("_xsrf", xsrf);
-        var $press = $(this).data("press");
-      if ($press) {
-        $(this).addClass("disabled");
-        $.ajax({
-          type: "POST",
-          url: $press,
-          data: $datas,
-          dataType: 'json',
-          cache: false,
-          contentType: false,
-          processData: false,
+      $.ajax({
+        type: "POST",
+        url: $urlpress,
+        data: $datas,
+        dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+      })
+        .done(function (data) {
+          // code en cas de succès
         })
-          //Ce code sera exécuté en cas de succès - La réponse du serveur est passée à done()
-          //On peut par exemple convertir cette réponse en chaine JSON et insérer cette chaine dans un div id="res"
-          .done(function (data) {
-            let mes = JSON.stringify(data);
-          })
-          //Ce code sera exécuté en cas d'échec - L'erreur est passée à fail()
-          //On peut afficher les informations relatives à la requête et à l'erreur
-          .fail(function (error) {
-            $.toast({
-              message: "La requête s'est terminée en échec. Infos : " + JSON.stringify(error),
-              class: 'error',
-              className: {
-                toast: 'ui message'
-              },
-              position: 'bottom center',
-              minDisplayTime: 1500
-            });
-          })
-          //Ce code sera exécuté que la requête soit un succès ou un échec
-          .always(function () {
-            setTimeout(() => { window.location.reload(true) }, 1500);
-          });
-      } // end press
-    }
+        .fail(function (error) {
+          // code en cas d'échec
+        })
+        .always(function () {
+          // code systématique
+          window.location.reload(true);
+        });
+    } // end press
     event.preventDefault();
   });
   // CLIC URL

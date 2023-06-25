@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.19.2 - 25 juin 2023
+- `changed` action-press sans affichage
+
 5.19.1 - 24 juin 2023
 - `changed` action-press disbled sur la ligne
 
