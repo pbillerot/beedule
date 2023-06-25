@@ -2,56 +2,48 @@
 <!DOCTYPE html>
 <html>
 {{template "_crud_head.html" .}}
-<style type="text/css">
-  body>.grid {
-    height: 100%;
-  }
-
-  .image {
-    margin-top: -100px;
-  }
-
-  .column {
-    max-width: 450px;
-  }
-</style>
 
 <body>
-  <div class="ui middle aligned center aligned grid">
-    <div class="column">
-      <h2 class="ui {{.Config.Theme}} image header">
-        <img src="{{.Config.Icone}}" class="medium image">
-        <div class="content">
-          {{.Title}}
+  <main>
+    <div class="ui centered card" style="width: 320px">
+      <div class="image" style="padding: 1em">
+        <img src="{{.Config.Icone}}">
+      </div>
+      <div class="content">
+        <div class="center aligned header">{{.Config.Appname}}</div>
+        <div class="center aligned meta">Version {{.Config.Version}} du {{.Config.Date}}</div>
+        <div class="center aligned meta">&copy; {{.Config.Author}}
         </div>
-      </h2>
-      <form class="ui large form" action="/bee/login" method="POST">
-        {{ .xsrfdata }}
-        <div class="ui stacked segment">
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="username" placeholder="Username">
+      </div>
+      <div class="content">
+        <form class="ui large form" action="/bee/login" method="POST">
+          {{ .xsrfdata }}
+          <div class="ui stacked segment">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" name="username" placeholder="Username">
+              </div>
             </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="Password">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password" name="password" placeholder="Password">
+              </div>
             </div>
-          </div>
-          {{if .flash.error}}
-          <div class="ui visible error message">
-            <div class="header">
-              {{.flash.error}}
+            {{if .flash.error}}
+            <div class="ui visible error message">
+              <div class="header">
+                {{.flash.error}}
+              </div>
             </div>
+            {{end}}
+            <button class="ui fluid large {{.Config.Theme}} submit button" type="submit">Se connecter</button>
           </div>
-          {{end}}
-          <button class="ui fluid large {{.Config.Theme}} submit button" type="submit">Se connecter</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </main>
   <input type="hidden" id="xsrf" value="{{.xsrf}}">
   {{template "_crud_foot.html" .}}
 </body>

@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.19.3 - 25 juin 2023
+- `changed` page login en card
+
 5.19.2 - 25 juin 2023
 - `changed` action-press sans affichage
 
