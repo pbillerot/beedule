@@ -10,5 +10,6 @@ dico-dir:
 - "/volshare/data/beedule/budget/config"
 - "/volshare/data/beedule/jecompte/config"
 - "/volshare/data/beedule/pluvio/config"
+- "/volshare/data/picsou/config"
 - "./beedic/chinook/config"
 

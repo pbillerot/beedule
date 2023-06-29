@@ -64,6 +64,10 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
       data-url="/bee/actionx/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}/{{$key}}" title="{{$element.LabelLong}}">
       {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
       </a>
+      {{else if (eq $element.Type "image")}}
+      {{if $val}}
+      <img class="ui mini image" title="{{$val}}" src="{{CrudMacro $element.Params.Src $appid $record $session}}">
+      {{end}}
       {{else if (eq $element.Type "list")}}
       <!-- list -->
       {{CrudItem $element.Items $val}}
