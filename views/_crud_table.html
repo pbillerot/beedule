@@ -65,8 +65,16 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
       {{if $element.IconName}}<i class="{{$class}} {{$element.IconName}} icon"></i>{{end}}
       </a>
       {{else if (eq $element.Type "image")}}
-      {{if $val}}
-      <img class="ui mini image" title="{{$val}}" src="{{CrudMacro $element.Params.Src $appid $record $session}}">
+      {{if $element.Params.Src}}
+        {{if $element.Params.URL}}
+      <div class="ui link {{$class}} image crud-popup-image"
+        data-url="{{CrudMacro $element.Params.URL $appid $record $session}}"
+        title="{{CrudMacro $element.Params.Title $appid $record $session}}">
+        <img src="{{CrudMacro $element.Params.Src $appid $record $session}}">
+      </div>
+        {{else}}
+      <img class="ui {{$class}} image" title="{{CrudMacro $element.Params.Title $appid $record $session}}" src="{{CrudMacro $element.Params.Src $appid $record $session}}">
+        {{end}}
       {{end}}
       {{else if (eq $element.Type "list")}}
       <!-- list -->

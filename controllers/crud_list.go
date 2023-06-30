@@ -274,6 +274,9 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 							view.Search += tableid + "." + key + " = '1'"
 						}
 					}
+				case "image":
+				case "url":
+					continue
 				case "list":
 					// TODO recherche dans le label du list
 				default:
@@ -308,8 +311,9 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 						view.Search += tableid + "." + key + " = '1'"
 					}
 				}
-			case "list":
-				// TODO recherche dans le label du list
+			case "image":
+			case "url":
+				continue
 			default:
 				if view.Search != "" {
 					view.Search += " OR "

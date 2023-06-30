@@ -593,6 +593,12 @@ $(document).ready(function () {
       event.preventDefault();
       return
     }
+    if (target.hasClass("crud-popup-image") || target.parent().hasClass("crud-popup-image")) {
+      // pour laisser la main à crud-jquery-button
+      // Cas d'un button dans une card
+      event.preventDefault();
+      return
+    }
 
     var $url = $(this).data('url');
     window.location = $url;

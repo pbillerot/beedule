@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.20.2 - 30 juin 2023
+- `changed` image dans liste table
+
 5.20.1 - 29 juin 2023
 - `changed` page login en card
 
