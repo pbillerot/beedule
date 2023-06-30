@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted` 
 - `changed` 
 
+5.20.3 - 30 juin 2023
+- `changed` image dans liste table sans lien
+
 5.20.2 - 30 juin 2023
 - `changed` image dans liste table
 
