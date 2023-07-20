@@ -5,10 +5,13 @@ Historique des modifications
 ### À venir :
 - filtres avec < > !
 
-- `fixed` 
-- `added` 
-- `deleted` 
-- `changed` 
+- `fixed`
+- `added`
+- `deleted`
+- `changed`
+
+5.20.4 - 20 juillet 2023
+- `fixed` vue dans form : fusion des where
 
 5.20.3 - 30 juin 2023
 - `changed` image dans liste table sans lien
@@ -56,7 +59,7 @@ Historique des modifications
 - `fixed` petites corrections suite rédaction de la doc
 
 5.15.2 - 18 mai 2023
-- `fixed` filtre avec recherche dans la liste et mémorisation saisie 
+- `fixed` filtre avec recherche dans la liste et mémorisation saisie
 
 5.15.1 - 17 mai 2023
 - `changed` manifest.pwa.lson intégré dans header html
@@ -129,7 +132,7 @@ Historique des modifications
 
 5.9.2 - 25 avril 2023
 - `added` help en markdown
-- `changed` retour arrière wide container 
+- `changed` retour arrière wide container
 
 5.9.1 - 24 avril 2023
 - `added` codemirror python
@@ -179,7 +182,7 @@ Historique des modifications
 
 5.7.1 - 27 mars 2023
 - `added` editeur coloriage sql
-- `changed` message toast centré en bas 
+- `changed` message toast centré en bas
 
 5.7.0 - 25 mars 2023
 - `added` planificateur de tâches via une table tasks id, name, day, month, last_day, last_month, disabled
@@ -235,7 +238,7 @@ Historique des modifications
 - `fixed` suppression d'un article qui ne se faisait plus
 
 5.0.0 13 mars 2022
-- `added` element: compute-sqlite class-sqlite default-sqlite format-sqlite hide-sqlite 
+- `added` element: compute-sqlite class-sqlite default-sqlite format-sqlite hide-sqlite
 - `added` formulaire: check-sqlite
 - `added` action: hide-sqlite
 - `changed` couleur bouton supprimer enregistrer
@@ -314,8 +317,8 @@ Historique des modifications
 3.7.3 9 février 2022
 - `fixed` tag wrap dans card
 - `added` bouton supprimer dans view
-- `added` bouton edit dans view 
-- `added` bouton partager l'application 
+- `added` bouton edit dans view
+- `added` bouton partager l'application
 
 3.7.2 30 janvier 2022
 - `fixed` vue dashbord pas totalement visible si infooter
@@ -365,7 +368,7 @@ Historique des modifications
 3.3.6 4 janvier 2022
 - `fixed` width 1ère section était forcée à "s"
 - `fixed` correction retour suite ouverture view à partir de dashboard
-- `fixed` correction style section de type view 
+- `fixed` correction style section de type view
 - `changed` dashboard Titre de la section avec label-long
 - `changed` titre sous le chart si label-long renseigné
 
@@ -471,14 +474,14 @@ Historique des modifications
 ----------------------
 - `added` col-nowrap
 - `added` format-sql
-- `added` help sur rubrique intégrée 
+- `added` help sur rubrique intégrée
 - `added` view: with-line-number
 - `added` eddy: menu vertical avec liste des fichiers dicodir pour les ouvrir
 
 2.2.1 du 2 juin 2021
 ----------------------
-- `removed` jointure.join jointure.column 
-- `added` Jointure.Join Jointure.Column 
+- `removed` jointure.join jointure.column
+- `added` Jointure.Join Jointure.Column
 - `changed` historique navigation pour gérer le retour arrière
 
 2.2.0 du 31 mai 2021
@@ -495,7 +498,7 @@ Historique des modifications
 
 2.0.13 du 23 mai 2021
 ----------------------
-- `added` template crud_list*.html renommés 
+- `added` template crud_list*.html renommés
 - `fixed` correction edit de portail.yaml
 
 2.0.11 du 23 mai 2021
@@ -585,14 +588,14 @@ Historique des modifications
 ----------------------
 - `changed` graphique dans une vue
 
-x.x.x 
+x.x.x
 ----------------------
 - historique non reportée dans ce document
 
 ###### Types de changements:
-`added` *pour les nouvelles fonctionnalités.*  
-`changed` *pour les changements aux fonctionnalités préexistantes.*  
-`deprecated` *pour les fonctionnalités qui seront bientôt supprimées*.  
-`removed` *pour les fonctionnalités désormais supprimées.*  
-`fixed` *pour les corrections de bugs.*  
-`security` *en cas de vulnérabilités.*  
+`added` *pour les nouvelles fonctionnalités.*
+`changed` *pour les changements aux fonctionnalités préexistantes.*
+`deprecated` *pour les fonctionnalités qui seront bientôt supprimées*.
+`removed` *pour les fonctionnalités désormais supprimées.*
+`fixed` *pour les corrections de bugs.*
+`security` *en cas de vulnérabilités.*

@@ -184,7 +184,11 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	// CAS appel d'une vue dans le formulaire
 	if parentElement.Params.View != "" {
 		if parentElement.Params.Where != "" {
-			view.Where = macro(c, appid, parentElement.Params.Where, parentElement.Record)
+			if view.Where != "" {
+				view.Where = "(" + view.Where + ") and (" + macro(c, appid, parentElement.Params.Where, parentElement.Record) + ")"
+			} else {
+				view.Where = macro(c, appid, parentElement.Params.Where, parentElement.Record)
+			}
 		} else {
 			if view.Where != "" {
 				view.Where = macro(c, appid, view.Where, orm.Params{})
