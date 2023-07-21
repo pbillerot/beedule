@@ -34,7 +34,7 @@
       {{if or $view.Card.Header $view.Card.HeaderRight}}
       <!-- header -->
       <div class="header">
-        <!-- range headerRight-->  
+        <!-- range headerRight-->
         {{range $im, $key := $view.Card.HeaderRight}}
           {{ $element := index $elements $key }}
           {{ $style = CrudStyleSqlite $element $appid $record $session}}
@@ -71,14 +71,14 @@
           <div class="right floated" style="white-space: nowrap">
           <span class="ui right floated text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </div>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range header --> 
+        <!-- / range header -->
         {{if $view.IconName }}
         <i class="large {{$theme}} {{$view.IconName}} icon"></i>
-        {{end}}    
-        <!-- range header -->  
+        {{end}}
+        <!-- range header -->
         {{range $im, $key := $view.Card.Header}}
           {{ $element := index $elements $key }}
           {{ $style = CrudStyleSqlite $element $appid $record $session}}
@@ -113,10 +113,10 @@
           {{else}}
         <!-- autre type -->
           <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range header --> 
+        <!-- / range header -->
       </div>
       <!-- / header -->
       {{end}}
@@ -125,7 +125,7 @@
       {{if or $view.Card.MetaLeft $view.Card.MetaRight}}
       <!-- meta left right -->
       <div class="extra">
-        <!-- range meta-->  
+        <!-- range meta-->
         {{range $im, $key := $view.Card.MetaLeft}}
           {{ $element := index $elements $key }}
           {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -161,13 +161,13 @@
           {{else}}
         <!-- autre type -->
           <span class="" style="white-space: nowrap">
-          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range meta left--> 
-        <!-- range meta right-->  
+        <!-- / range meta left-->
+        <!-- range meta right-->
         {{range $im, $key := $view.Card.MetaRight}}
           {{ $element := index $elements $key }}
           {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -187,7 +187,7 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text" {{if $style}}{{style $style}}{{end}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
@@ -205,19 +205,19 @@
           {{else}}
         <!-- autre type -->
           <span class="right floated" style="white-space: nowrap">
-          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range meta right--> 
+        <!-- / range meta right-->
       </div>
       <!-- / meta left right -->
       {{end}}
       {{if $view.Card.Meta}}
       <!-- meta -->
       <div class="extra">
-        <!-- range meta-->  
+        <!-- range meta-->
         {{range $im, $key := $view.Card.Meta}}
           {{ $element := index $elements $key }}
           {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -238,12 +238,12 @@
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
           {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{if $style}}{{style $style}}{{end}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           {{if $element.LabelShort}}<span><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
           {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
@@ -256,11 +256,11 @@
           {{else}}
         <!-- autre type -->
           {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-          <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
-          {{end}} 
+          <span class="ui {{$class}} text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range meta --> 
+        <!-- / range meta -->
       </div>
       <!-- / meta -->
       {{end}}
@@ -286,14 +286,14 @@
         <img src="{{CrudMacro $element.Params.Src $appid $record $session}}?{{$composter}}">
       </div>
             {{if $element.LabelLong }}
-      <div class="center aligned description" {{style $style}}>
+      <div class="center aligned description" {{if $style}}{{style $style}}{{end}}>
         <b>{{$element.LabelLong}}</b>
       </div>
             {{end}}
           {{else}}
           {{ if $val }}
       <div class="ui message" style="margin: 0.5em 0;padding: 0.7em">
-        <p class="ui {{$class}} text" {{style $style}}>{{CrudFormat $element.Format $val}}</p>
+        <p class="ui {{$class}} text" {{if $style}}{{style $style}}{{end}}>{{CrudFormat $element.Format $val}}</p>
       </div>
           {{end}}
           {{end}}
@@ -305,7 +305,7 @@
       {{if or $view.Card.ExtraLeft $view.Card.ExtraRight}}
       <!-- extra left right -->
       <div class="extra">
-        <!-- range meta-->  
+        <!-- range meta-->
         {{range $im, $key := $view.Card.ExtraLeft}}
           {{ $element := index $elements $key }}
           {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -325,13 +325,13 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span class=" left floated">
-          <span class="ui text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span>
+          <span class="ui text" {{if $style}}{{style $style}}{{end}}><b>{{CrudItem $element.Items $val}}</b></span>
           </span>
           {{else if (eq $element.Type "tag")}}
           <span class="left floated">
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-            <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+            <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
           </span>
           {{else if and (eq $element.Type "url") (ne $val "")}}<div class="left floated">
@@ -344,13 +344,13 @@
           {{else}}
           <!-- autre type -->
           <span class="left floated ">
-          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range extra left--> 
-        <!-- range extra right-->  
+        <!-- / range extra left-->
+        <!-- range extra right-->
         {{range $im, $key := $view.Card.ExtraRight}}
           {{ $element := index $elements $key }}
           {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -370,12 +370,12 @@
         </div>
             {{end}}
           {{else if (eq $element.Type "list")}}<span style="white-space: nowrap">
-        <span class="ui right floated text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui right floated text" {{if $style}}{{$style}}{{end}}><b>{{CrudItem $element.Items $val}}</b></span></span>
           {{else if (eq $element.Type "tag")}}
           <span class="right floated">
             {{$arr := CrudSplit $val ","}}
             {{range $i, $item := $arr}}
-        <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
             {{end}}
             </span>
           {{else if and (eq $element.Type "url") (ne $val "")}}<div class="right floated">
@@ -388,19 +388,19 @@
           {{else}}
         <!-- autre type -->
           <span class="right floated" style="white-space: nowrap">
-          <span class="ui text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
+          <span class="ui text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span>
           </span>
-          {{end}} 
+          {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range extra right--> 
+        <!-- / range extra right-->
       </div>
       <!-- / extra left right -->
       {{end}}
       {{if $view.Card.Extra}}
       <!-- extra -->
       <div class="extra">
-        <!-- range extra-->  
+        <!-- range extra-->
         {{range $im, $key := $view.Card.Extra}}
         {{ $element := index $elements $key }}
         {{ $class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -421,12 +421,12 @@
         {{end}}
         {{else if (eq $element.Type "list")}}
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudItem $element.Items $val}}</b></span></span>
+        <span class="ui {{$class}} text" {{if $style}}{{style $style}}{{end}}><b>{{CrudItem $element.Items $val}}</b></span></span>
         {{else if (eq $element.Type "tag")}}
         {{if $element.LabelShort}}><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
           <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
@@ -438,21 +438,21 @@
         {{else}}
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
-        <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
-        {{end}} 
+        <span class="ui {{$class}} text" {{if $style}}{{style $style}}{{end}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
+        {{end}}
         <!-- / type-->
         {{end}}
-        <!-- / range extra --> 
+        <!-- / range extra -->
       </div>
       <!-- / extra -->
       {{end}}
     </div>
-    <!-- /content -->   
+    <!-- /content -->
     {{if or $view.Card.Footer $view.Card.FooterRight}}
     <!-- footer -->
     <div class="content" style="padding-top: 0.5em;padding-bottom: 0.7em;">
       <div class="extra">
-      <!-- range footer-->  
+      <!-- range footer-->
       {{range $im, $key := $view.Card.FooterRight}}
         {{ $element := index $elements $key }}
         {{$class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -484,7 +484,7 @@
         <span class="right floated">
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         </span>
         {{else if and (eq $element.Type "url") (ne $val "")}}<span class="right floated">
@@ -499,11 +499,11 @@
         <span class="right floated">
         <span class="uitext" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span>
       </span>
-        {{end}} 
+        {{end}}
         <!-- / type-->
       {{end}}
-      <!-- / range footer rigth--> 
-      <!-- range footer -->  
+      <!-- / range footer rigth-->
+      <!-- range footer -->
       {{range $im, $key := $view.Card.Footer}}
         {{ $element := index $elements $key }}
         {{$class = CrudMacroSQL $element.ClassSqlite $appid $record $session}}
@@ -534,7 +534,7 @@
         {{if $element.LabelShort}}<span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         {{$arr := CrudSplit $val ","}}
         {{range $i, $item := $arr}}
-        <span class="ui tag label" style="{{$style}}; margin-bottom: 0.5em"><b>{{CrudItem $element.Items $item}}</b></span>
+        <span class="ui tag label" {{if $style}}{{print $style ";margin-bottom: 0.5em" | style}}{{end}}><b>{{CrudItem $element.Items $item}}</b></span>
         {{end}}
         {{else if and (eq $element.Type "url") (ne $val "")}}<div class="">
           <a class="crud-jquery-button" data-url="{{$val}}" data-target="_blank" title="{{$element.LabelLong}}">
@@ -547,14 +547,14 @@
         <!-- autre type -->
         {{if $element.LabelShort}}<span style="white-space: nowrap"><span class="ui grey text">{{$element.LabelShort}} : </span>{{end}}
         <span class="ui {{$class}} text" {{style $style}}><b>{{CrudFormat $element.Format $val}}</b></span></span>
-        {{end}} 
+        {{end}}
         <!-- / type-->
       {{end}}
-      <!-- / range footer --> 
+      <!-- / range footer -->
     </div></div>
     <!-- / div footer -->
     {{end}}
-    <!-- / if footer --> 
+    <!-- / if footer -->
   </div>
   <!-- / div CARD -->
   {{end}}

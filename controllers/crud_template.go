@@ -68,7 +68,10 @@ func init() {
 
 // style as
 func style(in interface{}) template.HTMLAttr {
-	return template.HTMLAttr("style=\"" + in.(string) + "\"")
+	if in.(string) != "" {
+		return template.HTMLAttr("style=\"" + in.(string) + "\"")
+	}
+	return ""
 }
 
 // markDowner as

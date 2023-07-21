@@ -38,17 +38,18 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   <!-- LOOP $RECORD -->
   {{ range $irecord, $record := $records }}
   {{ $id := index $record $tablekey}}
+  {{ $styleView := CrudMacroSQL $view.StyleSqlite $appid $record $session}}
   <tr {{if or $view.FormView $view.Deletable}}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
-    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
-    data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}" 
+    {{ style $styleView}}
+    data-url="/bee/view/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$id}}"
     {{else if $view.FormEdit }}
     class="crud-jquery-url {{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
-    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
-    data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}" 
+    {{ style $styleView}}
+    data-url="/bee/edit/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$view.FormEdit}}/{{$id}}"
     {{else}}
     class="{{CrudMacroSQL $view.ClassSqlite $appid $record $session}}"
-    style="{{CrudMacroSQL $view.StyleSqlite $appid $record $session}}"
+    {{ style $styleView}}
     {{end}}>
     {{if $view.WithLineNumber}}<td class="right aligned">{{CrudIncrement $irecord}}</td>{{end}}
     {{ range $num, $key := $cols }}
@@ -66,7 +67,7 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
       </a>
       {{else if (eq $element.Type "image")}}
       {{if $val}}
-      <img class="ui {{$class}} image" 
+      <img class="ui {{$class}} image"
       title="{{CrudMacro $element.Params.Title $appid $record $session}}"
       src="{{CrudMacro $element.Params.Src $appid $record $session}}">
       {{end}}
@@ -135,6 +136,6 @@ data-role="table" data-mode="columntoggle" data-app="{{$appid}}" data-table="{{$
   {{end}}<!--end hide-->
 {{end}}<!--end range-->
 </tr>
-</tfoot>  
+</tfoot>
 {{end}}<!--end if withsum-->
 </table>

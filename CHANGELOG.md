@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.20.5 - 21 juillet 2023
+- `fixed` style-sqlite accepte désormais plusieurs attributs
+
 5.20.4 - 20 juillet 2023
 - `fixed` vue dans form : fusion des where
 
