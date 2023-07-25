@@ -59,6 +59,7 @@ type Application struct {
 	Menu           []TableView       // menu des Vues de l'application
 	Shareable      bool              // Partageable ou non
 	TasksTableName string            `yaml:"tasks-table-name"` // Nom de la table des Tâches planifiées
+	Wiki           string            // répertoire du wiki de l'application
 }
 
 // Menu as
@@ -328,6 +329,13 @@ func (c *Portail) Load() ([]string, error) {
 		c.Applications[application.AppID] = application
 		logs.Info(".....set statique", "/bee/dico/"+application.AppID, dicodir)
 		beego.SetStaticPath("/bee/dico/"+application.AppID, dicodir)
+
+		// déclaration du wiki en répertoire statique
+		if application.Wiki != "" {
+			logs.Info(".....set statique", "/bee/wiki/"+application.AppID, application.Wiki)
+			beego.SetStaticPath("/bee/wiki/"+application.AppID, application.Wiki)
+		}
+
 	}
 
 	return dicoError, err

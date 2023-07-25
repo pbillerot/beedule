@@ -53,6 +53,14 @@
           <!-- end if isingroup -->
           {{end}}
           <!-- end range Menu-->
+          {{if $app.Wiki}}
+          <a class="item eddy-window-open"
+            data-url="/bee/wiki/{{$appid}}/" data-posx="left" target="wiki"
+            title="Aide...">
+            <i class="info circle {{$theme}} icon"></i>
+              Wiki
+          </a>
+          {{end}}
           {{if (CrudIsInGroup "dev" $session $appid)}}
           <div class="divider"></div>
           <a class="item eddy-window-open"
@@ -161,7 +169,7 @@
                 </div>
                 <div class="ui divider"></div>
           {{else if $element.Params.View}}
-            {{$uiView := index $uiViews $element.Params.View}} 
+            {{$uiView := index $uiViews $element.Params.View}}
             {{$search := $uiView.Search}}
             {{$iconName = $uiView.View.IconName}}
             {{if $element.Params.WithoutFrame}} <!-- Vue sans cadre -->
@@ -274,7 +282,7 @@
           {{end}}
           <script defer src="/bee/dico/{{$appid}}/{{$pdfid}}.js"></script>
         {{else if (eq $element.Type "image")}}
-        <a class="ui link image crud-popup-image" 
+        <a class="ui link image crud-popup-image"
         data-url="{{$element.Params.URL}}?{{$composter}}" title="{{$element.Params.Title}}">
           <img src="{{$element.Params.Src}}?{{$composter}}">
         </a>
@@ -304,7 +312,7 @@
         {{else if (eq $element.Type "pdf")}}
         <object type="application/pdf" data="{{$element.Params.URL}}?{{$composter}}" width="100%" height="75%"><p>Vous n'avez pas de plugin PDF mais vous pouvez <a href="{{$element.Params.URL}}?{{$composter}}">télécharger le fichier.</a></p></object>
         <div class="center aligned description">
-          <a class="crud-popup-pdf" 
+          <a class="crud-popup-pdf"
           data-url="{{$element.Params.URL}}?{{$composter}}" title="{{$element.Params.Title}}">
           <i class="large eye outline icon"></i><b>{{$element.LabelLong}}</b>
           </a>
@@ -397,7 +405,7 @@
       <div class="ui approve button">Je confirme</div>
     </div>
   </div> <!-- end modal confirm -->
-  
+
   <!-- Affichage d'une image en popup-->
   <div id="crud-modal-image" class="ui fullscreen modal">
     <div class="actions">

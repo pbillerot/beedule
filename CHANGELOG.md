@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.21.0 - 25 juillet 2023
+- `added` application.wiki pour définir le répertoire du wiki de l'application
+
 5.20.5 - 21 juillet 2023
 - `fixed` style-sqlite accepte désormais plusieurs attributs
 

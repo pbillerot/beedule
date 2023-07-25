@@ -50,6 +50,14 @@
           <!-- end if isingroup -->
           {{end}}
           <!-- end range Menu-->
+          {{if $app.Wiki}}
+          <a class="item eddy-window-open"
+            data-url="/bee/wiki/{{$appid}}/" data-posx="left" target="wiki"
+            title="Aide...">
+            <i class="info circle {{$theme}} icon"></i>
+              Wiki
+          </a>
+          {{end}}
           {{if (CrudIsInGroup "dev" $session $appid)}}
           <div class="divider"></div>
           <a class="item eddy-window-open"

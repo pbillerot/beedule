@@ -52,6 +52,14 @@
           <!-- end if isingroup -->
           {{end}}
           <!-- end range Menu-->
+          {{if $app.Wiki}}
+          <a class="item eddy-window-open"
+            data-url="/bee/wiki/{{$appid}}/" data-posx="left" target="wiki"
+            title="Aide...">
+            <i class="info circle {{$theme}} icon"></i>
+              Wiki
+          </a>
+          {{end}}
           {{if (CrudIsInGroup "dev" $session $appid)}}
           <div class="divider"></div>
           <a class="item eddy-window-open"
@@ -72,7 +80,7 @@
       <!-- end ui dropdown item-->
       {{ if not (eq $viewid "vprofil")}}
       <a href="{{.From}}" class="item" style="padding: 0.5em;">
-        <i class="arrow left icon"></i> 
+        <i class="arrow left icon"></i>
         <div class="header item">{{$view.Title}}</div>
       </a>
       {{else}}
@@ -185,7 +193,7 @@
               </div>
               <div class="content">
           {{else if $element.Params.View}}
-            {{$uiView := index $uiViews $element.Params.View}} 
+            {{$uiView := index $uiViews $element.Params.View}}
             {{$search := $uiView.Search}}
             {{$iconName = $uiView.View.IconName}}
             {{if $element.Params.WithoutFrame}} <!-- Vue sans cadre -->
@@ -304,8 +312,8 @@
           <script defer src="/bee/dico/{{$appid}}/{{$pdfid}}.js"></script>
         {{else if (eq $element.Type "image")}}
         {{CrudMacroSQL $element.FormatSqlite $appid $record $session}}
-        <a class="ui link image crud-popup-image" 
-        data-url="{{CrudMacro $element.Params.URL $appid $record $session}}?{{$composter}}" 
+        <a class="ui link image crud-popup-image"
+        data-url="{{CrudMacro $element.Params.URL $appid $record $session}}?{{$composter}}"
         title="{{CrudMacro $element.Params.Title $appid $record $session}}">
           <img src="{{CrudMacro $element.Params.Src $appid $record $session}}?{{$composter}}">
         </a>
@@ -337,7 +345,7 @@
         {{else if (eq $element.Type "pdf")}}
         <object type="application/pdf" data="{{$element.Params.URL}}?{{$composter}}" width="100%" height="75%"><p>Vous n'avez pas de plugin PDF mais vous pouvez <a href="{{$element.Params.URL}}?{{$composter}}">télécharger le fichier.</a></p></object>
         <div class="center aligned description">
-          <a class="crud-popup-pdf" 
+          <a class="crud-popup-pdf"
           data-url="{{$element.Params.URL}}?{{$composter}}" title="{{$element.Params.Title}}">
           <i class="large eye outline icon"></i><b>{{$element.LabelLong}}</b>
           </a>
@@ -363,7 +371,7 @@
         {{end}}
         {{else if (eq $element.Type "textarea")}}
         <div class="description">
-          <div class="meta"> 
+          <div class="meta">
             <span>{{$element.LabelLong}}</span>
           </div>
         </div>
