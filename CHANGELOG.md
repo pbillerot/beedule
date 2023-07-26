@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.21.1 - 26 juillet 2023
+- `changed` margin top sur button dans card
+
 5.21.0 - 25 juillet 2023
 - `added` application.wiki pour définir le répertoire du wiki de l'application
 

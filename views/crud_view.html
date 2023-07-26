@@ -266,7 +266,7 @@
         <!-- DEBUT type -->
         {{else if (eq $element.Type "button")}}
         <div class="meta">
-          <button class="ui {{$theme}} button crud-jquery-button" {{style $style}}
+          <button class="ui {{$theme}} button crud-jquery-button" {{print "margin-top: 2px;" $style | style}}
             data-url="{{$element.Params.URL}}" data-target="{{$element.Params.Target}}">
             {{$element.LabelLong}}
           </button>
