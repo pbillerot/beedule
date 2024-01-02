@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.3.1 - 2 janvier 2024
+- `fixed` codemirror link .css
+
 5.3.0 - 2 janvier 2024
 - `changed` codemirror 5.61.1 vers 5.65.16
 

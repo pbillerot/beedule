@@ -30,7 +30,7 @@ export GOPATH=/home/billerot/go
 ### Mise en production
 - maj changelog.md app.conf
 - git push...
--
+- sur vps cd /volshare/docker/beedule ./build.sh
 
 ### markdown
 https://github.com/gomarkdown/markdown
