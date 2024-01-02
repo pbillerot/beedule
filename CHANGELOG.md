@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.3.0 - 2 janvier 2024
+- `changed` codemirror 5.61.1 vers 5.65.16
+
 5.21.1 - 26 juillet 2023
 - `changed` margin top sur button dans card
 

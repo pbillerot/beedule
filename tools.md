@@ -15,12 +15,22 @@ export EDITOR=nano
 export PATH=$PATH:/usr/local/go/bin:/home/billerot/go/bin
 export GOPATH=/home/billerot/go
 ```
-## Ajout de modules 
+## Ajout de modules
 
 ### BeeGo
 - cd $GOPATH
 - go get -u github.com/beego/beego/v2
 - go get -u github.com/beego/bee/v2
+
+### Environnement de développement
+- go build
+- ./beedule
+- ou lancer le Debug dans vscodium
+
+### Mise en production
+- maj changelog.md app.conf
+- git push...
+-
 
 ### markdown
 https://github.com/gomarkdown/markdown
@@ -30,7 +40,7 @@ https://github.com/russross/blackfriday
 ### Scheduler
 - https://github.com/MichaelS11/go-scheduler
 
-Pour traduire l'expression 
+Pour traduire l'expression
 - https://github.com/bradymholt/cRonstrue
 
 ### dans .profil
@@ -75,7 +85,7 @@ git reset <commit de l'init par exemple>
 git push -f origin master  # Force push master branch to github
 
 avant je faisais ça, et je préfère
-git checkout --orphan newbgit 
+git checkout --orphan newbgit
 	si fichiers à valider
 	git add -A  # Add all files and commit them
 	git commit
