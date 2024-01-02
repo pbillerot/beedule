@@ -10,6 +10,10 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.3.2 - 2 janvier 2024
+- `changed` codemirror5 / codemirror
+- `fixed` edyy-hint.js of codemirror move to eddy
+
 5.3.1 - 2 janvier 2024
 - `fixed` codemirror link .css
 
