@@ -285,7 +285,8 @@ func EveryDay(ctx context.Context) error {
 	now := time.Now()
 	now_day := now.Day()
 	now_month := int(now.Month())
-	logs.Info("o_o everyDay", now_day, now_month)
+	now_year := int(now.Year())
+	logs.Info("o_o everyDay", now_day, now_month, now_year)
 	for _, application := range dico.Ctx.Applications {
 		if application.TasksTableName != "" {
 			sql := fmt.Sprintf("select * from %s where enabled = 1 order by priority", application.TasksTableName)
@@ -297,6 +298,11 @@ func EveryDay(ctx context.Context) error {
 					last_day, _ := strconv.Atoi(rec["last_day"].(string))
 					month, _ := strconv.Atoi(rec["month"].(string))
 					last_month, _ := strconv.Atoi(rec["last_month"].(string))
+					last_year, _ := strconv.Atoi(rec["last_year"].(string))
+					if last_year < now_year {
+						// maj début d'année' -> raz last_month
+						last_month = 0
+					}
 					if last_month < now_month || (now_month < 12 && last_month == 12) {
 						// maj début de mois -> raz last_day
 						last_day = 0
@@ -305,6 +311,7 @@ func EveryDay(ctx context.Context) error {
 						// month ok
 						if day == 0 || (last_day < day && day == now_day) {
 							// day ok
+							logs.Info("o_o everyDay", rec["label"])
 							// raz result
 							sql := fmt.Sprintf("update %s set result = '%s', date_run = '%s', cret = 0 where id = %d",
 								application.TasksTableName, "...", time.Now().Format("2006-01-02 15:04:05"), id)
@@ -323,7 +330,6 @@ func EveryDay(ctx context.Context) error {
 									sql = fmt.Sprintf("update %s set result = '%s' where id = %d",
 										application.TasksTableName, "ok", id)
 									CrudExec(sql, application.AliasDB)
-									continue
 								}
 							}
 							// exécution du shell
@@ -339,11 +345,16 @@ func EveryDay(ctx context.Context) error {
 										application.TasksTableName, id)
 									CrudExec(sql, application.AliasDB)
 									continue
+								} else {
+									// maj result
+									sql = fmt.Sprintf("update %s set result = 0 where id = %d",
+										application.TasksTableName, id)
+									CrudExec(sql, application.AliasDB)
 								}
 							}
 							// maj planif
-							sql = fmt.Sprintf("update %s set last_day = %d, last_month = %d where id = %d",
-								application.TasksTableName, now_day, now_month, id)
+							sql = fmt.Sprintf("update %s set last_day = %d, last_month = %d, last_year = %d where id = %d",
+								application.TasksTableName, now_day, now_month, now_year, id)
 							err = CrudExec(sql, application.AliasDB)
 							if err != nil {
 								continue

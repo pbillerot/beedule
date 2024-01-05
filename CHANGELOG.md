@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.3.3 - 5 janvier 2024
+- `fixed` prise en compte changement d'année dans les échéances
+
 5.3.2 - 2 janvier 2024
 - `changed` codemirror5 / codemirror
 - `fixed` edyy-hint.js of codemirror move to eddy
