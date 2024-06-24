@@ -1,47 +1,92 @@
-#
-# Configuration du site
-#
-baseURL: "/"
-params:
-  title: "BEEDULE-DOC"
-  subtitle: "Guide d'utilisation"
-  # l'image arrondie
-  avatar: "/media/beedule.svg"
-  # l'icône dans l'onglet du navigateur
-  favicon: "/media/beedule.svg"
-  # l'image d'arrière plan
-  backgroundImage: "/media/beedule-bg.png"
-  enableSearch: false
+# Version du 21 mai 2023 avec hugo 0.111.3
+baseURL: "https://beedule.billerot.net/learn/"
+canonifyURLs: true
+relativeURLs: true
 
-# Les menus que l'on peut ajouter
-menu:
-#  links: # menu qui va apparaître en bas de la carte du sommaire
-#  - name: "Documentation Beedream"
-#    url: "https://beedream.billerot.eu"
-#    weight: 10 # pour trier le menu
+title: "Apprendre Beedule"
+theme: "hugo-theme-relearn-main"
 
-  # navigation: # menu liens en haut du site 
-  # - name: "Documentation sur le thème BeeDream"
-  #   url: "https://beedream.billerot.eu/"
-  #   weight: 10
-  #   pre: "help" # nom de l'icône de la bibliothèque des icônes
-  # - name: "Bibliothèque des icônes"
-  #   url: "https://semantic-ui.com/elements/icon.html"
-  #   weight: 20 # pour trier le menu
-  #   pre: "font awesome" # nom de l'icône de la bibliothèque des icônes
-  # - name: "Documentation Hugo"
-  #   url: "https://gohugo.io/"
-  #   weight: 30 # pour trier le menu
-  #   pre: "hospital symbol" # nom de l'icône de la bibliothèque des icône  
+languageCode: "fr"
+defaultContentLanguage: "fr"
 
-# Paramètres indépendant du site
-theme: "beedream"
-languageCode: "fr-FR"
 outputs:
   home: ["HTML", "RSS", "JSON"]
+
+# https://mcshelby.github.io/hugo-theme-relearn/
+params:
+  editURL: "https://philippe.billerot.net/victor/document/"
+  # Author of the site, will be used in meta information
+  author: "philippe.billerot@gmail.com"
+  # Description of the site, will be used in meta information
+  description: "Apprendre à développer une application web avec le framework Beedule"
+  # this can be overridden in the pages frontmatter
+  alwaysopen: false  
+  # A title for shortcuts in menu is set by default. Set this to true to disable it.
+  disableShortcutsTitle: true
+  # Set this to true to disable copy-to-clipboard button for inline code.
+  disableInlineCopyToClipBoard: false
+  # If set to false, a Home button will appear below the search bar on the menu.
+  # It is redirecting to the landing page of the current language if specified. (Default is "/")
+  disableLandingPageButton: true
+  # Hide breadcrumbs in the header and only show the current page title
+  disableBreadcrumb: false
+  # If set to true, hide table of contents menu in the header of all pages
+  disableToc: false
+  # If set to true, prevents Hugo from including the Mermaid module if not needed (will reduce load times and traffic)
+  disableMermaid: true
+  # Hide Next and Previous page buttons normally displayed full height beside content
+  disableNextPrev: false
+  # Order sections in menu by "weight" or "title". Default to "weight";
+  # this can be overridden in the pages frontmatter
+  ordersectionsby: "weight"
+  # Change default color scheme with a variant one. Can be "red", "blue", "green".
+  themeVariant: "relearn-light"
+  # Provide a list of custom css files to load relative from the `static/` folder in the site root.
+  # custom_css: ["css/foo.css", "css/bar.css"]
+  custom_css: ["css/custom.css"]
+  # Change the title separator. Default to "::".
+  titleSeparator: "::"
+  # For external links you can define how they are opened in your browser; this setting will only be applied to the content area but not the shortcut menu
+  externalLinkTarget: "_blank"
+
 markup:
+  highlight:
+  # https://xyproto.github.io/splash/docs/all.html
+    #style: xcode # native tango xcode base16-snazzy
+    guessSyntax: false
+    noClasses: false
   goldmark:
     renderer:
       unsafe: true
-  highlight:
-    style: friendly # monokai dracula friendly
+
+menu:
+  shortcuts:
+    - identifier: "changelog"
+      name: "<i class='fas fa-rss'></i> Quoi de neuf"
+      url: "https://github.com/pbillerot/beedule/blob/master/CHANGELOG.md"
+      weight: 5
+    - identifier: "icones"
+      name: "<i class='fab fa-fonticons'></i> Icônes de Semantic"
+      url: "https://fomantic-ui.com/elements/icon.html" 
+      weight: 7
+    - identifier: "Couleur Html"
+      name:  "<i class='fas fa-palette'></i> Couleur HTML"
+      url: "https://web-color.aliasdmc.fr/couleurs-hexa-rgb-hsl-predefini-html-css.php"
+      weight: 8 
+    - identifier: "beebule"
+      name: "<i class='fab fa-github'></i> Beedule sur Github"
+      url: "https://github.com/pbillerot/beedule" 
+      weight: 10
+    - identifier: "github ?"
+      name: "<i class='fab fa-github'></i> Cette documentation sur Github"
+      url: "https://github.com/pbillerot/beedule-learn"
+      weight: 20
+    - identifier: "relearn"
+      name: "<i class='fas fa-fw fa-bookmark'></i> Aide thème Relearn"
+      url: "https://mcshelby.github.io/hugo-theme-relearn/"
+      weight: 100
+    - identifier: "awesome"
+      name: "<i class='fas fa-fw fa-flag'></i> Aide Awesome Icons"
+      url: "https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free"
+      weight: 110
+
