@@ -27,6 +27,7 @@
 
 [l'éditeur](editeur.md)
 [l'Ordonnanceur](ordonnanceur.md)
+[Liens](liens.md)
 
 [Exemple Chinook]()
 
