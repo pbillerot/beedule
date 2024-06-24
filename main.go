@@ -28,7 +28,6 @@ func init() {
 	models.Config.Author = beego.AppConfig.String("author")
 	models.Config.Version = beego.AppConfig.String("version")
 	models.Config.Theme = beego.AppConfig.String("theme")
-	models.Config.HelpPath = beego.AppConfig.String("helppath")
 	models.Config.LogPath = beego.AppConfig.String("logpath")
 	models.Config.Portail = beego.AppConfig.String("portail")
 	models.Config.TaskCron = beego.AppConfig.String("taskcron")

@@ -12,8 +12,6 @@ type BeeConfig struct {
 	Version  string
 	Portail  string
 	Theme    string
-	HelpDir  string
-	HelpPath string
 	LogPath  string
 	TaskCron string
 }

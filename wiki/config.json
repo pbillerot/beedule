@@ -1,0 +1,8 @@
+{
+    "title": "Guide PLUVIO",
+    "useSideMenu": true,
+    "lineBreaks": "gfm",
+    "additionalFooterText": "All content and images &copy; by Philippe Billerot - ",
+    "anchorCharacter": "&#x2693;",
+    "httpServer": "python3 -m http.server"
+}
