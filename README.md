@@ -7,4 +7,4 @@ C'est aussi un **[CRUD](https://fr.wikipedia.org/wiki/CRUD)** pour réaliser les
 
 Le **développeur d'application** Beedule aura à décrire les vues, les formulaires et les traitements dans des fichiers textes au format **[YAML](https://fr.wikipedia.org/wiki/YAML)** que nous appelerons le **dictionnaire**.
 
---> [Apprendre Beedule](https://philippe.billerot.eu/beedule-learn/)
+--> [Apprendre Beedule](https://beedule.billerot.net/wiki/)

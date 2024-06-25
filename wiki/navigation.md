@@ -1,4 +1,4 @@
-# Apprendre BEEDULE
+# Apprendre Beedule
 
 [Présentation](presentation/_index.md)
 [Installation]()
@@ -26,14 +26,14 @@
 * [Les graphiques](dictionnaire/chart.md)
 
 [l'éditeur](editeur.md)
-[l'Ordonnanceur](ordonnanceur.md)
+[l'ordonnanceur](ordonnanceur.md)
 [Liens](liens.md)
 
-[Exemple Chinook]()
+[Chinook]()
 
 * [Intro](chinook/_index.md)
-* [Le dictionnaire](chinook/dictionnaire.md)
 * [L'application](chinook/application.md)
+* [Le dictionnaire](chinook/dictionnaire.md)
 
 [gimmick:theme](flatly)
-[gimmick:themechooser](Theme)
+

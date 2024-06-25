@@ -30,10 +30,10 @@ menu:
 - table-id: Genre
   view-id: vall
 ```
-## L'application sur la page d'accueil du portail "Beedule"
+## L'application sur le portail
 ![](images/application-portail.png)
 
-### Les vues exposées de l'application
+## Les vues exposées de l'application
 ![](images/application-vues.png)
 
 

@@ -1,7 +1,7 @@
 
 ## Le dictionnaire Chinook
 
-![](images/chinook-schema.png)
+![](./images/chinook-schema.png)
 
 ## application.yaml
 

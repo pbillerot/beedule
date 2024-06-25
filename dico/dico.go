@@ -296,8 +296,8 @@ func (c *Portail) Load() ([]string, error) {
 	file.Path = beego.AppConfig.String("portail")
 
 	// déclaration du wiki beedoc
-	logs.Info("...set statique", "/bee/wiki/beedoc", "./wiki")
-	beego.SetStaticPath("/bee/wiki/beedoc", "./wiki")
+	logs.Info("...set statique", "/wiki", "./wiki")
+	beego.SetStaticPath("wiki", "./wiki")
 
 	// Init de Applications ShareApp
 	c.Applications = map[string]Application{}

@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.4.1 - 25 juin 2024
+- `added` url /wiki
+
 5.4.0 - 24 juin 2024
 - `changed` guide beedule wiki intégré dans la webapp /bee/wiki/beedoc
 
