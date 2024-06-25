@@ -11,6 +11,9 @@ Historique des modifications
 - `changed`
 
 5.4.1 - 25 juin 2024
+- `fixed` lien wiki dans l'éditeur
+
+5.4.1 - 25 juin 2024
 - `added` url /wiki
 
 5.4.0 - 24 juin 2024
