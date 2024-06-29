@@ -8,45 +8,46 @@ https://www.postgresqltutorial.com/postgresql-getting-started/
 `/volshare/docker/postgres/docker-compose.yaml`
 
 ```
-#
-# PORTAINER
-#
-version: "3.3"
+
+# https://github.com/docker-library/docs/blob/master/postgres/README.md
+
 services:
   postgres:
     image: postgres:latest
     container_name: postgres
     restart: unless-stopped
     user: 1000:1000
-    # ports:
-    #   - 5432:5432
+    ports:
+    # - 127.0.0.1:5432:5432
+    - 5432:5432
     environment:
-      POSTGRES_USER: beedule
-      # export POSTGRES_PASSWORD=password
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
       TZ: 'Europe/Paris'
+      PGTZ: 'Europe/Paris'
     volumes:
     - "/volshare/data/backup:/backup"
-    - "/volshare/persistent/postgres:/var/lib/postgresql/data"
+    - "/volshare/persistent/postgres:/var/lib/postgresql/data/pgdata"
     networks:
-    - web
+    - docker_web
 
 volumes:
   certs:
 
 networks:
-  web:
+  docker_web:
     external: true
 ```
 
 ## Commande de backup
 
 ```bash
-docker exec -i postgres /usr/bin/pg_dump -U beedule beedule >/volshare/data/backup/beedule.sql
+docker exec -i postgres /usr/bin/pg_dump -U user base >/volshare/data/backup/base.sql
 ```
 
 ## Commande de restauration
 
 ```bash
-docker exec -i postrges /bin/bash -c "PGPASSWORD=${POSTGRES_PASSWORD} psql --username beedule beedule" < /volshare/data/backup/beedule.sql
+docker exec -i postrges /bin/bash -c "PGPASSWORD=password psql --username user base" < /volshare/data/backup/base.sql
 ```

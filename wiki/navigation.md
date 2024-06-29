@@ -9,6 +9,7 @@
 * [Postgres](installation/postgres.md)
 * [Caddy](installation/caddy.md)
 * [Beedule](installation/beedule.md)
+* [Développement](installation/developpement.md)
 
 [Le dictionnaire]()
 

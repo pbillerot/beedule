@@ -15,7 +15,6 @@
 #
 # CADDY SERVER
 #
-version: "3.3"
 services:
   caddy:
     # https://hub.docker.com/_/caddy?tab=description
@@ -27,18 +26,19 @@ services:
       - 443:443
       # - 7890:7890
     volumes:
-    - ./caddy/caddyfile.conf:/etc/caddy/Caddyfile
-    - /volshare/persistent/etc:/data
+    - ./caddyfile.conf:/etc/caddy/Caddyfile
+    - /volshare/etc:/data
     - /volshare:/volshare
+    - /etc/localtime:/etc/localtime:ro
     networks:
-    - web
+    - docker_web
 
 volumes:
   certs:
 
 networks:
-  web:
-    driver: bridge
+  docker_web:
+    external: true
 ```
 
 ## Config Caddy

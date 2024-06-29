@@ -14,7 +14,8 @@
 # Le GOPATH par défaut de cette image est /go.
 FROM golang:1.17-alpine as goalpine
 
-# Installation de GCC et GIT
+
+# Installation de GCC GIT TZDATA
 RUN apk add build-base git
 
 # Installation de beedule
@@ -22,22 +23,30 @@ WORKDIR /src
 RUN git clone https://github.com/pbillerot/beedule.git
 WORKDIR /src/beedule
 
-# Build avec CGO
+# Build avec CGO arm64 pour la VM FREEBOX sinon amd64
 ENV CGO_CFLAGS="-g -O2 -Wno-return-local-addr"
-RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /src/beedule/beedule
+RUN GOOS=linux GOARCH=arm64 go build -a -installsuffix cgo -o /src/beedule/beedule
 
 # ETAPE GENERATION D'UNE IMAGE avec seulement le module compilé
 FROM alpine
+# Ajout de tzdata
+RUN apk add tzdata
+ENV TZ=Europe/Paris
+RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
+
+# Recopie de beedule généré dans l'étape compilation (goalpine)
 RUN mkdir -p /src/beedule
 copy --from=goalpine /src/beedule /src/beedule
-RUN apk add --update nnn
 
+# Ajout du user 1000
+# USER 1000:1000
 # Pont d'entrée
 WORKDIR /src/beedule
 ENTRYPOINT ./beedule
 
 # Le port sur lequel notre serveur écoute
 EXPOSE 3945
+
 ```
 
 ## Construction du container
@@ -45,7 +54,6 @@ EXPOSE 3945
 `/volshare/docker/beedule/docker-compose.yaml`
 
 ```
-version: "3.3"
 services:
   beedule:
     build:
@@ -54,19 +62,21 @@ services:
     container_name: beedule
     restart: unless-stopped
     user: 1000:1000
+    external_links:
+      - postgres
     # ports:
-    #   - "7601:3945"
+    #   - "3945:3945"
     volumes:
     - /volshare:/volshare
     - ./custom.conf:/src/beedule/conf/custom.conf
     networks:
-    - web
+    - docker_web
 
 volumes:
   certs:
 
 networks:
-  web:
+  docker_web:
     external: true
 ```
 

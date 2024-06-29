@@ -13,7 +13,6 @@
 #
 # PORTAINER
 #
-version: "3.3"
 services:
   portainer:
     image: portainer/portainer-ce:latest
@@ -23,13 +22,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - web
+    - docker_web
+
 volumes:
   certs:
 
 networks:
-  web:
-    driver: bridge
+  docker_web:
+    external: true
 ```
 
 ## dans Caddy
