@@ -26,8 +26,8 @@
 * [Les scripts sqlite](dictionnaire/scripts.md)
 * [Les graphiques](dictionnaire/chart.md)
 
-[l'éditeur](editeur.md)
-[l'ordonnanceur](ordonnanceur.md)
+[l'éditeur](editeur/_index.md)
+[l'ordonnanceur](ordonnanceur/_index.md)
 [Liens](liens.md)
 
 [Chinook]()

@@ -224,12 +224,12 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 			} else {
 				if elements[keyFilter].Jointure.Column == "" {
 					if elements[keyFilter].Type == "date" || elements[keyFilter].Type == "number" || elements[keyFilter].Type == "checkbox" || elements[keyFilter].Type == "amount" {
-						view.Search += "cast(" + tableid + "." + keyFilter + " as varchar) LIKE '%" + strings.ToLower(filter) + "%'"
+						view.Search += "cast(" + tableid + "." + keyFilter + " as varchar) ILIKE '%" + filter + "%'"
 					} else {
-						view.Search += "lower(" + tableid + "." + keyFilter + ") LIKE '%" + strings.ToLower(filter) + "%'"
+						view.Search += "lower(" + tableid + "." + keyFilter + ") ILIKE '%" + filter + "%'"
 					}
 				} else {
-					view.Search += "lower(" + elements[keyFilter].Jointure.Column + ") LIKE '%" + strings.ToLower(filter) + "%'"
+					view.Search += "lower(" + elements[keyFilter].Jointure.Column + ") ILIKE '%" + filter + "%'"
 				}
 			}
 
@@ -251,7 +251,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		if len(match) > 0 {
 			colName = match[1]
 			val = match[2]
-			ope = "LIKE"
+			ope = "ILIKE"
 		}
 		re = regexp.MustCompile(`^(.*)=(.*)`)
 		match = re.FindStringSubmatch(search)
@@ -297,7 +297,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 						if ope == "=" {
 							view.Search += "cast(" + tableid + "." + key + " as TEXT) = '" + val + "'"
 						} else {
-							view.Search += "cast(" + tableid + "." + key + " as TEXT) LIKE '%" + val + "%'"
+							view.Search += "cast(" + tableid + "." + key + " as TEXT) ILIKE '%" + val + "%'"
 						}
 					}
 				}
@@ -323,9 +323,9 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 					view.Search += " OR "
 				}
 				if element.Jointure.Column != "" {
-					view.Search += "cast(" + element.Jointure.Column + " as TEXT) LIKE '%" + search + "%'"
+					view.Search += "cast(" + element.Jointure.Column + " as TEXT) ILIKE '%" + search + "%'"
 				} else {
-					view.Search += "cast(" + tableid + "." + key + " as TEXT) LIKE '%" + search + "%'"
+					view.Search += "cast(" + tableid + "." + key + " as TEXT) ILIKE '%" + search + "%'"
 				}
 			}
 		}

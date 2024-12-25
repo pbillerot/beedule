@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.4.3 - 25 décembre 2024
+- `fixed` recherche cases insensitive dans une vue
+
 5.4.2 - 5 juillet 2024
 - `added` path / routé sur /bee
 

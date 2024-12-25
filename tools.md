@@ -93,3 +93,7 @@ git branch -D master  # Deletes the master branch
 git branch -m master  # Rename the current branch to master
 git push -f origin master  # Force push master branch to github
 ```
+
+### Debug
+- go install github.com/go-delve/delve/cmd/dlv@latest
+- avant de tester ouvrir la session SSH IONOS
