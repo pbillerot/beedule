@@ -4,7 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "/volshare/data/beedule"
+			"path": "/home/billerot/Volshare/data/beedule"
+		},
+		{
+			"path": "/home/billerot/Volshare/docker"
 		}
 	],
 	"settings": {

@@ -20,22 +20,31 @@ Beedule est développé avec le langage Go en utilisant le framework Beego.
 
 ## Installation de golang
 
-depuis la debian 12 c'est tout simple
+Exemple depuis Ubuntu 25.04
 
+```sh
+sudo apt install golang-go
+```
+### personnaliser ~/.profile
 ```bash
-sudo apt install golang
-echo "export PATH=~/go/bin:/usr/local/go/bin:${PATH}" | sudo tee -a $HOME/.profile source
-echo export GOPATH=~/go | sudo tee -a $HOME/.profile source
+# Personnalisation
+export PATH=$PATH:/usr/local/go/bin:/home/billerot/go/bin
+export GOPATH=/home/billerot/go
+```
+```bash
 source $HOME/.profile
 go version
 ```
+go version go1.24.2 linux/amd64
 
-## Installation de beego
+## Installation de beego et de l'outil bee
+<a href="https://beego.wiki/docs/install/install/" target="_blank">Beego wiki</a>
+<a href="https://beego.wiki/docs/install/bee/" target="_blank">Beego bee</a>
 
-- <a href="https://beego.wiki/docs/install/install/" target="_blank">Beego wiki</a>
+```bash
+go install github.com/beego/beego/v2@latest
+go install github.com/beego/bee/v2@latest
+```
 
-## Installation de l'outil bee
-
-- <a href="https://beego.wiki/docs/install/bee/" target="_blank">Beego bee</a>
 
 

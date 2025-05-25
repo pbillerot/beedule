@@ -1,24 +1,28 @@
 # BEEDULE DEVELOPPEMENT
 
-## Installation de GO sur ma Debian Buster
-- https://hub.docker.com/_/golang
-- https://golang.org/dl/
-```console
-cd ~/Téléchargements
-wget https://golang.org/dl/go1.17.2.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.17.2.linux-amd64.tar.gz
+## Installation de GO sur mon portable T480 sous Ubuntu 25.04
+```sh
+sudo apt install golang-go
 ```
-dans ~/.profile
-```
+### dans ~/.profile
+```bash
 # Personnalisation
-export EDITOR=nano
 export PATH=$PATH:/usr/local/go/bin:/home/billerot/go/bin
 export GOPATH=/home/billerot/go
 ```
+```sh
+source $HOME/.profile
+go version
+```
+go version go1.24.2 linux/amd64
+
 ## Ajout de modules
 
 ### BeeGo
 - cd $GOPATH
+- go install github.com/beego/beego/v2@latest
+- go install github.com/beego/bee/v2@latest
+ou
 - go get -u github.com/beego/beego/v2
 - go get -u github.com/beego/bee/v2
 
@@ -26,6 +30,7 @@ export GOPATH=/home/billerot/go
 - go build
 - ./beedule
 - ou lancer le Debug dans vscodium
+- ou bee run
 
 ### Mise en production
 - maj changelog.md app.conf
@@ -42,12 +47,6 @@ https://github.com/russross/blackfriday
 
 Pour traduire l'expression
 - https://github.com/bradymholt/cRonstrue
-
-### dans .profil
-```console
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=~/go
-```
 
 ### Mémo de commandes (pour le débutant que je suis)
 - go mod init github.com/pbillerot/beedule
