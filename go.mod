@@ -9,7 +9,7 @@ require (
 	github.com/imdario/mergo v0.3.16
 	github.com/leekchan/accounting v1.0.0
 	github.com/lib/pq v1.10.9
-	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/smartystreets/goconvey v1.8.0
 	golang.org/x/crypto v0.9.0
 	gopkg.in/yaml.v2 v2.4.0
