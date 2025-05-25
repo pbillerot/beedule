@@ -284,14 +284,16 @@ func CrudSplit(in string, separateur string) (out []string) {
 }
 
 // CrudContains as
-// list : "item1,item2,..."
-// in   : "item2"
+// list : "item 1,item 2,item 3,..."
+// in   : "item 2"
 // ret  : valeur à retourner si OK
 func CrudContains(list string, in string) (out bool) {
-	if strings.Contains(list, in) {
-		out = true
-	} else {
-		out = false
+	elements := strings.Split(list, ",")
+	out = false
+	for _, element := range elements {
+		if in == element {
+			out = true
+		}
 	}
 	return
 }

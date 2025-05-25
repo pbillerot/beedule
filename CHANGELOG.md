@@ -10,9 +10,11 @@ Historique des modifications
 - `deleted`
 - `changed`
 
-5.5.0 - 25 mai 2025
-- `changed` Version de golang 1.24
+5.5.1 - 25 mai 2025
+- `changed` golang 1.24 go-sqlite3 v1.14.22
+- `changed` fomantic-ui@2.9.4 jquery-3.7.1.min.js
 - `changed` Doc installation sous Ubuntu 25.04
+- `fixed` liste multiple qui affichait plus d'items qu'attendu
 
 5.4.3 - 25 décembre 2024
 - `fixed` recherche cases insensitive dans une vue
