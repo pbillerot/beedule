@@ -22,7 +22,7 @@ go version go1.24.2 linux/amd64
 - cd $GOPATH
 - go install github.com/beego/beego/v2@latest
 - go install github.com/beego/bee/v2@latest
-ou
+ou pour maj
 - go get -u github.com/beego/beego/v2
 - go get -u github.com/beego/bee/v2
 

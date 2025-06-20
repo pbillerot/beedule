@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.5.2 - 20 juin 2025
+- `changed` icone accueil et aprops changée
+
 5.5.1 - 25 mai 2025
 - `changed` golang 1.24 go-sqlite3 v1.14.22
 - `changed` fomantic-ui@2.9.4 jquery-3.7.1.min.js

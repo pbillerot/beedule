@@ -41,9 +41,17 @@ go version go1.24.2 linux/amd64
 <a href="https://beego.wiki/docs/install/install/" target="_blank">Beego wiki</a>
 <a href="https://beego.wiki/docs/install/bee/" target="_blank">Beego bee</a>
 
+Pour installer
+
 ```bash
 go install github.com/beego/beego/v2@latest
 go install github.com/beego/bee/v2@latest
+```
+Pour mettre à jour
+
+```bash
+go get github.com/beego/beego/v2
+go get github.com/beego/bee/v2
 ```
 
 
