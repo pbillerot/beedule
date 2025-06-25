@@ -161,7 +161,7 @@ func (c *CrudAddController) Post() {
 		if err != nil {
 			berr = true
 			element.Error = "error"
-			flash.Error(err.Error())
+			flash.Error("%s", err.Error())
 		}
 		elements[key] = element
 		// On écrase les données lues dans la table par la saisie
@@ -194,7 +194,7 @@ func (c *CrudAddController) Post() {
 	// C'est OK, les données sont correctes et placées dans SQLout
 	err = models.CrudInsert(appid, tableid, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
 		backward(c.Controller)
@@ -206,7 +206,7 @@ func (c *CrudAddController) Post() {
 		if sql != "" {
 			err = models.CrudExec(sql, table.Setting.AliasDB)
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 			}
 		} else {

@@ -154,11 +154,12 @@ func GetUser(username string) (User, error) {
 	user := User{Username: username}
 	err := o.Read(&user, "Username")
 
-	if err == orm.ErrNoRows {
+	switch err {
+	case orm.ErrNoRows:
 		fmt.Println("No result found.")
-	} else if err == orm.ErrMissPK {
+	case orm.ErrMissPK:
 		fmt.Println("No primary key found.")
-	} else {
+	default:
 		fmt.Println(user.Username)
 	}
 	return user, err

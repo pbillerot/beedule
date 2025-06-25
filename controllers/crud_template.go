@@ -239,23 +239,24 @@ func CrudFormat(in string, v interface{}) (out string) {
 	if in != "" && value != "" {
 		var recs []orm.Params
 		var err error
-		if in == "date" {
+		switch in {
+		case "date":
 			if strings.Contains(value, "0001-01") {
 				return ""
 			}
 			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d','"+value+"')", "default")
-		} else if in == "datetime" {
+		case "datetime":
 			recs, err = models.CrudSQL("SELECT strftime('%Y-%m-%d %H:%M:%S','"+value+"')", "default")
-		} else if in == "time" {
+		case "time":
 			if strings.Contains(value, "00-00-00") {
 				return ""
 			}
 			recs, err = models.CrudSQL("SELECT strftime('%H:%M:%S','"+value+"')", "default")
-		} else if in == "amount" {
+		case "amount":
 			ac := accounting.Accounting{Symbol: "€", Precision: 2, Thousand: " ", Decimal: ",", Format: "%v %s"}
 			fl, _ := strconv.ParseFloat(value, 32)
 			out = ac.FormatMoney(fl)
-		} else {
+		default:
 			recs, err = models.CrudSQL("SELECT printf('"+in+"','"+value+"')", "default")
 		}
 		if err != nil {

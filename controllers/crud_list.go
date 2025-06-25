@@ -49,14 +49,15 @@ func (c *CrudListController) CrudList() {
 	// Positionnement du navigateur sur la page qui va s'ouvrir
 	forward(c.Controller, fmt.Sprintf("/bee/list/%s/%s/%s", appid, tableid, viewid))
 
-	if uiView.View.Type == "card" {
+	switch uiView.View.Type {
+	case "card":
 		c.TplName = "crud_list_card.html"
-	} else if uiView.View.Type == "table" {
+	case "table":
 		c.TplName = "crud_list_table.html"
-	} else if uiView.View.Type == "dashboard" {
+	case "dashboard":
 		c.Ctx.Redirect(302, "/bee/dashboard/"+appid+"/"+tableid+"/"+viewid)
 		// c.TplName = "crud_dashboard.html"
-	} else {
+	default:
 		c.TplName = "crud_list_card.html"
 	}
 }
@@ -92,7 +93,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	if _, ok := dico.Ctx.Applications[appid]; !ok {
 		err = fmt.Errorf("app not found %s", appid)
 		logs.Error(err.Error())
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c)
 		return
 	}
@@ -101,14 +102,14 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 		} else {
 			err = fmt.Errorf("view not found %s", viewid)
 			logs.Error(err.Error())
-			flash.Error(err.Error())
+			flash.Error("%s", err.Error())
 			flash.Store(&c)
 			return
 		}
 	} else {
 		err = fmt.Errorf("table not found %s", tableid)
 		logs.Error(err.Error())
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c)
 		return
 	}
@@ -125,7 +126,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	if !IsInGroup(c, view.Group, appid, "") {
 		err = fmt.Errorf("accès non autorisé de %s à %s", viewid, view.Group)
 		logs.Error(err.Error())
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c)
 		return
 	}
@@ -175,7 +176,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
-					flash.Error(err.Error())
+					flash.Error("%s", err.Error())
 					flash.Store(&c)
 				}
 			}
@@ -347,7 +348,7 @@ func (ui *UIView) load(c beego.Controller, appid string, tableid string, viewid 
 	records, err := models.CrudList(appid, tableid, viewid, &view, elements)
 	ui.Records = records
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c)
 	}
 	if len(records) > 0 {

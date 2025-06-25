@@ -90,7 +90,7 @@ func (c *CrudEditController) Get() {
 
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return
@@ -184,7 +184,7 @@ func (c *CrudEditController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return
@@ -205,7 +205,7 @@ func (c *CrudEditController) Post() {
 		if err != nil {
 			berr = true
 			element.Error = "error"
-			flash.Error(err.Error())
+			flash.Error("%s", err.Error())
 		}
 		elements[key] = element
 	}
@@ -214,7 +214,7 @@ func (c *CrudEditController) Post() {
 		sql := macroSQL(c.Controller, appid, CheckSqlite, records[0])
 		if sql != "" {
 			berr = true
-			flash.Error(sql)
+			flash.Error("%s", sql)
 		}
 	}
 	// Calcul des éléments (valeur par défaut comprise)
@@ -247,7 +247,7 @@ func (c *CrudEditController) Post() {
 	// C'est OK, les données sont correctes et placées dans SQLout
 	err = models.CrudUpdate(appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.Data["error"] = "error"
 		backward(c.Controller)
@@ -267,7 +267,7 @@ func (c *CrudEditController) Post() {
 			unbased, err := base64.StdEncoding.DecodeString(b64data)
 			// img, _, err := image.Decode(bytes.NewReader([]byte(element.SQLout)))
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 				berr = true
 				break
@@ -275,7 +275,7 @@ func (c *CrudEditController) Post() {
 
 			outputFile, err := os.Create(element.Params.Src)
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 				berr = true
 				break
@@ -289,14 +289,14 @@ func (c *CrudEditController) Post() {
 			// if ext == ".png" {
 			// 	im, err := png.Decode(r)
 			// 	if err != nil {
-			// 		flash.Error(err.Error())
+			// 		flash.Error("%s", err.Error())
 			// 		flash.Store(&c.Controller)
 			// 		berr = true
 			// 		break
 			// 	}
 			// 	err = png.Encode(outputFile, im)
 			// 	if err != nil {
-			// 		flash.Error(err.Error())
+			// 		flash.Error("%s", err.Error())
 			// 		flash.Store(&c.Controller)
 			// 		berr = true
 			// 	}
@@ -306,7 +306,7 @@ func (c *CrudEditController) Post() {
 			// 	opts.Quality = 1
 			// 	err = jpeg.Encode(outputFile, img, &opts)
 			// 	if err != nil {
-			// 		flash.Error(err.Error())
+			// 		flash.Error("%s", err.Error())
 			// 		flash.Store(&c.Controller)
 			// 		berr = true
 			// 	}
@@ -326,7 +326,7 @@ func (c *CrudEditController) Post() {
 		if sql != "" {
 			err = models.CrudExec(sql, table.Setting.AliasDB)
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 				berr = true
 			}

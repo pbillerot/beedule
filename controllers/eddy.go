@@ -42,14 +42,14 @@ func (c *EddyController) EddyDocument() {
 		if err != nil {
 			msg := fmt.Sprintf("EddyDocument %s : %s", pathFile, err)
 			beego.Error(msg)
-			flash.Error(msg)
+			flash.Error("%s", msg)
 			flash.Store(&c.Controller)
 		}
 		// Demande d'actualisation de l'arborescence
 		dico.Ctx = dico.Portail{}
 		msg, err := dico.Ctx.Load()
 		if err != nil {
-			flash.Error(strings.Join(msg[:], ","))
+			flash.Error("%s", strings.Join(msg[:], ","))
 			flash.Store(&c.Controller)
 		}
 		c.Ctx.Output.Cookie("eddy-refresh", "true")
@@ -61,7 +61,7 @@ func (c *EddyController) EddyDocument() {
 	if err != nil {
 		msg := fmt.Sprintf("EddyDocument %s : %s", keyid, err)
 		beego.Error(msg)
-		flash.Error(msg)
+		flash.Error("%s", msg)
 		flash.Store(&c.Controller)
 	}
 	record.Content = string(content)
@@ -114,7 +114,7 @@ func (c *EddyController) EddyLog() {
 	if err != nil {
 		msg := fmt.Sprintf("EddyLog %s : %s", keyid, err)
 		beego.Error(msg)
-		flash.Error(msg)
+		flash.Error("%s", msg)
 		flash.Store(&c.Controller)
 	}
 	record.Content = string(content)

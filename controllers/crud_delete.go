@@ -69,7 +69,7 @@ func (c *CrudDeleteController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return
@@ -85,7 +85,7 @@ func (c *CrudDeleteController) Post() {
 	// Suppression de l'enregistrement
 	err = models.CrudDelete(appid, tableid, id)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
 		// PostSQL
@@ -94,7 +94,7 @@ func (c *CrudDeleteController) Post() {
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
-					flash.Error(err.Error())
+					flash.Error("%s", err.Error())
 					flash.Store(&c.Controller)
 				}
 			}

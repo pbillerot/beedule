@@ -109,7 +109,7 @@ func (c *CrudViewController) Get() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	// Calcul des éléments

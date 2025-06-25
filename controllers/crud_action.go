@@ -61,7 +61,7 @@ func (c *CrudActionViewController) Post() {
 
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		backward(c.Controller)
 		return
@@ -73,7 +73,7 @@ func (c *CrudActionViewController) Post() {
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
-					flash.Error(err.Error())
+					flash.Error("%s", err.Error())
 					flash.Store(&c.Controller)
 				}
 			}
@@ -156,7 +156,7 @@ func (c *CrudActionPressController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	if len(records) == 0 {
@@ -172,7 +172,7 @@ func (c *CrudActionPressController) Post() {
 		if sql != "" {
 			err = models.CrudExec(sql, table.Setting.AliasDB)
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 			}
 		}
@@ -279,7 +279,7 @@ func (c *CrudActionFormController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	if len(records) == 0 {
@@ -291,7 +291,7 @@ func (c *CrudActionFormController) Post() {
 
 	iactionid, err := strconv.Atoi(actionid)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		c.Ctx.Redirect(302, "/bee/view/"+appid+"/"+tableid+"/"+viewid+"/"+id)
 		return
@@ -303,7 +303,7 @@ func (c *CrudActionFormController) Post() {
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
-					flash.Error(err.Error())
+					flash.Error("%s", err.Error())
 					flash.Store(&c.Controller)
 				}
 			}
@@ -405,7 +405,7 @@ func (c *CrudActionElementController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	if len(records) == 0 {
@@ -426,7 +426,7 @@ func (c *CrudActionElementController) Post() {
 					if sql != "" {
 						err = models.CrudExec(sql, table.Setting.AliasDB)
 						if err != nil {
-							flash.Error(err.Error())
+							flash.Error("%s", err.Error())
 							flash.Store(&c.Controller)
 						}
 					}
@@ -441,7 +441,7 @@ func (c *CrudActionElementController) Post() {
 	}
 
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	}
 	// if withPlugin {
@@ -560,7 +560,7 @@ func (c *CrudAjaxSqlController) Post() {
 		if sql != "" {
 			records, err := models.CrudSQL(sql, table.Setting.AliasDB)
 			if err != nil {
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 				rest.Response = "Error"
 				rest.Message = err.Error()
@@ -673,7 +673,7 @@ func (c *CrudActionAjaxController) Post() {
 	// lecture du record
 	records, err := models.CrudRead(filter, appid, tableid, id, elements)
 	if err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		rest.Message = err.Error()
 		c.Data["json"] = &rest
@@ -698,7 +698,7 @@ func (c *CrudActionAjaxController) Post() {
 			if sql != "" {
 				err = models.CrudExec(sql, table.Setting.AliasDB)
 				if err != nil {
-					flash.Error(err.Error())
+					flash.Error("%s", err.Error())
 					flash.Store(&c.Controller)
 					rest.Response = "Error"
 					rest.Message = err.Error()
