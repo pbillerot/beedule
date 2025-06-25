@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.5.5 - 25 juin 2025
+- `added` icone-about sur l'accueil et apropos
+
 5.5.4 - 25 juin 2025
 - `fixed` correction syntaxe golang
 

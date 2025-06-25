@@ -2,18 +2,19 @@ package types
 
 // BeeConfig Paramètres de config de la webapp
 type BeeConfig struct {
-	Appname  string
-	Appnote  string
-	Date     string
-	Icone    string
-	Site     string
-	Email    string
-	Author   string
-	Version  string
-	Portail  string
-	Theme    string
-	LogPath  string
-	TaskCron string
+	Appname    string
+	Appnote    string
+	Date       string
+	Icone      string
+	IconeAbout string
+	Site       string
+	Email      string
+	Author     string
+	Version    string
+	Portail    string
+	Theme      string
+	LogPath    string
+	TaskCron   string
 }
 
 // Session Données de session dans le contexte

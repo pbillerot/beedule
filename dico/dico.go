@@ -289,11 +289,11 @@ func (c *Portail) Load() ([]string, error) {
 		logs.Error("Unmarshal", msg)
 		return dicoError, err
 	}
-	file := File{}
-	file.Base = "portail.yaml"
-	file.Ext = ".yaml"
-	file.Name = "portail"
-	file.Path = beego.AppConfig.String("portail")
+	// file := File{}
+	// file.Base = "portail.yaml"
+	// file.Ext = ".yaml"
+	// file.Name = "portail"
+	// file.Path = beego.AppConfig.String("portail")
 
 	// déclaration du wiki
 	logs.Info("...set statique", "/wiki", "./wiki")

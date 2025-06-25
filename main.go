@@ -23,6 +23,7 @@ func init() {
 	models.Config.Appnote = beego.AppConfig.String("appnote")
 	models.Config.Date = beego.AppConfig.String("date")
 	models.Config.Icone = beego.AppConfig.String("icone")
+	models.Config.IconeAbout = beego.AppConfig.String("iconeabout")
 	models.Config.Site = beego.AppConfig.String("site")
 	models.Config.Email = beego.AppConfig.String("email")
 	models.Config.Author = beego.AppConfig.String("author")
