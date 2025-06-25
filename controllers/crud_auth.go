@@ -76,7 +76,8 @@ func (c *AboutController) Get() {
 // Get of LoginController
 func (c *LoginController) Get() {
 	setContext(c.Controller, "admin", "users")
-	c.Data["Title"] = "Beedule"
+	c.Data["TabIcon"] = dico.Ctx.IconFile
+	c.Data["TabTitle"] = dico.Ctx.Title
 	c.TplName = "crud_login.html"
 }
 

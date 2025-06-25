@@ -10,6 +10,9 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.5.3 - 25 juin 2025
+- `fixed` ajout icone et titre sur la page d'accueil
+
 5.5.2 - 20 juin 2025
 - `changed` icone accueil et aprops changée
 
