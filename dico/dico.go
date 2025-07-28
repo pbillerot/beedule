@@ -138,16 +138,7 @@ type Element struct {
 	WithSum       bool              `yaml:"with-sum"`    // dans une table calcule la somme des valeurs
 }
 
-// HashPassword hashage de Value
-func (element *Element) HashPassword(password string) string {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	if err != nil {
-		logs.Error(err)
-	}
-	return string(bytes)
-}
-
-// View Vue d'une table
+// View Modele Vue d'une table
 type View struct {
 	ActionPress    Action             `yaml:"action-press"` // Action sur appui long sur l'article
 	Actions        []Action           // Action sur la vue (ordres sql)
@@ -214,6 +205,7 @@ type Action struct {
 	Group       string   // Groupe autorisée à lancer l'action
 	Label       string   // label de l'action
 	Checkbox    Setters  `yaml:"checkbox"`     // checkbox pour mettre à jour la donnée
+	IconName    string   `yaml:"icon-name"`    // icone de l'action dans le menu
 	URL         string   `yaml:"url"`          // URL d'appel du formulaire
 	SQL         []string `yaml:"sql"`          // les ordres SQL seront exécutées avant l'appel du formulaire
 	WithConfirm bool     `yaml:"with-confirm"` // demande de  confirmation
@@ -262,6 +254,15 @@ type CardList struct {
 type Jointure struct {
 	Join   string // la commande du genre : left outer join on field = field
 	Column string // colonne retournée par la jointure
+}
+
+// HashPassword hashage de Value
+func (element *Element) HashPassword(password string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		logs.Error(err)
+	}
+	return string(bytes)
 }
 
 // CHARGEMENT DU DICTIONNAIRE

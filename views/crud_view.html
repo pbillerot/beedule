@@ -102,7 +102,7 @@
           {{range $iaction, $action := $form.Actions}}
           {{if not $action.Hide}}
           <a class="item crud-jquery-action" data-confirm="{{$action.WithConfirm}}"
-            data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$iaction}}">{{str2html $action.Label}}</a>
+            data-url="/bee/actionf/{{$appid}}/{{$tableid}}/{{$viewid}}/{{$formviewid}}/{{$id}}/{{$iaction}}">{{if $action.IconName}}<i class="{{$action.IconName}}"></i>{{end}}{{str2html $action.Label}}</a>
           {{end}}
           {{end}}
           <!-- end range actions-->

@@ -127,7 +127,7 @@
                 <label>{{$action.Label}}</label>
               </div>
               {{else}}
-              {{str2html $action.Label}}
+              {{if $action.IconName}}<i class="{{$action.IconName}}"></i>{{end}}{{str2html $action.Label}}
               {{end}}
             </a>
             {{end}}

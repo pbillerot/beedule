@@ -10,6 +10,11 @@ Historique des modifications
 - `deleted`
 - `changed`
 
+5.6.0 - 28 juillet 2025
+- `added` icone-name dans Action
+- `added` doc structure de dictionnaire
+
+
 5.5.5 - 25 juin 2025
 - `added` icone-about sur l'accueil et apropos
 

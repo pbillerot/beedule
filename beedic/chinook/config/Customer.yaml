@@ -171,6 +171,7 @@ forms:
       _factures:
         type: card
         order: 300
+        width: l
         label-long: "Factures"
         icon-name: "file invoice"
         args:

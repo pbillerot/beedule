@@ -14,6 +14,7 @@
 [Le dictionnaire]()
 
 * [Intro](dictionnaire/_index.md)
+* [Structures du dictionnaire](dictionnaire/structures.md)
 * [Le portail](dictionnaire/portail.md)
 * [Les applications](dictionnaire/application.md)
 * [Les tables](dictionnaire/tables.md)
