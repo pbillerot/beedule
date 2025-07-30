@@ -24,12 +24,6 @@ type Portail struct {
 	Info         string
 	IconFile     string                 `yaml:"icon-file"`
 	Applications map[string]Application // working
-	ShareApps    []ShareApp             // working
-}
-
-type ShareApp struct {
-	AppID     string
-	SessionID string
 }
 
 // File as les fichiers du dictionnaire dicodir
@@ -47,17 +41,15 @@ type Application struct {
 	Batman         string            `yaml:"batman"`   // par défaut
 	Title          string            // Label de l'application
 	Image          string            // image de l'application affichée au niveau du portail
-	IconFile       string            `yaml:"icon-file"` // url de l'icône de l'application
+	IconFile       string            `yaml:"icon-file"` // url de l'icône de l'application ou
 	IconName       string            `yaml:"icon-name"` // Icône https://semantic-ui.com/elements/icon.html
 	Group          string            // groupe utilisateur habilité à accéder à l'application
 	DicoDir        string            `yaml:"dico-dir"` // working
 	Parameters     map[string]string // paramètres de l'application accessible par {__param1}
 	Path           string            // Path ou URL de l'application externe
-	Target         string            // _blank pour ouvrir l'application dans un nouvel onglet
 	Tables         map[string]*Table // Tables de l'application chargées par portail.load working
 	Files          []File            // liste des fichiers trouvés dans dicodir de l'application working
 	Menu           []TableView       // menu des Vues de l'application
-	Shareable      bool              // Partageable ou non
 	TasksTableName string            `yaml:"tasks-table-name"` // Nom de la table des Tâches planifiées
 	Wiki           string            // répertoire du wiki de l'application
 }
@@ -300,10 +292,8 @@ func (c *Portail) Load() ([]string, error) {
 	logs.Info("...set statique", "/wiki", "./wiki")
 	beego.SetStaticPath("wiki", "./wiki")
 
-	// Init de Applications ShareApp
+	// Init de Applications
 	c.Applications = map[string]Application{}
-	var shareApps []ShareApp
-	c.ShareApps = shareApps
 
 	// Chargement du dictionnaire des applications
 	for _, dicodir := range c.DicoDir {
@@ -460,41 +450,4 @@ func (c *Menu) Load(file File) (string, error) {
 		return msg, err
 	}
 	return "", err
-}
-
-// shareUpdate Ajout des binomes appid sessionid des applications paratageables
-func (c *Portail) ShareUpdate(sessionid string) {
-	for appid, application := range c.Applications {
-		isFind := false
-		if application.Shareable {
-			for _, shareApp := range c.ShareApps {
-				if appid == shareApp.AppID && sessionid == shareApp.SessionID {
-					isFind = true
-					break
-				}
-			}
-			if !isFind {
-				shareApp := ShareApp{AppID: appid, SessionID: sessionid}
-				c.ShareApps = append(c.ShareApps, shareApp)
-				logs.Info("ShareUpdate add", appid, sessionid)
-			}
-		}
-	}
-	// for _, shareApp := range c.ShareApps {
-	// 	logs.Info("Shared url ", fmt.Sprintf("http://localhost:3945/bee/share/%s/%s",
-	// 		shareApp.AppID,
-	// 		shareApp.SessionID))
-	// }
-}
-
-// IsShared Est-ce que le binome appid sessionid est partagé ?
-func (c *Portail) IsShared(appid string, sessionid string) (bret bool) {
-	bret = false
-	for _, shareApp := range c.ShareApps {
-		if appid == shareApp.AppID && sessionid == shareApp.SessionID {
-			bret = true
-			break
-		}
-	}
-	return
 }

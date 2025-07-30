@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
+
 	beego "github.com/beego/beego/v2/adapter"
-	"github.com/pbillerot/beedule/dico"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 // CrudPortailController as
@@ -18,8 +20,6 @@ func (c *CrudPortailController) Get() {
 	flash.Store(&c.Controller)
 	navigateInit(c.Controller)
 
-	// remplissage de ShareApps
-	dico.Ctx.ShareUpdate(sessionID)
-
+	logs.Debug(fmt.Sprintf("sessionID: %v", sessionID))
 	c.TplName = "crud_portail.html"
 }

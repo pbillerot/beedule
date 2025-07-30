@@ -14,10 +14,6 @@ group: billerot
 # logo de l'application (de type png ou svg)
 # "/bee/data/<app-id>" : préfixe des fichiers de l'application
 image: "/bee/data/jecompte/calc.png"
-# Le lien de l'application pourra être partagé avec un anonyme
-# il disposera des mêmes droits que l'émetteur
-# par contre l'accès ne sera actif que durant la session
-shareable: true
 # Liste des vues exposées dans le menu de gauche et dans le pied de page
 menu: 
 - table-id: jec_jeux

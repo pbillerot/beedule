@@ -7,12 +7,6 @@ type Portail struct {
 	Info         string
 	IconFile     string                 `yaml:"icon-file"`
 	Applications map[string]Application // working
-	ShareApps    []ShareApp             // working
-}
-
-type ShareApp struct {
-	AppID     string
-	SessionID string
 }
 
 // File as les fichiers du dictionnaire dicodir
@@ -20,7 +14,7 @@ type File struct {
 	Base string // le filename
 	Name string // le filename sans l'extension
 	Ext  string // l'extensions
-	Path string //le chemin compley
+	Path string //le chemin complet
 }
 
 // Application as
@@ -36,11 +30,9 @@ type Application struct {
 	DicoDir        string            `yaml:"dico-dir"` // working
 	Parameters     map[string]string // paramètres de l'application accessible par {__param1}
 	Path           string            // Path ou URL de l'application externe
-	Target         string            // _blank pour ouvrir l'application dans un nouvel onglet
 	Tables         map[string]*Table // Tables de l'application chargées par portail.load working
 	Files          []File            // liste des fichiers trouvés dans dicodir de l'application working
 	Menu           []TableView       // menu des Vues de l'application
-	Shareable      bool              // Partageable ou non
 	TasksTableName string            `yaml:"tasks-table-name"` // Nom de la table des Tâches planifiées
 	Wiki           string            // répertoire du wiki de l'application
 }

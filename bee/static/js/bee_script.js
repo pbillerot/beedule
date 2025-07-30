@@ -99,25 +99,6 @@ $(document).ready(function () {
     }
   }
 
-  // PARTAGE
-  if (navigator.share) {
-    $('.crud-share').on('click', function (event) {
-      if (navigator.share) {
-        navigator.share({
-          title: document.title,
-          text: $(this).data('text'),
-          url: $(this).data('url'),
-        })
-          .then(() => console.log('Successful share'))
-          .catch((error) => console.log('Error sharing', error));
-      }
-      event.preventDefault();
-    });
-  } else {
-    // On cache le menu Partage car non accessible
-    //$('.crud-share').hide();
-  } // end navigator.share
-
   // Collapse
   $('.crud-collapse').on('click', function (event) {
     var portlet = $(this).closest('div');
